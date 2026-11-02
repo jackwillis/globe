@@ -91,10 +91,14 @@ if(Python3_FOUND)
   target_link_libraries(globe-moving-base-bench PRIVATE globe_embedded_elevation globe_clock_posix)
   target_compile_options(globe-moving-base-bench PRIVATE -Wall -Wextra -Wpedantic)
 
+  add_executable(globe-shade-bench src/platform/bench/shade_bench.cpp)
+  target_link_libraries(globe-shade-bench PRIVATE globe_embedded_elevation globe_platform_common globe_clock_posix)
+  target_compile_options(globe-shade-bench PRIVATE -Wall -Wextra -Wpedantic)
+
   add_executable(globe-refine-profile src/platform/bench/refine_profile.cpp)
   target_include_directories(globe-refine-profile PRIVATE src/platform/common)
   target_link_libraries(globe-refine-profile PRIVATE globe_embedded_atlas globe_embedded_elevation
-                                                      globe_clock_posix)
+                                                      globe_platform_common globe_clock_posix)
   target_compile_options(globe-refine-profile PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 

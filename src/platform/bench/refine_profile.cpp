@@ -5,6 +5,7 @@
 // (uses the clock helper); the library is not modified. Prints one JSON object.
 //
 //   refine-profile [--repeat N]
+#include "cli.hpp"
 #include "clock.hpp"
 #include "globe/atlas.hpp"
 #include "globe/elevation.hpp"
@@ -263,10 +264,10 @@ void print_case(const char* name, double radius, const Result& r, bool last) {
 
 int main(int argc, char** argv) {
     int repeat = 9;
-    for (int i = 1; i + 1 < argc; ++i) {
-        if (std::strcmp(argv[i], "--repeat") == 0) {
-            repeat = std::max(1, std::atoi(argv[i + 1]));
-        }
+    if (argc != 1 && (argc != 3 || std::strcmp(argv[1], "--repeat") != 0 ||
+                      !parse_int_arg(argv[2], 1, 1000, repeat))) {
+        std::fprintf(stderr, "usage: refine-profile [--repeat 1..1000]\n");
+        return 2;
     }
     AtlasError err = AtlasError::Ok;
     const auto atlas = Atlas::parse(kEmbeddedAtlasData, kEmbeddedAtlasSize, &err);

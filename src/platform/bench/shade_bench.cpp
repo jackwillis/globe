@@ -6,6 +6,7 @@
 // the horizon (the flat path clips them), so it draws slightly fewer limb pixels.
 //
 //   shade-bench [repeats]   (default 20)
+#include "cli.hpp"
 #include "clock.hpp"
 #include "globe/elevation.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -61,14 +62,18 @@ void report(const char* name, double radius, std::vector<double>& ms, long pixel
         "    {\"case\": \"%s\", \"radius_px\": %.0f, \"median_ms\": %.3f, \"min_ms\": %.3f, "
         "\"max_ms\": %.3f, \"pixels\": %ld, \"ns_per_pixel\": %.1f, "
         "\"checksum\": \"%016llx\"}%s\n",
-        name, radius, m, ms.front(), ms.back(), pixels, m * 1.0e6 / pixels,
+        name, radius, m, ms.front(), ms.back(), pixels, m * 1.0e6 / static_cast<double>(pixels),
         static_cast<unsigned long long>(sum), last ? "" : ",");
 }
 
 } // namespace
 
 int main(int argc, char** argv) {
-    const int repeats = argc > 1 ? std::max(3, std::atoi(argv[1])) : 20;
+    int repeats = 20;
+    if (argc != 1 && (argc != 2 || !parse_int_arg(argv[1], 3, 1000, repeats))) {
+        std::fprintf(stderr, "usage: shade-bench [3..1000]\n");
+        return 2;
+    }
     const auto grid = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
     auto scene = grid ? TerrainScene::create(*grid) : std::nullopt;
     auto created = Framebuffer::create(640, 480);
@@ -84,7 +89,7 @@ int main(int argc, char** argv) {
         palette[i] = scene->color(static_cast<std::uint8_t>(i));
     }
     // Corner value: mean of the (up to four) cells meeting at the corner.
-    std::vector<double> corner_value((w + 1) * (h + 1));
+    std::vector<double> corner_value(static_cast<std::size_t>(w + 1) * (h + 1));
     for (std::uint32_t y = 0; y <= h; ++y) {
         for (std::uint32_t x = 0; x <= w; ++x) {
             double sum = 0;
@@ -132,7 +137,7 @@ int main(int argc, char** argv) {
 
         // Shaded path: own projection, quads with all four corners in front, visible on screen.
         std::vector<Quad> quads;
-        std::vector<double> sx((w + 1) * (h + 1)), sy(sx.size());
+        std::vector<double> sx(static_cast<std::size_t>(w + 1) * (h + 1)), sy(sx.size());
         std::vector<char> front(sx.size());
         for (std::uint32_t y = 0; y <= h; ++y) {
             for (std::uint32_t x = 0; x <= w; ++x) {
@@ -144,7 +149,7 @@ int main(int argc, char** argv) {
                 const std::size_t i = y * (w + 1) + x;
                 sx[i] = p.x;
                 sy[i] = p.y;
-                front[i] = v.z >= 0;
+                front[i] = static_cast<char>(v.z >= 0);
             }
         }
         for (std::uint32_t y = 0; y < h; ++y) {
