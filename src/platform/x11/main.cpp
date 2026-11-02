@@ -3,7 +3,7 @@
 // X11 front end: one window showing the globe. Sleeps until input or a one-shot wake, turns
 // X events into Msgs, runs update(), and renders only when update() asks for a redraw.
 //
-//   globe-x11 [--atlas FILE] [--size WxH] [--script TRACE [--exit-when-done]]
+//   globe-x11 [--atlas FILE] [--elevation FILE] [--size WxH] [--script TRACE [--exit-when-done]]
 //             [--idle-seconds N] [--verify-pixels] [--stats]
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
@@ -19,6 +19,7 @@
 #include <sys/resource.h>
 #include <sys/select.h>
 
+#include <array>
 #include <cerrno>
 #include <cstdint>
 #include <cstdio>
@@ -29,6 +30,7 @@
 
 #include "cli.hpp"
 #include "clock.hpp"
+#include "elevation_packs.hpp"
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
@@ -44,6 +46,8 @@ namespace {
 
 struct Options {
     const char* atlas_path = nullptr;
+    std::array<const char*, 3> elevation_paths{};
+    unsigned elevation_count = 0;
     const char* script_path = nullptr;
     int width = 640;
     int height = 480;
@@ -80,9 +84,11 @@ double ms_since(std::uint64_t t0) {
 
 class App {
   public:
-    App(Display* dpy, const Scene& scene, TerrainScene* terrain, const Options& opt)
-        : dpy_(dpy), scene_(scene), terrain_(terrain), opt_(opt),
-          model_(initial_model(opt.width, opt.height)) {}
+    App(Display* dpy, const Scene& scene, ElevationPacks& packs, const Options& opt)
+        : dpy_(dpy), scene_(scene), packs_(packs), opt_(opt),
+          model_(initial_model(opt.width, opt.height)) {
+        packs_.register_levels(model_);
+    }
 
     ~App() {
         if (image_ != nullptr) {
@@ -179,6 +185,8 @@ class App {
         std::printf("  \"refine_bands\": %zu,\n  \"refine_work_ms\": %.4f,\n", refine_bands_,
                     refine_work_ms_);
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
+        std::printf("  \"elevation_pack_count\": %u,\n  \"terrain_cache_bytes\": %zu,\n",
+                    packs_.count(), packs_.bytes());
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -272,9 +280,10 @@ class App {
         if (model_.stage == QualityStage::Refine &&
             (old_stage != QualityStage::Refine || std::holds_alternative<Repaint>(msg))) {
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
-                                quality_for(model_), model_.generation, terrain_);
+                                quality_for(model_), model_.generation, packs_.for_model(model_));
         }
-        if (fx.redraw && std::holds_alternative<Resize>(msg)) {
+        if (fx.redraw && (std::holds_alternative<Resize>(msg) ||
+                          std::holds_alternative<RegisterElevation>(msg))) {
             fx.wake_after_ms = update(model_, Tick{monotonic_ns() / 1000000ULL}).wake_after_ms;
         }
         need_redraw_ |= fx.redraw;
@@ -592,7 +601,7 @@ class App {
 
     Display* dpy_;
     const Scene& scene_;
-    TerrainScene* terrain_;
+    ElevationPacks& packs_;
     Options opt_;
     Model model_;
     Window win_ = 0;
@@ -633,6 +642,12 @@ int main(int argc, char** argv) {
                 std::fprintf(stderr, "bad --size\n");
                 return 2;
             }
+        } else if (a == "--elevation" && i + 1 < argc) {
+            if (opt.elevation_count == opt.elevation_paths.size()) {
+                std::fprintf(stderr, "too many elevation packs\n");
+                return 2;
+            }
+            opt.elevation_paths[opt.elevation_count++] = argv[++i];
         } else if (a == "--script" && i + 1 < argc) {
             opt.script_path = argv[++i];
         } else if (a == "--exit-when-done") {
@@ -647,9 +662,10 @@ int main(int argc, char** argv) {
         } else if (a == "--stats") {
             opt.stats = true;
         } else {
-            std::fprintf(stderr,
-                         "usage: globe-x11 [--atlas FILE] [--size WxH] [--script TRACE "
-                         "[--exit-when-done]] [--idle-seconds N] [--verify-pixels] [--stats]\n");
+            std::fprintf(
+                stderr,
+                "usage: globe-x11 [--atlas FILE] [--elevation FILE] [--size WxH] [--script TRACE "
+                "[--exit-when-done]] [--idle-seconds N] [--verify-pixels] [--stats]\n");
             return 2;
         }
     }
@@ -683,14 +699,14 @@ int main(int argc, char** argv) {
         return 2;
     }
 
-    const auto elevation = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
-    if (!elevation) {
-        std::fprintf(stderr, "globe-x11: invalid embedded elevation\n");
-        return 1;
-    }
-    auto terrain = TerrainScene::create(*elevation);
-    if (!terrain)
-        std::fprintf(stderr, "globe-x11: terrain cache unavailable; showing outlines\n");
+    ElevationPacks packs;
+    if (!packs.initialize(kEmbeddedElevationData, kEmbeddedElevationSize))
+        std::fprintf(stderr, "globe-x11: %s; showing outlines\n", packs.error());
+    for (unsigned i = 0; i < opt.elevation_count; ++i)
+        if (!packs.import_file(opt.elevation_paths[i])) {
+            std::fprintf(stderr, "globe-x11: %s\n", packs.error());
+            return 2;
+        }
     Display* dpy = XOpenDisplay(nullptr);
     if (dpy == nullptr) {
         std::fprintf(stderr, "globe-x11: cannot open display (is DISPLAY set and authorized?)\n");
@@ -698,7 +714,7 @@ int main(int argc, char** argv) {
     }
     int rc = 0;
     {
-        App app(dpy, *scene, terrain ? &*terrain : nullptr, opt);
+        App app(dpy, *scene, packs, opt);
         app.set_script(opt.script_path != nullptr);
         if (!app.init()) {
             rc = 1;

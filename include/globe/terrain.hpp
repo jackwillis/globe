@@ -18,6 +18,7 @@ struct CellBands {
 // outlive this cache. Only the job holding token() may use its projection workspace.
 class TerrainScene {
   public:
+    static std::size_t required_bytes(const Elevation& grid);
     static std::optional<TerrainScene> create(const Elevation& grid);
     TerrainScene(TerrainScene&&) noexcept = default;
     TerrainScene& operator=(TerrainScene&&) noexcept = default;

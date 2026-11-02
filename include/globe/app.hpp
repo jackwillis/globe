@@ -43,7 +43,12 @@ enum class Command : std::uint8_t {
     Quit,
 };
 
+constexpr unsigned kElevationLevels = 4;
+struct ElevationLevel {
+    std::uint32_t width = 0, height = 0;
+};
 struct Model {
+    std::array<ElevationLevel, kElevationLevels> elevations{};
     Camera camera;
     Layers layers;
     DragMode drag_mode;
@@ -92,8 +97,13 @@ struct Tick {
     std::uint64_t time_ms;
 };
 
-using Msg =
-    std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint, Tick>;
+struct RegisterElevation {
+    unsigned level;
+    std::uint32_t width, height;
+};
+
+using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint,
+                         Tick, RegisterElevation>;
 
 struct Effects {
     bool redraw = false;

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/app.hpp"
+#include "globe/elevation.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -177,7 +178,22 @@ Layers effective_layers(const Model& model) {
 
 RenderQuality quality_for(const Model& model) {
     const bool fine = model.stage == QualityStage::Refine || model.stage == QualityStage::Decorate;
-    return {fine ? 1.5 : 3.0, fine};
+    unsigned selected = 0;
+    std::uint32_t best_width = 0;
+    bool meets_target = false;
+    for (unsigned i = 0; i < kElevationLevels; ++i) {
+        const auto width = model.elevations[i].width;
+        if (width == 0)
+            continue;
+        const bool meets = model.camera.radius_px * (360.0 * kDegToRad) / width <= 4.0;
+        if ((meets && (!meets_target || width <= best_width)) ||
+            (!meets && !meets_target && width >= best_width)) {
+            selected = i;
+            best_width = width;
+            meets_target = meets;
+        }
+    }
+    return {fine ? 1.5 : 3.0, fine, selected};
 }
 
 ToolbarState toolbar_state(const Model& model) {
@@ -330,6 +346,20 @@ Effects update(Model& model, const Msg& msg) {
             } else {
                 model.stage = QualityStage::Refine;
             }
+        }
+    } else if (const auto* pack = std::get_if<RegisterElevation>(&msg)) {
+        if (pack->level < kElevationLevels && pack->height > 0 && pack->width <= 32768 &&
+            pack->width == 2 * static_cast<std::uint64_t>(pack->height) &&
+            static_cast<std::uint64_t>(pack->width) * pack->height <=
+                static_cast<std::uint64_t>(kElevationMaxCells) &&
+            (model.elevations[pack->level].width != pack->width ||
+             model.elevations[pack->level].height != pack->height)) {
+            model.elevations[pack->level] = {pack->width, pack->height};
+            ++model.generation;
+            model.stage = QualityStage::Moving;
+            model.stage_needs_time = true;
+            fx.redraw = true;
+            fx.wake_after_ms = kSettleDelayMs;
         }
     } else if (std::holds_alternative<Repaint>(msg)) {
         fx.redraw = true;

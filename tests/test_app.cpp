@@ -451,6 +451,31 @@ void test_resize_and_expose() {
     CHECK(d.dragging && d.last_input_ms == 5);
 }
 
+void test_elevation_selection() {
+    Model m = fresh();
+    CHECK(update(m, RegisterElevation{0, 360, 180}).redraw);
+    CHECK(update(m, RegisterElevation{1, 720, 360}).redraw);
+    update(m, RegisterElevation{2, 180, 90});
+    m.stage = QualityStage::Refine;
+    m.camera.radius_px = 80;
+    CHECK(quality_for(m).elevation_level == 2);
+    m.camera.radius_px = 180;
+    CHECK(quality_for(m).elevation_level == 0);
+    m.camera.radius_px = 400;
+    CHECK(quality_for(m).elevation_level == 1);
+    m.camera.radius_px = 10000;
+    CHECK(quality_for(m).elevation_level == 1); // finest available when all exceed target error
+    const auto before = m.generation;
+    CHECK(!update(m, RegisterElevation{4, 720, 360}).redraw);
+    CHECK(!update(m, RegisterElevation{1, 721, 360}).redraw);
+    CHECK(m.generation == before);
+    char buffer[100];
+    const Msg msg = RegisterElevation{3, 1080, 540};
+    const auto n = format_message(msg, buffer, sizeof buffer);
+    const auto back = parse_message(std::string_view(buffer, n));
+    CHECK(back && std::holds_alternative<RegisterElevation>(*back));
+}
+
 void test_quality_profile_and_generation() {
     Model m = fresh();
     const auto moving = quality_for(m);
@@ -632,6 +657,11 @@ void test_trace_text_round_trip() {
 
 void test_trace_parse_rejects_malformed() {
     const char* bad[] = {
+        "elevation 4 360 180",
+        "elevation 1 361 180",
+        "elevation 1 0 0",
+        "elevation 1 32768 16384",
+        "elevation 1 360 180 extra",
         "",
         "   ",
         "# comment",
@@ -807,6 +837,7 @@ int main(int argc, char** argv) {
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();
+    test_elevation_selection();
     test_quality_profile_and_generation();
     test_quality_wakes();
     test_stage_trace_replay();

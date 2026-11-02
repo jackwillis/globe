@@ -32,6 +32,7 @@ target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion 
 # Platform-neutral helpers shared by every front end (pixel layout conversion, timing summaries,
 # command-line parsing). No OS headers, so they are tested anywhere and reusable for Mac OS 9.
 add_library(globe_platform_common
+  src/platform/common/elevation_packs.cpp
   src/platform/common/pixel_format.cpp
   src/platform/common/frame_stats.cpp
   src/platform/common/cli.cpp)
@@ -96,11 +97,11 @@ if(GLOBE_BUILD_TESTS)
     set_tests_properties(${name} PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   endforeach()
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
-  foreach(name pixel_format frame_stats cli)
+  foreach(name pixel_format frame_stats cli elevation_packs)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_platform_common globe_clock_posix)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
-    add_test(NAME ${name} COMMAND test_${name})
+    add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
   endforeach()
   if(TARGET globe-x11)
     find_program(XVFB_RUN xvfb-run)

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/trace.hpp"
+#include "globe/elevation.hpp"
 
 #include <cmath>
 #include <cstdio>
@@ -214,6 +215,16 @@ std::optional<Msg> parse_message(std::string_view line) {
                 }
             }
         }
+    } else if (verb == "elevation" && n == 4) {
+        int level = 0, width = 0, height = 0;
+        if (parse_int(tok[1], 0, static_cast<int>(kElevationLevels) - 1, level) &&
+            parse_int(tok[2], 1, 32768, width) && parse_int(tok[3], 1, 16384, height) &&
+            width == 2 * height &&
+            static_cast<std::uint64_t>(width) * height <=
+                static_cast<std::uint64_t>(kElevationMaxCells))
+            return Msg{RegisterElevation{static_cast<unsigned>(level),
+                                         static_cast<std::uint32_t>(width),
+                                         static_cast<std::uint32_t>(height)}};
     } else if (verb == "resize" && n == 3) {
         int w = 0;
         int h = 0;
@@ -262,6 +273,13 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
     } else if (const auto* tick = std::get_if<Tick>(&msg)) {
         w.text("tick ");
         w.u64(tick->time_ms);
+    } else if (const auto* pack = std::get_if<RegisterElevation>(&msg)) {
+        w.text("elevation ");
+        w.u64(pack->level);
+        w.text(" ");
+        w.u64(pack->width);
+        w.text(" ");
+        w.u64(pack->height);
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
         w.text("resize ");
         w.integer(resize->width);

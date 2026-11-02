@@ -69,10 +69,14 @@ Rgb565 hypsometric_color(std::int16_t meters) {
         }
     return rgb565(255, 255, 255);
 }
+std::size_t TerrainScene::required_bytes(const Elevation& grid) {
+    return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) * 2 * sizeof(Vec3) +
+           static_cast<std::size_t>(grid.width()) * grid.height() * sizeof(CellBands) + 512;
+}
 std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
     const auto corners = static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1);
     const auto cells = static_cast<std::size_t>(grid.width()) * grid.height();
-    if (corners * 2 * sizeof(Vec3) + cells * sizeof(CellBands) + 512 > kTerrainCacheBudget)
+    if (required_bytes(grid) > kTerrainCacheBudget)
         return std::nullopt;
     std::unique_ptr<Vec3[]> world(new (std::nothrow) Vec3[corners]),
         projected(new (std::nothrow) Vec3[corners]);

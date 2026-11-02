@@ -3,8 +3,8 @@
 // Headless benchmark: replays a recorded message trace through update() and render_globe(),
 // timing each frame, and prints one JSON object. No display, window system or network.
 //
-//   globe-bench [--atlas FILE] [--size WxH] [--repeat N] [--convert] [--layers gcb] [--reference]
-//   TRACE
+//   globe-bench [--atlas FILE] [--elevation FILE] [--size WxH] [--repeat N] [--convert] [--layers
+//   gcb] [--reference] TRACE
 //
 // The embedded atlas is used unless --atlas is given. With --convert each frame is also packed
 // into a 32-bit X-style pixel layout, to include that cost. With --layers, only the listed layers
@@ -14,6 +14,7 @@
 #include <sys/resource.h>
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -23,6 +24,7 @@
 
 #include "cli.hpp"
 #include "clock.hpp"
+#include "elevation_packs.hpp"
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
@@ -75,6 +77,8 @@ PixelFormat host_x_format() {
 int main(int argc, char** argv) {
     const std::uint64_t t_start = monotonic_ns();
     const char* atlas_path = nullptr;
+    std::array<const char*, 3> elevation_paths{};
+    unsigned elevation_count = 0;
     const char* dump_path = nullptr;
     const char* trace_path = nullptr;
     int width = 640;
@@ -88,6 +92,10 @@ int main(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         if (std::strcmp(argv[i], "--atlas") == 0 && i + 1 < argc) {
             atlas_path = argv[++i];
+        } else if (std::strcmp(argv[i], "--elevation") == 0 && i + 1 < argc) {
+            if (elevation_count == elevation_paths.size())
+                return 2;
+            elevation_paths[elevation_count++] = argv[++i];
         } else if (std::strcmp(argv[i], "--size") == 0 && i + 1 < argc) {
             if (!parse_size_arg(argv[++i], kMaxViewportDimension, width, height)) {
                 std::fprintf(stderr, "bad --size\n");
@@ -125,8 +133,10 @@ int main(int argc, char** argv) {
         } else if (argv[i][0] != '-' && trace_path == nullptr) {
             trace_path = argv[i];
         } else {
-            std::fprintf(stderr, "usage: globe-bench [--atlas FILE] [--size WxH] [--repeat N] "
-                                 "[--convert] [--layers gcb] TRACE\n");
+            std::fprintf(
+                stderr,
+                "usage: globe-bench [--atlas FILE] [--elevation FILE] [--size WxH] [--repeat N] "
+                "[--convert] [--layers gcb] TRACE\n");
             return 2;
         }
     }
@@ -184,12 +194,14 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "scene allocation failed\n");
         return 2;
     }
-    const auto elevation = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
-    if (!elevation)
+    ElevationPacks packs;
+    if (!packs.initialize(kEmbeddedElevationData, kEmbeddedElevationSize))
         return 2;
-    auto terrain = TerrainScene::create(*elevation);
-    if (!terrain)
-        return 2;
+    for (unsigned i = 0; i < elevation_count; ++i)
+        if (!packs.import_file(elevation_paths[i])) {
+            std::fprintf(stderr, "globe-bench: %s\n", packs.error());
+            return 2;
+        }
     auto fb = Framebuffer::create(width, height);
     if (!fb) {
         std::fprintf(stderr, "framebuffer allocation failed\n");
@@ -214,6 +226,7 @@ int main(int argc, char** argv) {
     std::vector<double> convert_ms;
     std::vector<double> frame_segments;
     std::vector<double> frame_lines;
+    unsigned selected_level = 0;
     double refine_ms = 0.0;
     double max_refine_step_ms = 0.0;
     unsigned refine_steps = 0;
@@ -222,6 +235,7 @@ int main(int argc, char** argv) {
 
     for (int rep = 0; rep < repeat; ++rep) {
         Model model = initial_model(width, height);
+        packs.register_levels(model);
         if (force_layers) {
             model.layers = forced;
         }
@@ -263,10 +277,11 @@ int main(int argc, char** argv) {
                 break;
             }
         }
+        selected_level = quality_for(model).elevation_level;
         if (refine) {
             model.stage = QualityStage::Refine;
             RefinementJob job(model.camera, *scene, kDefaultPalette, effective_layers(model),
-                              quality_for(model), model.generation, &*terrain);
+                              quality_for(model), model.generation, packs.for_model(model));
             const auto started = monotonic_ns();
             while (job.active()) {
                 const auto step_start = monotonic_ns();
@@ -333,7 +348,9 @@ int main(int argc, char** argv) {
     std::printf("  \"peak_rss_kb\": %ld,\n", usage.ru_maxrss);
     std::printf("  \"frame_buffer_bytes\": %zu,\n", fb->byte_size());
     std::printf("  \"frames\": %zu,\n", render_ms.size());
-    std::printf("  \"terrain_cache_bytes\": %zu,\n", terrain->bytes());
+    std::printf("  \"elevation_pack_count\": %u,\n  \"selected_elevation_level\": %u,\n",
+                packs.count(), selected_level);
+    std::printf("  \"terrain_cache_bytes\": %zu,\n", packs.bytes());
     std::printf("  \"refine_ms\": %.4f,\n  \"max_refine_step_ms\": %.4f,\n"
                 "  \"refine_steps\": %u,\n",
                 refine_ms / repeat, max_refine_step_ms, refine_steps);

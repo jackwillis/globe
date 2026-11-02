@@ -47,7 +47,7 @@ def build(source,output,cell_degrees=1.0,expected_sha256=SOURCE_SHA256):
         raise ValueError('resolution must divide global extent and fit decoder budget')
     cells=bytearray()
     table=lookup()
-    with h5py.File(source,'r') as f:
+    with h5py.File(source,'r',rdcc_nbytes=64*1024*1024) as f:
         z=f['z']; lat=f['lat'][:]; lon=f['lon'][:]
         if z.shape!=(10800,21600) or z.shape!=(len(lat),len(lon)):
             raise ValueError('unexpected source grid')

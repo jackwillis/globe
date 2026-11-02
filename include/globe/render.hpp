@@ -21,6 +21,7 @@ class TerrainScene;
 struct RenderQuality {
     double max_chord_px = 3.0;
     bool terrain = false;
+    unsigned elevation_level = 0;
 };
 
 struct Palette {
