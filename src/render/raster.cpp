@@ -78,19 +78,28 @@ void walk(std::int64_t a0, std::int64_t b0, std::int64_t a1, std::int64_t b1, st
     }
 }
 
+// Call only after finite input has been confined to the safety box. Truncation is floor for
+// nonnegative values; negative nonintegers need one more step toward minus infinity.
+std::int64_t floor_coordinate(double v) {
+    const auto truncated = static_cast<std::int64_t>(v);
+    return truncated - (v < static_cast<double>(truncated) ? 1 : 0);
+}
+
 } // namespace
 
 void draw_line(Framebuffer& fb, double x0, double y0, double x1, double y1, Rgb565 color) {
     if (!(std::isfinite(x0) && std::isfinite(y0) && std::isfinite(x1) && std::isfinite(y1))) {
         return;
     }
-    if (!clip_to_box(x0, y0, x1, y1)) {
+    const bool inside = x0 >= -kBox && x0 <= kBox && y0 >= -kBox && y0 <= kBox && x1 >= -kBox &&
+                        x1 <= kBox && y1 >= -kBox && y1 <= kBox;
+    if (!inside && !clip_to_box(x0, y0, x1, y1)) {
         return;
     }
-    std::int64_t ax = static_cast<std::int64_t>(std::floor(x0));
-    std::int64_t ay = static_cast<std::int64_t>(std::floor(y0));
-    std::int64_t bx = static_cast<std::int64_t>(std::floor(x1));
-    std::int64_t by = static_cast<std::int64_t>(std::floor(y1));
+    std::int64_t ax = floor_coordinate(x0);
+    std::int64_t ay = floor_coordinate(y0);
+    std::int64_t bx = floor_coordinate(x1);
+    std::int64_t by = floor_coordinate(y1);
     const auto absval = [](std::int64_t v) { return v < 0 ? -v : v; };
     if (absval(bx - ax) >= absval(by - ay)) {
         if (ax > bx) { // canonical direction: a line and its reverse draw the same pixels

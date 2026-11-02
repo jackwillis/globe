@@ -148,6 +148,35 @@ void test_line_clipping_is_exact() {
     }
 }
 
+void test_line_integer_boundaries() {
+    Framebuffer fb = make_fb(8, 8);
+    // Values on either side of zero and integer boundaries: truncation is not floor.
+    const double ends[] = {-0.00001, 0.0, 0.99999, 1.0, 1.00001, 6.99999, 7.0};
+    for (double start : ends) {
+        for (double end : ends) {
+            fb.clear(0);
+            draw_line(fb, start, 2.5, end, 2.5, kInk);
+            const int lo = static_cast<int>(std::floor(std::min(start, end)));
+            const int hi = static_cast<int>(std::floor(std::max(start, end)));
+            for (int x = 0; x < fb.width(); ++x) {
+                CHECK((fb.pixel(x, 2) == kInk) == (x >= lo && x <= hi));
+            }
+        }
+    }
+    // Both endpoints outside the safety box must still be clipped; division and conversion
+    // remain bounded. Cover each axis and reversed endpoints.
+    for (bool reverse : {false, true}) {
+        const double a = reverse ? 1e9 : -1e9;
+        const double b = -a;
+        fb.clear(0);
+        draw_line(fb, a, 3.5, b, 3.5, kInk);
+        CHECK(count(fb, kInk) == 8);
+        fb.clear(0);
+        draw_line(fb, 3.5, a, 3.5, b, kInk);
+        CHECK(count(fb, kInk) == 8);
+    }
+}
+
 void test_line_extremes() {
     Framebuffer fb = make_fb(16, 8);
     fb.clear(0);
@@ -587,6 +616,7 @@ int main(int argc, char** argv) {
     test_line_exact_pixels();
     test_line_symmetry_and_connectivity();
     test_line_clipping_is_exact();
+    test_line_integer_boundaries();
     test_line_extremes();
     test_fill_disc();
     test_golden_frames(root);
