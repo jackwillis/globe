@@ -104,12 +104,16 @@ bool finite(double x, double y) {
     return std::isfinite(x) && std::isfinite(y);
 }
 
-double distance(ScreenPoint a, ScreenPoint b) {
-    return std::hypot(a.x - b.x, a.y - b.y);
+// Squared distances: no square root (slow on some targets) and no std::hypot, which Retro68's
+// math library lacks.
+double distance_squared(ScreenPoint a, ScreenPoint b) {
+    const double dx = a.x - b.x;
+    const double dy = a.y - b.y;
+    return dx * dx + dy * dy;
 }
 
 bool on_globe(const Camera& cam, ScreenPoint p) {
-    return distance(p, {cam.center_x, cam.center_y}) <= cam.radius_px;
+    return distance_squared(p, {cam.center_x, cam.center_y}) <= cam.radius_px * cam.radius_px;
 }
 
 } // namespace
@@ -152,9 +156,10 @@ Effects update(Model& model, const Msg& msg) {
     if (const auto* down = std::get_if<PointerDown>(&msg)) {
         if (finite(down->x, down->y)) {
             const ScreenPoint p{down->x, down->y};
-            const bool second_click = model.click_valid && down->time_ms >= model.click_ms &&
-                                      down->time_ms - model.click_ms <= kDoubleClickMs &&
-                                      distance(p, model.click_pos) <= kDoubleClickSlopPx;
+            const bool second_click =
+                model.click_valid && down->time_ms >= model.click_ms &&
+                down->time_ms - model.click_ms <= kDoubleClickMs &&
+                distance_squared(p, model.click_pos) <= kDoubleClickSlopPx * kDoubleClickSlopPx;
             model.last_input_ms = down->time_ms;
             if (second_click && on_globe(model.camera, p)) {
                 // Bring the clicked point to the center, then zoom in on it.
@@ -178,7 +183,8 @@ Effects update(Model& model, const Msg& msg) {
     } else if (const auto* move = std::get_if<PointerMove>(&msg)) {
         if (model.dragging && finite(move->x, move->y)) {
             const ScreenPoint to{move->x, move->y};
-            if (model.click_valid && distance(to, model.click_pos) > kDoubleClickSlopPx) {
+            if (model.click_valid &&
+                distance_squared(to, model.click_pos) > kDoubleClickSlopPx * kDoubleClickSlopPx) {
                 model.click_valid = false; // it is a drag, not a click
             }
             fx = set_camera(model, drag_rotate(model.camera, model.drag_last, to));
