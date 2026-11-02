@@ -137,3 +137,36 @@ these files yet; they are recorded so the later builder can verify them.
   is small enough to use as a build-time input; it never ships to the target.
 - The ZIPs are not committed. They are kept at `~/scratch/globe-data/naturalearth/` on the
   development laptop.
+
+## Lakes source check — 2026-11-01 (not yet used by any builder)
+
+Candidate source for water cells in the elevation pack (the Great Lakes are missing from the 110m
+coastline and are one cell or less at 1 degree): Natural Earth **lakes** polygons, physical theme,
+version **5.0.0** at all three detail levels. Public domain (same Natural Earth terms as the other
+layers). Nothing reads these files yet.
+
+| Level | ZIP bytes | Source ZIP SHA-256 | Records | Parts | Points |
+| --- | --- | --- | --- | --- | --- |
+| 1:110m | 23,622 | `f2eed3c738a93010770acb0ba44273ea6a83b053641588bc902d9d6fd1cdafcb` | 24 | 24 | 465 |
+| 1:50m | 252,615 | `f28d42c286d96b57a17aac2cbeb432f8c65532c20063495711fbc64e24666df3` | 412 | 465 | 19,778 |
+| 1:10m | 2,349,685 | `0803a06f9c3cb4671d89b68c48b142aad9366ba40f665245e12a913fbc61722a` | 1,355 | 1,597 | 162,852 |
+
+- URLs: `https://naturalearth.s3.amazonaws.com/{110m,50m,10m}_physical/ne_{110m,50m,10m}_lakes.zip`
+- Measured from the complete downloads: byte counts, SHA-256, shape type 5 (polygon) at every level,
+  and record, part and point counts read from the `.shp`. Names come from the `.dbf` `name` field.
+- The five Great Lakes are present at every level, one record each (a part is a ring; islands are
+  holes, so use even-odd fill). Bounding boxes agree to about 0.1 degree across levels. Points per
+  lake at 50m: Superior 446, Michigan 313, Huron 583, Erie 172, Ontario 229 (110m: 31, 32, 32, 19,
+  17; 10m: 1311, 785, 1540, 404, 548). Lake Victoria and Lake Baikal are also present at every level.
+  **No record named Caspian exists** at any level; the Caspian Sea is not in this layer.
+- **Rasterization estimate (measured, one-off Python, not a builder):** the five Great Lakes at 50m
+  against 1-degree cells with edges on whole degrees, sampling 16 x 16 points per cell and filling by
+  even-odd. 67 cells touch a Great Lake polygon. **29 cells are more than 50% water** by lon/lat
+  area (not cos-latitude weighted); 30 cells have their center inside a polygon. The two rules
+  disagree on 5 cells (lon/lat of the cell's west-south corner: -89/48, -88/44, -80/42, -80/43,
+  -77/43), so the choice of rule changes the picture slightly. Largest cells are nearly all water:
+  Superior at -87/47 is 100%, -88/47 is 98%, -89/47 is 95%.
+- Not measured: how lakes beyond the Great Lakes rasterize, the effect on the other lakes at 1
+  degree, whether the elevation file already shows the Great Lakes as water, and any builder cost.
+- The ZIPs are not committed; they are kept at `~/scratch/globe-data/naturalearth/` on the
+  development laptop. 50m (about 253 KB) is the likely build-time input; it never ships to the target.
