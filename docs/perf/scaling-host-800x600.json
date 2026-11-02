@@ -1,0 +1,60 @@
+{
+  "tool": "globe-bench",
+  "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "optimized": "yes",
+  "viewport": "800x600",
+  "layers": "as traced",
+  "trace_messages": 376,
+  "repeats": 2,
+  "atlas_bytes": 35068,
+  "atlas_polylines": 467,
+  "atlas_points": 8120,
+  "atlas_parse_ms": 0.0727,
+  "renderer": "scene",
+  "scene_build_ms": 0.4695,
+  "scene_bytes": 241912,
+  "first_frame_ms_since_main": 6.0522,
+  "total_ms": 507.0,
+  "timer_overhead_ns": 20,
+  "peak_rss_kb": 12516,
+  "frame_buffer_bytes": 960000,
+  "frames": 750,
+  "terrain_cache_bytes": 3396080,
+  "refine_ms": 0.0,
+  "max_refine_step_ms": 0.0,
+  "refine_steps": 0,
+  "render_ms": {
+    "count": 750,
+    "min": 0.1431,
+    "mean": 0.3706,
+    "p50": 0.3824,
+    "p95": 0.4537,
+    "max": 0.9029
+  },
+  "convert_ms": {
+    "count": 750,
+    "min": 0.2395,
+    "mean": 0.2973,
+    "p50": 0.285,
+    "p95": 0.3889,
+    "max": 0.6678
+  },
+  "visible_segments_per_frame": {
+    "count": 750,
+    "min": 1781.0,
+    "mean": 4811.5067,
+    "p50": 5106.0,
+    "p95": 5751.0,
+    "max": 5906.0
+  },
+  "lines_per_frame": {
+    "count": 750,
+    "min": 2266.0,
+    "mean": 6732.04,
+    "p50": 7099.0,
+    "p95": 8138.0,
+    "max": 12475.0
+  },
+  "frame_checksum": "a7a7de843b3e3b43",
+  "limits": "render and optional pixel packing only; no X11 submission, no display, no idle CPU; peak_rss_kb is ru_maxrss as the OS reports it (kilobytes on Linux and NetBSD); times are wall clock, not CPU time"
+}
