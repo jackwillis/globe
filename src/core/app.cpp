@@ -15,7 +15,7 @@ constexpr LatLon kHome = {20.0, 0.0};
 constexpr double kHomeRadiusFraction = 0.4; // of the shorter viewport side
 constexpr double kMinRadiusFraction = 0.2;
 constexpr double kMaxRadiusFraction = 8.0;
-constexpr double kZoomStep = 1.1;  // per wheel step or key press
+constexpr double kZoomStep = 1.1;  // per wheel step or command press
 constexpr int kMaxWheelSteps = 40; // 1.1^40 > 40: one message can cross the whole zoom range
 constexpr double kMaxTurntableLatitude = 89.9; // keeps the longitude defined at the pole
 constexpr double kArrowStepDegrees = 10.0;
@@ -96,49 +96,49 @@ Effects set_camera(Model& model, const Camera& next) {
     return fx;
 }
 
-Effects on_key(Model& model, Key key) {
+Effects on_command(Model& model, Command command) {
     const Camera& cam = model.camera;
     const double d = cam.radius_px * kSin10Degrees;
     const ScreenPoint c{cam.center_x, cam.center_y};
     Effects fx;
     const bool turntable = model.drag_mode == DragMode::Turntable;
-    switch (key) {
-    case Key::Left:
+    switch (command) {
+    case Command::Left:
         return set_camera(model, turntable ? turntable_step(cam, kArrowStepDegrees, 0.0)
                                            : drag_rotate(cam, c, {c.x - d, c.y}));
-    case Key::Right:
+    case Command::Right:
         return set_camera(model, turntable ? turntable_step(cam, -kArrowStepDegrees, 0.0)
                                            : drag_rotate(cam, c, {c.x + d, c.y}));
-    case Key::Up:
+    case Command::Up:
         return set_camera(model, turntable ? turntable_step(cam, 0.0, -kArrowStepDegrees)
                                            : drag_rotate(cam, c, {c.x, c.y - d}));
-    case Key::Down:
+    case Command::Down:
         return set_camera(model, turntable ? turntable_step(cam, 0.0, kArrowStepDegrees)
                                            : drag_rotate(cam, c, {c.x, c.y + d}));
-    case Key::AlignNorth:
+    case Command::AlignNorth:
         return set_camera(model, north_up_camera(cam, center_of(cam)));
-    case Key::ToggleDragMode:
+    case Command::ToggleDragMode:
         model.drag_mode = turntable ? DragMode::Trackball : DragMode::Turntable;
         return fx;
-    case Key::ZoomIn:
+    case Command::ZoomIn:
         return set_camera(model, zoom_camera(cam, 1));
-    case Key::ZoomOut:
+    case Command::ZoomOut:
         return set_camera(model, zoom_camera(cam, -1));
-    case Key::Reset:
+    case Command::Reset:
         return set_camera(model, home_camera(cam.width, cam.height));
-    case Key::ToggleGraticule:
+    case Command::ToggleGraticule:
         model.layers.graticule = !model.layers.graticule;
         fx.redraw = true;
         return fx;
-    case Key::ToggleBorders:
+    case Command::ToggleBorders:
         model.layers.borders = !model.layers.borders;
         fx.redraw = true;
         return fx;
-    case Key::ToggleCoastlines:
+    case Command::ToggleCoastlines:
         model.layers.coastlines = !model.layers.coastlines;
         fx.redraw = true;
         return fx;
-    case Key::Quit:
+    case Command::Quit:
         fx.quit = true;
         return fx;
     }
@@ -177,6 +177,23 @@ Layers effective_layers(const Model& model) {
         layers.graticule = false;
     }
     return layers;
+}
+
+ToolbarState toolbar_state(const Model& model) {
+    ToolbarState state{};
+    const auto index = [](Command command) { return static_cast<std::size_t>(command); };
+    state[index(Command::ToggleGraticule)].checked = model.layers.graticule;
+    state[index(Command::ToggleBorders)].checked = model.layers.borders;
+    state[index(Command::ToggleCoastlines)].checked = model.layers.coastlines;
+    state[index(Command::ToggleDragMode)].checked = model.drag_mode == DragMode::Trackball;
+    // World north is +Y. Its screen projection must point up, with no sideways component.
+    state[index(Command::AlignNorth)].enabled =
+        std::fabs(model.camera.right.y) > 1e-12 || model.camera.up.y < 0.0;
+    state[index(Command::ZoomIn)].enabled =
+        model.camera.radius_px < max_radius_px(model.camera.width, model.camera.height);
+    state[index(Command::ZoomOut)].enabled =
+        model.camera.radius_px > min_radius_px(model.camera.width, model.camera.height);
+    return state;
 }
 
 Model initial_model(int width, int height) {
@@ -255,9 +272,9 @@ Effects update(Model& model, const Msg& msg) {
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
         fx = set_camera(model, zoom_camera(model.camera, wheel->steps));
         model.last_input_ms = wheel->time_ms;
-    } else if (const auto* key = std::get_if<KeyDown>(&msg)) {
-        fx = on_key(model, key->key);
-        model.last_input_ms = key->time_ms;
+    } else if (const auto* command = std::get_if<CommandIssued>(&msg)) {
+        fx = on_command(model, command->command);
+        model.last_input_ms = command->time_ms;
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
         if (resize->width >= 1 && resize->height >= 1 && resize->width <= kMaxViewportDimension &&
             resize->height <= kMaxViewportDimension &&

@@ -14,25 +14,25 @@ namespace {
 constexpr std::size_t kMaxLine = 200;
 constexpr std::size_t kMaxTokens = 6;
 
-struct KeyEntry {
+struct CommandEntry {
     const char* name;
-    Key key;
+    Command command;
 };
 
-constexpr KeyEntry kKeys[] = {
-    {"left", Key::Left},
-    {"right", Key::Right},
-    {"up", Key::Up},
-    {"down", Key::Down},
-    {"zoom_in", Key::ZoomIn},
-    {"zoom_out", Key::ZoomOut},
-    {"reset", Key::Reset},
-    {"toggle_graticule", Key::ToggleGraticule},
-    {"toggle_borders", Key::ToggleBorders},
-    {"toggle_coastlines", Key::ToggleCoastlines},
-    {"align_north", Key::AlignNorth},
-    {"toggle_drag_mode", Key::ToggleDragMode},
-    {"quit", Key::Quit},
+constexpr CommandEntry kCommands[] = {
+    {"left", Command::Left},
+    {"right", Command::Right},
+    {"up", Command::Up},
+    {"down", Command::Down},
+    {"zoom_in", Command::ZoomIn},
+    {"zoom_out", Command::ZoomOut},
+    {"reset", Command::Reset},
+    {"toggle_graticule", Command::ToggleGraticule},
+    {"toggle_borders", Command::ToggleBorders},
+    {"toggle_coastlines", Command::ToggleCoastlines},
+    {"align_north", Command::AlignNorth},
+    {"toggle_drag_mode", Command::ToggleDragMode},
+    {"quit", Command::Quit},
 };
 
 // Splits a NUL-terminated copy of the line in place; returns the token count, or kMaxTokens + 1
@@ -159,9 +159,9 @@ class Writer {
 
 } // namespace
 
-const char* key_name(Key key) {
-    for (const KeyEntry& e : kKeys) {
-        if (e.key == key) {
+const char* command_name(Command command) {
+    for (const CommandEntry& e : kCommands) {
+        if (e.command == command) {
             return e.name;
         }
     }
@@ -205,9 +205,9 @@ std::optional<Msg> parse_message(std::string_view line) {
         }
     } else if (verb == "key" && n == 3) {
         if (parse_u64(tok[1], t)) {
-            for (const KeyEntry& e : kKeys) {
+            for (const CommandEntry& e : kCommands) {
                 if (std::strcmp(tok[2], e.name) == 0) {
-                    return Msg{KeyDown{t, e.key}};
+                    return Msg{CommandIssued{t, e.command}};
                 }
             }
         }
@@ -251,11 +251,11 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
         w.u64(wheel->time_ms);
         w.text(" ");
         w.integer(wheel->steps);
-    } else if (const auto* key = std::get_if<KeyDown>(&msg)) {
+    } else if (const auto* key = std::get_if<CommandIssued>(&msg)) {
         w.text("key ");
         w.u64(key->time_ms);
         w.text(" ");
-        w.text(key_name(key->key));
+        w.text(command_name(key->command));
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
         w.text("resize ");
         w.integer(resize->width);

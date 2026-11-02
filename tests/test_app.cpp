@@ -179,7 +179,7 @@ void test_turntable_drag() {
 void test_align_north_and_mode_toggle() {
     // In trackball mode a drag can leave north tilted; N puts it back without moving the center.
     Model m = fresh();
-    update(m, KeyDown{0, Key::ToggleDragMode});
+    update(m, CommandIssued{0, Command::ToggleDragMode});
     CHECK(m.drag_mode == DragMode::Trackball);
     update(m, PointerDown{1, 130.0, 60.0});
     update(m, PointerMove{2, 120.0, 90.0});
@@ -189,18 +189,18 @@ void test_align_north_and_mode_toggle() {
     CHECK(!north_is_up(m.camera)); // the roll the trackball allows
     const LatLon c = center_of(m.camera);
     const double r = m.camera.radius_px;
-    Effects fx = update(m, KeyDown{6, Key::AlignNorth});
+    Effects fx = update(m, CommandIssued{6, Command::AlignNorth});
     CHECK(fx.redraw && north_is_up(m.camera));
     CHECK_NEAR(center_of(m.camera).lat_deg, c.lat_deg, 1e-9);
     CHECK_NEAR(center_of(m.camera).lon_deg, c.lon_deg, 1e-9);
     CHECK_NEAR(m.camera.radius_px, r, 0.0);
     CHECK(basis_error(m.camera) < 1e-12);
     // Already aligned: nothing to redraw.
-    CHECK(!update(m, KeyDown{7, Key::AlignNorth}).redraw);
+    CHECK(!update(m, CommandIssued{7, Command::AlignNorth}).redraw);
     // The toggle changes mode without redrawing, and back.
-    fx = update(m, KeyDown{8, Key::ToggleDragMode});
+    fx = update(m, CommandIssued{8, Command::ToggleDragMode});
     CHECK(!fx.redraw && m.drag_mode == DragMode::Turntable);
-    update(m, KeyDown{9, Key::ToggleDragMode});
+    update(m, CommandIssued{9, Command::ToggleDragMode});
     CHECK(m.drag_mode == DragMode::Trackball);
     // After switching to the turntable, the first drag also straightens a tilted view.
     update(m, PointerDown{10, 130.0, 60.0});
@@ -208,7 +208,7 @@ void test_align_north_and_mode_toggle() {
     update(m, PointerMove{12, 60.0, 100.0});
     CHECK(!north_is_up(m.camera));
     update(m, PointerUp{13});
-    update(m, KeyDown{14, Key::ToggleDragMode});
+    update(m, CommandIssued{14, Command::ToggleDragMode});
     update(m, PointerDown{1000, 80.0, 60.0});
     update(m, PointerMove{1001, 81.0, 60.0});
     CHECK(north_is_up(m.camera));
@@ -243,13 +243,13 @@ void test_grid_hidden_while_dragging() {
     update(m, PointerMove{2010, 80.0, 60.0});
     CHECK(!update(m, PointerUp{2020}).redraw);
     // With the graticule switched off there is nothing to bring back.
-    update(m, KeyDown{3000, Key::ToggleGraticule});
+    update(m, CommandIssued{3000, Command::ToggleGraticule});
     update(m, PointerDown{4000, 80.0, 60.0});
     update(m, PointerMove{4010, 60.0, 60.0});
     CHECK(!update(m, PointerUp{4020}).redraw);
     CHECK(!effective_layers(m).graticule && !m.layers.graticule);
     // Other layers follow the user's switches during a drag too.
-    update(m, KeyDown{5000, Key::ToggleBorders});
+    update(m, CommandIssued{5000, Command::ToggleBorders});
     update(m, PointerDown{6000, 80.0, 60.0});
     CHECK(!effective_layers(m).borders && effective_layers(m).coastlines);
 }
@@ -388,37 +388,37 @@ void test_zoom_and_limits() {
 void test_keys() {
     Model m = fresh();
     const LatLon home = center_of(m.camera);
-    Effects fx = update(m, KeyDown{1, Key::Left});
+    Effects fx = update(m, CommandIssued{1, Command::Left});
     CHECK(fx.redraw && center_of(m.camera).lon_deg > home.lon_deg);
     CHECK_NEAR(center_of(m.camera).lon_deg - home.lon_deg, 10.0, 1.0);
-    update(m, KeyDown{2, Key::Right});
+    update(m, CommandIssued{2, Command::Right});
     CHECK_NEAR(center_of(m.camera).lon_deg, home.lon_deg, 1e-6);
-    fx = update(m, KeyDown{3, Key::Up});
+    fx = update(m, CommandIssued{3, Command::Up});
     CHECK(fx.redraw && center_of(m.camera).lat_deg < home.lat_deg);
-    update(m, KeyDown{4, Key::Down});
+    update(m, CommandIssued{4, Command::Down});
     CHECK_NEAR(center_of(m.camera).lat_deg, home.lat_deg, 1e-6);
 
-    update(m, KeyDown{5, Key::ZoomIn});
-    update(m, KeyDown{6, Key::ZoomIn});
+    update(m, CommandIssued{5, Command::ZoomIn});
+    update(m, CommandIssued{6, Command::ZoomIn});
     CHECK(m.camera.radius_px > fresh().camera.radius_px);
-    update(m, KeyDown{7, Key::Left});
-    fx = update(m, KeyDown{8, Key::Reset});
+    update(m, CommandIssued{7, Command::Left});
+    fx = update(m, CommandIssued{8, Command::Reset});
     CHECK(fx.redraw && same_camera(m.camera, fresh().camera));
-    fx = update(m, KeyDown{9, Key::Reset});
+    fx = update(m, CommandIssued{9, Command::Reset});
     CHECK(!fx.redraw); // already home
 
     CHECK(m.layers.graticule);
-    fx = update(m, KeyDown{10, Key::ToggleGraticule});
+    fx = update(m, CommandIssued{10, Command::ToggleGraticule});
     CHECK(fx.redraw && !m.layers.graticule && m.layers.coastlines && m.layers.borders);
-    update(m, KeyDown{11, Key::ToggleBorders});
-    update(m, KeyDown{12, Key::ToggleCoastlines});
+    update(m, CommandIssued{11, Command::ToggleBorders});
+    update(m, CommandIssued{12, Command::ToggleCoastlines});
     CHECK(!m.layers.borders && !m.layers.coastlines);
-    update(m, KeyDown{13, Key::ToggleGraticule});
+    update(m, CommandIssued{13, Command::ToggleGraticule});
     CHECK(m.layers.graticule);
 
-    fx = update(m, KeyDown{14, Key::Quit});
+    fx = update(m, CommandIssued{14, Command::Quit});
     CHECK(fx.quit && !fx.redraw && m.last_input_ms == 14);
-    fx = update(m, KeyDown{15, Key::Left});
+    fx = update(m, CommandIssued{15, Command::Left});
     CHECK(!fx.quit);
 }
 
@@ -452,6 +452,45 @@ void test_resize_and_expose() {
     CHECK(d.dragging && d.last_input_ms == 5);
 }
 
+void test_toolbar_state() {
+    Model m = fresh();
+    const auto state = [](const Model& model, Command command) {
+        return toolbar_state(model)[static_cast<std::size_t>(command)];
+    };
+    const auto initial = toolbar_state(m);
+    CHECK(initial.size() == static_cast<std::size_t>(Command::Quit) + 1);
+    for (std::size_t i = 0; i < initial.size(); ++i) {
+        CHECK(initial[i].visible);
+        CHECK(initial[i].enabled == (i != static_cast<std::size_t>(Command::AlignNorth)));
+        CHECK(initial[i].checked == (i == static_cast<std::size_t>(Command::ToggleGraticule) ||
+                                     i == static_cast<std::size_t>(Command::ToggleBorders) ||
+                                     i == static_cast<std::size_t>(Command::ToggleCoastlines)));
+    }
+    const Command toggles[] = {Command::ToggleGraticule, Command::ToggleBorders,
+                               Command::ToggleCoastlines, Command::ToggleDragMode};
+    for (Command command : toggles) {
+        const bool before = state(m, command).checked;
+        update(m, CommandIssued{1, command});
+        CHECK(state(m, command).checked != before);
+        update(m, CommandIssued{2, command});
+        CHECK(state(m, command).checked == before);
+    }
+    m.dragging = true;
+    CHECK(state(m, Command::ToggleGraticule).checked); // preference, even while hidden
+    for (double heading : {30.0, 180.0, -90.0}) {
+        m.camera = *make_camera({{20.0, 40.0}, heading, 48.0, 160, 120});
+        const Camera before = m.camera;
+        CHECK(state(m, Command::AlignNorth).enabled);
+        CHECK(same_camera(before, m.camera)); // querying is pure
+        update(m, CommandIssued{3, Command::AlignNorth});
+        CHECK(!state(m, Command::AlignNorth).enabled);
+    }
+    m.camera.radius_px = min_radius_px(160, 120);
+    CHECK(!state(m, Command::ZoomOut).enabled && state(m, Command::ZoomIn).enabled);
+    m.camera.radius_px = max_radius_px(160, 120);
+    CHECK(!state(m, Command::ZoomIn).enabled && state(m, Command::ZoomOut).enabled);
+}
+
 void test_trace_text_round_trip() {
     const Msg msgs[] = {
         PointerDown{12, 1.0 / 3.0, -2.5e-7},
@@ -459,8 +498,8 @@ void test_trace_text_round_trip() {
         PointerUp{0},
         Wheel{7, -3},
         Wheel{8, 1000000},
-        KeyDown{9, Key::ToggleCoastlines},
-        KeyDown{10, Key::Quit},
+        CommandIssued{9, Command::ToggleCoastlines},
+        CommandIssued{10, Command::Quit},
         Resize{640, 480},
         Repaint{},
     };
@@ -482,11 +521,11 @@ void test_trace_text_round_trip() {
     CHECK(format_message(Repaint{}, tiny, sizeof tiny) ==
           0); // does not fit: reported, not truncated
     CHECK(format_message(Repaint{}, nullptr, 10) == 0);
-    for (int k = 0; k <= static_cast<int>(Key::Quit); ++k) {
-        const std::string line = std::string("key 5 ") + key_name(static_cast<Key>(k));
+    for (int k = 0; k <= static_cast<int>(Command::Quit); ++k) {
+        const std::string line = std::string("key 5 ") + command_name(static_cast<Command>(k));
         const auto back = parse_message(line);
-        const auto* kp = back ? std::get_if<KeyDown>(&*back) : nullptr;
-        CHECK(kp != nullptr && kp->key == static_cast<Key>(k));
+        const auto* kp = back ? std::get_if<CommandIssued>(&*back) : nullptr;
+        CHECK(kp != nullptr && kp->command == static_cast<Command>(k));
     }
 }
 
@@ -663,6 +702,7 @@ int main(int argc, char** argv) {
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();
+    test_toolbar_state();
     test_trace_text_round_trip();
     test_trace_parse_rejects_malformed();
     test_replay(root);

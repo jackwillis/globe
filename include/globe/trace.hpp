@@ -6,7 +6,7 @@
 //   resize W H | expose
 //
 // Blank lines and lines starting with '#' are comments. Numbers are written with enough digits to
-// round-trip exactly.
+// round-trip exactly. The legacy `key` verb represents CommandIssued messages.
 #pragma once
 
 #include <cstddef>
@@ -26,6 +26,6 @@ std::optional<Msg> parse_message(std::string_view line);
 // 0 if capacity is too small.
 std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity);
 
-const char* key_name(Key key);
+const char* command_name(Command key);
 
 } // namespace globe

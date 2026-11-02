@@ -8,6 +8,8 @@
 // Holds no framebuffer, atlas or geometry: the view layer renders from a read-only Model.
 #pragma once
 
+#include <array>
+#include <cstddef>
 #include <cstdint>
 #include <variant>
 
@@ -27,7 +29,7 @@ enum class QualityStage : std::uint8_t { Moving, Settle, Refine, Decorate, Fetch
 //             near the rim turns it faster.
 enum class DragMode : std::uint8_t { Turntable, Trackball };
 
-enum class Key : std::uint8_t {
+enum class Command : std::uint8_t {
     Left,
     Right,
     Up,
@@ -76,9 +78,9 @@ struct Wheel {
     std::uint64_t time_ms;
     int steps; // positive zooms in
 };
-struct KeyDown {
+struct CommandIssued {
     std::uint64_t time_ms;
-    Key key;
+    Command command;
 };
 struct Resize {
     int width;
@@ -86,7 +88,8 @@ struct Resize {
 };
 struct Repaint {};
 
-using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, KeyDown, Resize, Repaint>;
+using Msg =
+    std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint>;
 
 struct Effects {
     bool redraw = false;
@@ -104,6 +107,17 @@ double max_radius_px(int width, int height);
 // Layers to draw for the current state. The graticule is hidden while a drag is in progress to
 // keep frames cheap; releasing the button redraws it.
 Layers effective_layers(const Model& model);
+
+// One entry per Command, indexed by its enum value. All current commands are visible;
+// checked describes stored layer preferences and whether Trackball mode is selected.
+struct CommandState {
+    bool visible = true;
+    bool enabled = true;
+    bool checked = false;
+};
+constexpr std::size_t kCommandCount = static_cast<std::size_t>(Command::Quit) + 1;
+using ToolbarState = std::array<CommandState, kCommandCount>;
+ToolbarState toolbar_state(const Model& model);
 
 // Two presses within kDoubleClickMs and kDoubleClickSlopPx, the second on the globe, zoom in by
 // kDoubleClickZoom and center the globe on the clicked point.

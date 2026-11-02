@@ -387,35 +387,35 @@ class App {
     bool on_key(KeySym sym, std::uint64_t now) {
         switch (sym) {
         case XK_Left:
-            return apply(KeyDown{now, Key::Left});
+            return apply(CommandIssued{now, Command::Left});
         case XK_Right:
-            return apply(KeyDown{now, Key::Right});
+            return apply(CommandIssued{now, Command::Right});
         case XK_Up:
-            return apply(KeyDown{now, Key::Up});
+            return apply(CommandIssued{now, Command::Up});
         case XK_Down:
-            return apply(KeyDown{now, Key::Down});
+            return apply(CommandIssued{now, Command::Down});
         case XK_plus:
         case XK_equal:
         case XK_KP_Add:
-            return apply(KeyDown{now, Key::ZoomIn});
+            return apply(CommandIssued{now, Command::ZoomIn});
         case XK_minus:
         case XK_KP_Subtract:
-            return apply(KeyDown{now, Key::ZoomOut});
+            return apply(CommandIssued{now, Command::ZoomOut});
         case XK_r:
-            return apply(KeyDown{now, Key::Reset});
+            return apply(CommandIssued{now, Command::Reset});
         case XK_g:
-            return apply(KeyDown{now, Key::ToggleGraticule});
+            return apply(CommandIssued{now, Command::ToggleGraticule});
         case XK_b:
-            return apply(KeyDown{now, Key::ToggleBorders});
+            return apply(CommandIssued{now, Command::ToggleBorders});
         case XK_c:
-            return apply(KeyDown{now, Key::ToggleCoastlines});
+            return apply(CommandIssued{now, Command::ToggleCoastlines});
         case XK_n:
-            return apply(KeyDown{now, Key::AlignNorth});
+            return apply(CommandIssued{now, Command::AlignNorth});
         case XK_t:
-            return apply(KeyDown{now, Key::ToggleDragMode});
+            return apply(CommandIssued{now, Command::ToggleDragMode});
         case XK_Escape:
         case XK_q:
-            return apply(KeyDown{now, Key::Quit});
+            return apply(CommandIssued{now, Command::Quit});
         default:
             return false;
         }

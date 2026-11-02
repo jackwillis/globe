@@ -12,7 +12,7 @@ include/globe/          public, portable interfaces (no OS headers)
   raster.hpp            exact-clipping lines, disc fill
   render.hpp            Scene (cached vertex vectors), render_globe(camera, scene, palette, layers)
   atlas.hpp, crc32.hpp  GATL reader (zero-copy, validating)
-  app.hpp, trace.hpp    Model / Msg / update / Effects; DragMode (Turntable default, Trackball);
+  app.hpp, trace.hpp    Model / Msg / update / Effects; Command / toolbar_state; DragMode (Turntable default, Trackball);
                         double-click, align-north, graticule-hidden-while-dragging; text traces
   embedded_atlas.hpp    the atlas compiled into the binary
 src/core, src/data, src/render   implementations of the above
@@ -56,3 +56,13 @@ pointer position) before drawing, so a burst of motion costs one frame.
 See `docs/perf/README.md`. In short, rendering is cheap on a modern host (about 1 ms for a
 640x480 frame) and about 60 times slower on the 467 MHz G4 (about 64 ms), which is the main open
 question for M2 and beyond.
+
+## Toolbar command state (2026-11-01)
+
+Core actions use `Command` and `CommandIssued`, independent of keyboard input. The existing
+`key TIME NAME` trace spelling is retained, including formatting, so recorded traces are unchanged.
+`toolbar_state(Model)` returns a fixed array indexed by `Command`: all commands are visible;
+layer checks reflect preferences even while the graticule is temporarily hidden during dragging;
+the drag-mode check means Trackball. Align-north is enabled for a tilted or upside-down north
+projection (tolerance 1e-12); zoom buttons are disabled at their respective radius limits.
+This supplies state only; the native toolbar window remains a later task.
