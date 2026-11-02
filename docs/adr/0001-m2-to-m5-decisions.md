@@ -91,3 +91,28 @@ decisions that followed. This amends D6; nothing below is implemented yet unless
   by arithmetic, not measured). If wanted later it is an optional imported pack, never on the
   floppy, and its license must be confirmed first.
 - **Not decided here:** how much of the layer split ships before OS 9 work starts.
+
+## Addendum, 2026-11-01 (refinement order; shaded-fill timing)
+
+- **Refinement order: center-biased dissolve over cells, not a top-to-bottom sweep.** Each terrain
+  cell gets a fixed pseudo-random number from a hash of its index (no clock or RNG state, so replays
+  and host/G4 checksums stay deterministic). At view time a visible cell's appear-time is roughly
+  `random + w * distance_from_center`, bucketed into about 16 passes; pass k draws the cells in
+  bucket k as ordinary whole-cell fills, over the flat base, and cancellation stops between
+  passes. `w` is one tunable weight, to be chosen on the G4. The bucket is computed in the pass
+  that already culls hidden cells, so there is no sort. The final image must not depend on the
+  order, which holds only while cells do not overlap and shared edges leave no gaps; tests must pin
+  this. It does not make refinement faster, only nicer to watch. A single-pixel dissolve is
+  rejected (it defeats span fills). Fallbacks: center-out row bands (cheap, keeps the current band
+  code) or coarser blocks of cells if the speckle looks noisy. Replaces the row-band structure in
+  `terrain.cpp`, so it waits for the current Codex pass to land.
+- **Shaded fill timing (measured, G4, 640x480, median of 30; commit `0ecc5fd` on branch
+  `claude/smooth-quad`, unmerged):** 1x zoom (~3.8 px per cell) flat 107.5 ms vs shaded 185.6 ms; 2x
+  zoom flat 106.4 ms vs shaded 99.4 ms; host 2.4/3.8 ms and 2.0/2.1 ms; checksums match across host and
+  G4. Against the refine frame of about 0.58 s (Codex's figure, not re-measured here) shading adds
+  roughly 78 ms at 1x and nothing at 2x, so smoothing is affordable. Not measured: the shaded fill
+  inside the real refine path, cancellation, display submission. The shaded path skips cells with a
+  corner behind the horizon, so limb pixels differ slightly from the flat path.
+- **Where the refine time goes (inference, profile in progress):** the flat fill is about 107 ms of
+  roughly 580 ms, so the larger share is probably projecting all ~65,000 corners and per-cell
+  setup. Fix by measurement, not by guess; the profile result will be recorded here.
