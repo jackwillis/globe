@@ -28,7 +28,13 @@ statically), pushed to `/tmp` on maul with `maulctl push nb`, and run there: Net
 way later that day (`ok`, exit 0, 1.94 s user for the whole test including a 200,000-drag drift check). `atlas`
 followed (`ok`, exit 0, 1.63 s user, 3.2 s real): the little-endian decoder read the real
 `data/atlas.gatl` on big-endian PowerPC and reproduced the checksums computed by the Python
-decoder, so byte-order handling is confirmed on hardware, not only by construction. Nothing was
+decoder, so byte-order handling is confirmed on hardware, not only by construction.
+
+Later the same day: `render` (golden frames identical on x86 and PPC; 16.8 s user, dominated by two
+absurd-zoom frames, not representative of normal frames) and `app` (a 124-message recorded session
+replayed on the G4 produced a final frame with the same FNV-1a hash as the host,
+`b3519ed59541d2b0`, so trackball and rendering arithmetic agree across the two architectures for
+that session; this is evidence, not a guarantee for every input). Nothing was
 compiled on maul. No timing was taken; these are correctness runs only.
 
 ## Not measured

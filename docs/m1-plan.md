@@ -22,10 +22,10 @@ terrain (M5), the Mac OS 9 front end.
    provenance and attribution embedded. Prints byte size. Documented in `docs/atlas-format.md`.
 3. **Atlas decoder** *(done)* (`src/data`). Bounded, validating, no hidden allocation; rejects truncated,
    oversized and corrupt input. Mutation test over every byte position of a small atlas.
-4. **Line rasterizer and layers** (`src/render`). Viewport clipping, integer Bresenham into
+4. **Line rasterizer and layers** *(done)* (`src/render`). Viewport clipping, integer Bresenham into
    RGB565, ocean disc, coastlines, borders, optional graticule, built on the M0 horizon clipping
    and subdivision. Golden-frame tests (small fixed frames, checked in as text).
-5. **Elm core** (`src/core`). `Model` (camera, quality stage, window size), `Msg` (drag, wheel,
+5. **Elm core** *(done)* (`src/core`). `Model` (camera, quality stage, window size), `Msg` (drag, wheel,
    key, resize, redraw), `update` returning `Effects`; deterministic with the clock passed in.
    Replayable message-trace test. Moving stage only; the stage enum exists for M2.
 6. **X11 adapter** (`src/platform/x11`). Window, XImage conversion from RGB565 using the

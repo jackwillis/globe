@@ -16,6 +16,8 @@ add_library(globe_core
   src/core/geometry.cpp
   src/core/projection.cpp
   src/core/trackball.cpp
+  src/core/app.cpp
+  src/core/trace.cpp
   src/data/atlas.cpp
   src/data/crc32.cpp
   src/render/framebuffer.cpp
@@ -36,7 +38,7 @@ if(GLOBE_BUILD_TESTS)
   if(Python3_FOUND)
     add_test(NAME atlas_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render)
+  foreach(name bytes framebuffer projection trackball atlas render app)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

@@ -15,7 +15,7 @@ $CONTAINER run --rm -v "$PWD":/src:Z -w /src "$IMAGE" sh -ec '
 for cxx in powerpc-apple-macos-g++ m68k-apple-macos-g++; do
 	echo "== $cxx"
 	'"$TC"'/bin/$cxx --version | head -1
-	for f in tools/retro68-probe/probe.cpp src/core/geometry.cpp src/core/projection.cpp src/core/trackball.cpp src/data/atlas.cpp src/data/crc32.cpp src/render/framebuffer.cpp src/render/raster.cpp src/render/render.cpp; do
+	for f in tools/retro68-probe/probe.cpp src/core/geometry.cpp src/core/projection.cpp src/core/trackball.cpp src/core/app.cpp src/core/trace.cpp src/data/atlas.cpp src/data/crc32.cpp src/render/framebuffer.cpp src/render/raster.cpp src/render/render.cpp; do
 		'"$TC"'/bin/$cxx '"$STD"' -fno-exceptions -fno-rtti -Wall -Wextra -Wpedantic -Iinclude -c "$f" -o /tmp/probe.o 2>&1 \
 			| grep -E "probe:|error|warning" || true
 		if '"$TC"'/bin/$cxx '"$STD"' -fno-exceptions -fno-rtti -Iinclude -c "$f" -o /tmp/probe.o 2>/dev/null; then
