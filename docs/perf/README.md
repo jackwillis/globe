@@ -178,3 +178,14 @@ render total. Raw host/G4 measurements are in terrain-*.json.
 
 `shade_bench` times `fill_triangle_shaded` (two triangles per 1-degree cell) against the existing flat `draw_cell` on the same cells, projection excluded ([raw](shade-fill-g4.json)). At 640x480 on the G4 with the globe radius at 220 px (about 3.8 px per cell, 152k pixels): flat 107.5 ms, shaded 185.6 ms (+78 ms; cost is per-cell and per-scanline setup, not per pixel). At radius 440 (2x zoom, full window): flat 106.4 ms, shaded 99.4 ms. Host: 2.4 vs 3.8 ms and 2.0 vs 2.1 ms. Frame checksums match host and G4 in all four cases.
 The existing G4 terrain refine renders in about 0.58 s in total, so smoothing adds roughly 13% at 1x and nothing at 2x. Not measured: the shaded fill wired into the real refine path, band cancellation, and real-display submission. The shaded path skips limb cells (a corner behind the horizon) that the flat path clips.
+
+## Refine profile (2026-11-01, `refine-profile-g4.json`)
+
+`globe-refine-profile` times the settled terrain refine frame by phase at 640x480 (host median of
+51 runs, G4 median of 9; host and G4 frame checksums match). G4, 1x zoom: the real `RefinementJob`
+takes 786 ms with terrain and 456 ms without it; the terrain phases are about 215 ms (project
+corners 18, bound cells 26, per-band cell scan 47, fills 123 by subtraction). The same line layers
+drawn in one pass cost 28 ms, so band-by-band line drawing is about 16x a single pass. About 115 ms
+of the job is not accounted for by any measured phase (inferred to be per-work-unit stepping
+overhead). A hemisphere pre-test before projecting skips half the corners but saves under 1 ms on
+the G4.
