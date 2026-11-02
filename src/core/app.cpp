@@ -148,7 +148,7 @@ Effects update(Model& model, const Msg& msg) {
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
         fx = set_camera(model, zoom_camera(model.camera, wheel->steps));
         model.last_input_ms = wheel->time_ms;
-    } else if (const auto* key = std::get_if<KeyPress>(&msg)) {
+    } else if (const auto* key = std::get_if<KeyDown>(&msg)) {
         fx = on_key(model, key->key);
         model.last_input_ms = key->time_ms;
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
@@ -169,7 +169,7 @@ Effects update(Model& model, const Msg& msg) {
             model.camera = cam;
             fx.redraw = true;
         }
-    } else if (std::holds_alternative<Expose>(msg)) {
+    } else if (std::holds_alternative<Repaint>(msg)) {
         fx.redraw = true;
     }
     return fx;

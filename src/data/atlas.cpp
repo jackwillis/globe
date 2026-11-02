@@ -65,7 +65,7 @@ bool valid_text(const std::uint8_t* s, std::size_t n) {
 
 const char* atlas_error_name(AtlasError error) {
     switch (error) {
-    case AtlasError::None:
+    case AtlasError::Ok:
         return "none";
     case AtlasError::TooShort:
         return "too short";
@@ -172,7 +172,7 @@ std::optional<Atlas> Atlas::parse(const std::uint8_t* data, std::size_t size, At
         return fail(AtlasError::BadText);
     }
     if (error != nullptr) {
-        *error = AtlasError::None;
+        *error = AtlasError::Ok;
     }
     return Atlas(data, polylines, points,
                  std::string_view(reinterpret_cast<const char*>(text), text_size));

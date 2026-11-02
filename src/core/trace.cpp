@@ -144,7 +144,7 @@ std::optional<Msg> parse_message(std::string_view line) {
         if (parse_u64(tok[1], t)) {
             for (const KeyEntry& e : kKeys) {
                 if (std::strcmp(tok[2], e.name) == 0) {
-                    return Msg{KeyPress{t, e.key}};
+                    return Msg{KeyDown{t, e.key}};
                 }
             }
         }
@@ -156,7 +156,7 @@ std::optional<Msg> parse_message(std::string_view line) {
             return Msg{Resize{w, h}};
         }
     } else if (verb == "expose" && n == 1) {
-        return Msg{Expose{}};
+        return Msg{Repaint{}};
     }
     return std::nullopt;
 }
@@ -177,7 +177,7 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
         len = std::snprintf(buf, capacity, "wheel %llu %d",
                             static_cast<unsigned long long>(wheel->time_ms), wheel->steps);
-    } else if (const auto* key = std::get_if<KeyPress>(&msg)) {
+    } else if (const auto* key = std::get_if<KeyDown>(&msg)) {
         len = std::snprintf(buf, capacity, "key %llu %s",
                             static_cast<unsigned long long>(key->time_ms), key_name(key->key));
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {

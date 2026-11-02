@@ -42,7 +42,7 @@ void operator delete(void* p, std::size_t) noexcept {
 namespace {
 
 AtlasError error_of(const Bytes& b) {
-    AtlasError e = AtlasError::None;
+    AtlasError e = AtlasError::Ok;
     const auto a = Atlas::parse(b.data(), b.size(), &e);
     CHECK(!a.has_value());
     return e;
@@ -110,7 +110,7 @@ void test_tiny_fixture(const std::string& root) {
 
     AtlasError e = AtlasError::BadMagic;
     const auto a = Atlas::parse(file.data(), file.size(), &e);
-    CHECK(a.has_value() && e == AtlasError::None);
+    CHECK(a.has_value() && e == AtlasError::Ok);
     if (!a) {
         return;
     }
@@ -187,7 +187,7 @@ void test_header_errors() {
 
     CHECK(Atlas::parse(nullptr, 100) == std::nullopt);
     CHECK(Atlas::parse(good.data(), 0) == std::nullopt);
-    AtlasError e = AtlasError::None;
+    AtlasError e = AtlasError::Ok;
     CHECK(!Atlas::parse(good.data(), 23, &e) && e == AtlasError::TooShort);
     CHECK(!Atlas::parse(nullptr, 0, &e) && e == AtlasError::TooShort);
 
@@ -290,15 +290,15 @@ void test_text_validation() {
     const std::vector<Poly> one = {{1, {{0, 0}, {1, 1}}}};
     const auto text_error = [&](const std::string& t) {
         const Bytes b = make_atlas(one, t);
-        AtlasError e = AtlasError::None;
+        AtlasError e = AtlasError::Ok;
         const bool ok = Atlas::parse(b.data(), b.size(), &e).has_value();
-        return ok ? AtlasError::None : e;
+        return ok ? AtlasError::Ok : e;
     };
-    CHECK(text_error("plain ascii") == AtlasError::None);
-    CHECK(text_error("") == AtlasError::None);
-    CHECK(text_error("euro \xE2\x82\xAC sign") == AtlasError::None);
-    CHECK(text_error("\xF0\x9F\x98\x80") == AtlasError::None);
-    CHECK(text_error("\xF4\x8F\xBF\xBF") == AtlasError::None); // U+10FFFF
+    CHECK(text_error("plain ascii") == AtlasError::Ok);
+    CHECK(text_error("") == AtlasError::Ok);
+    CHECK(text_error("euro \xE2\x82\xAC sign") == AtlasError::Ok);
+    CHECK(text_error("\xF0\x9F\x98\x80") == AtlasError::Ok);
+    CHECK(text_error("\xF4\x8F\xBF\xBF") == AtlasError::Ok); // U+10FFFF
     CHECK(text_error(std::string("a\0b", 3)) == AtlasError::BadText);
     CHECK(text_error("\x80") == AtlasError::BadText);             // lone continuation
     CHECK(text_error("\xC0\x80") == AtlasError::BadText);         // overlong NUL
@@ -361,7 +361,7 @@ void test_structural_mutation_with_valid_crc() {
             Bytes b = good;
             b[i] = static_cast<std::uint8_t>(v);
             refresh_crc(b);
-            AtlasError e = AtlasError::None;
+            AtlasError e = AtlasError::Ok;
             const auto a = Atlas::parse(b.data(), b.size(), &e);
             if (a) {
                 ++accepted;

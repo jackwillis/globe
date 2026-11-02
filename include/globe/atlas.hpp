@@ -24,7 +24,7 @@ constexpr std::uint32_t kAtlasMaxTextBytes = 4096;
 enum class AtlasLayer : std::uint8_t { Coastline = 1, Border = 2 };
 
 enum class AtlasError : std::uint8_t {
-    None,
+    Ok,
     TooShort,           // smaller than the header, or no data
     BadMagic,           // not a GATL file
     UnsupportedVersion, // a version this reader does not know

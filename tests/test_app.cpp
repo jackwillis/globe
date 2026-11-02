@@ -114,43 +114,43 @@ void test_zoom_and_limits() {
 void test_keys() {
     Model m = fresh();
     const LatLon home = center_of(m.camera);
-    Effects fx = update(m, KeyPress{1, Key::Left});
+    Effects fx = update(m, KeyDown{1, Key::Left});
     CHECK(fx.redraw && center_of(m.camera).lon_deg > home.lon_deg);
     CHECK_NEAR(center_of(m.camera).lon_deg - home.lon_deg, 10.0, 1.0);
-    update(m, KeyPress{2, Key::Right});
+    update(m, KeyDown{2, Key::Right});
     CHECK_NEAR(center_of(m.camera).lon_deg, home.lon_deg, 1e-6);
-    fx = update(m, KeyPress{3, Key::Up});
+    fx = update(m, KeyDown{3, Key::Up});
     CHECK(fx.redraw && center_of(m.camera).lat_deg < home.lat_deg);
-    update(m, KeyPress{4, Key::Down});
+    update(m, KeyDown{4, Key::Down});
     CHECK_NEAR(center_of(m.camera).lat_deg, home.lat_deg, 1e-6);
 
-    update(m, KeyPress{5, Key::ZoomIn});
-    update(m, KeyPress{6, Key::ZoomIn});
+    update(m, KeyDown{5, Key::ZoomIn});
+    update(m, KeyDown{6, Key::ZoomIn});
     CHECK(m.camera.radius_px > fresh().camera.radius_px);
-    update(m, KeyPress{7, Key::Left});
-    fx = update(m, KeyPress{8, Key::Reset});
+    update(m, KeyDown{7, Key::Left});
+    fx = update(m, KeyDown{8, Key::Reset});
     CHECK(fx.redraw && same_camera(m.camera, fresh().camera));
-    fx = update(m, KeyPress{9, Key::Reset});
+    fx = update(m, KeyDown{9, Key::Reset});
     CHECK(!fx.redraw); // already home
 
     CHECK(m.layers.graticule);
-    fx = update(m, KeyPress{10, Key::ToggleGraticule});
+    fx = update(m, KeyDown{10, Key::ToggleGraticule});
     CHECK(fx.redraw && !m.layers.graticule && m.layers.coastlines && m.layers.borders);
-    update(m, KeyPress{11, Key::ToggleBorders});
-    update(m, KeyPress{12, Key::ToggleCoastlines});
+    update(m, KeyDown{11, Key::ToggleBorders});
+    update(m, KeyDown{12, Key::ToggleCoastlines});
     CHECK(!m.layers.borders && !m.layers.coastlines);
-    update(m, KeyPress{13, Key::ToggleGraticule});
+    update(m, KeyDown{13, Key::ToggleGraticule});
     CHECK(m.layers.graticule);
 
-    fx = update(m, KeyPress{14, Key::Quit});
+    fx = update(m, KeyDown{14, Key::Quit});
     CHECK(fx.quit && !fx.redraw && m.last_input_ms == 14);
-    fx = update(m, KeyPress{15, Key::Left});
+    fx = update(m, KeyDown{15, Key::Left});
     CHECK(!fx.quit);
 }
 
 void test_resize_and_expose() {
     Model m = fresh();
-    Effects fx = update(m, Expose{});
+    Effects fx = update(m, Repaint{});
     CHECK(fx.redraw && !fx.quit);
     fx = update(m, Resize{320, 240});
     CHECK(fx.redraw && m.camera.width == 320 && m.camera.height == 240);
@@ -185,10 +185,10 @@ void test_trace_text_round_trip() {
         PointerUp{0},
         Wheel{7, -3},
         Wheel{8, 1000000},
-        KeyPress{9, Key::ToggleCoastlines},
-        KeyPress{10, Key::Quit},
+        KeyDown{9, Key::ToggleCoastlines},
+        KeyDown{10, Key::Quit},
         Resize{640, 480},
-        Expose{},
+        Repaint{},
     };
     for (const Msg& msg : msgs) {
         char buf[200];
@@ -205,13 +205,13 @@ void test_trace_text_round_trip() {
         }
     }
     char tiny[4];
-    CHECK(format_message(Expose{}, tiny, sizeof tiny) ==
+    CHECK(format_message(Repaint{}, tiny, sizeof tiny) ==
           0); // does not fit: reported, not truncated
-    CHECK(format_message(Expose{}, nullptr, 10) == 0);
+    CHECK(format_message(Repaint{}, nullptr, 10) == 0);
     for (int k = 0; k <= static_cast<int>(Key::Quit); ++k) {
         const std::string line = std::string("key 5 ") + key_name(static_cast<Key>(k));
         const auto back = parse_message(line);
-        const auto* kp = back ? std::get_if<KeyPress>(&*back) : nullptr;
+        const auto* kp = back ? std::get_if<KeyDown>(&*back) : nullptr;
         CHECK(kp != nullptr && kp->key == static_cast<Key>(k));
     }
 }

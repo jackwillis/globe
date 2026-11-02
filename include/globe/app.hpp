@@ -62,7 +62,7 @@ struct Wheel {
     std::uint64_t time_ms;
     int steps; // positive zooms in
 };
-struct KeyPress {
+struct KeyDown {
     std::uint64_t time_ms;
     Key key;
 };
@@ -70,9 +70,9 @@ struct Resize {
     int width;
     int height;
 };
-struct Expose {};
+struct Repaint {};
 
-using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, KeyPress, Resize, Expose>;
+using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, KeyDown, Resize, Repaint>;
 
 struct Effects {
     bool redraw = false;
