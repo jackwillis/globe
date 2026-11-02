@@ -100,6 +100,9 @@ void draw_line(Framebuffer& fb, double x0, double y0, double x1, double y1, Rgb5
     std::int64_t ay = floor_coordinate(y0);
     std::int64_t bx = floor_coordinate(x1);
     std::int64_t by = floor_coordinate(y1);
+    if (std::max(ay, by) < fb.first_row() || std::min(ay, by) >= fb.end_row()) {
+        return;
+    }
     const auto absval = [](std::int64_t v) { return v < 0 ? -v : v; };
     if (absval(bx - ax) >= absval(by - ay)) {
         if (ax > bx) { // canonical direction: a line and its reverse draw the same pixels
@@ -116,7 +119,7 @@ void draw_line(Framebuffer& fb, double x0, double y0, double x1, double y1, Rgb5
             std::swap(ax, bx);
             std::swap(ay, by);
         }
-        walk(ay, ax, by, bx, 0, fb.height() - 1, [&](std::int64_t y, std::int64_t x) {
+        walk(ay, ax, by, bx, fb.first_row(), fb.end_row() - 1, [&](std::int64_t y, std::int64_t x) {
             fb.set_pixel(static_cast<int>(x), static_cast<int>(y), color);
         });
     }
@@ -129,9 +132,11 @@ void fill_disc(Framebuffer& fb, double cx, double cy, double radius, Rgb565 colo
     // Clamp to the buffer before converting to int: the disc may be far larger than, or far
     // outside, the buffer.
     const double h = static_cast<double>(fb.height());
-    const int y_first = static_cast<int>(std::min(std::max(0.0, std::ceil(cy - radius - 0.5)), h));
-    const int y_last =
-        static_cast<int>(std::max(std::min(h - 1.0, std::floor(cy + radius - 0.5)), -1.0));
+    const int y_first = std::max(
+        fb.first_row(), static_cast<int>(std::min(std::max(0.0, std::ceil(cy - radius - 0.5)), h)));
+    const int y_last = std::min(
+        fb.end_row() - 1,
+        static_cast<int>(std::max(std::min(h - 1.0, std::floor(cy + radius - 0.5)), -1.0)));
     for (int y = y_first; y <= y_last; ++y) {
         const double dy = y + 0.5 - cy;
         const double d2 = radius * radius - dy * dy;

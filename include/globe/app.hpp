@@ -48,6 +48,7 @@ struct Model {
     Layers layers;
     DragMode drag_mode;
     QualityStage stage;
+    std::uint64_t generation; // invalidates in-flight screen-space work on accepted input/resize
     std::uint64_t stage_since_ms; // settle clock; separate from last user input for resize
     bool stage_needs_time;        // initial state or resize awaits its first timestamped message
     bool dragging;
@@ -116,6 +117,7 @@ double max_radius_px(int width, int height);
 // Layers to draw for the current state. The graticule is hidden while a drag is in progress to
 // keep frames cheap; releasing the button redraws it.
 Layers effective_layers(const Model& model);
+RenderQuality quality_for(const Model& model);
 
 // One entry per Command, indexed by its enum value. All current commands are visible;
 // checked describes stored layer preferences and whether Trackball mode is selected.

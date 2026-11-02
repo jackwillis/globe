@@ -17,6 +17,11 @@
 
 namespace globe {
 
+struct RenderQuality {
+    double max_chord_px = 3.0;
+    bool terrain = false;
+};
+
 struct Palette {
     Rgb565 background;
     Rgb565 ocean;
@@ -89,11 +94,50 @@ class Scene {
 
 // Clears the framebuffer and draws using cached vectors. Disable culling for reference checks.
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
-                         const Palette& palette, const Layers& layers, bool cull_polylines = true);
+                         const Palette& palette, const Layers& layers, bool cull_polylines = true,
+                         RenderQuality quality = {});
 
 // Reference path: same pixels, but computes every vertex's unit vector on the fly. Used by tests
 // to check the Scene path, and by the benchmark to show what the cache saves.
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atlas,
                          const Palette& palette, const Layers& layers);
+
+constexpr int kRefineBandRows = 16;
+struct RenderStep {
+    unsigned work_units = 0;
+    int first_row = 0;
+    int end_row = 0;
+    bool band_ready = false;
+};
+
+// One bounded continuation, no allocations. Scene must outlive the job. A work unit is one
+// background row, graticule/atlas arc, or polyline/table transition. Every step restores fb's clip.
+class RefinementJob {
+  public:
+    RefinementJob(const Camera& camera, const Scene& scene, const Palette& palette, Layers layers,
+                  RenderQuality quality, std::uint64_t generation);
+    bool active() const { return active_; }
+    void cancel() { active_ = false; }
+    RenderStep step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units = 64);
+    const RenderStats& stats() const { return stats_; }
+
+  private:
+    Camera camera_;
+    const Scene* scene_;
+    Palette palette_;
+    Layers layers_;
+    RenderQuality quality_;
+    std::uint64_t generation_;
+    bool active_ = true;
+    int band_first_ = 0;
+    int row_ = 0;
+    int phase_ = 0;
+    int grid_segment_ = 0;
+    AtlasCursor cursor_{};
+    AtlasPolyline line_{AtlasLayer::Coastline, 0, nullptr};
+    std::uint16_t segment_ = 0;
+    std::uint32_t line_first_ = 0;
+    RenderStats stats_{};
+};
 
 } // namespace globe

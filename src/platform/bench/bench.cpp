@@ -13,6 +13,7 @@
 // from CLOCK_MONOTONIC; see the "limits" field of the output for what is and is not measured.
 #include <sys/resource.h>
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -77,6 +78,7 @@ int main(int argc, char** argv) {
     int height = 480;
     int repeat = 3;
     bool convert = false;
+    bool refine = false;
     bool reference_path = false;
     bool force_layers = false;
     Layers forced{};
@@ -95,6 +97,8 @@ int main(int argc, char** argv) {
             }
         } else if (std::strcmp(argv[i], "--reference") == 0) {
             reference_path = true; // compute vertex vectors per frame instead of using the Scene
+        } else if (std::strcmp(argv[i], "--refine") == 0) {
+            refine = true;
         } else if (std::strcmp(argv[i], "--convert") == 0) {
             convert = true;
         } else if (std::strcmp(argv[i], "--layers") == 0 && i + 1 < argc) {
@@ -199,6 +203,9 @@ int main(int argc, char** argv) {
     std::vector<double> convert_ms;
     std::vector<double> frame_segments;
     std::vector<double> frame_lines;
+    double refine_ms = 0.0;
+    double max_refine_step_ms = 0.0;
+    unsigned refine_steps = 0;
     double first_frame_ms = 0.0;
     std::uint64_t checksum = 1469598103934665603ULL; // FNV-1a over final frames, as a sanity tag
 
@@ -245,6 +252,19 @@ int main(int argc, char** argv) {
                 break;
             }
         }
+        if (refine) {
+            model.stage = QualityStage::Refine;
+            RefinementJob job(model.camera, *scene, kDefaultPalette, effective_layers(model),
+                              quality_for(model), model.generation);
+            const auto started = monotonic_ns();
+            while (job.active()) {
+                const auto step_start = monotonic_ns();
+                job.step(*fb, model.generation);
+                max_refine_step_ms = std::max(max_refine_step_ms, ms(monotonic_ns() - step_start));
+                ++refine_steps;
+            }
+            refine_ms += ms(monotonic_ns() - started);
+        }
         for (int y = 0; y < fb->height(); y += 7) {
             for (int x = 0; x < fb->width(); x += 5) {
                 checksum = (checksum ^ fb->pixel(x, y)) * 1099511628211ULL;
@@ -287,6 +307,9 @@ int main(int argc, char** argv) {
     std::printf("  \"peak_rss_kb\": %ld,\n", usage.ru_maxrss);
     std::printf("  \"frame_buffer_bytes\": %zu,\n", fb->byte_size());
     std::printf("  \"frames\": %zu,\n", render_ms.size());
+    std::printf("  \"refine_ms\": %.4f,\n  \"max_refine_step_ms\": %.4f,\n"
+                "  \"refine_steps\": %u,\n",
+                refine_ms / repeat, max_refine_step_ms, refine_steps);
     print_summary("render_ms", sr, false);
     if (convert) {
         print_summary("convert_ms", sc, false);

@@ -44,6 +44,10 @@ class Framebuffer {
     Rgb565* data() { return pixels_.get(); }
     const Rgb565* data() const { return pixels_.get(); }
 
+    // Drawing clip, half-open rows; reads and dimensions retain full framebuffer coordinates.
+    void clip_rows(int first, int end);
+    int first_row() const { return clip_first_; }
+    int end_row() const { return clip_end_; }
     void clear(Rgb565 color);
     // Out-of-range coordinates are ignored.
     void set_pixel(int x, int y, Rgb565 color);
@@ -54,10 +58,12 @@ class Framebuffer {
 
   private:
     Framebuffer(int width, int height, std::unique_ptr<Rgb565[]> pixels)
-        : width_(width), height_(height), pixels_(std::move(pixels)) {}
+        : width_(width), height_(height), clip_end_(height), pixels_(std::move(pixels)) {}
 
     int width_;
     int height_;
+    int clip_first_ = 0;
+    int clip_end_;
     std::unique_ptr<Rgb565[]> pixels_;
 };
 

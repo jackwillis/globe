@@ -19,13 +19,20 @@ std::optional<Framebuffer> Framebuffer::create(int width, int height) {
     return Framebuffer(width, height, std::move(pixels));
 }
 
+void Framebuffer::clip_rows(int first, int end) {
+    clip_first_ = std::clamp(first, 0, height_);
+    clip_end_ = std::clamp(end, clip_first_, height_);
+}
+
 void Framebuffer::clear(Rgb565 color) {
-    std::fill_n(pixels_.get(), static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_),
-                color);
+    std::fill(
+        pixels_.get() + static_cast<std::size_t>(clip_first_) * static_cast<std::size_t>(stride()),
+        pixels_.get() + static_cast<std::size_t>(clip_end_) * static_cast<std::size_t>(stride()),
+        color);
 }
 
 void Framebuffer::set_pixel(int x, int y, Rgb565 color) {
-    if (x < 0 || y < 0 || x >= width_ || y >= height_) {
+    if (x < 0 || y < clip_first_ || x >= width_ || y >= clip_end_) {
         return;
     }
     pixels_[static_cast<std::size_t>(y) * static_cast<std::size_t>(stride()) +
@@ -41,7 +48,7 @@ Rgb565 Framebuffer::pixel(int x, int y) const {
 }
 
 void Framebuffer::fill_span(int y, int x0, int x1, Rgb565 color) {
-    if (y < 0 || y >= height_) {
+    if (y < clip_first_ || y >= clip_end_) {
         return;
     }
     if (x0 > x1) {

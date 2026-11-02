@@ -10,5 +10,6 @@ print(result.stdout, end="")
 stats = json.loads(result.stdout)
 assert stats["quality_stage"] == 2, stats  # Refine
 assert stats["wake_ticks"] == 2, stats  # Settle, then Refine; no polling afterwards
+assert stats["refine_bands"] > 0, stats
 assert stats["idle_frames"] == 0, stats
 assert stats["idle_cpu_ms"] < 50, stats  # two-second wait, generous scheduling tolerance

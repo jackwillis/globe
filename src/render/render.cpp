@@ -46,15 +46,15 @@ double inverse_length(double l2) {
 // normalized points of the chord: they lie exactly on the great circle, though not evenly spaced
 // in angle. That avoids the sine, cosine, arctangent and square roots an even angular spacing
 // would need for every point.
-void draw_arc(Framebuffer& fb, const Camera& cam, Vec3 a, Vec3 b, Rgb565 color,
-              RenderStats& stats) {
+void draw_arc(Framebuffer& fb, const Camera& cam, Vec3 a, Vec3 b, Rgb565 color, RenderStats& stats,
+              double chord_px = kMaxChordPx) {
     ++stats.segments;
     const std::optional<Arc> arc = clip_arc_to_front(a, b);
     if (!arc) {
         return;
     }
     ++stats.segments_visible;
-    const double max_step = kMaxChordPx / cam.radius_px;
+    const double max_step = chord_px / cam.radius_px;
     const double max_step2 = max_step * max_step;
     const Vec3 d = arc->b - arc->a;
     const double len2 = dot(d, d);
@@ -114,12 +114,12 @@ Vec3 meridian_point(int meridian, int sample) {
 // circles drawn one sample at a time, pole to pole.
 template <typename ParallelPoint, typename MeridianPoint>
 void draw_graticule(Framebuffer& fb, const Camera& cam, Rgb565 color, RenderStats& stats,
-                    ParallelPoint parallel, MeridianPoint meridian) {
+                    ParallelPoint parallel, MeridianPoint meridian, double chord_px = kMaxChordPx) {
     for (int p = 0; p < kParallels; ++p) {
         Vec3 prev = to_camera_space(cam, parallel(p, 0));
         for (int s = 1; s < kParallelSamples; ++s) {
             const Vec3 cur = to_camera_space(cam, parallel(p, s));
-            draw_arc(fb, cam, prev, cur, color, stats);
+            draw_arc(fb, cam, prev, cur, color, stats, chord_px);
             prev = cur;
         }
     }
@@ -127,7 +127,7 @@ void draw_graticule(Framebuffer& fb, const Camera& cam, Rgb565 color, RenderStat
         Vec3 prev = to_camera_space(cam, meridian(m, 0));
         for (int s = 1; s < kMeridianSamples; ++s) {
             const Vec3 cur = to_camera_space(cam, meridian(m, s));
-            draw_arc(fb, cam, prev, cur, color, stats);
+            draw_arc(fb, cam, prev, cur, color, stats, chord_px);
             prev = cur;
         }
     }
@@ -138,7 +138,7 @@ void draw_graticule(Framebuffer& fb, const Camera& cam, Rgb565 color, RenderStat
 template <typename VertexAt>
 void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, AtlasLayer layer,
                       Rgb565 color, RenderStats& stats, VertexAt vertex,
-                      const PolylineCap* caps = nullptr) {
+                      const PolylineCap* caps = nullptr, double chord_px = kMaxChordPx) {
     AtlasCursor cursor;
     AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
     for (;;) {
@@ -161,7 +161,7 @@ void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, At
         Vec3 prev = to_camera_space(cam, vertex(line, first, 0));
         for (std::uint16_t i = 1; i < line.point_count; ++i) {
             const Vec3 cur = to_camera_space(cam, vertex(line, first, i));
-            draw_arc(fb, cam, prev, cur, color, stats);
+            draw_arc(fb, cam, prev, cur, color, stats, chord_px);
             prev = cur;
         }
     }
@@ -219,7 +219,11 @@ std::size_t Scene::bytes() const {
 }
 
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
-                         const Palette& palette, const Layers& layers, bool cull_polylines) {
+                         const Palette& palette, const Layers& layers, bool cull_polylines,
+                         RenderQuality quality) {
+    const double chord_px = std::isfinite(quality.max_chord_px)
+                                ? std::clamp(quality.max_chord_px, 0.25, 16.0)
+                                : kMaxChordPx;
     RenderStats stats;
     fb.clear(palette.background);
     fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
@@ -233,7 +237,8 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& sce
             },
             [meridians](int m, int s) {
                 return meridians[static_cast<std::size_t>(m * kMeridianSamples + s)];
-            });
+            },
+            chord_px);
     }
     const Vec3* vertices = scene.vertices();
     const auto vertex = [vertices](const AtlasPolyline&, std::uint32_t first, std::uint16_t i) {
@@ -241,11 +246,11 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& sce
     };
     if (layers.coastlines) {
         draw_atlas_layer(fb, camera, scene.atlas(), AtlasLayer::Coastline, palette.coastline, stats,
-                         vertex, cull_polylines ? scene.caps() : nullptr);
+                         vertex, cull_polylines ? scene.caps() : nullptr, chord_px);
     }
     if (layers.borders) {
         draw_atlas_layer(fb, camera, scene.atlas(), AtlasLayer::Border, palette.border, stats,
-                         vertex, cull_polylines ? scene.caps() : nullptr);
+                         vertex, cull_polylines ? scene.caps() : nullptr, chord_px);
     }
     return stats;
 }
@@ -269,6 +274,101 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atl
         draw_atlas_layer(fb, camera, atlas, AtlasLayer::Border, palette.border, stats, vertex);
     }
     return stats;
+}
+
+RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Palette& palette,
+                             Layers layers, RenderQuality quality, std::uint64_t generation)
+    : camera_(camera), scene_(&scene), palette_(palette), layers_(layers), quality_(quality),
+      generation_(generation) {
+    quality_.max_chord_px = std::isfinite(quality_.max_chord_px)
+                                ? std::clamp(quality_.max_chord_px, 0.25, 16.0)
+                                : kMaxChordPx;
+}
+
+RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units) {
+    RenderStep result;
+    if (!active_ || generation != generation_ || fb.width() != camera_.width ||
+        fb.height() != camera_.height) {
+        active_ = false;
+        return result;
+    }
+    if (max_work_units == 0)
+        return result;
+    result.first_row = band_first_;
+    result.end_row = std::min(band_first_ + kRefineBandRows, fb.height());
+    const int saved_first = fb.first_row();
+    const int saved_end = fb.end_row();
+    fb.clip_rows(result.first_row, result.end_row);
+    while (result.work_units < max_work_units && !result.band_ready) {
+        ++result.work_units;
+        if (phase_ == 0) {
+            fb.clip_rows(row_, row_ + 1);
+            fb.fill_span(row_, 0, fb.width() - 1, palette_.background);
+            fill_disc(fb, camera_.center_x, camera_.center_y, camera_.radius_px, palette_.ocean);
+            fb.clip_rows(result.first_row, result.end_row);
+            if (++row_ == result.end_row)
+                phase_ = 1;
+        } else if (phase_ == 1 || phase_ == 2) {
+            const bool parallels = phase_ == 1;
+            const int samples = parallels ? kParallelSamples : kMeridianSamples;
+            const int lines = parallels ? kParallels : kMeridians;
+            if (!layers_.graticule || grid_segment_ == lines * (samples - 1)) {
+                ++phase_;
+                grid_segment_ = 0;
+                continue;
+            }
+            const int line = grid_segment_ / (samples - 1);
+            const int point = grid_segment_ % (samples - 1);
+            const Vec3* grid =
+                scene_->graticule() + (parallels ? 0 : kParallels * kParallelSamples);
+            const int first = line * samples + point;
+            draw_arc(fb, camera_, to_camera_space(camera_, grid[first]),
+                     to_camera_space(camera_, grid[first + 1]), palette_.graticule, stats_,
+                     quality_.max_chord_px);
+            ++grid_segment_;
+        } else if (phase_ == 3 || phase_ == 4) {
+            const bool coast = phase_ == 3;
+            if ((coast && !layers_.coastlines) || (!coast && !layers_.borders)) {
+                ++phase_;
+                cursor_ = {};
+                segment_ = 0;
+                continue;
+            }
+            if (segment_ == 0) {
+                const auto index = cursor_.index;
+                line_first_ = cursor_.first_point;
+                if (!scene_->atlas().next(cursor_, line_)) {
+                    ++phase_;
+                    cursor_ = {};
+                    continue;
+                }
+                if (line_.layer != (coast ? AtlasLayer::Coastline : AtlasLayer::Border))
+                    continue;
+                const auto& cap = scene_->caps()[index];
+                if (dot(cap.axis, camera_.forward) < -cap.sin_radius - 1e-12) {
+                    ++stats_.polylines_culled;
+                    continue;
+                }
+                segment_ = 1;
+            } else {
+                const Vec3* points = scene_->vertices() + line_first_;
+                draw_arc(fb, camera_, to_camera_space(camera_, points[segment_ - 1]),
+                         to_camera_space(camera_, points[segment_]),
+                         coast ? palette_.coastline : palette_.border, stats_,
+                         quality_.max_chord_px);
+                if (++segment_ == line_.point_count)
+                    segment_ = 0;
+            }
+        } else {
+            result.band_ready = true;
+            band_first_ = result.end_row;
+            row_ = band_first_;
+            phase_ = 0;
+            active_ = band_first_ < fb.height();
+        }
+    }
+    fb.clip_rows(saved_first, saved_end);
+    return result;
 }
 
 } // namespace globe

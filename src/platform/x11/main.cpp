@@ -149,6 +149,8 @@ class App {
                     }
                 }
             }
+            if (!quit)
+                refine_step();
         }
         return pixels_ok_ ? 0 : 3;
     }
@@ -171,6 +173,8 @@ class App {
         std::printf("  \"wake_ticks\": %zu,\n  \"quality_stage\": %d,\n", wake_ticks_,
                     static_cast<int>(model_.stage));
         std::printf("  \"verified_frames\": %zu,\n", verified_frames_);
+        std::printf("  \"refine_bands\": %zu,\n  \"refine_work_ms\": %.4f,\n", refine_bands_,
+                    refine_work_ms_);
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -252,7 +256,19 @@ class App {
     }
 
     bool apply(const Msg& msg) {
+        const auto old_generation = model_.generation;
+        const auto old_stage = model_.stage;
         Effects fx = update(model_, msg);
+        if (model_.generation != old_generation) {
+            if (refinement_)
+                refinement_->cancel();
+            if (old_stage == QualityStage::Refine)
+                fx.redraw = true;
+        }
+        if (old_stage != QualityStage::Refine && model_.stage == QualityStage::Refine) {
+            refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
+                                quality_for(model_), model_.generation);
+        }
         if (fx.redraw && std::holds_alternative<Resize>(msg)) {
             fx.wake_after_ms = update(model_, Tick{monotonic_ns() / 1000000ULL}).wake_after_ms;
         }
@@ -287,7 +303,7 @@ class App {
 
     // Sleep until input, one requested wake, or a measurement deadline. No periodic polling.
     bool wait_events(std::uint64_t end_ms = 0) {
-        if (XPending(dpy_) > 0) {
+        if (XPending(dpy_) > 0 || (refinement_ && refinement_->active())) {
             return true;
         }
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
@@ -334,6 +350,7 @@ class App {
             present();
             need_redraw_ = false;
         }
+        finish_settling();
         rusage a{};
         getrusage(RUSAGE_SELF, &a);
         const std::size_t frames0 = t_.render_ms.size();
@@ -414,6 +431,38 @@ class App {
         return ok;
     }
 
+    void refine_step() {
+        if (!fb_ || !refinement_ || !refinement_->active())
+            return;
+        const std::uint64_t t = monotonic_ns();
+        const auto step = refinement_->step(*fb_, model_.generation);
+        refine_work_ms_ += ms_since(t);
+        if (step.band_ready) {
+            ++refine_bands_;
+            upload(step.first_row, step.end_row);
+        }
+    }
+
+    void finish_settling() {
+        // Measurement begins only after requested settling/refinement completes. While drawing,
+        // return to X event handling after every bounded work step, just like the main loop.
+        while (wake_at_ms_ != 0 || (refinement_ && refinement_->active())) {
+            if (!wait_events())
+                return;
+            while (XPending(dpy_) > 0) {
+                XEvent ev;
+                XNextEvent(dpy_, &ev);
+                if (handle(ev))
+                    return;
+            }
+            if (need_redraw_) {
+                present();
+                need_redraw_ = false;
+            }
+            refine_step();
+        }
+    }
+
     void present() {
         if (!fb_ || image_ == nullptr) {
             return;
@@ -422,13 +471,20 @@ class App {
         std::uint64_t t = monotonic_ns();
         render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_));
         t_.render_ms.push_back(ms_since(t));
-        t = monotonic_ns();
+        upload(0, fb.height());
+    }
+
+    void upload(int first_row, int end_row) {
+        if (!fb_ || image_ == nullptr)
+            return;
+        Framebuffer& fb = *fb_;
+        std::uint64_t t = monotonic_ns();
         convert_pixels(fb, format_, reinterpret_cast<std::uint8_t*>(image_->data),
                        static_cast<std::size_t>(image_->bytes_per_line));
         t_.pack_ms.push_back(ms_since(t));
         t = monotonic_ns();
-        XPutImage(dpy_, win_, gc_, image_, 0, 0, 0, 0, static_cast<unsigned>(fb.width()),
-                  static_cast<unsigned>(fb.height()));
+        XPutImage(dpy_, win_, gc_, image_, 0, first_row, 0, first_row,
+                  static_cast<unsigned>(fb.width()), static_cast<unsigned>(end_row - first_row));
         XSync(dpy_, False);
         t_.present_ms.push_back(ms_since(t));
         if (opt_.verify_pixels) {
@@ -543,6 +599,9 @@ class App {
     std::optional<Framebuffer> fb_;
     std::size_t wake_ticks_ = 0;
     std::uint64_t wake_at_ms_ = 0;
+    std::optional<RefinementJob> refinement_;
+    std::size_t refine_bands_ = 0;
+    double refine_work_ms_ = 0;
     bool pixels_ok_ = true;
     std::size_t verified_frames_ = 0;
     bool need_redraw_ = false;

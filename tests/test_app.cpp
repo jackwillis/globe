@@ -451,6 +451,31 @@ void test_resize_and_expose() {
     CHECK(d.dragging && d.last_input_ms == 5);
 }
 
+void test_quality_profile_and_generation() {
+    Model m = fresh();
+    const auto moving = quality_for(m);
+    CHECK(moving.max_chord_px == 3.0 && !moving.terrain);
+    const auto generation = m.generation;
+    update(m, PointerMove{1, 2, 3});
+    CHECK(m.generation == generation);
+    update(m, Wheel{100, 1});
+    CHECK(m.generation != generation);
+    update(m, Tick{250});
+    CHECK(!quality_for(m).terrain);
+    update(m, Tick{251});
+    const auto fine = quality_for(m);
+    CHECK(fine.max_chord_px == 1.5 && fine.terrain);
+    const auto settled_generation = m.generation;
+    update(m, Repaint{});
+    CHECK(m.generation == settled_generation);
+    update(m, PointerDown{300, 80, 60});
+    CHECK(m.generation != settled_generation && !quality_for(m).terrain);
+    CHECK(quality_for(m).max_chord_px == moving.max_chord_px);
+    const auto before_resize = m.generation;
+    update(m, Resize{200, 100});
+    CHECK(m.generation != before_resize);
+}
+
 void test_quality_wakes() {
     Model m = fresh();
     auto fx = update(m, Wheel{1000, 1});
@@ -782,6 +807,7 @@ int main(int argc, char** argv) {
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();
+    test_quality_profile_and_generation();
     test_quality_wakes();
     test_stage_trace_replay();
     test_toolbar_state();

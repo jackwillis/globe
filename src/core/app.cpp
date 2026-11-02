@@ -175,6 +175,11 @@ Layers effective_layers(const Model& model) {
     return layers;
 }
 
+RenderQuality quality_for(const Model& model) {
+    const bool fine = model.stage == QualityStage::Refine || model.stage == QualityStage::Decorate;
+    return {fine ? 1.5 : 3.0, fine};
+}
+
 ToolbarState toolbar_state(const Model& model) {
     ToolbarState state{};
     const auto index = [](Command command) { return static_cast<std::size_t>(command); };
@@ -301,6 +306,7 @@ Effects update(Model& model, const Msg& msg) {
             model.camera = cam;
             model.stage = QualityStage::Moving;
             model.stage_needs_time = true;
+            ++model.generation;
             fx.wake_after_ms = kSettleDelayMs;
             fx.redraw = true;
         }
@@ -329,6 +335,7 @@ Effects update(Model& model, const Msg& msg) {
         fx.redraw = true;
     }
     if (input) {
+        ++model.generation;
         model.stage = QualityStage::Moving;
         model.stage_since_ms = input_ms;
         model.stage_needs_time = false;

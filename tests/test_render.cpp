@@ -575,6 +575,49 @@ void test_scene_matches_reference(const std::string& root) {
     CHECK(culled > 0); // this must exercise culling, not merely compare two unculled paths
 }
 
+void test_refinement_bands() {
+    const auto bytes = synthetic_atlas();
+    const auto atlas = parse_or_die(bytes);
+    const auto scene = Scene::create(atlas);
+    CHECK(scene.has_value());
+    if (!scene)
+        return;
+    auto expected = make_fb(80, 61);
+    auto actual = make_fb(80, 61);
+    const auto camera = cam(20, 40, 30, 25, 80, 61);
+    RenderQuality quality{1.5, false};
+    render_globe(expected, camera, *scene, kTestPalette, Layers{}, true, quality);
+    actual.clear(0xAAAA);
+    RefinementJob job(camera, *scene, kTestPalette, Layers{}, quality, 7);
+    unsigned steps = 0;
+    while (job.active() && steps < 10000) {
+        const std::vector<Rgb565> previous(actual.data(), actual.data() + 80 * 61);
+        const auto result = job.step(actual, 7, 7);
+        CHECK(actual.first_row() == 0 && actual.end_row() == 61);
+        for (int y = 0; y < 61; ++y) {
+            if (y < result.first_row || y >= result.end_row) {
+                CHECK(std::memcmp(actual.data() + y * 80, previous.data() + y * 80,
+                                  80 * sizeof(Rgb565)) == 0);
+            }
+        }
+        CHECK(result.work_units <= 7);
+        CHECK(result.first_row >= 0 && result.end_row <= 61);
+        CHECK(result.end_row - result.first_row <= kRefineBandRows);
+        ++steps;
+    }
+    CHECK(!job.active() && steps > 1 && steps < 10000);
+    CHECK(std::memcmp(actual.data(), expected.data(), actual.byte_size()) == 0);
+    // A superseded job must not touch even a single pixel, including after partial work.
+    RefinementJob cancelled(camera, *scene, kTestPalette, Layers{}, quality, 8);
+    cancelled.step(actual, 8, 5);
+    std::vector<Rgb565> before(actual.data(), actual.data() + 80 * 61);
+    const auto result = cancelled.step(actual, 9, 100);
+    CHECK(!cancelled.active() && result.work_units == 0);
+    CHECK(std::memcmp(before.data(), actual.data(), actual.byte_size()) == 0);
+    RefinementJob zero(camera, *scene, kTestPalette, Layers{}, quality, 10);
+    CHECK(zero.step(actual, 10, 0).work_units == 0 && zero.active());
+}
+
 void test_extreme_cameras(const std::string& root) {
     // Many random and extreme cameras over the real atlas: no crash, no sanitizer finding.
     std::FILE* f = std::fopen((root + "/data/atlas.gatl").c_str(), "rb");
@@ -633,6 +676,7 @@ int main(int argc, char** argv) {
     test_render_properties();
     test_long_arcs_follow_the_great_circle();
     test_scene_matches_reference(root);
+    test_refinement_bands();
     test_extreme_cameras(root);
     return TEST_MAIN_RESULT();
 }
