@@ -37,6 +37,11 @@ replayed on the G4 produced a final frame with the same FNV-1a hash as the host,
 that session; this is evidence, not a guarantee for every input). Nothing was
 compiled on maul. No timing was taken; these are correctness runs only.
 
+X11 program: cross-built with the same compiler against the X sysroot (`-I.../usr/X11R7/include
+-L.../usr/X11R7/lib -Wl,-rpath,/usr/X11R7/lib -lX11`, dynamic), 87 KB stripped; on maul `ldd` resolves
+every library and it stops at "cannot open display" as expected for the remote account. Not run
+against a real display. Benchmark and performance data: `docs/perf/README.md`.
+
 ## Not measured
 
 - Nothing has been built or run under Retro68 (Mac OS 9, 68k). The NetBSD/macppc run above
