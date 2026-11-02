@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "check.hpp"
+#include "clock.hpp"
 #include "frame_stats.hpp"
 
 using namespace globe;

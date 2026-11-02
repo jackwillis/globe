@@ -28,11 +28,13 @@ target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
 target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
 
 # Platform adapter code that needs no OS headers, so it can be tested anywhere.
-add_library(globe_pixel_format src/platform/x11/pixel_format.cpp)
-target_include_directories(globe_pixel_format PUBLIC src/platform/x11)
+add_library(globe_pixel_format src/platform/common/pixel_format.cpp)
+target_include_directories(globe_pixel_format PUBLIC src/platform/common)
 target_link_libraries(globe_pixel_format PUBLIC globe_core)
 
 add_library(globe_frame_stats src/platform/common/frame_stats.cpp src/platform/common/cli.cpp)
+add_library(globe_clock_posix src/platform/common/clock_posix.cpp)
+target_include_directories(globe_clock_posix PUBLIC src/platform/common)
 target_include_directories(globe_frame_stats PUBLIC src/platform/common)
 
 find_package(Python3 COMPONENTS Interpreter)
@@ -48,7 +50,7 @@ if(Python3_FOUND)
 
   add_executable(globe-bench src/platform/bench/bench.cpp)
   target_link_libraries(globe-bench PRIVATE globe_core globe_embedded_atlas globe_frame_stats
-                                            globe_pixel_format)
+                                            globe_pixel_format globe_clock_posix)
   target_compile_options(globe-bench PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
@@ -57,7 +59,7 @@ if(X11_FOUND AND TARGET globe_embedded_atlas)
   add_executable(globe-x11 src/platform/x11/main.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
   target_link_libraries(globe-x11 PRIVATE globe_core globe_embedded_atlas globe_frame_stats
-                                          globe_pixel_format ${X11_LIBRARIES})
+                                          globe_pixel_format globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
@@ -83,7 +85,7 @@ if(GLOBE_BUILD_TESTS)
   target_compile_options(test_pixel_format PRIVATE -Wall -Wextra -Wpedantic)
   add_test(NAME pixel_format COMMAND test_pixel_format)
   add_executable(test_frame_stats tests/test_frame_stats.cpp)
-  target_link_libraries(test_frame_stats PRIVATE globe_frame_stats)
+  target_link_libraries(test_frame_stats PRIVATE globe_frame_stats globe_clock_posix)
   target_compile_options(test_frame_stats PRIVATE -Wall -Wextra -Wpedantic)
   add_test(NAME frame_stats COMMAND test_frame_stats)
   add_executable(test_cli tests/test_cli.cpp)

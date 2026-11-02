@@ -94,6 +94,67 @@ bool parse_double(const char* s, double& out) {
     return true;
 }
 
+// Retro68's printf has no %ll (see docs/toolchain.md), so 64-bit values are written by hand.
+// Doubles still use "%.17g" through snprintf; that conversion is plain C89.
+class Writer {
+  public:
+    Writer(char* buf, std::size_t cap) : buf_(buf), cap_(cap) {}
+
+    void text(const char* s) {
+        const std::size_t n = std::strlen(s);
+        if (!ok_ || len_ + n >= cap_) {
+            ok_ = false;
+            return;
+        }
+        std::memcpy(buf_ + len_, s, n);
+        len_ += n;
+    }
+
+    void u64(std::uint64_t v) {
+        char digits[24];
+        std::size_t n = 0;
+        do {
+            digits[n++] = static_cast<char>('0' + static_cast<int>(v % 10U));
+            v /= 10U;
+        } while (v != 0);
+        char out[24];
+        for (std::size_t i = 0; i < n; ++i) {
+            out[i] = digits[n - 1 - i];
+        }
+        out[n] = '\0';
+        text(out);
+    }
+
+    void integer(int v) { formatted("%d", v); }
+    void real(double v) { formatted("%.17g", v); }
+
+    // Terminates the buffer; returns the length, or 0 if anything did not fit.
+    std::size_t finish() {
+        if (!ok_ || len_ >= cap_) {
+            buf_[0] = '\0';
+            return 0;
+        }
+        buf_[len_] = '\0';
+        return len_;
+    }
+
+  private:
+    template <typename T> void formatted(const char* fmt, T v) {
+        char tmp[40];
+        const int n = std::snprintf(tmp, sizeof tmp, fmt, v);
+        if (n < 0 || static_cast<std::size_t>(n) >= sizeof tmp) {
+            ok_ = false;
+            return;
+        }
+        text(tmp);
+    }
+
+    char* buf_;
+    std::size_t cap_;
+    std::size_t len_ = 0;
+    bool ok_ = true;
+};
+
 } // namespace
 
 const char* key_name(Key key) {
@@ -165,31 +226,43 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
     if (buf == nullptr || capacity == 0) {
         return 0;
     }
-    int len = 0;
+    Writer w(buf, capacity);
     if (const auto* down = std::get_if<PointerDown>(&msg)) {
-        len = std::snprintf(buf, capacity, "down %llu %.17g %.17g",
-                            static_cast<unsigned long long>(down->time_ms), down->x, down->y);
+        w.text("down ");
+        w.u64(down->time_ms);
+        w.text(" ");
+        w.real(down->x);
+        w.text(" ");
+        w.real(down->y);
     } else if (const auto* move = std::get_if<PointerMove>(&msg)) {
-        len = std::snprintf(buf, capacity, "move %llu %.17g %.17g",
-                            static_cast<unsigned long long>(move->time_ms), move->x, move->y);
+        w.text("move ");
+        w.u64(move->time_ms);
+        w.text(" ");
+        w.real(move->x);
+        w.text(" ");
+        w.real(move->y);
     } else if (const auto* up = std::get_if<PointerUp>(&msg)) {
-        len = std::snprintf(buf, capacity, "up %llu", static_cast<unsigned long long>(up->time_ms));
+        w.text("up ");
+        w.u64(up->time_ms);
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
-        len = std::snprintf(buf, capacity, "wheel %llu %d",
-                            static_cast<unsigned long long>(wheel->time_ms), wheel->steps);
+        w.text("wheel ");
+        w.u64(wheel->time_ms);
+        w.text(" ");
+        w.integer(wheel->steps);
     } else if (const auto* key = std::get_if<KeyDown>(&msg)) {
-        len = std::snprintf(buf, capacity, "key %llu %s",
-                            static_cast<unsigned long long>(key->time_ms), key_name(key->key));
+        w.text("key ");
+        w.u64(key->time_ms);
+        w.text(" ");
+        w.text(key_name(key->key));
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
-        len = std::snprintf(buf, capacity, "resize %d %d", resize->width, resize->height);
+        w.text("resize ");
+        w.integer(resize->width);
+        w.text(" ");
+        w.integer(resize->height);
     } else {
-        len = std::snprintf(buf, capacity, "expose");
+        w.text("expose");
     }
-    if (len < 0 || static_cast<std::size_t>(len) >= capacity) {
-        buf[0] = '\0';
-        return 0;
-    }
-    return static_cast<std::size_t>(len);
+    return w.finish();
 }
 
 } // namespace globe

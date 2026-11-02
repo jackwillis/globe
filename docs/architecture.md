@@ -15,9 +15,10 @@ include/globe/          public, portable interfaces (no OS headers)
   app.hpp, trace.hpp    Model / Msg / update / Effects; text message traces
   embedded_atlas.hpp    the atlas compiled into the binary
 src/core, src/data, src/render   implementations of the above
-src/platform/common     frame timing summary, monotonic clock, CLI number parsing
+src/platform/common     portable adapter helpers: pixel_format (RGB565 -> any window-system layout),
+                        frame timing summary, CLI parsing; clock.hpp (+ clock_posix.cpp)
 src/platform/bench      globe-bench: headless trace replay with per-frame timing
-src/platform/x11        globe-x11, plus pixel_format (RGB565 -> any X visual layout)
+src/platform/x11        globe-x11 (the only file that includes X11)
 tools/                  atlas builder (Python), embed_atlas.py, Retro68 probe, policy check
 ```
 

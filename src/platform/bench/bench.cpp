@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "cli.hpp"
+#include "clock.hpp"
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"

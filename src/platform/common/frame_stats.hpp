@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
-// Distribution summary for timing samples, plus the monotonic clock the platform layer reads.
-// Core code never calls the clock: time enters the application only inside messages.
+// Distribution summary for timing samples. Portable: no OS calls. The monotonic clock that
+// produces the samples is separate (clock.hpp), because each platform reads time differently.
 #pragma once
 
 #include <cstddef>
-#include <cstdint>
 
 namespace globe {
 
@@ -21,8 +20,5 @@ struct Summary {
 // Summarizes samples (finite values). Sorts `samples` in place. Zero samples give a zeroed
 // Summary. Nearest-rank percentile: the value at index ceil(p * n) - 1 of the sorted samples.
 Summary summarize(double* samples, std::size_t count);
-
-// Nanoseconds from an arbitrary fixed origin; never goes backwards (CLOCK_MONOTONIC).
-std::uint64_t monotonic_ns();
 
 } // namespace globe

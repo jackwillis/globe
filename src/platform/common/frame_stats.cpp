@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <ctime>
 
 namespace globe {
 
@@ -35,13 +34,6 @@ Summary summarize(double* samples, std::size_t count) {
     s.p50 = nearest_rank(samples, count, 0.50);
     s.p95 = nearest_rank(samples, count, 0.95);
     return s;
-}
-
-std::uint64_t monotonic_ns() {
-    timespec ts{};
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return static_cast<std::uint64_t>(ts.tv_sec) * 1000000000ULL +
-           static_cast<std::uint64_t>(ts.tv_nsec);
 }
 
 } // namespace globe

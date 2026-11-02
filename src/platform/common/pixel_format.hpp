@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
-// Converts the RGB565 framebuffer into the pixel layout an X server asked for (bits per pixel,
-// channel masks, byte order). No X11 types: the adapter fills in PixelFormat from its visual and
-// server settings, so the conversion can be tested without a display.
+// Converts the RGB565 framebuffer into the pixel layout a window system asked for (bits per
+// pixel, channel masks, byte order). No platform types: an adapter fills in PixelFormat from its
+// visual (X11) or pixel map (QuickDraw GWorld), so one tested converter serves every front end
+// and the conversion can be tested without a display.
 //
 // Channels are scaled to the mask width with rounding so that full intensity stays full
 // (0x1F -> all ones) and zero stays zero. Padding bits are written as zero.
