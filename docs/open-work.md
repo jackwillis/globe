@@ -13,7 +13,7 @@ HANDOFF-codex.md uncommitted. Follow ADR 0001 including the G4 terrain performan
 - [x] Ordered 6: pure cursor intent and toolbar hit testing; X11 utility toolbar and cursor mapping.
 - [x] Ordered 7: GPOL country data, spherical picking with holes/poles/antimeridian, core InfoCard,
       scrolling X11 popup; GPLC cities afterwards.
-- [ ] Ordered 8: Retro68 OS 9 application proof of life, wake-driven sleep, GWorld conversion;
+- [x] Ordered 8: Retro68 OS 9 application proof of life, wake-driven sleep, GWorld conversion;
       built, not run (owner hardware acceptance).
 - [ ] Ordered 9: designated floppy build/packaging size report and CI report/budget.
 - [x] Independent 5: four-size host/G4 scaling report.
