@@ -10,7 +10,7 @@ include/globe/          public, portable interfaces (no OS headers)
   trackball.hpp         drag rotation, zoom, re-orthonormalization
   framebuffer.hpp       RGB565 framebuffer, one allocation
   raster.hpp            exact-clipping lines, disc fill
-  render.hpp            render_globe(camera, atlas, palette, layers)
+  render.hpp            Scene (cached vertex vectors), render_globe(camera, scene, palette, layers)
   atlas.hpp, crc32.hpp  GATL reader (zero-copy, validating)
   app.hpp, trace.hpp    Model / Msg / update / Effects; text message traces
   embedded_atlas.hpp    the atlas compiled into the binary

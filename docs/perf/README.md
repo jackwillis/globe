@@ -48,6 +48,36 @@ frames per second. Zoom steps and key presses in the trace still draw the grid, 
 smaller than the 15.7 ms the graticule costs per frame. One G4 run only; the earlier baseline had
 three.
 
+## Speed-ups after hiding the graticule (2026-11-01)
+
+Two changes, measured one at a time on the same trace (640x480, drag frames, render only; pack
+is unchanged at about 17 ms). Every variant draws the same frames: the sampled frame checksum is
+`485cbfbc9fef11a3` for all of them, on the host and on the G4.
+
+1. **Scene cache.** Each atlas vertex's unit vector (and the graticule's) is computed once at load
+   (`Scene`: 227 KB, 13 ms once on the G4) instead of four `sin`/`cos` calls per vertex per frame.
+2. **Cheaper arcs.** `clip_arc_to_front` compares a squared quantity; `draw_arc` picks the
+   subdivision count from the squared chord length (a square root only for long arcs) and places
+   interior points on the chord normalized with two Newton steps, so no `sin`, `atan2` or
+   `sqrt` per point. The points are still on the great circle; a test checks drawn pixels stay
+   within 2 px of an exactly sampled arc for arcs from 10 to 165 degrees.
+
+| G4, render mean / p50 / p95 | before (grid hidden) | after change 1 | after change 2 |
+| --- | --- | --- | --- |
+| scene cache on | n/a | 36.1 / 36.7 / 46.1 ms | **20.8 / 21.1 / 24.7 ms** |
+| scene cache off (`--reference`) | 48.0 / 47.3 / 60.0 ms | 46.1 / 46.6 / 57.3 ms | 30.7 / 31.1 / 36.5 ms |
+
+(Each cell is one run; 752 frames for the last two columns, 1,128 for "before", so treat
+differences of a millisecond or two as noise. Files: `g4-640-change1-*.json`,
+`g4-640-change2-*.json`, `g4-640-no-grid-while-dragging.json`.)
+
+Host: 0.82 ms without the cache and 0.49 ms with it (change 1 only, `--repeat 5`); with both
+changes, 0.69 ms without and **0.36 ms** with the cache (`host-release-640-change2-*.json`).
+
+**Net effect on the G4:** a drag frame went from about 64 ms (grid on) to 48 ms (grid hidden) to
+**20.8 ms** render, which with the 17 ms pack is about 38 ms per frame, roughly 26 frames per
+second before X submission (it was about 12). Pixel packing is now the largest single cost.
+
 ## Where the time goes (G4, mean ms per frame, layers forced with `--layers`)
 
 | Layers drawn | render mean | added by that layer |
@@ -92,18 +122,14 @@ covered by the `x11_idle` test. Idle CPU on the G4 was not measured.
 
 Ordered by expected effect, each to be tried and measured, not assumed:
 
-1. Cache each atlas vertex's unit vector at load time (about 195 KB as doubles, 97 KB as floats)
-   so the per-frame work per vertex is one matrix-vector product, with no `sin`/`cos`.
-2. Cut `sqrt`/`atan2` per segment: choose the subdivision count from the squared chord length,
-   subdivide with a normalized linear interpolation (same great circle, no `sin`), and avoid
-   normalizing when the arc is short.
-3. Cull whole polylines using a bounding vector per polyline, and skip segments off the viewport.
-4. Speed up the 17 ms pixel pack (about 55 ns per pixel now): per-row lookup into a reused word,
-   or skip packing when the server's layout already matches RGB565.
+1. Speed up the 17 ms pixel pack (about 55 ns per pixel), now the largest single cost: a 32-bit
+   fast path with unrolled stores, reuse of the previous pixel's packed value in flat areas, or
+   skipping packing when the server's layout already matches RGB565.
+2. Cull whole polylines using a bounding vector per polyline, and skip segments off the viewport.
+3. Replace `std::floor` in `draw_line` (a 113 ns library call on the G4) with an inline floor, and
+   skip the Liang-Barsky clip for lines already inside the buffer.
 
-Changes 1 and 2 will change some drawn pixels slightly (the points still lie on the same great
-circle, but sub-points are spaced differently), so the golden frames and pinned hashes would be
-regenerated, deliberately, in the same commit.
+(Done: the vertex cache and the cheaper arcs, above.)
 
 ## Reproduce
 
