@@ -281,6 +281,7 @@ class App {
         image_ = img;
         fb_.emplace(std::move(*fb));
         format_ = format;
+        frame_valid_ = false; // the new buffers are blank until the next render
         return true;
     }
 
@@ -330,6 +331,13 @@ class App {
             fx.wake_after_ms = update(model_, Tick{monotonic_ns() / 1000000ULL}).wake_after_ms;
         }
         need_redraw_ |= fx.redraw;
+        if (fx.present_only) {
+            // Expose or update: show the pixels we already have; render only if there are none.
+            if (frame_valid_)
+                resend();
+            else
+                need_redraw_ = true;
+        }
         if (fx.wake_after_ms != 0) {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
@@ -540,7 +548,22 @@ class App {
         std::uint64_t t = monotonic_ns();
         render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_));
         t_.render_ms.push_back(ms_since(t));
+        frame_valid_ = true;
         upload(0, fb.height());
+    }
+
+    // Shows the already packed image again, without rendering or converting.
+    void resend() {
+        if (!fb_ || image_ == nullptr)
+            return;
+        const std::uint64_t t = monotonic_ns();
+        XPutImage(dpy_, win_, gc_, image_, 0, 0, 0, 0, static_cast<unsigned>(fb_->width()),
+                  static_cast<unsigned>(fb_->height()));
+        XSync(dpy_, False);
+        t_.present_ms.push_back(ms_since(t));
+        if (opt_.verify_pixels) {
+            pixels_ok_ &= verify_window();
+        }
     }
 
     void upload(int first_row, int end_row) {
@@ -780,6 +803,7 @@ class App {
     std::size_t verified_frames_ = 0;
     bool need_redraw_ = true;
     bool first_expose_ = false;
+    bool frame_valid_ = false; // fb_ and image_ hold a rendered frame
     bool script_active_ = false;
     bool script_started_ = false;
     std::vector<Msg> script_;

@@ -57,7 +57,8 @@ struct Model {
     std::uint64_t stage_since_ms; // settle clock; separate from last user input for resize
     bool stage_needs_time;        // initial state or resize awaits its first timestamped message
     bool dragging;
-    bool drag_moved; // the camera changed since the button went down
+    bool drag_active; // the pointer has moved past kDragSlopPx since the button went down
+    bool drag_moved;  // the camera changed since the button went down
     ScreenPoint drag_last;
     bool click_valid; // a recent press that could become the first half of a double click
     ScreenPoint click_pos;
@@ -114,6 +115,10 @@ struct Effects {
     // such as pointer motion asks for a wake on every message. A stale wake that does fire is
     // harmless: update checks the current stage and input timestamp.
     std::uint32_t wake_after_ms = 0;
+    // Show the pixels already in the framebuffer again (window exposed, update event). Nothing
+    // may be rendered or restarted for it: the model did not change. A platform with no valid
+    // frame yet (the first expose, or after its buffers were recreated) renders instead.
+    bool present_only = false;
 };
 
 // Fresh state for a viewport: north up, centered on a fixed home position, globe sized to fit.
@@ -155,6 +160,12 @@ std::optional<Command> toolbar_hit(ScreenPoint pointer);
 constexpr std::uint64_t kDoubleClickMs = 400;
 constexpr double kDoubleClickSlopPx = 6.0;
 constexpr double kDoubleClickZoom = 2.0;
+
+// A press alone changes nothing: no stage change, no new generation, no redraw. A drag begins once
+// the pointer is more than kDragSlopPx from where the button went down; the globe then follows the
+// pointer from that press position, so nothing lags. A release without a drag leaves the model
+// untouched, and platforms treat it as a click (country picking).
+constexpr double kDragSlopPx = 3.0;
 
 constexpr std::uint32_t kSettleDelayMs = 150;
 constexpr std::uint32_t kRefineDelayMs = 1; // separate event-loop turn for Settle work

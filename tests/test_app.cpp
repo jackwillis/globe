@@ -210,7 +210,7 @@ void test_align_north_and_mode_toggle() {
     update(m, PointerUp{13});
     update(m, CommandIssued{14, Command::ToggleDragMode});
     update(m, PointerDown{1000, 80.0, 60.0});
-    update(m, PointerMove{1001, 81.0, 60.0});
+    update(m, PointerMove{1001, 84.0, 60.0}); // past the drag slop
     CHECK(north_is_up(m.camera));
 }
 
@@ -226,10 +226,10 @@ void test_grid_hidden_while_dragging() {
     Model m = fresh();
     CHECK(effective_layers(m).graticule);
     update(m, PointerDown{0, 80.0, 60.0});
-    CHECK(!effective_layers(m).graticule); // hidden from the press on
+    CHECK(effective_layers(m).graticule); // a press alone changes nothing
     CHECK(effective_layers(m).coastlines && effective_layers(m).borders);
-    CHECK(m.layers.graticule); // the user's setting is untouched
-    Effects fx = update(m, PointerMove{16, 70.0, 60.0});
+    Effects fx = update(m, PointerMove{16, 70.0, 60.0}); // a drag: hidden from here on
+    CHECK(m.layers.graticule);                           // the user's setting is untouched
     CHECK(fx.redraw && !effective_layers(m).graticule);
     fx = update(m, PointerUp{32});
     CHECK(fx.redraw && effective_layers(m).graticule); // back, with a redraw to show it
@@ -423,8 +423,11 @@ void test_keys() {
 
 void test_resize_and_expose() {
     Model m = fresh();
+    const Model snapshot = m;
     Effects fx = update(m, Repaint{});
-    CHECK(fx.redraw && !fx.quit);
+    CHECK(fx.present_only && !fx.redraw && !fx.quit && fx.wake_after_ms == 0);
+    CHECK(same_camera(m.camera, snapshot.camera) && m.stage == snapshot.stage &&
+          m.generation == snapshot.generation && m.dragging == snapshot.dragging);
     fx = update(m, Resize{320, 240});
     CHECK(fx.redraw && m.camera.width == 320 && m.camera.height == 240);
     CHECK_NEAR(m.camera.center_x, 160.0, 0.0);
@@ -494,6 +497,10 @@ void test_quality_profile_and_generation() {
     update(m, Repaint{});
     CHECK(m.generation == settled_generation);
     update(m, PointerDown{300, 80, 60});
+    CHECK(m.generation == settled_generation && quality_for(m).terrain); // a press is not input
+    update(m, PointerMove{310, 80 + kDragSlopPx, 60});
+    CHECK(m.generation == settled_generation && quality_for(m).terrain); // inside the slop
+    update(m, PointerMove{320, 80 + kDragSlopPx + 1.0, 60});
     CHECK(m.generation != settled_generation && !quality_for(m).terrain);
     CHECK(quality_for(m).max_chord_px == moving.max_chord_px);
     const auto before_resize = m.generation;
@@ -521,16 +528,27 @@ void test_quality_wakes() {
     CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
     update(m, Tick{2150});
     CHECK(m.stage == QualityStage::Settle);
+    // A press alone neither restarts the stage nor stops settling already under way.
+    const auto generation = m.generation;
     fx = update(m, PointerDown{2151, 80.0, 60.0});
-    CHECK(m.stage == QualityStage::Moving);
+    CHECK(m.stage == QualityStage::Settle && fx.wake_after_ms == 0 && m.generation == generation);
     fx = update(m, Tick{3000});
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
+    fx = update(m, PointerUp{3001}); // a click: no drag, so nothing at all happens
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0 && !fx.redraw &&
+          m.generation == generation);
+    // A real drag holds the settle clock until release, then restarts it.
+    update(m, PointerDown{3100, 80.0, 60.0});
+    fx = update(m, PointerMove{3110, 90.0, 60.0});
+    CHECK(m.stage == QualityStage::Moving && fx.redraw && m.generation != generation);
+    fx = update(m, Tick{3500});
     CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == 0); // held still
-    fx = update(m, PointerUp{3001});
+    fx = update(m, PointerUp{3501});
     CHECK(fx.wake_after_ms == kSettleDelayMs);
-    update(m, Tick{3151});
-    fx = update(m, Tick{3151});
+    update(m, Tick{3651});
+    fx = update(m, Tick{3651});
     CHECK(m.stage == QualityStage::Settle && fx.wake_after_ms == kRefineDelayMs);
-    fx = update(m, Tick{3152});
+    fx = update(m, Tick{3652});
     CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
     update(m, PointerMove{4000, 10.0, 10.0}); // hovering is not camera input
     CHECK(m.stage == QualityStage::Refine);
@@ -546,6 +564,61 @@ void test_quality_wakes() {
     CHECK(m.stage == QualityStage::Refine);
     fx = update(m, Repaint{});
     CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
+}
+
+// A click without dragging changes nothing: same model, no effects, settled stage kept.
+void test_click_changes_nothing() {
+    Model m = fresh();
+    update(m, Tick{0});
+    update(m, Tick{150});
+    update(m, Tick{151});
+    CHECK(m.stage == QualityStage::Refine);
+    const Model before = m;
+    Effects fx = update(m, PointerDown{1000, 70.0, 60.0});
+    CHECK(!fx.redraw && !fx.present_only && !fx.quit && fx.wake_after_ms == 0);
+    CHECK(m.stage == before.stage && m.generation == before.generation &&
+          m.stage_since_ms == before.stage_since_ms && same_camera(m.camera, before.camera));
+    CHECK(m.dragging && !m.drag_active && !m.drag_moved);
+    // Jitter inside the slop in every direction still changes nothing.
+    for (const ScreenPoint to : {ScreenPoint{70.0 + kDragSlopPx, 60.0},
+                                 {70.0 - kDragSlopPx, 60.0},
+                                 {70.0, 60.0 + kDragSlopPx},
+                                 {70.0, 60.0 - kDragSlopPx}}) {
+        fx = update(m, PointerMove{1010, to.x, to.y});
+        CHECK(!fx.redraw && fx.wake_after_ms == 0 && !m.drag_active && !m.drag_moved);
+        CHECK(m.stage == before.stage && m.generation == before.generation &&
+              same_camera(m.camera, before.camera));
+    }
+    CHECK(effective_layers(m).graticule);
+    fx = update(m, PointerUp{1020});
+    CHECK(!fx.redraw && fx.wake_after_ms == 0 && !m.dragging && !m.drag_active);
+    CHECK(m.stage == before.stage && m.generation == before.generation &&
+          same_camera(m.camera, before.camera));
+    // The release of a click still ends the press (platforms pick on dragging && !drag_moved).
+    // One pixel past the slop is a drag: the globe follows from the press position, not the
+    // point where the slop was crossed.
+    m.drag_mode = DragMode::Trackball; // exact grab-the-point behavior
+    update(m, PointerDown{2000, 70.0, 60.0});
+    fx = update(m, PointerMove{2010, 70.0 + kDragSlopPx + 1.0, 60.0});
+    CHECK(m.drag_active && m.drag_moved && fx.redraw && fx.wake_after_ms == kSettleDelayMs);
+    CHECK(m.stage == QualityStage::Moving && m.generation != before.generation);
+    CHECK(!effective_layers(m).graticule);
+    CHECK(same_camera(m.camera,
+                      drag_rotate(before.camera, {70.0, 60.0}, {70.0 + kDragSlopPx + 1.0, 60.0})));
+    fx = update(m, PointerUp{2020});
+    CHECK(fx.redraw && fx.wake_after_ms == kSettleDelayMs && !m.dragging);
+    // A double click that changes nothing (already at the maximum zoom) is not input either.
+    Model z = fresh();
+    z.camera = *make_camera({{0.0, 0.0}, 0.0, max_radius_px(160, 120), 160, 120});
+    update(z, Tick{0});
+    update(z, Tick{150});
+    update(z, Tick{151});
+    CHECK(z.stage == QualityStage::Refine);
+    const auto zoom_generation = z.generation;
+    update(z, PointerDown{5000, 80.0, 60.0});
+    update(z, PointerUp{5010});
+    fx = update(z, PointerDown{5100, 80.0, 60.0});
+    CHECK(z.stage == QualityStage::Refine && z.generation == zoom_generation && !fx.redraw);
 }
 
 void test_stage_trace_replay() {
@@ -833,6 +906,7 @@ int main(int argc, char** argv) {
     test_align_north_and_mode_toggle();
     test_double_click_keeps_north_up_in_turntable();
     test_grid_hidden_while_dragging();
+    test_click_changes_nothing();
     test_double_click();
     test_zoom_and_limits();
     test_keys();

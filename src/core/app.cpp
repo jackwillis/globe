@@ -170,7 +170,7 @@ double max_radius_px(int width, int height) {
 
 Layers effective_layers(const Model& model) {
     Layers layers = model.layers;
-    if (model.dragging) {
+    if (model.dragging && model.drag_active) {
         layers.graticule = false;
     }
     return layers;
@@ -248,6 +248,7 @@ Model initial_model(int width, int height) {
     m.stage = QualityStage::Moving;
     m.stage_needs_time = true;
     m.dragging = false;
+    m.drag_active = false;
     m.drag_moved = false;
     m.drag_last = {0.0, 0.0};
     m.click_valid = false;
@@ -268,13 +269,12 @@ Effects update(Model& model, const Msg& msg) {
                 model.click_valid && down->time_ms >= model.click_ms &&
                 down->time_ms - model.click_ms <= kDoubleClickMs &&
                 distance_squared(p, model.click_pos) <= kDoubleClickSlopPx * kDoubleClickSlopPx;
-            input = true;
-            input_ms = down->time_ms;
             model.last_input_ms = down->time_ms;
             if (second_click && on_globe(model.camera, p)) {
                 // Bring the clicked point to the center, then zoom in on it.
                 model.click_valid = false;
                 model.dragging = false;
+                model.drag_active = false;
                 model.drag_moved = false;
                 Camera centered = model.camera;
                 if (model.drag_mode == DragMode::Turntable) {
@@ -289,8 +289,12 @@ Effects update(Model& model, const Msg& msg) {
                 fx = set_camera(model, zoomed(centered, kDoubleClickZoom,
                                               min_radius_px(centered.width, centered.height),
                                               max_radius_px(centered.width, centered.height)));
+                input = fx.redraw; // a zoom that changed nothing is not input
+                input_ms = down->time_ms;
             } else {
+                // A press alone is not input: the settled frame stays, see kDragSlopPx.
                 model.dragging = true;
+                model.drag_active = false;
                 model.drag_moved = false;
                 model.drag_last = p;
                 model.click_valid = true;
@@ -301,25 +305,33 @@ Effects update(Model& model, const Msg& msg) {
     } else if (const auto* move = std::get_if<PointerMove>(&msg)) {
         if (model.dragging && finite(move->x, move->y)) {
             const ScreenPoint to{move->x, move->y};
-            if (model.click_valid &&
-                distance_squared(to, model.click_pos) > kDoubleClickSlopPx * kDoubleClickSlopPx) {
+            // drag_last stays at the press position until the slop is passed.
+            if (!model.drag_active &&
+                distance_squared(to, model.drag_last) > kDragSlopPx * kDragSlopPx) {
+                model.drag_active = true;
                 model.click_valid = false; // it is a drag, not a click
             }
-            fx = set_camera(model, drag_camera(model, model.drag_last, to));
-            model.drag_moved |= fx.redraw;
-            model.drag_last = to;
-            input = true;
-            input_ms = move->time_ms;
-            model.last_input_ms = move->time_ms;
+            if (model.drag_active) {
+                fx = set_camera(model, drag_camera(model, model.drag_last, to));
+                model.drag_moved |= fx.redraw;
+                model.drag_last = to;
+                input = true;
+                input_ms = move->time_ms;
+                model.last_input_ms = move->time_ms;
+            }
         }
     } else if (const auto* up = std::get_if<PointerUp>(&msg)) {
         // The graticule was hidden while dragging; bring it back, but only if the drag drew.
         fx.redraw = model.dragging && model.drag_moved && model.layers.graticule;
+        // Only a drag that changed the view restarts the settle clock; a plain click does not.
+        input = model.dragging && model.drag_moved;
         model.dragging = false;
+        model.drag_active = false;
         model.drag_moved = false;
-        input = true;
         input_ms = up->time_ms;
-        model.last_input_ms = up->time_ms;
+        if (input) {
+            model.last_input_ms = up->time_ms;
+        }
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
         fx = set_camera(model, zoom_camera(model.camera, wheel->steps));
         input = true;
@@ -357,7 +369,7 @@ Effects update(Model& model, const Msg& msg) {
             model.stage_since_ms = tick->time_ms;
             model.stage_needs_time = false;
         }
-        if (!model.dragging &&
+        if (!(model.dragging && model.drag_active) &&
             (model.stage == QualityStage::Moving || model.stage == QualityStage::Settle)) {
             const std::uint32_t delay =
                 model.stage == QualityStage::Moving ? kSettleDelayMs : kRefineDelayMs;
@@ -388,7 +400,7 @@ Effects update(Model& model, const Msg& msg) {
             fx.wake_after_ms = kSettleDelayMs;
         }
     } else if (std::holds_alternative<Repaint>(msg)) {
-        fx.redraw = true;
+        fx.present_only = true; // the model is unchanged: show the existing pixels again
     }
     if (input) {
         ++model.generation;
