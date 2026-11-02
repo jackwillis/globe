@@ -228,3 +228,15 @@ configuration matrix.
 - Both editions use the same source and the same pack formats; the difference is which data and
   front ends are built in, selected at build time. Exactly what goes in each is open until the
   floppy size report and the compression measurements exist.
+
+## Measurement, 2026-11-01 (Codex: compression prototype, no runtime codec chosen)
+
+The requested quarter-degree ETOPO pack was actually built: 1,037,352 bytes, SHA-256
+`b6d9c8a4ae4cf66c67d6c247057c15e23416f6341a734965b33e07cf859b2241`.
+For its 1,036,800 cell bytes, zlib-wrapped DEFLATE level 9 gives 500,301 bytes; gradient predictor
+plus DEFLATE 428,179; adaptive order-0 byte range coding 804,716; predictor plus range coding
+392,593. Each decode and predictor reversal exactly reproduces its input. Sizes exclude the
+552-byte GELV metadata and a future container. Atlas delta/zigzag varints give 26,706 point bytes
+versus 32,480 (whole-file arithmetic 29,294 versus 35,068). See `docs/perf/compression.md` and raw
+JSON for method and limits. These are modern Python measurements, with no target decoder,
+G4 decode timing or runtime format change; the result does not choose the eventual codec.

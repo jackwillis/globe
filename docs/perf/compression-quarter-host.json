@@ -1,0 +1,29 @@
+{
+  "elevation_bytes": 1037352,
+  "cell_bytes": 1036800,
+  "grid": "1440x720",
+  "elevation_sha256": "b6d9c8a4ae4cf66c67d6c247057c15e23416f6341a734965b33e07cf859b2241",
+  "candidates": {
+    "plain": {
+      "zlib_level9_bytes": 500301,
+      "adaptive_range_bytes": 804716,
+      "range_encode_host_ms": 1332.631,
+      "range_decode_host_ms": 1798.06,
+      "roundtrip": true
+    },
+    "gradient": {
+      "zlib_level9_bytes": 428179,
+      "adaptive_range_bytes": 392593,
+      "range_encode_host_ms": 1094.493,
+      "range_decode_host_ms": 1652.87,
+      "roundtrip": true
+    }
+  },
+  "atlas_delta": {
+    "raw_point_bytes": 32480,
+    "delta_varint_point_bytes": 26706,
+    "whole_file_candidate_bytes": 29294,
+    "roundtrip": true
+  },
+  "limits": "modern Python prototype, order-0 adaptive byte range coder; sizes exclude container and 552-byte metadata; no target decoder, target timing or runtime format selected"
+}
