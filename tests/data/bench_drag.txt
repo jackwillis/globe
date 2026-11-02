@@ -375,4 +375,3 @@ key 6792 right
 key 6892 down
 key 6992 toggle_graticule
 key 7092 toggle_borders
-key 7192 toggle_coastlines

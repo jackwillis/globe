@@ -134,10 +134,6 @@ Effects on_command(Model& model, Command command) {
         model.layers.borders = !model.layers.borders;
         fx.redraw = true;
         return fx;
-    case Command::ToggleCoastlines:
-        model.layers.coastlines = !model.layers.coastlines;
-        fx.redraw = true;
-        return fx;
     case Command::Quit:
         fx.quit = true;
         return fx;
@@ -184,7 +180,6 @@ ToolbarState toolbar_state(const Model& model) {
     const auto index = [](Command command) { return static_cast<std::size_t>(command); };
     state[index(Command::ToggleGraticule)].checked = model.layers.graticule;
     state[index(Command::ToggleBorders)].checked = model.layers.borders;
-    state[index(Command::ToggleCoastlines)].checked = model.layers.coastlines;
     state[index(Command::ToggleDragMode)].checked = model.drag_mode == DragMode::Trackball;
     // World north is +Y. Its screen projection must point up, with no sideways component.
     state[index(Command::AlignNorth)].enabled =

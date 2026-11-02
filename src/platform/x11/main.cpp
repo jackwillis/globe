@@ -7,7 +7,7 @@
 //             [--idle-seconds N] [--stats]
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
-// G / B / C toggle graticule / borders / coastlines, N aligns north up, T switches between
+// G / B toggle graticule / borders, N aligns north up, T switches between
 // turntable and trackball dragging, Esc or Q quits.
 //
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
@@ -464,8 +464,6 @@ class App {
             return apply(CommandIssued{now, Command::ToggleGraticule});
         case XK_b:
             return apply(CommandIssued{now, Command::ToggleBorders});
-        case XK_c:
-            return apply(CommandIssued{now, Command::ToggleCoastlines});
         case XK_n:
             return apply(CommandIssued{now, Command::AlignNorth});
         case XK_t:

@@ -411,8 +411,7 @@ void test_keys() {
     fx = update(m, CommandIssued{10, Command::ToggleGraticule});
     CHECK(fx.redraw && !m.layers.graticule && m.layers.coastlines && m.layers.borders);
     update(m, CommandIssued{11, Command::ToggleBorders});
-    update(m, CommandIssued{12, Command::ToggleCoastlines});
-    CHECK(!m.layers.borders && !m.layers.coastlines);
+    CHECK(!m.layers.borders && m.layers.coastlines); // coastlines are not user-switchable
     update(m, CommandIssued{13, Command::ToggleGraticule});
     CHECK(m.layers.graticule);
 
@@ -540,11 +539,10 @@ void test_toolbar_state() {
         CHECK(initial[i].visible);
         CHECK(initial[i].enabled == (i != static_cast<std::size_t>(Command::AlignNorth)));
         CHECK(initial[i].checked == (i == static_cast<std::size_t>(Command::ToggleGraticule) ||
-                                     i == static_cast<std::size_t>(Command::ToggleBorders) ||
-                                     i == static_cast<std::size_t>(Command::ToggleCoastlines)));
+                                     i == static_cast<std::size_t>(Command::ToggleBorders)));
     }
     const Command toggles[] = {Command::ToggleGraticule, Command::ToggleBorders,
-                               Command::ToggleCoastlines, Command::ToggleDragMode};
+                               Command::ToggleDragMode};
     for (Command command : toggles) {
         const bool before = state(m, command).checked;
         update(m, CommandIssued{1, command});
@@ -575,7 +573,7 @@ void test_trace_text_round_trip() {
         PointerUp{0},
         Wheel{7, -3},
         Wheel{8, 1000000},
-        CommandIssued{9, Command::ToggleCoastlines},
+        CommandIssued{9, Command::ToggleBorders},
         CommandIssued{10, Command::Quit},
         Resize{640, 480},
         Repaint{},

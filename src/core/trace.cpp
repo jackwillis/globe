@@ -29,7 +29,6 @@ constexpr CommandEntry kCommands[] = {
     {"reset", Command::Reset},
     {"toggle_graticule", Command::ToggleGraticule},
     {"toggle_borders", Command::ToggleBorders},
-    {"toggle_coastlines", Command::ToggleCoastlines},
     {"align_north", Command::AlignNorth},
     {"toggle_drag_mode", Command::ToggleDragMode},
     {"quit", Command::Quit},

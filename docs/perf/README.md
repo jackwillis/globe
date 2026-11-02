@@ -78,6 +78,11 @@ changes, 0.69 ms without and **0.36 ms** with the cache (`host-release-640-chang
 **20.8 ms** render, which with the 17 ms pack is about 38 ms per frame, roughly 26 frames per
 second before X submission (it was about 12). Pixel packing is now the largest single cost.
 
+> **Note (2026-11-01):** the coastline toggle was removed as a user feature, so `bench_drag.txt` no
+> longer ends by switching coastlines off. Its frame checksum for `--repeat 2` is now
+> `41c7adb508763323` (identical on host and G4); the `485cbfbc9fef11a3` quoted in the sections
+> above belongs to the earlier trace. Timings in those sections are historical and unchanged.
+
 ## Where the time goes (G4, mean ms per frame, layers forced with `--layers`)
 
 | Layers drawn | render mean | added by that layer |

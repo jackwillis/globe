@@ -38,7 +38,6 @@ enum class Command : std::uint8_t {
     Reset,
     ToggleGraticule,
     ToggleBorders,
-    ToggleCoastlines,
     AlignNorth,     // rotate about the view axis so north is up; the center stays put
     ToggleDragMode, // switch between Turntable and Trackball
     Quit,

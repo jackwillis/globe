@@ -23,8 +23,9 @@ ctest --test-dir build --output-on-failure
 
 Controls: drag to rotate (north stays up), wheel or `+`/`-` to zoom, double-click to zoom in and
 center on the point, arrows to turn, `N` aligns north up, `T` switches to trackball dragging (the
-point under the pointer follows it exactly, but the globe can roll), `G`/`B`/`C` toggle graticule,
-borders and coastlines, `R` resets, `Esc` or `Q` quits. The graticule is hidden while dragging.
+point under the pointer follows it exactly, but the globe can roll), `G`/`B` toggle the graticule
+and borders (coastlines are always drawn), `R` resets, `Esc` or `Q` quits. The graticule is hidden
+while dragging.
 
 `-DGLOBE_SANITIZE=ON` adds ASan and UBSan. `tools/probe-retro68.sh` compiles the core
 for PowerPC and 68k inside the Retro68 container (podman). Licence: GPL-3.0-or-later.
