@@ -25,6 +25,7 @@ message times through a minimal ABI declaration (the installed interfaces omit i
 exports it). AppearanceLib exports SetThemeCursor; the same pure intent maps to arrow 0, closed
 hand 8 and open hand 9. The API values are documented in the archived
 [Appearance Manager reference](https://leopard-adc.pepas.com/documentation/Carbon/Reference/Appearance_Manager/index.html).
+The return type is the documented 32-bit OSStatus (checked against the archived reference).
 A failed native cursor call falls back to the system arrow. This requires OS 9 / Appearance Manager.
 
 WaitNextEvent sleeps until an event, a replacement stage deadline, or available refinement work.
