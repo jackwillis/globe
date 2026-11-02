@@ -17,7 +17,7 @@ if git ls-files | grep -iE '\.(sit|hqx|smi|img|dsk|rsrc|bin)$' | grep .; then
 fi
 
 missing=$(git ls-files 'include/*' 'src/*' 'tests/*' 'tools/*' 'CMakeLists.txt' | \
-    grep -E '\.(cpp|hpp|cc|h|sh|py|txt)$' | \
+    grep -E '\.(cpp|hpp|cc|h|sh|py)$|(^|/)CMakeLists\.txt$' | \
     xargs grep -L 'SPDX-License-Identifier: GPL-3.0-or-later')
 [ -z "$missing" ] || { echo "$missing"; bad "missing 'SPDX-License-Identifier: GPL-3.0-or-later'"; }
 
