@@ -73,3 +73,14 @@ here follows the ETOPO 2022 product link, exact filename and dataset metadata, n
 summary. Attribution for a future generated pack should cite NOAA NCEI, the DOI above and its
 access date. No GELV format, decoder, builder, quantization table or elevation pack was created
 in this source-check pass.
+
+## Generated elevation pack — 2026-11-01
+
+The subsequent all-open-items pass implemented GELV v1 and built `elevation-1deg.gelv` from the
+verified persisted source above. The source SHA-256 was rechecked before conversion. The pack is
+360x180, 65,352 bytes, SHA-256
+`2ceb255dcdad98fe28beaf85f1a64122956af4a8388e95f094858d3162b085be`.
+Two independent conversions produced identical bytes; a later equivalent scalar quantizer
+reproduced the same digest. Build environment: h5py 3.16.0, numpy 2.5.4, modern host Python.
+The data retains the source's CC0-1.0 status; conversion tools and runtime code are GPL-3.0-or-later.
+See `docs/elevation-format.md` for the mean-cell aggregation and quantization table decisions.

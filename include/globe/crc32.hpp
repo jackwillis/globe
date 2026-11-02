@@ -8,6 +8,8 @@
 
 namespace globe {
 
+std::uint32_t crc32_extend(std::uint32_t previous, const std::uint8_t* data, std::size_t size);
+
 std::uint32_t crc32(const std::uint8_t* data, std::size_t size);
 
 } // namespace globe

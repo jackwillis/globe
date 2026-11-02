@@ -24,7 +24,7 @@ using namespace atlas_util;
 namespace {
 std::size_t g_allocations = 0;
 }
-void* operator new(std::size_t n) {
+[[gnu::noinline]] void* operator new(std::size_t n) {
     ++g_allocations;
     void* p = std::malloc(n != 0 ? n : 1);
     if (p == nullptr) {
@@ -32,10 +32,10 @@ void* operator new(std::size_t n) {
     }
     return p;
 }
-void operator delete(void* p) noexcept {
+[[gnu::noinline]] void operator delete(void* p) noexcept {
     std::free(p);
 }
-void operator delete(void* p, std::size_t) noexcept {
+[[gnu::noinline]] void operator delete(void* p, std::size_t) noexcept {
     std::free(p);
 }
 
