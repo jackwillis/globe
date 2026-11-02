@@ -116,3 +116,46 @@ decisions that followed. This amends D6; nothing below is implemented yet unless
 - **Where the refine time goes (inference, profile in progress):** the flat fill is about 107 ms of
   roughly 580 ms, so the larger share is probably projecting all ~65,000 corners and per-cell
   setup. Fix by measurement, not by guess; the profile result will be recorded here.
+
+## Addendum, 2026-11-01 (behavior rules for every front end; compression direction)
+
+### Behavior rules (owner, binding on X11 and the OS 9 front end)
+
+These live in the portable core or in a shared platform rule so both front ends behave the same.
+
+1. **A click without dragging changes nothing visible.** A pointer press alone must not leave the
+   settled stage, bump the render generation or schedule a re-render. The Moving stage starts only
+   when the pointer has moved beyond the drag slop. A release without movement leaves the model
+   untouched (country picking still uses that release). Double-click zoom still changes the camera.
+   Review finding, 2026-11-01: `update()` in `src/core/app.cpp` currently treats every
+   `PointerDown` as input (stage Moving, `generation` bumped, settle wake scheduled), so a plain
+   click discards a finished refine and re-renders it about 150 ms later. To be fixed in the
+   core with a test that clicks without moving and asserts stage, generation and effects are
+   unchanged. Not yet fixed.
+2. **Moving or exposing a window never re-renders.** A window move, an expose or a repaint request
+   resends the pixels already in the framebuffer. Only a resize, a camera change or a data change
+   starts a new render or restarts refinement. X11 already ignores `ConfigureNotify` when the size
+   is unchanged; the suspected remaining cause is `Expose` becoming `Repaint`, which currently asks
+   for a render. Unverified on the G4. The OS 9 front end must do the same for update events
+   and window drags.
+
+### Compression direction (design only; nothing implemented, no ratios measured)
+
+- Compression serves the floppy and downloads, not the draw loop. Decode once at load, or per tile.
+  Decoders must be small portable C++ with no allocation in hot paths and an output size bounded
+  by the header (corrupt data must not be able to exhaust memory).
+- Vector layers (coastline, borders, country polygons): delta from the previous quantized point as
+  a variable-length integer; expected roughly 2x smaller (inference).
+- Elevation grids: predict each cell from its neighbors, store the error, then entropy-code with
+  DEFLATE (a tinf-style inflate, about 2 KB of code, 32 KB window) or a small adaptive range coder.
+  Higher-resolution packs are independent compressed tiles (for example 16 by 16 degrees) decoded on
+  demand into a small cache, which keeps OS 9 memory bounded.
+- Flags (ice, lakes): run-length coding. Places: shared string table with delta-coded positions.
+- Not planned: LZMA (large dictionary, heavy decoder), JPEG/PNG (only useful for the dropped
+  satellite imagery).
+- The small embedded files keep the raw zero-copy v1 formats; compressed data is a separate
+  container for the optional large packs, with the CRC over the stored bytes and the output size
+  checked against the header.
+- Before choosing, measure on real data: derive a 0.25 degree grid from the ETOPO source and
+  compare plain DEFLATE, predictor plus DEFLATE and a range coder, plus delta-varint on the atlas
+  points. Record the ratios here and in the floppy size report.
