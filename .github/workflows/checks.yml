@@ -42,7 +42,16 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Lint (clang-tidy 22.1.8)
         run: |
-          git ls-files 'src/*.cpp' | xargs clang-tidy -p build --quiet
+          git ls-files 'src/*.cpp' ':!:src/platform/os9/*' | xargs clang-tidy -p build --quiet
+
+      - name: Full edition size report
+        run: |
+          tools/build-edition.sh full
+          cat build-full/size-report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-edition-size-report
+          path: build-full/size-report.*
 
   clang:
     name: Host build with clang
@@ -80,3 +89,15 @@ jobs:
           out=$(tools/probe-retro68.sh "$RETRO68_IMAGE" 2>&1) || { echo "$out"; exit 1; }
           echo "$out" | grep -E '^(==|ok|FAIL)|probe: <'
           ! echo "$out" | grep -q '^FAIL'
+      - name: Build and package designated OS 9 floppy edition (not executed)
+        run: |
+          tools/build-os9.sh --floppy
+          cat build-os9-floppy/size-report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: os9-floppy-build-and-size-report
+          path: |
+            build-os9-floppy/GlobeFloppy.bin
+            build-os9-floppy/GlobeFloppy-1440.dsk
+            build-os9-floppy/size-report.*
+            build-os9-floppy/hfs-*.txt

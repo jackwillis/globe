@@ -29,3 +29,12 @@ while dragging.
 
 `-DGLOBE_SANITIZE=ON` adds ASan and UBSan. `tools/probe-retro68.sh` compiles the core
 for PowerPC and 68k inside the Retro68 container (podman). Licence: GPL-3.0-or-later.
+
+The two release builds are `tools/build-edition.sh full` (native X11) and
+`tools/build-edition.sh floppy` (classic PowerPC OS 9). Both emit size reports; the latter also
+creates a real 1.44 MB HFS image and verifies application forks after extraction. See
+[floppy measurements](docs/floppy-size.md), [OS 9 proof](docs/os9-proof.md),
+[local elevation import](docs/elevation-import.md), [toolbar](docs/toolbar.md),
+[countries](docs/country-format.md), [places](docs/place-format.md),
+[scaling](docs/perf/scaling.md) and [compression experiment](docs/perf/compression.md).
+OS 9 is built and packaged, not executed; CI is configured, not run in this repository.

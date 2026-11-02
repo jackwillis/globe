@@ -1,15 +1,10 @@
 # OS 9 proof of life — built, not run
 
-Build locally with Retro68's PowerPC toolchain in the container:
+Build the OS 9 floppy edition locally with `tools/build-edition.sh floppy` (Retro68 container).
+Transfer `build-os9-floppy/GlobeFloppy.bin` as MacBinary and decode on the Mac; preserve both forks.
+Alternatively use `build-os9-floppy/GlobeFloppy-1440.dsk`, the designated 1.44 MB HFS image. The
+framework also generates an 800 KB transport image; that is not the designated floppy report.
 
-```
-podman run --rm -v "$PWD":/src:Z -w /src ghcr.io/autc04/retro68 sh -ec '
-  cmake -S os9 -B build-os9 -DCMAKE_TOOLCHAIN_FILE=/Retro68-build/toolchain/powerpc-apple-macos/cmake/retroppc.toolchain.cmake
-  cmake --build build-os9 -j2'
-```
-
-Transfer `build-os9/Globe.bin` as MacBinary and decode on the Mac; preserve both forks. The generated
-`.dsk` is Retro68's default 800 KB transport image, not the designated 1.44 MB floppy experiment.
 No Apple headers, implementations or binaries are copied into this repository. Compilation uses
 Retro68's installed Multiversal interfaces and import libraries.
 
@@ -35,7 +30,7 @@ The pure sleep calculation tests overdue, one-ms, 150-ms, rounding and saturated
 and rounding-down mutants fail. A SIZE resource requests a 24 MiB partition, minimum 12 MiB.
 
 Actual build: Retro68 GNU 16.1.0, `-Os`, no exceptions/RTTI; linked and packaged successfully with
-no final compiler warnings. Data fork 233,020 bytes, resource fork 424 bytes, MacBinary 233,728
+no final compiler warnings. Designated data fork 233,020 bytes, resource fork 432 bytes, MacBinary 233,728
 bytes. Initial compile failures exposed an absent QDOffscreen.h and Carbon-only port accessors;
 the final code uses the available classic QuickDraw interfaces instead.
 

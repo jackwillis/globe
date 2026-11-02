@@ -15,7 +15,7 @@ HANDOFF-codex.md uncommitted. Follow ADR 0001 including the G4 terrain performan
       scrolling X11 popup; GPLC cities afterwards.
 - [x] Ordered 8: Retro68 OS 9 application proof of life, wake-driven sleep, GWorld conversion;
       built, not run (owner hardware acceptance).
-- [ ] Ordered 9: designated floppy build/packaging size report and CI report/budget.
+- [x] Ordered 9: designated floppy build/packaging size report and CI report/budget.
 - [x] Independent 5: four-size host/G4 scaling report.
 
 No CI execution or real G4 display access can be claimed. Keep commits narrow, write meaningful
@@ -36,3 +36,10 @@ New refined checksum 1228dcc860a92a77 agrees on host/G4; legacy pins unchanged. 
 G4 unit tests and Retro68 compile checks pass. Five terrain mutants rejected after strengthening a
 center-only horizon test with a coarse-grid strict-interior oracle. Initial four-size G4 scaling
 series overlapped a hardware unit test; rerun cleanly before treating scaling as complete.
+
+The original checklist is complete (OS 9 acceptance remains built, not run). The concurrently
+added ADR redesigns are follow-up work held by Claude: the click-slop core fix, layered gray base,
+styles, ice/lakes and the center-biased dissolve/shaded path. Those branches were not merged here.
+X11 exposure handling now obeys the new cached-pixel rule, as OS 9 update handling already does.
+Two release entry points and size reports are provided; compression is measured in a modern
+prototype, with raw embedded v1 data retained until a bounded runtime container is selected.
