@@ -24,7 +24,8 @@ CMake 4.3.0 + Ninja 1.13.2, GCC 16.2.1 with ASan/UBSan and clang 22.1.8: configu
 The three unit tests were cross-built on the laptop (`powerpc--netbsd-g++` 12.5.0, `-std=c++20 -O2
 -static -fno-exceptions -fno-rtti`, stripped, about 0.9 MB each since libstdc++ is linked
 statically), pushed to `/tmp` on maul with `maulctl push nb`, and run there: NetBSD 11.0 macppc
-(G4, big-endian). `bytes`, `framebuffer` and `projection` all printed `ok`, exit 0. Nothing was
+(G4, big-endian). `bytes`, `framebuffer` and `projection` all printed `ok`, exit 0. `trackball` was added the same
+way later that day (`ok`, exit 0, 1.94 s user for the whole test including a 200,000-drag drift check). Nothing was
 compiled on maul. No timing was taken; these are correctness runs only.
 
 ## Not measured
