@@ -84,3 +84,26 @@ Two independent conversions produced identical bytes; a later equivalent scalar 
 reproduced the same digest. Build environment: h5py 3.16.0, numpy 2.5.4, modern host Python.
 The data retains the source's CC0-1.0 status; conversion tools and runtime code are GPL-3.0-or-later.
 See `docs/elevation-format.md` for the mean-cell aggregation and quantization table decisions.
+
+## Glaciated-areas source check — 2026-11-01 (not yet used by any builder)
+
+Candidate source for an ice flag in the elevation pack (Antarctica and Greenland white, coastal
+rock not): Natural Earth **glaciated areas** polygons, physical theme, version **4.1.0** at all
+three detail levels. Public domain (same terms as the other Natural Earth layers). Nothing reads
+these files yet; they are recorded so the later builder can verify them.
+
+| Level | ZIP bytes | Source ZIP SHA-256 | Records | Parts | Points |
+| --- | --- | --- | --- | --- | --- |
+| 1:110m | 19,590 | `7247fc9dc9b7d66b0bd8970fad81c46cb18d392ed52be348a313bbd8c1f4b990` | 11 | 12 | 827 |
+| 1:50m | 216,484 | `f48644b4523482501bcd380c4b7345ba574ab79b87df753447d772ea239b7daf` | 377 | 395 | 18,868 |
+| 1:10m | 1,644,604 | `de6ff396ab7eee8cbe2146030cc29278ef67c468e5675c748b1372e241ecbbff` | 1,886 | 2,558 | 239,371 |
+
+- URLs: `https://naturalearth.s3.amazonaws.com/{110m,50m,10m}_physical/ne_{110m,50m,10m}_glaciated_areas.zip`
+- Counts come from reading the `.shp` headers and records (shape type 5, polygon); byte counts and
+  hashes are from the complete downloads. Not measured: how the polygons rasterize onto the 1-degree grid.
+- Antarctica is the largest polygon at every level (bounding box to -90 latitude, north edge -63);
+  Greenland is the second (about 60 to 83 N). At 110m the layer is only 11 records, so it
+  covers the two ice sheets and a few caps; 50m adds many smaller glaciers. 50m at about 217 KB
+  is small enough to use as a build-time input; it never ships to the target.
+- The ZIPs are not committed. They are kept at `~/scratch/globe-data/naturalearth/` on the
+  development laptop.
