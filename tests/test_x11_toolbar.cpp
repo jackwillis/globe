@@ -28,8 +28,8 @@ Window find(Display* d, const char* title) {
     return found;
 }
 int main(int argc, char** argv) {
-    CHECK(argc == 2);
-    if (argc != 2)
+    CHECK(argc == 2 || argc == 3);
+    if (argc != 2 && argc != 3)
         return 1;
     int out[2];
     CHECK(pipe(out) == 0);
@@ -77,7 +77,30 @@ int main(int argc, char** argv) {
         XFlush(d);
         usleep(20000);
     };
-    if (main && toolbar) {
+    const bool repaint_test = argc == 3;
+    if (main && toolbar && repaint_test) {
+        usleep(1000000); // let the initial one-shot refinement finish
+        XMoveWindow(d, main, 20, 20);
+        XFlush(d);
+        for (int i = 0; i < 10; ++i) {
+            XEvent expose{};
+            expose.xexpose.type = Expose;
+            expose.xexpose.display = d;
+            expose.xexpose.window = main;
+            XSendEvent(d, main, False, ExposureMask, &expose);
+            XFlush(d);
+            usleep(20000);
+        }
+        XEvent close{};
+        close.xclient.type = ClientMessage;
+        close.xclient.display = d;
+        close.xclient.window = main;
+        close.xclient.message_type = XInternAtom(d, "WM_PROTOCOLS", False);
+        close.xclient.format = 32;
+        close.xclient.data.l[0] = static_cast<long>(XInternAtom(d, "WM_DELETE_WINDOW", False));
+        XSendEvent(d, main, False, NoEventMask, &close);
+        XFlush(d);
+    } else if (main && toolbar) {
         motion(80, 60);
         motion(0, 0);
         motion(80, 60);
@@ -122,10 +145,15 @@ int main(int argc, char** argv) {
     int status = 0;
     waitpid(pid, &status, 0);
     CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0);
-    CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);
-    CHECK(text.find("\"cursor_changes\": 5") != std::string::npos);
-    CHECK(text.find("\"info_cards\": 1") != std::string::npos);
-    CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
+    if (repaint_test) {
+        CHECK(text.find("\"frames\": 1,") != std::string::npos);
+        CHECK(text.find("\"refine_bands\": 8,") != std::string::npos);
+    } else {
+        CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);
+        CHECK(text.find("\"cursor_changes\": 5") != std::string::npos);
+        CHECK(text.find("\"info_cards\": 1") != std::string::npos);
+        CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
+    }
     if (test::failures())
         std::fprintf(stderr, "%s\n", text.c_str());
     return TEST_MAIN_RESULT();

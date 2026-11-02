@@ -15,3 +15,13 @@ fail; the X11 interaction test initially failed because no toolbar window existe
 GCC ASan/UBSan 24/24 passed, including both pixel depths and quiet idle. The first clang X11 run
 was sandboxed and could not open private displays; rerun outside the sandbox is recorded separately.
 Retro68 compile probes include the portable core; no real G4 desktop acceptance was performed.
+
+The later behavior ADR is implemented for X11 exposure and scripted repaint requests: they upload
+the current framebuffer without invoking the renderer or restarting a refinement job. A private
+X11 test moves the window and sends ten exposures after settling, requiring exactly one coarse
+render and eight completed refinement bands. Before the fix it reported 11 renders and 38 bands.
+The first implementation exposed a startup ordering bug (configure and expose arrived on separate
+turns and scripts did not start); script dispatch is now independent of redraw. Standalone
+`--idle-seconds` also finishes after measuring, without requiring a script. OS 9 update events
+already use CopyBits on the cached GWorld. The core click rule is assigned to the concurrent pass
+in the updated handoff; no platform workaround was added here.

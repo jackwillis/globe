@@ -104,6 +104,7 @@ endif()
 if(GLOBE_BUILD_TESTS)
   enable_testing()
   if(Python3_FOUND)
+    add_test(NAME floppy_report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_floppy_report.py)
     add_test(NAME place_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_place_builder.py)
     add_test(NAME country_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_country_builder.py)
     add_test(NAME elevation_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_elevation_builder.py)
@@ -153,6 +154,9 @@ if(GLOBE_BUILD_TESTS)
       add_test(NAME x11_toolbar COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
                $<TARGET_FILE:test_x11_toolbar> $<TARGET_FILE:globe-x11>)
       set_tests_properties(x11_toolbar PROPERTIES TIMEOUT 20)
+      add_test(NAME x11_repaint COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
+               $<TARGET_FILE:test_x11_toolbar> $<TARGET_FILE:globe-x11> repaint)
+      set_tests_properties(x11_repaint PROPERTIES TIMEOUT 20)
       # Nothing may be drawn while the window sits idle.
       add_test(NAME x11_idle
                COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"

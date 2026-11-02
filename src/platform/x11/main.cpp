@@ -178,16 +178,18 @@ class App {
             if (!quit && need_redraw_) {
                 present();
                 need_redraw_ = false;
-                if (!script_started_ && first_expose_ && script_active_) {
-                    script_started_ = true;
+            }
+            // Mapping/configure and exposure can arrive on separate event-loop turns.
+            // Dispatch scripts independently of whether this turn needed a new render.
+            if (!quit && !script_started_ && first_expose_) {
+                script_started_ = true;
+                if (script_active_)
                     quit = play_script();
-                    if (!quit && opt_.exit_when_done) {
-                        quit = true;
-                    }
-                    if (!quit && opt_.idle_seconds > 0) {
-                        wait_idle();
-                        quit = true; // measurement mode: report and leave
-                    }
+                if (!quit && opt_.exit_when_done)
+                    quit = true;
+                if (!quit && opt_.idle_seconds > 0) {
+                    wait_idle();
+                    quit = true;
                 }
             }
             if (!quit)
@@ -304,6 +306,12 @@ class App {
     }
 
     bool apply(const Msg& msg) {
+        // Repaint is a presentation request. Keep the cached frame and any in-flight job.
+        if (std::holds_alternative<Repaint>(msg)) {
+            if (!need_redraw_ && fb_)
+                upload(0, fb_->height());
+            return false;
+        }
         const auto old_generation = model_.generation;
         const auto old_stage = model_.stage;
         Effects fx = update(model_, msg);
@@ -313,8 +321,7 @@ class App {
             if (old_stage == QualityStage::Refine)
                 fx.redraw = true;
         }
-        if (model_.stage == QualityStage::Refine &&
-            (old_stage != QualityStage::Refine || std::holds_alternative<Repaint>(msg))) {
+        if (model_.stage == QualityStage::Refine && old_stage != QualityStage::Refine) {
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
                                 quality_for(model_), model_.generation, packs_.for_model(model_));
         }
@@ -771,7 +778,7 @@ class App {
     double refine_work_ms_ = 0;
     bool pixels_ok_ = true;
     std::size_t verified_frames_ = 0;
-    bool need_redraw_ = false;
+    bool need_redraw_ = true;
     bool first_expose_ = false;
     bool script_active_ = false;
     bool script_started_ = false;
