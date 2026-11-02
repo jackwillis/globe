@@ -67,8 +67,12 @@ std::optional<Arc> clip_arc_to_front(Vec3 a, Vec3 b);
 
 // Writes unit vectors along the shorter great-circle arc from a to b into out, including both
 // endpoints, so that consecutive points are at most max_step_rad apart (to within rounding, about
-// 1e-9 relative). Returns the number of points written, or 0 if the arc is degenerate, max_step_rad
-// is not positive and finite, or capacity is too small. Never writes more than capacity points.
+// 1e-9 relative). Returns the number of points written, or 0 if the arc is degenerate,
+// max_step_rad is not positive and finite, or capacity is too small. Never writes more than
+// capacity points.
+//
+// Currently used by tests as an exact reference; the renderer subdivides on its own with a cheaper
+// method that avoids sin, atan2 and sqrt.
 std::size_t subdivide_arc(Vec3 a, Vec3 b, double max_step_rad, Vec3* out, std::size_t capacity);
 
 } // namespace globe

@@ -7,12 +7,13 @@ include/globe/          public, portable interfaces (no OS headers)
   bytes.hpp             endian-explicit loads/stores
   geometry.hpp          Vec3, LatLon, unit-vector conversion
   projection.hpp        Camera, orthographic projection, horizon arc clipping, subdivision
-  trackball.hpp         drag rotation, zoom, re-orthonormalization
+  trackball.hpp         trackball drag, zoom, re-orthonormalization (the Trackball DragMode)
   framebuffer.hpp       RGB565 framebuffer, one allocation
   raster.hpp            exact-clipping lines, disc fill
   render.hpp            Scene (cached vertex vectors), render_globe(camera, scene, palette, layers)
   atlas.hpp, crc32.hpp  GATL reader (zero-copy, validating)
-  app.hpp, trace.hpp    Model / Msg / update / Effects; text message traces
+  app.hpp, trace.hpp    Model / Msg / update / Effects; DragMode (Turntable default, Trackball);
+                        double-click, align-north, graticule-hidden-while-dragging; text traces
   embedded_atlas.hpp    the atlas compiled into the binary
 src/core, src/data, src/render   implementations of the above
 src/platform/common     portable adapter helpers: pixel_format (RGB565 -> any window-system layout),

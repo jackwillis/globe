@@ -8,7 +8,7 @@ terrain (M5), the Mac OS 9 front end.
 
 | Question | Decision |
 | --- | --- |
-| Drag behavior | Virtual trackball. The camera keeps a full orientation; `make_camera` (center + heading) stays as a convenience for tests and initial placement. |
+| Drag behavior | Virtual trackball (chosen at planning). **Superseded 2026-11-01:** after hands-on use the owner found it rolled the globe and behaved oddly at the rim, so the default is now a north-up turntable; the trackball stays behind the `T` key. |
 | Platforms | NetBSD/X11 only. OS 9 follows later on the same core; the Retro68 compile probe keeps guarding portability meanwhile. |
 | Atlas content | Natural Earth 1:110m coastlines and borders (public domain), one file. |
 
@@ -28,7 +28,7 @@ terrain (M5), the Mac OS 9 front end.
 5. **Elm core** *(done)* (`src/core`). `Model` (camera, quality stage, window size), `Msg` (drag, wheel,
    key, resize, redraw), `update` returning `Effects`; deterministic with the clock passed in.
    Replayable message-trace test. Moving stage only; the stage enum exists for M2.
-6. **X11 adapter** *(done; built and tested under Xvfb, not yet run on a real display)* (`src/platform/x11`). Window, XImage conversion from RGB565 using the
+6. **X11 adapter** *(done; tested under Xvfb and run by the owner on the G4's display)* (`src/platform/x11`). Window, XImage conversion from RGB565 using the
    visual's masks and byte order, blocks while idle, redraws on change. Cross-built on the
    laptop; maul only runs it (display access is the owner's, see the weather project's notes).
 7. **Measurement.** *(done for render and pack; X submission on real hardware not yet measured)* Injectable clock; per-frame time, segments drawn, peak memory, idle CPU,
@@ -67,3 +67,11 @@ Not yet met, and why:
   17 ms at 640x480. Not measured: X submission and display on the G4.
 - **"Responsive" on the G4.** At about 12 frames per second before submission, 640x480 is not
   comfortably interactive; see the candidate improvements in `docs/perf/README.md`.
+
+## Update (2026-11-01, later)
+
+The owner ran `globe-x11` on the G4's display and reported that dragging felt weird and slower than
+v1. Changes made in response: north-up turntable dragging by default (trackball on `T`),
+align-north (`N`), double-click to zoom and center, graticule hidden while dragging, and two
+renderer speed-ups (drag-frame render 48 ms to 20.8 ms on the G4; see `docs/perf/README.md`).
+Not yet confirmed by the owner: whether the new drag feels right, and real-display frame rate.
