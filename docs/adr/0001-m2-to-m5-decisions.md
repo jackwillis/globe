@@ -52,3 +52,42 @@ and the popup layout. Each gets decided when implemented, with measurements.
   closed-hand cursors (to be confirmed against Retro68's own headers when that work starts, without
   copying Apple files); the X11 core cursor font has no open/closed hand, so X11 needs a fallback
   such as `XC_hand2` and `XC_fleur`, or the cursor theme through Xcursor if present on the target.
+
+## Addendum, 2026-11-01 (terrain look, after the tip4 demo)
+
+Owner feedback on the first terrain build (`globe-x11-tip4`, committed tip `9c62abc`) and the
+decisions that followed. This amends D6; nothing below is implemented yet unless it says so.
+
+- **Feedback:** the 1-degree cells look very chunky; there are no Great Lakes (the 110m coastline
+  has no lakes and a lake is one cell or less at 1 degree); deserts do not look like deserts
+  (elevation alone cannot tell the Sahara from the Amazon); land should be gray while the globe
+  is being moved.
+- **Layered refinement instead of modes.** Terrain is a stack of refine steps that composite, each
+  a bounded, cancellable pass: (1) *base*, flat gray land and a flat ocean color, cheap enough for
+  the Moving stage; (2) *terrain color*, the elevation palette; (3) *relief*, optional slope
+  shading; (4) *lines*, borders, coastlines, graticule; (5) *labels and popups*, later. A settled
+  frame must be identical however the steps were reached, so tests pin the final image. Each step
+  needs its own G4 timing. How the flat base is filled during motion is open: the coastlines are
+  polylines, not polygons, so the candidate is a coarse decimated elevation grid filled flat.
+- **Styles are palettes for the terrain-color step**, not render paths: a runtime-selectable
+  256-entry table, chosen by a toolbar button and a `CycleStyle` command. Hypsometric is the
+  default; cel-shaded (flat height classes, optionally biased by latitude) is the second. Layer
+  visibility is a separate toolbar toggle, like graticule and borders.
+- **Smoothing without more data.** Interpolate a palette index across each cell (shaded quads) so
+  the 1-degree grid reads as soft terrain. `fill_triangle_shaded` exists (branch
+  `claude/smooth-quad`, not merged, not timed on the G4); wiring into terrain is blocked on a G4
+  timing of the settled frame. Finer packs are an opt-in extra with a size report, because 0.5 degree
+  is about 260 KB and 0.25 degree about 1 MB raw (arithmetic, not measured) against a 1.44 MB floppy.
+- **Antarctica is always ice white.** First a latitude rule (land south of about -60 degrees) as a
+  shared override before the palette lookup; reserve an ice-flag bit in GELV; later fill it from
+  Natural Earth glaciated areas. Source recorded in `data/SOURCES.md` (version 4.1.0; 50m is 216,484
+  bytes, 377 records); build-time input only, never shipped.
+- **Great Lakes:** add the Natural Earth lakes polygons as a build-time input that marks water
+  cells in the pack, and optionally draw lake outlines. Source not yet checked (size, hash, license).
+- **Deserts:** needs more than elevation: latitude tinting first, or a coarse land-cover grid as a
+  further small versioned file. Not decided.
+- **Satellite imagery: not planned.** A 1024x512 RGB565 texture is about 1 MB, and mapping it
+  means inverse projection per pixel (`sqrt`, `atan2`: slow on the G4; several hundred ms per frame
+  by arithmetic, not measured). If wanted later it is an optional imported pack, never on the
+  floppy, and its license must be confirmed first.
+- **Not decided here:** how much of the layer split ships before OS 9 work starts.
