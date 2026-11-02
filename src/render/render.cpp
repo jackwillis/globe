@@ -91,6 +91,42 @@ void draw_arc(Framebuffer& fb, const Camera& cam, Vec3 a, Vec3 b, Rgb565 color, 
     ++stats.lines_drawn;
 }
 
+// Row-band rejection for the refinement job. A band redraws only what can touch its rows, so
+// an arc is rasterized by the one or two bands it crosses instead of by all of them. The tests
+// are conservative: they may keep an arc that draws nothing in the band, never drop one that
+// would draw a pixel, so the finished frame equals the single-pass frame bit for bit.
+//
+// Margin: lines cover rows floor(ymin)..floor(ymax); interior points of a subdivided arc are
+// normalized with a Newton step good to 1e-5 of the radius.
+double band_margin_px(const Camera& cam) {
+    return 2.0 + 1.0e-4 * cam.radius_px;
+}
+
+bool rows_miss_band(double y_lo, double y_hi, int first, int end) {
+    return y_hi < static_cast<double>(first) || y_lo >= static_cast<double>(end);
+}
+
+// The projection is 1-Lipschitz, so the screen arc stays within the 3D deviation of the great
+// circle from its chord, R * (1 - cos(phi / 2)) <= R * (pi^2 / 32) * |a - b|^2 (no square root).
+bool arc_misses_band(const Camera& cam, Vec3 a, Vec3 b, int first, int end) {
+    const Vec3 d = a - b;
+    const double slack = band_margin_px(cam) + cam.radius_px * 0.31 * dot(d, d);
+    const double ya = cam.center_y - cam.radius_px * a.y;
+    const double yb = cam.center_y - cam.radius_px * b.y;
+    return rows_miss_band(std::min(ya, yb) - slack, std::max(ya, yb) + slack, first, end);
+}
+
+// Every vertex and arc of a cap with sin_radius < 1 lies within 2 sin(theta / 2) <= sqrt(2) *
+// sin(theta) of the axis in the (1-Lipschitz) projection. Caps of 90 degrees or more never miss.
+bool cap_misses_band(const Camera& cam, const PolylineCap& cap, int first, int end) {
+    if (!(cap.sin_radius < 1.0)) {
+        return false;
+    }
+    const double yc = cam.center_y - cam.radius_px * dot(cap.axis, cam.up);
+    const double slack = band_margin_px(cam) + cam.radius_px * 1.4143 * cap.sin_radius;
+    return rows_miss_band(yc - slack, yc + slack, first, end);
+}
+
 constexpr int kParallels = 5;         // latitudes -60, -30, 0, 30, 60
 constexpr int kParallelSamples = 121; // longitudes -180 to 180 every kGraticuleSampleDeg
 constexpr int kMeridians = 12;        // longitudes -180 to 150 every kGraticuleSpacingDeg
@@ -350,9 +386,13 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             const Vec3* grid =
                 scene_->graticule() + (parallels ? 0 : kParallels * kParallelSamples);
             const int first = line * samples + point;
-            draw_arc(fb, camera_, to_camera_space(camera_, grid[first]),
-                     to_camera_space(camera_, grid[first + 1]), palette_.graticule, stats_,
-                     quality_.max_chord_px);
+            const Vec3 a = to_camera_space(camera_, grid[first]);
+            const Vec3 b = to_camera_space(camera_, grid[first + 1]);
+            if (arc_misses_band(camera_, a, b, result.first_row, result.end_row)) {
+                ++stats_.segments_skipped;
+            } else {
+                draw_arc(fb, camera_, a, b, palette_.graticule, stats_, quality_.max_chord_px);
+            }
             ++grid_segment_;
         } else if (phase_ == 3 || phase_ == 4) {
             const bool coast = phase_ == 3;
@@ -377,13 +417,21 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                     ++stats_.polylines_culled;
                     continue;
                 }
+                if (cap_misses_band(camera_, cap, result.first_row, result.end_row)) {
+                    ++stats_.polylines_skipped;
+                    continue;
+                }
                 segment_ = 1;
             } else {
                 const Vec3* points = scene_->vertices() + line_first_;
-                draw_arc(fb, camera_, to_camera_space(camera_, points[segment_ - 1]),
-                         to_camera_space(camera_, points[segment_]),
-                         coast ? palette_.coastline : palette_.border, stats_,
-                         quality_.max_chord_px);
+                const Vec3 a = to_camera_space(camera_, points[segment_ - 1]);
+                const Vec3 b = to_camera_space(camera_, points[segment_]);
+                if (arc_misses_band(camera_, a, b, result.first_row, result.end_row)) {
+                    ++stats_.segments_skipped;
+                } else {
+                    draw_arc(fb, camera_, a, b, coast ? palette_.coastline : palette_.border,
+                             stats_, quality_.max_chord_px);
+                }
                 if (++segment_ == line_.point_count)
                     segment_ = 0;
             }

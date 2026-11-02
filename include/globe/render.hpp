@@ -40,10 +40,12 @@ struct Layers {
 
 // What a frame cost, in countable terms (not time; timing belongs to the platform layer).
 struct RenderStats {
-    std::uint32_t polylines_culled = 0; // whole cached polylines proven behind the horizon
-    std::uint32_t segments = 0;         // atlas and graticule segments considered
-    std::uint32_t segments_visible = 0; // of those, with any part on the front hemisphere
-    std::uint32_t lines_drawn = 0;      // straight line pieces rasterized after subdivision
+    std::uint32_t polylines_culled = 0;  // whole cached polylines proven behind the horizon
+    std::uint32_t segments = 0;          // atlas and graticule segments considered
+    std::uint32_t segments_visible = 0;  // of those, with any part on the front hemisphere
+    std::uint32_t lines_drawn = 0;       // straight line pieces rasterized after subdivision
+    std::uint32_t polylines_skipped = 0; // refinement only: polylines proven outside the band
+    std::uint32_t segments_skipped = 0;  // refinement only: arcs proven outside the band
 };
 
 constexpr Palette kDefaultPalette = {

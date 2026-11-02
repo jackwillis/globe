@@ -1,0 +1,24 @@
+{
+  "note": "GL-6 row-band rejection of arcs and polyline caps in RefinementJob. G4 (maul, NetBSD/macppc, cross GCC 12.5.0 -O2 -static), 640x480, globe-refine-profile --repeat 9 (median per run) and globe-bench --refine --repeat 2 tests/data/bench_drag.txt. Base = main cd65107 sources built the same way. The owner's globe-x11-tip6 was running (idle) on maul during all runs; one base run was disturbed (marked noisy) and is not used in the summary.",
+  "refine_profile_zoom_1x_ms": {
+    "base": {"refine_job_with_terrain": [783.027, 786.207], "refine_job_lines_only": [456.327, 456.568], "noisy_run_not_used": {"refine_job_with_terrain": 1494.917, "refine_job_lines_only": 746.464}},
+    "new": {"refine_job_with_terrain": [378.133, 380.695], "refine_job_lines_only": [82.005, 81.887]},
+    "lines_single_pass": 28.0
+  },
+  "refine_profile_zoom_2x_ms": {
+    "base": {"refine_job_with_terrain": [1019.637, 1014.002], "refine_job_lines_only": [708.632, 710.906]},
+    "new": {"refine_job_with_terrain": [387.531, 393.822], "refine_job_lines_only": [86.220, 86.139]}
+  },
+  "bench_refine_drag_trace_final_view_ms": {
+    "base": [574.571, 581.151, 589.904, 579.928, 562.402],
+    "new": [440.702, 444.516, 444.015, 453.846, 456.097, 454.437],
+    "steps_base": 68506,
+    "steps_new": 67246
+  },
+  "checksums": {
+    "bench_refine_frame_host_and_g4": "1228dcc860a92a77",
+    "profile_job_zoom_1x_base_and_new": "cf55e45eae838297",
+    "profile_job_zoom_2x_base_and_new": "eca1d7571db504f9"
+  },
+  "max_refine_step_ms_note": "Both binaries show occasional 24-34 ms max steps on the G4 (base 23.7-34.4 in four runs, new 0.7-26.4); treated as machine noise, not a regression."
+}
