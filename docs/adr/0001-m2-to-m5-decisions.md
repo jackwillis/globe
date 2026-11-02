@@ -184,3 +184,34 @@ only cells overlapping the current band (or drop bands in favor of the cell diss
 per-band scan); (3) make the per-cell fill cheaper (shaded fill, or skip fills that change no pixel).
 The dissolve order and the layered stack above should be built with these in mind: lines are a
 separate top layer drawn once, not interleaved with terrain passes.
+
+## Addendum, 2026-11-01 (data policy and a separate maps app)
+
+Owner decisions after discussing streaming OpenStreetMap data. Design only; nothing implemented.
+
+- **Terrain is baked into the globe app, compressed.** It changes rarely, is small once compressed,
+  and a baked layer cannot be mismatched or corrupt. The globe stays offline and floppy-sized.
+- **Only the vector layers are updatable:** borders, countries, places and similar data ship as
+  separate versioned pack files that are imported into a data folder (local import first, per D2b).
+  Every pack carries a format version and a checksum. An app rejects a pack it does not understand
+  and keeps running on its baked data. The terrain build must be reproducible so its checksum is
+  stable. Optional higher-resolution terrain packs remain an optional extra with a size report.
+- **No relay.** The owner does not want a relay machine between the apps and any server. The
+  earlier relay idea and an in-app download manager in the globe are dropped.
+- **Streets and other detailed maps belong to a separate maps application,** not the globe. It has
+  its own projection (flat or local, not the globe's orthographic view), tile cache, zoom levels and
+  network code. The globe and the maps app live in one repository, share libraries (projection,
+  raster, pack decoders) and the pack formats, and can hand each other a place as latitude and
+  longitude on the command line. The globe could open a regional pack the maps app fetched.
+- **Networking by platform (from memory, to verify before relying on it):** the NetBSD/X11 maps app
+  can fetch over HTTPS directly with the system TLS library. The public OpenStreetMap raster tile
+  servers allow only light, cached use with attribution and a proper User-Agent, not bulk
+  downloading, so the app must cache and fetch only what is on screen; raster tiles need a PNG
+  decoder. Static vector-tile archives fetched by HTTP range requests need no server logic, but which
+  public ones exist and their terms are unchecked. OpenStreetMap data is ODbL: attribution, and
+  share-alike for derived databases, so a built pack carries the license text.
+- **OS 9:** the owner's Mac cannot realistically do modern TLS, so a networked maps app there is
+  probably not possible without a relay, which is rejected. OS 9 maps is offline regional packs
+  built on a modern machine and imported, or not built.
+- **Rendering streets** (hundreds of thousands of segments per city) needs tile culling and a zoom
+  threshold, and is unmeasured on the G4.
