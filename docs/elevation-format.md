@@ -46,3 +46,36 @@ python3 tools/elevation-builder/build_elevation.py \
 The fixture tests all truncation lengths, extra bytes, every byte mutation, header/extent/lookup
 violations with repaired CRCs, dimensions/size bounds and zero-allocation parsing. Initial pack
 SHA-256: 2ceb255dcdad98fe28beaf85f1a64122956af4a8388e95f094858d3162b085be.
+
+## Lake water mask (GL-28, 2026-11-02)
+
+The bundled build uses the pinned Natural Earth 50m lakes 5.0.0 ZIP as an additional build-time
+input (`--lakes PATH`). A global cell is water when its center is inside the polygon by even-odd
+ring filling. Rings are unwrapped at the antimeridian; islands remain holes; rows remain south-first.
+This center rule is exact for its chosen samples and avoids the earlier 16x16 area approximation.
+It selects 30 Great Lakes cells (the earlier >50%-area estimate selected 29).
+
+GELV v1 has no separate water flag. Selected cells whose quantized height is nonnegative become
+index 127, the existing -1 m shallow-water **color proxy**. Existing negative heights are retained.
+Consequently this pack does not preserve the positive surface/bed elevation of marked inland lakes;
+it must not be used as an accurate bathymetry product. Header, lookup table, flags and decoder are
+unchanged. A future water/ice flag needs a separately reviewed version; none is introduced here.
+
+All 412 source records were read: 135 selected cell centers worldwide, 132 changed nonnegative
+cells. The five Great Lakes contribute 30 centers, 29 changed cells. An independent ray-crossing
+check reproduces those 30 centers; a pinned fixture checks that the embedded pack keeps them water.
+The source's Caspian omission and resolution limitations remain (see data/SOURCES.md).
+
+Two complete source conversions produced identical 65,352-byte files, SHA-256
+`8d0fd2e6777f24dc13ac47e0f73aa459e503c70116d66a61bb2b339b618766a6`.
+Without `--lakes`, the builder still reproduces the historical raw ETOPO grid used by compression
+experiments. The current bundled build command is:
+
+```
+python tools/elevation-builder/build_elevation.py ETOPO.nc elevation-1deg.gelv --lakes ne_50m_lakes.zip
+```
+
+The settled replay pin deliberately changes 27336cb8117e5e7f -> efa030af1a10f887 for the water mask
+and shared-corner shades. Host and G4 agree. Hole omission, north/south reversal and wrong-water-index
+mutants fail. A stale Python bytecode cache initially replayed the last same-length mutant after
+source restoration; clearing only that generated cache and repeating all mutations resolved it.

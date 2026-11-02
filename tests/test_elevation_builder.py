@@ -26,7 +26,7 @@ class Format(unittest.TestCase):
         with self.assertRaises(ValueError): builder.quantize(float('nan'))
     def test_pack_pin(self):
         data=(ROOT/'data/elevation-1deg.gelv').read_bytes()
-        self.assertEqual(hashlib.sha256(data).hexdigest(),'2ceb255dcdad98fe28beaf85f1a64122956af4a8388e95f094858d3162b085be')
+        self.assertEqual(hashlib.sha256(data).hexdigest(),'8d0fd2e6777f24dc13ac47e0f73aa459e503c70116d66a61bb2b339b618766a6')
     def test_invalid(self):
         for w,h,cells in [(0,2,b''),(2,2,b'123'),(32769,1,b'')]:
             with self.assertRaises(ValueError): builder.encode(w,h,cells)

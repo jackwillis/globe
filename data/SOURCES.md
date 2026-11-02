@@ -138,12 +138,12 @@ these files yet; they are recorded so the later builder can verify them.
 - The ZIPs are not committed. They are kept at `~/scratch/globe-data/naturalearth/` on the
   development laptop.
 
-## Lakes source check — 2026-11-01 (not yet used by any builder)
+## Lakes source check — 2026-11-01; builder adoption 2026-11-02
 
 Candidate source for water cells in the elevation pack (the Great Lakes are missing from the 110m
 coastline and are one cell or less at 1 degree): Natural Earth **lakes** polygons, physical theme,
 version **5.0.0** at all three detail levels. Public domain (same Natural Earth terms as the other
-layers). Nothing reads these files yet.
+layers). The elevation builder now reads the pinned 50m file when `--lakes` is supplied.
 
 | Level | ZIP bytes | Source ZIP SHA-256 | Records | Parts | Points |
 | --- | --- | --- | --- | --- | --- |
@@ -170,3 +170,12 @@ layers). Nothing reads these files yet.
   degree, whether the elevation file already shows the Great Lakes as water, and any builder cost.
 - The ZIPs are not committed; they are kept at `~/scratch/globe-data/naturalearth/` on the
   development laptop. 50m (about 253 KB) is the likely build-time input; it never ships to the target.
+
+GL-28 re-verification, 2026-11-02: persisted 50m ZIP SHA-256 recomputed and matches the table;
+VERSION.txt inspected as 5.0.0 and all 412 polygon/DBF records read. The bundled one-degree pack
+now uses cell-center even-odd water marking, preserving island holes and antimeridian wrapping.
+135 centers selected globally, 132 nonnegative cells changed to the v1 shallow-water color proxy;
+30 Great Lakes centers, 29 changed. Both complete source conversions agree: 65,352 bytes,
+SHA-256 `8d0fd2e6777f24dc13ac47e0f73aa459e503c70116d66a61bb2b339b618766a6`.
+The previous `2ceb255d...` pack is the historical ETOPO-only build. Source ZIPs remain outside Git.
+See docs/elevation-format.md for the explicit loss of positive inland-water elevation in v1.
