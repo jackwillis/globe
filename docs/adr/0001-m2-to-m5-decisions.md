@@ -39,3 +39,16 @@ the M1 hands-on results in `docs/perf/README.md`.
 The exact elevation quantization (a per-file lookup table is proposed so one format spans ocean
 depths and mountain heights), the Settle delay (design doc suggests 120 to 200 ms; tune on the G4),
 and the popup layout. Each gets decided when implemented, with measurements.
+
+## Addendum, 2026-11-01 (after hands-on use on the G4)
+
+- The owner confirmed the north-up turntable drag feels right, and that the graticule is good.
+- The coastline toggle was removed as a user feature: coastlines are always drawn. The graticule and
+  borders toggles remain.
+- **Cursor feedback is part of the toolbar milestone (D4), not earlier.** Plan: a pure
+  `cursor_for(Model, pointer)` in the core returning an intent (open hand over the globe, closed hand
+  while dragging, arrow elsewhere), used in both drag modes, next to `toolbar_state`. Each platform
+  maps the intent to a native cursor. On Mac OS 9 the Appearance Manager provides theme open- and
+  closed-hand cursors (to be confirmed against Retro68's own headers when that work starts, without
+  copying Apple files); the X11 core cursor font has no open/closed hand, so X11 needs a fallback
+  such as `XC_hand2` and `XC_fleur`, or the cursor theme through Xcursor if present on the target.

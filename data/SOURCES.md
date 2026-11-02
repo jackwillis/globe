@@ -54,8 +54,10 @@ identifies these NOAA data as public domain in the United States and **CC0-1.0 w
 Retrieved 2026-11-01, America/Chicago. HTTP 200, `application/x-netcdf`; Last-Modified
 2022-10-04 21:55:19 UTC. The catalog's advertised byte count matched the full download.
 The SHA-256 was streamed during download and independently recomputed with `sha256sum`;
-this is our observed digest, not a claimed publisher checksum. The source remains outside the
-repository at `/tmp/ETOPO_2022_v1_60s_N90W180_surface.nc`; it is not committed.
+this is our observed digest, not a claimed publisher checksum. The source is not committed. It
+was moved on 2026-11-01 from `/tmp` to `~/scratch/globe-data/etopo/` on the development laptop
+so a reboot does not lose it; any copy of the file is valid if its SHA-256 matches the digest in
+the table above (re-verified after the move).
 
 Inspection of the actual file with h5py confirmed HDF5 magic `89 48 44 46 0d 0a 1a 0a`,
 `_nc3_strict=1`, CF-1.5, the shape/type/units above, and coordinate arrays. Longitude increases

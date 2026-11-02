@@ -75,3 +75,7 @@ v1. Changes made in response: north-up turntable dragging by default (trackball 
 align-north (`N`), double-click to zoom and center, graticule hidden while dragging, and two
 renderer speed-ups (drag-frame render 48 ms to 20.8 ms on the G4; see `docs/perf/README.md`).
 Not yet confirmed by the owner: whether the new drag feels right, and real-display frame rate.
+
+Owner feedback after trying the changes: the drag feels great and the grid is good; the coastline
+toggle was dropped (coastlines are always drawn). See the addendum in
+`docs/adr/0001-m2-to-m5-decisions.md`.
