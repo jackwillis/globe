@@ -137,6 +137,47 @@ void test_stride_and_rows() {
     }
 }
 
+void test_fast_matches_generic() {
+    // Odd width, unaligned destination and padded rows exercise tails and alignment; the
+    // sequential pattern covers all 65,536 inputs, then flat runs exercise cached colors.
+    auto fb = Framebuffer::create(257, 257);
+    CHECK(fb.has_value());
+    if (!fb) {
+        return;
+    }
+    const PixelFormat formats[] = {k32Le,
+                                   k32Be,
+                                   kRgbx,
+                                   k16_565,
+                                   k16_565Be,
+                                   k24Le,
+                                   {32, 0x3FF00000U, 0x000FFC00U, 0x000003FFU, true}};
+    for (int pattern = 0; pattern < 2; ++pattern) {
+        for (int y = 0; y < fb->height(); ++y) {
+            for (int x = 0; x < fb->width(); ++x) {
+                const unsigned i = static_cast<unsigned>(y * fb->width() + x);
+                fb->set_pixel(x, y, static_cast<Rgb565>(pattern == 0 ? i : i / 71));
+            }
+        }
+        for (const PixelFormat& f : formats) {
+            const std::size_t stride = pixel_row_bytes(f, fb->width()) + 7;
+            std::vector<std::uint8_t> fast(stride * 257 + 2, 0xA5);
+            std::vector<std::uint8_t> generic(fast.size(), 0xA5);
+            CHECK(convert_pixels(*fb, f, fast.data() + 1, stride));
+            CHECK(convert_pixels_generic(*fb, f, generic.data() + 1, stride));
+            CHECK(fast == generic); // includes every row's padding and both guard bytes
+        }
+    }
+    std::uint8_t unchanged[32];
+    std::memset(unchanged, 0xA5, sizeof unchanged);
+    CHECK(!convert_pixels_generic(*fb, k32Le, unchanged, 1));
+    CHECK(!convert_pixels_generic(*fb, k32Le, nullptr, 4096));
+    CHECK(!convert_pixels_generic(*fb, {8, 0xE0, 0x1C, 3, false}, unchanged, 4096));
+    for (std::uint8_t byte : unchanged) {
+        CHECK(byte == 0xA5);
+    }
+}
+
 void test_unsupported_formats() {
     CHECK(pixel_format_supported(k32Le) && pixel_format_supported(k16_555));
     CHECK(!pixel_format_supported({8, 0xE0, 0x1C, 0x03, false}));              // 8 bpp (palette)
@@ -164,6 +205,7 @@ void test_unsupported_formats() {
 } // namespace
 
 int main() {
+    test_fast_matches_generic();
     test_known_values();
     test_exhaustive_8bit_channels();
     test_stride_and_rows();

@@ -37,4 +37,9 @@ std::size_t pixel_row_bytes(const PixelFormat& format, int width);
 bool convert_pixels(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
                     std::size_t stride);
 
+// Reference converter without layout fast paths, for byte-for-byte checks and measurements.
+// Same validation and destination contract as convert_pixels.
+bool convert_pixels_generic(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
+                            std::size_t stride);
+
 } // namespace globe
