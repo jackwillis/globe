@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/terrain.hpp"
+#include "globe/raster.hpp"
 #include <algorithm>
 #include <cmath>
 #include <new>
@@ -55,6 +56,25 @@ void fill_polygon(Framebuffer& fb, const Vec3* p, int count, Rgb565 color) {
     }
 }
 } // namespace
+Rgb565 terrain_color(std::int16_t meters, double latitude, TerrainStyle style) {
+    if (meters >= 0 && latitude < -60)
+        return rgb565(255, 255, 255);
+    if (style == TerrainStyle::Hypsometric)
+        return hypsometric_color(meters);
+    if (meters < -2000)
+        return rgb565(8, 36, 96);
+    if (meters < 0)
+        return rgb565(32, 108, 170);
+    if (meters < 200)
+        return rgb565(80, 144, 72);
+    if (meters < 1000)
+        return rgb565(152, 176, 88);
+    if (meters < 3000)
+        return rgb565(160, 120, 72);
+    if (meters < 5000)
+        return rgb565(200, 176, 144);
+    return rgb565(248, 248, 248);
+}
 Rgb565 hypsometric_color(std::int16_t meters) {
     const int h = meters;
     if (h <= stops[0].height)
@@ -70,8 +90,9 @@ Rgb565 hypsometric_color(std::int16_t meters) {
     return rgb565(255, 255, 255);
 }
 std::size_t TerrainScene::required_bytes(const Elevation& grid) {
-    return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) * 2 * sizeof(Vec3) +
-           static_cast<std::size_t>(grid.width()) * grid.height() * sizeof(CellBands) + 512;
+    return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) *
+               (2 * sizeof(Vec3) + 1) +
+           static_cast<std::size_t>(grid.width()) * grid.height() * sizeof(CellBands) + 1024;
 }
 std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
     const auto corners = static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1);
@@ -93,8 +114,37 @@ std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
                 to_unit_vector({lat, lon});
         }
     TerrainScene scene(grid, std::move(world), std::move(projected), std::move(bands));
-    for (unsigned i = 0; i < 256; ++i)
-        scene.colors_[i] = hypsometric_color(grid.value(static_cast<std::uint8_t>(i)));
+    scene.values_.reset(new (std::nothrow) std::uint8_t[corners]);
+    if (!scene.values_)
+        return std::nullopt;
+    for (unsigned i = 0; i < 256; ++i) {
+        const auto height = grid.value(static_cast<std::uint8_t>(i));
+        if (height >= 0 && scene.first_land_ == 256)
+            scene.first_land_ = i;
+        scene.colors_[0][i] = terrain_color(height, 0, TerrainStyle::Hypsometric);
+        scene.colors_[1][i] = terrain_color(height, 0, TerrainStyle::CelShaded);
+    }
+    const bool wrap = grid.west_deg() == -180 && grid.east_deg() == 180;
+    for (std::uint32_t y = 0; y <= grid.height(); ++y)
+        for (std::uint32_t x = 0; x <= grid.width(); ++x) {
+            unsigned sum = 0, n = 0;
+            for (int dy = -1; dy <= 0; ++dy)
+                for (int dx = -1; dx <= 0; ++dx) {
+                    int row = static_cast<int>(y) + dy, col = static_cast<int>(x) + dx;
+                    if (row < 0 || row >= static_cast<int>(grid.height()))
+                        continue;
+                    if (wrap)
+                        col =
+                            (col + static_cast<int>(grid.width())) % static_cast<int>(grid.width());
+                    if (col < 0 || col >= static_cast<int>(grid.width()))
+                        continue;
+                    sum += grid.cells()[static_cast<std::size_t>(row) * grid.width() +
+                                        static_cast<unsigned>(col)];
+                    ++n;
+                }
+            scene.values_[static_cast<std::size_t>(y) * (grid.width() + 1) + x] =
+                static_cast<std::uint8_t>(sum / n);
+        }
     return scene;
 }
 void TerrainScene::project_corner(std::size_t index, const Camera& camera) {
@@ -119,7 +169,8 @@ void TerrainScene::bound_cell(std::size_t index, int height, int band_rows) {
         static_cast<int>(std::clamp(high, 0.0, static_cast<double>(height))) / band_rows + 1);
     bands_[index] = {static_cast<std::int16_t>(begin), static_cast<std::int16_t>(end)};
 }
-void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows) const {
+void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
+                             TerrainStyle style, bool smooth) const {
     (void)band_rows;
     if (band < bands_[index].first || band >= bands_[index].end)
         return;
@@ -128,6 +179,26 @@ void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int b
     const Vec3 input[] = {projected_[first], projected_[first + 1],
                           projected_[first + grid_.width() + 2],
                           projected_[first + grid_.width() + 1]};
+    const auto index_value = grid_.cells()[index];
+    const auto meters = grid_.value(index_value);
+    const double latitude = grid_.south_deg() + (grid_.north_deg() - grid_.south_deg()) *
+                                                    (static_cast<double>(y) + 0.5) / grid_.height();
+    if (smooth && !(meters >= 0 && latitude < -60) && input[0].z >= 0 && input[1].z >= 0 &&
+        input[2].z >= 0 && input[3].z >= 0) {
+        const unsigned low = meters >= 0 ? first_land_ : 0;
+        const unsigned high = meters >= 0 ? 255 : first_land_ - 1;
+        const auto value = [&](std::size_t i) {
+            return static_cast<double>(std::clamp(static_cast<unsigned>(values_[i]), low, high));
+        };
+        const auto a = value(first), b = value(first + 1), c = value(first + grid_.width() + 2),
+                   d = value(first + grid_.width() + 1);
+        const auto* palette = colors_[style == TerrainStyle::CelShaded ? 1 : 0].data();
+        fill_triangle_shaded(fb, input[0].x, input[0].y, a, input[1].x, input[1].y, b, input[2].x,
+                             input[2].y, c, palette);
+        fill_triangle_shaded(fb, input[0].x, input[0].y, a, input[2].x, input[2].y, c, input[3].x,
+                             input[3].y, d, palette);
+        return;
+    }
     Vec3 clipped[8];
     int count = 0;
     Vec3 previous = input[3];
@@ -140,6 +211,42 @@ void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int b
             clipped[count++] = current;
         previous = current;
     }
-    fill_polygon(fb, clipped, count, colors_[grid_.cells()[index]]);
+    fill_polygon(fb, clipped, count, terrain_color(meters, latitude, style));
+}
+void TerrainScene::draw_base(Framebuffer& fb, const Camera& camera) const {
+    const auto sx = std::max<std::uint32_t>(1, grid_.width() / 36),
+               sy = std::max<std::uint32_t>(1, grid_.height() / 18);
+    for (std::uint32_t y = 0; y < grid_.height(); y += sy)
+        for (std::uint32_t x = 0; x < grid_.width(); x += sx) {
+            const auto endx = std::min(x + sx, grid_.width()),
+                       endy = std::min(y + sy, grid_.height());
+            const auto value =
+                grid_.cells()[static_cast<std::size_t>((y + endy) / 2) * grid_.width() +
+                              (x + endx) / 2];
+            if (grid_.value(value) < 0)
+                continue;
+            const auto project = [&](std::uint32_t col, std::uint32_t row) {
+                const auto v = to_camera_space(
+                    camera, world_[static_cast<std::size_t>(row) * (grid_.width() + 1) + col]);
+                const auto p = to_screen(camera, v);
+                return Vec3{p.x, p.y, v.z};
+            };
+            const Vec3 input[] = {project(x, y), project(endx, y), project(endx, endy),
+                                  project(x, endy)};
+            Vec3 clipped[8];
+            int count = 0;
+            auto previous = input[3];
+            for (auto current : input) {
+                if ((previous.z >= 0) != (current.z >= 0))
+                    clipped[count++] =
+                        previous + (current - previous) * (previous.z / (previous.z - current.z));
+                if (current.z >= 0)
+                    clipped[count++] = current;
+                previous = current;
+            }
+            const double latitude = grid_.south_deg() + (grid_.north_deg() - grid_.south_deg()) *
+                                                            (y + endy) * 0.5 / grid_.height();
+            fill_polygon(fb, clipped, count, latitude < -60 ? rgb565(255, 255, 255) : kMovingLand);
+        }
 }
 } // namespace globe

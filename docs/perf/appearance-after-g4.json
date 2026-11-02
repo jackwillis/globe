@@ -1,0 +1,17 @@
+{
+  "width": 640, "height": 480, "repeat": 9,
+  "zoom_1x": {
+    "radius_px": 220, "bands": 30,
+    "counts": {"corners": 65341, "cells": 64800, "cells_culled": 32098, "corners_front": 32612, "corners_kept_by_pretest": 33386, "cell_band_fills": 38944, "pixels_filled": 152080},
+    "median_ms": {"project_all_corners": 21.056, "bound_all_cells": 29.028, "cell_scan_only": 55.925, "cell_scan_and_fill": 377.984, "fill_derived": 322.059, "phase_sum": 428.068,
+      "refine_job_with_terrain": 554.943, "refine_job_lines_only": 82.357, "project_with_hemisphere_pretest": 19.967, "lines_single_pass": 28.121},
+    "checksum_phases": "8c40e85ee209bdc2", "checksum_job": "7904d23d448e4c21"
+  },
+  "zoom_2x": {
+    "radius_px": 440, "bands": 30,
+    "counts": {"corners": 65341, "cells": 64800, "cells_culled": 32098, "corners_front": 32612, "corners_kept_by_pretest": 33386, "cell_band_fills": 34044, "pixels_filled": 307200},
+    "median_ms": {"project_all_corners": 18.517, "bound_all_cells": 26.124, "cell_scan_only": 54.893, "cell_scan_and_fill": 323.432, "fill_derived": 268.539, "phase_sum": 368.074,
+      "refine_job_with_terrain": 692.716, "refine_job_lines_only": 88.013, "project_with_hemisphere_pretest": 17.257, "lines_single_pass": 105.829},
+    "checksum_phases": "5c08e1a89a5976dd", "checksum_job": "90e7782a0daafc82"
+  }
+}

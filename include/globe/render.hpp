@@ -14,6 +14,7 @@
 #include "globe/atlas.hpp"
 #include "globe/framebuffer.hpp"
 #include "globe/projection.hpp"
+#include "globe/terrain_style.hpp"
 
 namespace globe {
 class TerrainScene;
@@ -22,6 +23,8 @@ struct RenderQuality {
     double max_chord_px = 3.0;
     bool terrain = false;
     unsigned elevation_level = 0;
+    TerrainStyle terrain_style = TerrainStyle::Hypsometric;
+    bool smooth_terrain = true;
 };
 
 struct Palette {
@@ -99,12 +102,13 @@ class Scene {
 // Clears the framebuffer and draws using cached vectors. Disable culling for reference checks.
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
                          const Palette& palette, const Layers& layers, bool cull_polylines = true,
-                         RenderQuality quality = {});
+                         RenderQuality quality = {}, const TerrainScene* base = nullptr);
 
 // Reference path: same pixels, but computes every vertex's unit vector on the fly. Used by tests
 // to check the Scene path, and by the benchmark to show what the cache saves.
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atlas,
-                         const Palette& palette, const Layers& layers);
+                         const Palette& palette, const Layers& layers,
+                         const TerrainScene* base = nullptr);
 
 constexpr int kRefineBandRows = 16;
 struct RenderStep {

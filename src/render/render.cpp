@@ -257,13 +257,15 @@ std::size_t Scene::bytes() const {
 
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
                          const Palette& palette, const Layers& layers, bool cull_polylines,
-                         RenderQuality quality) {
+                         RenderQuality quality, const TerrainScene* base) {
     const double chord_px = std::isfinite(quality.max_chord_px)
                                 ? std::clamp(quality.max_chord_px, 0.25, 16.0)
                                 : kMaxChordPx;
     RenderStats stats;
     fb.clear(palette.background);
     fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
+    if (base)
+        base->draw_base(fb, camera);
     if (layers.graticule) {
         const Vec3* grid = scene.graticule();
         const Vec3* meridians = grid + static_cast<std::size_t>(kParallels) * kParallelSamples;
@@ -293,10 +295,12 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& sce
 }
 
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atlas,
-                         const Palette& palette, const Layers& layers) {
+                         const Palette& palette, const Layers& layers, const TerrainScene* base) {
     RenderStats stats;
     fb.clear(palette.background);
     fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
+    if (base)
+        base->draw_base(fb, camera);
     if (layers.graticule) {
         draw_graticule(fb, camera, palette.graticule, stats, parallel_point, meridian_point);
     }
@@ -359,8 +363,8 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 prepare_index_ = 0;
             }
         } else if (phase_ == 6) {
-            terrain_->draw_cell(fb, terrain_cell_++, band_first_ / kRefineBandRows,
-                                kRefineBandRows);
+            terrain_->draw_cell(fb, terrain_cell_++, band_first_ / kRefineBandRows, kRefineBandRows,
+                                quality_.terrain_style, quality_.smooth_terrain);
             if (terrain_cell_ == terrain_->cell_count())
                 phase_ = 1;
         } else if (phase_ == 0) {

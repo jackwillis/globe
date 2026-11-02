@@ -135,6 +135,12 @@ Effects on_command(Model& model, Command command) {
         model.layers.borders = !model.layers.borders;
         fx.redraw = true;
         return fx;
+    case Command::CycleStyle:
+        model.terrain_style = model.terrain_style == TerrainStyle::Hypsometric
+                                  ? TerrainStyle::CelShaded
+                                  : TerrainStyle::Hypsometric;
+        fx.redraw = true;
+        return fx;
     case Command::Quit:
         fx.quit = true;
         return fx;
@@ -193,7 +199,7 @@ RenderQuality quality_for(const Model& model) {
             meets_target = meets;
         }
     }
-    return {fine ? 1.5 : 3.0, fine, selected};
+    return {fine ? 1.5 : 3.0, fine, selected, model.terrain_style};
 }
 
 CursorIntent cursor_for(const Model& model, ScreenPoint pointer) {
@@ -228,6 +234,7 @@ ToolbarState toolbar_state(const Model& model) {
     state[index(Command::ToggleGraticule)].checked = model.layers.graticule;
     state[index(Command::ToggleBorders)].checked = model.layers.borders;
     state[index(Command::ToggleDragMode)].checked = model.drag_mode == DragMode::Trackball;
+    state[index(Command::CycleStyle)].checked = model.terrain_style == TerrainStyle::CelShaded;
     // World north is +Y. Its screen projection must point up, with no sideways component.
     state[index(Command::AlignNorth)].enabled =
         std::fabs(model.camera.right.y) > 1e-12 || model.camera.up.y < 0.0;

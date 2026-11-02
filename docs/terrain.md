@@ -1,3 +1,44 @@
+# Terrain appearance (GL-27, 2026-11-02)
+
+The moving view uses a 36 x 18 sampled land mask from the loaded elevation grid: gray land and the
+flat ocean disc, with the existing lines above it. It projects cached grid corners without modifying
+the refinement workspace or allocating in a frame. Antarctic land south of -60 degrees is white in
+both moving and settled views; negative heights remain water. The global mask is deliberately coarse.
+
+S cycles Hypsometric and Cel-shaded palettes in both front ends; the X11 Style button shows a checked
+state for Cel-shaded. Traces accept `style TIME` or `key TIME style`. Style is model state and enters
+the derived quality profile; changing it invalidates old refinement.
+
+Settled terrain interpolates palette indices from shared cached corner averages, clamped within the
+cell's land/water class. Two shaded triangles cover each front-facing quad. Cells crossing the horizon
+retain the existing clipped flat fill so skipping a shaded corner never exposes stale base pixels.
+The Antarctic land override precedes palette selection. No GELV format or flag change is needed.
+The final frame clears its own bands and is independent of the moving base and initial framebuffer.
+Corner shades add one byte per corner; two style tables add 512 bytes over the old cache.
+
+## Measured on the G4
+
+Same 640x480 views as the merged profiler, median of nine, local cross-build GCC 12.5 -O2 -static.
+The gray mask alone costs 4.2727 ms at radius 220 and 5.2840 ms at 440 (host 0.1109/0.1181 ms).
+Before this change the full refine job was 379.944/386.428 ms; after it was 554.943/692.716 ms.
+These are integrated costs, larger than the earlier isolated shading microbenchmark. A separate
+standard trace's final view refined in 801.8763 ms mean (two repetitions); its longest continuation
+was 120.1318 ms. Moving rendering averaged 32.9700 ms in that run, including the gray mask and lines.
+Conversion/submission is additional; no real display timing or hardware interaction acceptance.
+
+Smoothing is retained as a sub-second settled step with bounded work counts, not a hard wall-clock
+budget. The longest continuation remains a responsiveness limitation for owner acceptance. No dissolve,
+pass/surface refactor or networking is included. Raw before/after/base/replay JSON is in `docs/perf/appearance-*`.
+
+The standard refined pin intentionally changes 1228dcc860a92a77 -> 27336cb8117e5e7f for smoothing and
+Antarctic white. The moving benchmark now includes the gray mask (71e66eac3bde93c7 at repeat 2).
+Host/G4 refined pixels agree, as do the base-only checksums. The app replay hash remains
+9b4a458633a32d9d and outline-only goldens remain unchanged. GCC sanitizer and clang suites pass 34/34;
+PowerPC and 68k compile probes and G4 app/terrain tests pass. Mutants disabling Antarctic white,
+style propagation, smoothing and water rejection in the base are all caught.
+
+## Earlier implementation measurements (historical)
+
 # Forward-projected settled terrain
 
 Moving remains the existing outline renderer. Refine uses the embedded GELV grid: each shared cell

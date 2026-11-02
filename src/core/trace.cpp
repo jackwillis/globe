@@ -33,6 +33,7 @@ constexpr CommandEntry kCommands[] = {
     {"align_north", Command::AlignNorth},
     {"toggle_drag_mode", Command::ToggleDragMode},
     {"quit", Command::Quit},
+    {"style", Command::CycleStyle},
 };
 
 // Splits a NUL-terminated copy of the line in place; returns the token count, or kMaxTokens + 1
@@ -194,6 +195,8 @@ std::optional<Msg> parse_message(std::string_view line) {
             }
             return Msg{PointerMove{t, x, y}};
         }
+    } else if (verb == "style" && n == 2 && parse_u64(tok[1], t)) {
+        return Msg{CommandIssued{t, Command::CycleStyle}};
     } else if (verb == "tick" && n == 2) {
         if (parse_u64(tok[1], t)) {
             return Msg{Tick{t}};

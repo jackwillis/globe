@@ -454,6 +454,30 @@ void test_resize_and_expose() {
     CHECK(d.dragging && d.last_input_ms == 5);
 }
 
+void test_styles() {
+    auto m = fresh();
+    CHECK(m.terrain_style == TerrainStyle::Hypsometric);
+    const auto g = m.generation;
+    CHECK(update(m, CommandIssued{10, Command::CycleStyle}).redraw);
+    CHECK(m.terrain_style == TerrainStyle::CelShaded && m.generation > g);
+    CHECK(quality_for(m).terrain_style == TerrainStyle::CelShaded);
+    CHECK(toolbar_state(m)[static_cast<std::size_t>(Command::CycleStyle)].checked);
+    update(m, CommandIssued{20, Command::CycleStyle});
+    CHECK(m.terrain_style == TerrainStyle::Hypsometric);
+    char style_text[100];
+    const Msg style_command = CommandIssued{30, Command::CycleStyle};
+    CHECK(format_message(style_command, style_text, sizeof(style_text)) > 0);
+    auto formatted = parse_message(style_text);
+    CHECK(formatted);
+    CHECK(!parse_message("style -1") && !parse_message("style 30 extra"));
+    auto msg = parse_message("style 30");
+    CHECK(msg);
+    if (msg) {
+        update(m, *msg);
+        CHECK(m.terrain_style == TerrainStyle::CelShaded);
+    }
+}
+
 void test_elevation_selection() {
     Model m = fresh();
     CHECK(update(m, RegisterElevation{0, 360, 180}).redraw);
@@ -657,7 +681,7 @@ void test_toolbar_state() {
         return toolbar_state(model)[static_cast<std::size_t>(command)];
     };
     const auto initial = toolbar_state(m);
-    CHECK(initial.size() == static_cast<std::size_t>(Command::Quit) + 1);
+    CHECK(initial.size() == kCommandCount);
     for (std::size_t i = 0; i < initial.size(); ++i) {
         CHECK(initial[i].visible);
         CHECK(initial[i].enabled == (i != static_cast<std::size_t>(Command::AlignNorth)));
@@ -911,6 +935,7 @@ int main(int argc, char** argv) {
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();
+    test_styles();
     test_elevation_selection();
     test_quality_profile_and_generation();
     test_quality_wakes();

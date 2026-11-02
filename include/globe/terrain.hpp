@@ -4,6 +4,7 @@
 #include "globe/elevation.hpp"
 #include "globe/framebuffer.hpp"
 #include "globe/projection.hpp"
+#include "globe/terrain_style.hpp"
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -31,14 +32,18 @@ class TerrainScene {
     }
     std::size_t bytes() const {
         return corner_count() * 2 * sizeof(Vec3) + cell_count() * sizeof(CellBands) +
-               sizeof(colors_);
+               sizeof(colors_) + corner_count();
     }
-    Rgb565 color(std::uint8_t index) const { return colors_[index]; }
+    Rgb565 color(std::uint8_t index, TerrainStyle style = TerrainStyle::Hypsometric) const {
+        return colors_[style == TerrainStyle::CelShaded ? 1 : 0][index];
+    }
+    void draw_base(Framebuffer& fb, const Camera& camera) const;
     std::uint64_t claim() { return ++token_; }
     std::uint64_t token() const { return token_; }
     void project_corner(std::size_t index, const Camera& camera);
     void bound_cell(std::size_t index, int height, int band_rows);
-    void draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows) const;
+    void draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
+                   TerrainStyle style = TerrainStyle::Hypsometric, bool smooth = true) const;
 
   private:
     TerrainScene(const Elevation& grid, std::unique_ptr<Vec3[]> world,
@@ -48,8 +53,12 @@ class TerrainScene {
     Elevation grid_;
     std::unique_ptr<Vec3[]> world_, projected_;
     std::unique_ptr<CellBands[]> bands_;
-    std::array<Rgb565, 256> colors_{};
+    std::array<std::array<Rgb565, 256>, 2> colors_{};
+    std::unique_ptr<std::uint8_t[]> values_;
+    unsigned first_land_ = 256;
     std::uint64_t token_ = 0;
 };
+constexpr Rgb565 kMovingLand = rgb565(160, 160, 160);
+Rgb565 terrain_color(std::int16_t meters, double latitude, TerrainStyle style);
 Rgb565 hypsometric_color(std::int16_t meters);
 } // namespace globe

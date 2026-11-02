@@ -36,6 +36,23 @@ void test_terrain() {
     if (!terrain)
         return;
     CHECK(terrain->bytes() <= kTerrainCacheBudget);
+    CHECK(terrain->bytes() == TerrainScene::required_bytes(*elevation));
+    CHECK(terrain->color(192, TerrainStyle::CelShaded) != terrain->color(192));
+    CHECK(terrain_color(1000, -80, TerrainStyle::Hypsometric) == rgb565(255, 255, 255));
+    CHECK(terrain_color(-1000, -80, TerrainStyle::Hypsometric) != rgb565(255, 255, 255));
+    auto base = Framebuffer::create(80, 61);
+    CHECK(base);
+    if (base) {
+        const auto view = *make_camera({{0, 0}, 0, 25, 80, 61});
+        base->clear(0);
+        terrain->draw_base(*base, view);
+        CHECK(base->pixel(40, 30) == kMovingLand);
+        CHECK(base->pixel(0, 0) == 0);
+        const auto polar = *make_camera({{-80, 0}, 0, 25, 80, 61});
+        base->clear(0);
+        terrain->draw_base(*base, polar);
+        CHECK(base->pixel(40, 30) == rgb565(255, 255, 255));
+    }
     CHECK(terrain->color(0) != terrain->color(128));
     CHECK(terrain->color(128) != terrain->color(255));
     auto atlas_bytes =
@@ -62,6 +79,14 @@ void test_terrain() {
     CHECK(fb->pixel(44, 34) == terrain->color(192));
     CHECK(fb->pixel(40, 30) == rgb565(0, 0, 0)); // borders above terrain are black
     CHECK(fb->pixel(0, 0) == kDefaultPalette.background);
+    for (auto style : {TerrainStyle::Hypsometric, TerrainStyle::CelShaded}) {
+        const auto polar = *make_camera({{-80, 0}, 0, 25, 80, 61});
+        RefinementJob ice(polar, *scene, kDefaultPalette, {false, false, false},
+                          {1.5, true, 0, style}, 2, &*terrain);
+        while (ice.active())
+            ice.step(*fb, 2, 256);
+        CHECK(fb->pixel(40, 30) == rgb565(255, 255, 255));
+    }
     RefinementJob moving(camera, *scene, kDefaultPalette, {false, false, false}, {3, false}, 2,
                          &*terrain);
     while (moving.active())
@@ -78,6 +103,9 @@ void test_terrain() {
     if (split) {
         for (double longitude : {-90.0, 90.0}) {
             const auto view = *make_camera({{0, longitude}, 0, 25, 80, 61});
+            fb->clear(7);
+            split->draw_base(*fb, view);
+            CHECK(fb->pixel(40, 30) == (longitude < 0 ? 7 : kMovingLand));
             RefinementJob halves(view, *scene, kDefaultPalette, {false, false, false}, {1.5, true},
                                  4, &*split);
             while (halves.active())
@@ -123,8 +151,51 @@ void test_terrain() {
     RefinementJob replacement(camera, *scene, kDefaultPalette, layers, {1.5, true}, 3, &*terrain);
     CHECK(old.step(*fb, 3, 1).work_units == 0 && !old.active()); // workspace ownership also cancels
 }
+void test_appearance() {
+    auto bytes = land_grid();
+    for (unsigned y = 0; y < 180; ++y)
+        for (unsigned x = 0; x < 360; ++x)
+            bytes[552 + y * 360 + x] = (x % 2) ? 160 : 224;
+    store_le32(bytes.data() + 36,
+               crc32_extend(crc32(bytes.data(), 36), bytes.data() + 40, bytes.size() - 40));
+    const auto grid = Elevation::parse(bytes.data(), bytes.size());
+    CHECK(grid);
+    if (!grid)
+        return;
+    auto terrain = TerrainScene::create(*grid);
+    auto ab = atlas_util::make_atlas({{1, {{0, 0}, {1, 1}}}}, "appearance");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    CHECK(atlas);
+    if (!atlas)
+        return;
+    auto scene = Scene::create(*atlas);
+    auto fb = Framebuffer::create(100, 80);
+    CHECK(scene && fb && terrain);
+    if (!scene || !fb || !terrain)
+        return;
+    const auto camera = *make_camera({{0, 0}, 0, 35, 100, 80});
+    const auto render = [&](TerrainStyle style, bool smooth) {
+        RefinementJob job(camera, *scene, kDefaultPalette, {false, false, false},
+                          {1.5, true, 0, style, smooth}, 10, &*terrain);
+        while (job.active())
+            job.step(*fb, 10, 256);
+        return std::vector<Rgb565>(fb->data(), fb->data() + 100 * 80);
+    };
+    fb->clear(123);
+    auto flat = render(TerrainStyle::Hypsometric, false);
+    auto smooth = render(TerrainStyle::Hypsometric, true);
+    CHECK(flat != smooth);
+    auto cel = render(TerrainStyle::CelShaded, true);
+    CHECK(cel != smooth);
+    terrain->draw_base(*fb, camera);
+    CHECK(render(TerrainStyle::Hypsometric, true) ==
+          smooth); // settled image independent of moving base
+    fb->clear(456);
+    CHECK(render(TerrainStyle::Hypsometric, true) == smooth);
+}
 } // namespace
 int main() {
     test_terrain();
+    test_appearance();
     return TEST_MAIN_RESULT();
 }

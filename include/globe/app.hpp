@@ -41,6 +41,7 @@ enum class Command : std::uint8_t {
     AlignNorth,     // rotate about the view axis so north is up; the center stays put
     ToggleDragMode, // switch between Turntable and Trackball
     Quit,
+    CycleStyle,
 };
 
 constexpr unsigned kElevationLevels = 4;
@@ -49,6 +50,7 @@ struct ElevationLevel {
 };
 struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
+    TerrainStyle terrain_style = TerrainStyle::Hypsometric;
     Camera camera;
     Layers layers;
     DragMode drag_mode;
@@ -142,7 +144,7 @@ struct CommandState {
     bool checked = false;
     bool operator==(const CommandState&) const = default;
 };
-constexpr std::size_t kCommandCount = static_cast<std::size_t>(Command::Quit) + 1;
+constexpr std::size_t kCommandCount = static_cast<std::size_t>(Command::CycleStyle) + 1;
 using ToolbarState = std::array<CommandState, kCommandCount>;
 ToolbarState toolbar_state(const Model& model);
 
@@ -151,7 +153,7 @@ CursorIntent cursor_for(const Model& model, ScreenPoint pointer);
 struct ButtonRect {
     int x, y, width, height;
 };
-constexpr int kToolbarWidth = 404, kToolbarHeight = 100;
+constexpr int kToolbarWidth = 404, kToolbarHeight = 132;
 ButtonRect toolbar_button(Command command);
 std::optional<Command> toolbar_hit(ScreenPoint pointer);
 

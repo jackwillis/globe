@@ -246,11 +246,12 @@ int main(int argc, char** argv) {
         for (;;) {
             if (need_frame) {
                 const std::uint64_t t0 = monotonic_ns();
-                const RenderStats rs = reference_path
-                                           ? render_globe(*fb, model.camera, *atlas,
-                                                          kDefaultPalette, effective_layers(model))
-                                           : render_globe(*fb, model.camera, *scene,
-                                                          kDefaultPalette, effective_layers(model));
+                const RenderStats rs =
+                    reference_path ? render_globe(*fb, model.camera, *atlas, kDefaultPalette,
+                                                  effective_layers(model), packs.for_model(model))
+                                   : render_globe(*fb, model.camera, *scene, kDefaultPalette,
+                                                  effective_layers(model), true, quality_for(model),
+                                                  packs.for_model(model));
                 const std::uint64_t t1 = monotonic_ns();
                 render_ms.push_back(ms(t1 - t0));
                 frame_segments.push_back(rs.segments_visible);

@@ -1,0 +1,17 @@
+{
+  "width": 640, "height": 480, "repeat": 9,
+  "zoom_1x": {
+    "radius_px": 220, "bands": 30,
+    "counts": {"corners": 65341, "cells": 64800, "cells_culled": 32098, "corners_front": 32612, "corners_kept_by_pretest": 33386, "cell_band_fills": 38944, "pixels_filled": 152080},
+    "median_ms": {"project_all_corners": 18.166, "bound_all_cells": 26.342, "cell_scan_only": 45.376, "cell_scan_and_fill": 168.306, "fill_derived": 122.931, "phase_sum": 212.814,
+      "refine_job_with_terrain": 379.944, "refine_job_lines_only": 81.853, "project_with_hemisphere_pretest": 17.212, "lines_single_pass": 28.044},
+    "checksum_phases": "aa22f90676c522b5", "checksum_job": "cf55e45eae838297"
+  },
+  "zoom_2x": {
+    "radius_px": 440, "bands": 30,
+    "counts": {"corners": 65341, "cells": 64800, "cells_culled": 32098, "corners_front": 32612, "corners_kept_by_pretest": 33386, "cell_band_fills": 34044, "pixels_filled": 307200},
+    "median_ms": {"project_all_corners": 18.116, "bound_all_cells": 26.064, "cell_scan_only": 44.310, "cell_scan_and_fill": 171.150, "fill_derived": 126.839, "phase_sum": 215.330,
+      "refine_job_with_terrain": 386.428, "refine_job_lines_only": 86.086, "project_with_hemisphere_pretest": 17.383, "lines_single_pass": 36.088},
+    "checksum_phases": "6661350819985900", "checksum_job": "eca1d7571db504f9"
+  }
+}

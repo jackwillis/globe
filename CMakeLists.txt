@@ -86,6 +86,11 @@ if(Python3_FOUND)
                                             globe_clock_posix)
   target_compile_options(globe-bench PRIVATE -Wall -Wextra -Wpedantic)
 
+  add_executable(globe-moving-base-bench src/platform/bench/moving_base_bench.cpp)
+  target_include_directories(globe-moving-base-bench PRIVATE src/platform/common)
+  target_link_libraries(globe-moving-base-bench PRIVATE globe_embedded_elevation globe_clock_posix)
+  target_compile_options(globe-moving-base-bench PRIVATE -Wall -Wextra -Wpedantic)
+
   add_executable(globe-refine-profile src/platform/bench/refine_profile.cpp)
   target_include_directories(globe-refine-profile PRIVATE src/platform/common)
   target_link_libraries(globe-refine-profile PRIVATE globe_embedded_atlas globe_embedded_elevation

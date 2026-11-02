@@ -546,7 +546,8 @@ class App {
         }
         Framebuffer& fb = *fb_;
         std::uint64_t t = monotonic_ns();
-        render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_));
+        render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
+                     quality_for(model_), packs_.for_model(model_));
         t_.render_ms.push_back(ms_since(t));
         frame_valid_ = true;
         upload(0, fb.height());
@@ -596,8 +597,8 @@ class App {
     void draw_toolbar() {
         toolbar_cache_ = toolbar_state(model_);
         static constexpr std::array<const char*, kCommandCount> labels = {
-            "Left",  "Right",     "Up",      "Down",     "Zoom in",   "Zoom out",
-            "Reset", "Graticule", "Borders", "North up", "Trackball", "Quit"};
+            "Left",      "Right",   "Up",       "Down",      "Zoom in", "Zoom out", "Reset",
+            "Graticule", "Borders", "North up", "Trackball", "Quit",    "Style"};
         const int screen = DefaultScreen(dpy_);
         const auto white = WhitePixel(dpy_, screen), black = BlackPixel(dpy_, screen);
         XSetForeground(dpy_, gc_, white);
@@ -760,6 +761,8 @@ class App {
             return apply(CommandIssued{now, Command::ToggleBorders});
         case XK_n:
             return apply(CommandIssued{now, Command::AlignNorth});
+        case XK_s:
+            return apply(CommandIssued{now, Command::CycleStyle});
         case XK_t:
             return apply(CommandIssued{now, Command::ToggleDragMode});
         case XK_Escape:

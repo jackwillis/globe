@@ -71,7 +71,7 @@ class Application {
             }
             if (redraw_) {
                 render_globe(*fb_, model_.camera, *scene_, kDefaultPalette,
-                             effective_layers(model_));
+                             effective_layers(model_), true, quality_for(model_), &*terrain_);
                 copy(0, fb_->height());
                 redraw_ = false;
             }
@@ -245,6 +245,10 @@ class Application {
             case 'b':
             case 'B':
                 command = Command::ToggleBorders;
+                break;
+            case 's':
+            case 'S':
+                command = Command::CycleStyle;
                 break;
             case 't':
             case 'T':
