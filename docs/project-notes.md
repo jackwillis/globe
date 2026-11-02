@@ -4,6 +4,7 @@ Read with `docs/handoff.md` (rules, commands, dated pass notes) and `docs/adr/00
 (all decisions and addenda). This file records what is not in the code.
 
 ## Where things stand
+- 2026-11-01 (later): the owner renamed `v2` to `main` (v1 stays as tag `v1`) and an `origin` remote now exists; nothing was pushed by Claude. All five side branches below were merged into `main` (tip `8b182e9` plus this note) and deleted; the 'unmerged' list that follows is now historical. Latest G4 build: `/tmp/globe-x11-tip6` on maul (host tests 34/34; G4 run is the owner's).
 - Branch `v2`. Unmerged side branches, each one reviewed by its author only and host-tested:
   `claude/smooth-quad` (shaded triangle fill plus G4 bench), `claude/lakes-source` (Natural Earth lakes
   record), `claude/refine-profile` (G4 refine profiler), `claude/click-rules` (click and repaint rules in
