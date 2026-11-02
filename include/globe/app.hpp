@@ -98,8 +98,11 @@ using Msg =
 struct Effects {
     bool redraw = false;
     bool quit = false;
-    // Request one wake after this delay; 0 means no new wake request. Existing wakes may fire
-    // harmlessly after invalidation: update checks the current stage and input timestamp.
+    // Request a wake (a Tick message) after this delay; 0 means no new request. A new request
+    // replaces any earlier one that has not fired: platforms keep a single deadline (an X11 select
+    // timeout, the sleep argument of WaitNextEvent), never one timer per request, because input
+    // such as pointer motion asks for a wake on every message. A stale wake that does fire is
+    // harmless: update checks the current stage and input timestamp.
     std::uint32_t wake_after_ms = 0;
 };
 
