@@ -33,6 +33,8 @@
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
 #include "globe/embedded_atlas.hpp"
+#include "globe/embedded_elevation.hpp"
+#include "globe/terrain.hpp"
 #include "globe/trace.hpp"
 #include "pixel_format.hpp"
 
@@ -78,8 +80,9 @@ double ms_since(std::uint64_t t0) {
 
 class App {
   public:
-    App(Display* dpy, const Scene& scene, const Options& opt)
-        : dpy_(dpy), scene_(scene), opt_(opt), model_(initial_model(opt.width, opt.height)) {}
+    App(Display* dpy, const Scene& scene, TerrainScene* terrain, const Options& opt)
+        : dpy_(dpy), scene_(scene), terrain_(terrain), opt_(opt),
+          model_(initial_model(opt.width, opt.height)) {}
 
     ~App() {
         if (image_ != nullptr) {
@@ -175,6 +178,7 @@ class App {
         std::printf("  \"verified_frames\": %zu,\n", verified_frames_);
         std::printf("  \"refine_bands\": %zu,\n  \"refine_work_ms\": %.4f,\n", refine_bands_,
                     refine_work_ms_);
+        std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -265,9 +269,10 @@ class App {
             if (old_stage == QualityStage::Refine)
                 fx.redraw = true;
         }
-        if (old_stage != QualityStage::Refine && model_.stage == QualityStage::Refine) {
+        if (model_.stage == QualityStage::Refine &&
+            (old_stage != QualityStage::Refine || std::holds_alternative<Repaint>(msg))) {
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
-                                quality_for(model_), model_.generation);
+                                quality_for(model_), model_.generation, terrain_);
         }
         if (fx.redraw && std::holds_alternative<Resize>(msg)) {
             fx.wake_after_ms = update(model_, Tick{monotonic_ns() / 1000000ULL}).wake_after_ms;
@@ -499,7 +504,7 @@ class App {
         case Expose:
             if (ev.xexpose.count == 0) {
                 first_expose_ = true;
-                need_redraw_ = true;
+                return apply(Repaint{});
             }
             return false;
         case ConfigureNotify: {
@@ -587,6 +592,7 @@ class App {
 
     Display* dpy_;
     const Scene& scene_;
+    TerrainScene* terrain_;
     Options opt_;
     Model model_;
     Window win_ = 0;
@@ -677,6 +683,14 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    const auto elevation = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
+    if (!elevation) {
+        std::fprintf(stderr, "globe-x11: invalid embedded elevation\n");
+        return 1;
+    }
+    auto terrain = TerrainScene::create(*elevation);
+    if (!terrain)
+        std::fprintf(stderr, "globe-x11: terrain cache unavailable; showing outlines\n");
     Display* dpy = XOpenDisplay(nullptr);
     if (dpy == nullptr) {
         std::fprintf(stderr, "globe-x11: cannot open display (is DISPLAY set and authorized?)\n");
@@ -684,7 +698,7 @@ int main(int argc, char** argv) {
     }
     int rc = 0;
     {
-        App app(dpy, *scene, opt);
+        App app(dpy, *scene, terrain ? &*terrain : nullptr, opt);
         app.set_script(opt.script_path != nullptr);
         if (!app.init()) {
             rc = 1;

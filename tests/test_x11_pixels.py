@@ -12,4 +12,4 @@ result.check_returncode()
 stats = json.loads(result.stdout)
 assert stats["visual_depth"] == int(sys.argv[1]), stats
 assert stats["frames"] > 100, stats
-assert stats["verified_frames"] == stats["frames"], stats
+assert stats["verified_frames"] == stats["presentations"], stats

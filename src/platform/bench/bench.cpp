@@ -27,6 +27,8 @@
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
 #include "globe/embedded_atlas.hpp"
+#include "globe/embedded_elevation.hpp"
+#include "globe/terrain.hpp"
 #include "globe/trace.hpp"
 #include "pixel_format.hpp"
 
@@ -73,6 +75,7 @@ PixelFormat host_x_format() {
 int main(int argc, char** argv) {
     const std::uint64_t t_start = monotonic_ns();
     const char* atlas_path = nullptr;
+    const char* dump_path = nullptr;
     const char* trace_path = nullptr;
     int width = 640;
     int height = 480;
@@ -97,6 +100,8 @@ int main(int argc, char** argv) {
             }
         } else if (std::strcmp(argv[i], "--reference") == 0) {
             reference_path = true; // compute vertex vectors per frame instead of using the Scene
+        } else if (std::strcmp(argv[i], "--dump-ppm") == 0 && i + 1 < argc) {
+            dump_path = argv[++i];
         } else if (std::strcmp(argv[i], "--refine") == 0) {
             refine = true;
         } else if (std::strcmp(argv[i], "--convert") == 0) {
@@ -179,6 +184,12 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "scene allocation failed\n");
         return 2;
     }
+    const auto elevation = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
+    if (!elevation)
+        return 2;
+    auto terrain = TerrainScene::create(*elevation);
+    if (!terrain)
+        return 2;
     auto fb = Framebuffer::create(width, height);
     if (!fb) {
         std::fprintf(stderr, "framebuffer allocation failed\n");
@@ -255,7 +266,7 @@ int main(int argc, char** argv) {
         if (refine) {
             model.stage = QualityStage::Refine;
             RefinementJob job(model.camera, *scene, kDefaultPalette, effective_layers(model),
-                              quality_for(model), model.generation);
+                              quality_for(model), model.generation, &*terrain);
             const auto started = monotonic_ns();
             while (job.active()) {
                 const auto step_start = monotonic_ns();
@@ -272,6 +283,21 @@ int main(int argc, char** argv) {
         }
     }
     const std::uint64_t t_end = monotonic_ns();
+    if (dump_path != nullptr) {
+        auto* out = std::fopen(dump_path, "wb");
+        if (!out)
+            return 2;
+        std::fprintf(out, "P6\n%d %d\n255\n", fb->width(), fb->height());
+        for (int y = 0; y < fb->height(); ++y)
+            for (int x = 0; x < fb->width(); ++x) {
+                const auto pixel = fb->pixel(x, y);
+                std::fputc(((pixel >> 11) * 255 + 15) / 31, out);
+                std::fputc((((pixel >> 5) & 63) * 255 + 31) / 63, out);
+                std::fputc(((pixel & 31) * 255 + 15) / 31, out);
+            }
+        if (std::fclose(out) != 0)
+            return 2;
+    }
 
     rusage usage{};
     getrusage(RUSAGE_SELF, &usage);
@@ -307,6 +333,7 @@ int main(int argc, char** argv) {
     std::printf("  \"peak_rss_kb\": %ld,\n", usage.ru_maxrss);
     std::printf("  \"frame_buffer_bytes\": %zu,\n", fb->byte_size());
     std::printf("  \"frames\": %zu,\n", render_ms.size());
+    std::printf("  \"terrain_cache_bytes\": %zu,\n", terrain->bytes());
     std::printf("  \"refine_ms\": %.4f,\n  \"max_refine_step_ms\": %.4f,\n"
                 "  \"refine_steps\": %u,\n",
                 refine_ms / repeat, max_refine_step_ms, refine_steps);

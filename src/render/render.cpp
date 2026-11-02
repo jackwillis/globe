@@ -7,6 +7,7 @@
 #include <new>
 
 #include "globe/raster.hpp"
+#include "globe/terrain.hpp"
 
 namespace globe {
 
@@ -277,9 +278,16 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atl
 }
 
 RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Palette& palette,
-                             Layers layers, RenderQuality quality, std::uint64_t generation)
+                             Layers layers, RenderQuality quality, std::uint64_t generation,
+                             TerrainScene* terrain)
     : camera_(camera), scene_(&scene), palette_(palette), layers_(layers), quality_(quality),
       generation_(generation) {
+    if (quality_.terrain && terrain != nullptr) {
+        terrain_ = terrain;
+        terrain_token_ = terrain_->claim();
+        phase_ = -2;
+        palette_.border = rgb565(0, 0, 0);
+    }
     quality_.max_chord_px = std::isfinite(quality_.max_chord_px)
                                 ? std::clamp(quality_.max_chord_px, 0.25, 16.0)
                                 : kMaxChordPx;
@@ -287,8 +295,9 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
 
 RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units) {
     RenderStep result;
-    if (!active_ || generation != generation_ || fb.width() != camera_.width ||
-        fb.height() != camera_.height) {
+    if (!active_ || generation != generation_ ||
+        (terrain_ != nullptr && terrain_->token() != terrain_token_) ||
+        fb.width() != camera_.width || fb.height() != camera_.height) {
         active_ = false;
         return result;
     }
@@ -301,13 +310,32 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
     fb.clip_rows(result.first_row, result.end_row);
     while (result.work_units < max_work_units && !result.band_ready) {
         ++result.work_units;
-        if (phase_ == 0) {
+        if (phase_ == -2) {
+            terrain_->project_corner(prepare_index_++, camera_);
+            if (prepare_index_ == terrain_->corner_count()) {
+                phase_ = -1;
+                prepare_index_ = 0;
+            }
+        } else if (phase_ == -1) {
+            terrain_->bound_cell(prepare_index_++, fb.height(), kRefineBandRows);
+            if (prepare_index_ == terrain_->cell_count()) {
+                phase_ = 0;
+                prepare_index_ = 0;
+            }
+        } else if (phase_ == 6) {
+            terrain_->draw_cell(fb, terrain_cell_++, band_first_ / kRefineBandRows,
+                                kRefineBandRows);
+            if (terrain_cell_ == terrain_->cell_count())
+                phase_ = 1;
+        } else if (phase_ == 0) {
             fb.clip_rows(row_, row_ + 1);
             fb.fill_span(row_, 0, fb.width() - 1, palette_.background);
             fill_disc(fb, camera_.center_x, camera_.center_y, camera_.radius_px, palette_.ocean);
             fb.clip_rows(result.first_row, result.end_row);
-            if (++row_ == result.end_row)
-                phase_ = 1;
+            if (++row_ == result.end_row) {
+                phase_ = terrain_ != nullptr ? 6 : 1;
+                terrain_cell_ = 0;
+            }
         } else if (phase_ == 1 || phase_ == 2) {
             const bool parallels = phase_ == 1;
             const int samples = parallels ? kParallelSamples : kMeridianSamples;

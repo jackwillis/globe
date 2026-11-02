@@ -16,6 +16,7 @@
 #include "globe/projection.hpp"
 
 namespace globe {
+class TerrainScene;
 
 struct RenderQuality {
     double max_chord_px = 3.0;
@@ -115,13 +116,17 @@ struct RenderStep {
 class RefinementJob {
   public:
     RefinementJob(const Camera& camera, const Scene& scene, const Palette& palette, Layers layers,
-                  RenderQuality quality, std::uint64_t generation);
+                  RenderQuality quality, std::uint64_t generation, TerrainScene* terrain = nullptr);
     bool active() const { return active_; }
     void cancel() { active_ = false; }
     RenderStep step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units = 64);
     const RenderStats& stats() const { return stats_; }
 
   private:
+    TerrainScene* terrain_ = nullptr;
+    std::uint64_t terrain_token_ = 0;
+    std::size_t prepare_index_ = 0;
+    std::size_t terrain_cell_ = 0;
     Camera camera_;
     const Scene* scene_;
     Palette palette_;

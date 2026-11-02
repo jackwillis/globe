@@ -165,3 +165,11 @@ and [polyline culling](pass-20261101-culling.md), with raw host/G4 JSON beside t
 the G4, mean render plus pack fell from 20.7097 + 17.0486 ms to 17.7811 + 6.9910 ms (about 37.8 to
 24.8 ms before X submission). Each step is one matching run; do not read that as real-display FPS.
 The Xvfb suite now verifies actual pixels at depths 24 and 16 as well as smoke/idle behavior.
+
+## Staged terrain (2026-11-01)
+
+See [bounded refinement](../refinement.md) and [terrain](../terrain.md). Initial G4 terrain refine
+render costs about 0.58 seconds spread over cancellable continuations, versus 0.157 seconds for
+finer outlines only. New terrain checksum is pinned independently; moving-frame checksum remains
+unchanged. Per-band conversion and real-display submission are additional, not included in that
+render total. Raw host/G4 measurements are in terrain-*.json.

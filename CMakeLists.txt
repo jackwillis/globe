@@ -23,7 +23,8 @@ add_library(globe_core
   src/data/crc32.cpp
   src/render/framebuffer.cpp
   src/render/raster.cpp
-  src/render/render.cpp)
+  src/render/render.cpp
+  src/render/terrain.cpp)
 target_include_directories(globe_core PUBLIC include)
 target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
 target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
@@ -52,8 +53,16 @@ if(Python3_FOUND)
   add_library(globe_embedded_atlas ${CMAKE_BINARY_DIR}/embedded_atlas.cpp)
   target_link_libraries(globe_embedded_atlas PUBLIC globe_core)
 
+  add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/embedded_elevation.cpp
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py
+            ${CMAKE_SOURCE_DIR}/data/elevation-1deg.gelv ${CMAKE_BINARY_DIR}/embedded_elevation.cpp Elevation
+    DEPENDS ${CMAKE_SOURCE_DIR}/data/elevation-1deg.gelv ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py)
+  add_library(globe_embedded_elevation ${CMAKE_BINARY_DIR}/embedded_elevation.cpp)
+  target_link_libraries(globe_embedded_elevation PUBLIC globe_core)
+
   add_executable(globe-bench src/platform/bench/bench.cpp)
-  target_link_libraries(globe-bench PRIVATE globe_embedded_atlas globe_platform_common
+  target_link_libraries(globe-bench PRIVATE globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                             globe_clock_posix)
   target_compile_options(globe-bench PRIVATE -Wall -Wextra -Wpedantic)
 endif()
@@ -62,7 +71,7 @@ find_package(X11)
 if(X11_FOUND AND TARGET globe_embedded_atlas)
   add_executable(globe-x11 src/platform/x11/main.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
-  target_link_libraries(globe-x11 PRIVATE globe_embedded_atlas globe_platform_common
+  target_link_libraries(globe-x11 PRIVATE globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
 endif()
@@ -79,11 +88,12 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render app elevation)
+  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
     add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR})
+    set_tests_properties(${name} PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   endforeach()
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
   foreach(name pixel_format frame_stats cli)
@@ -121,12 +131,13 @@ if(GLOBE_BUILD_TESTS)
                        ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_x11_wakes.py
                        $<TARGET_FILE:globe-x11>
                        --size 160x120 --script ${CMAKE_SOURCE_DIR}/tests/data/trace1.txt
-                       --idle-seconds 2 --stats)
-      set_tests_properties(x11_idle PROPERTIES PASS_REGULAR_EXPRESSION "\"idle_frames\": 0,"
-                           TIMEOUT 120)
+                       --idle-seconds 2 --verify-pixels --stats)
+      set_tests_properties(x11_idle PROPERTIES TIMEOUT 120)
     endif()
   endif()
   if(TARGET globe-bench)
+    add_test(NAME bench_refine COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_refine.py
+             $<TARGET_FILE:globe-bench> --refine --repeat 2 ${CMAKE_SOURCE_DIR}/tests/data/bench_drag.txt)
     add_test(NAME bench_smoke COMMAND globe-bench --repeat 1 --size 320x240
              ${CMAKE_SOURCE_DIR}/tests/data/bench_drag.txt)
   endif()
