@@ -40,13 +40,19 @@ tools/                  atlas builder (Python), embed_atlas.py, Retro68 probe, p
 ## Data flow of a frame
 
 ```
-X event / one-shot wake --> Msg --> update(Model&, Msg) --> Effects{redraw, quit, wake_after_ms}
+X event / one-shot wake --> Msg --> update(Model&, Msg) --> Effects{redraw, present_only, quit,
+                                                                    wake_after_ms}
                                               |
                         (only if redraw)      v
         render_globe(Framebuffer&, Model.camera, Atlas, Palette, Layers)
                                               |
                 convert_pixels (RGB565 -> server layout) --> XPutImage + XSync
 ```
+
+`present_only` (a `Repaint`, from an expose or update event) skips the renderer: the platform shows
+the pixels it already holds. Only a platform with no valid frame yet renders. Moving a window,
+exposing it or clicking it never starts a render or restarts refinement; only a resize, a camera
+change or a data change does.
 
 `globe-x11` blocks in `select` until X input or a requested one-shot wake, then drains all queued
 events (keeping only the latest pointer position) before drawing. Once refinement scheduling
@@ -72,8 +78,10 @@ This supplies state only; the native toolbar window remains a later task.
 
 `Effects::wake_after_ms` requests one wake; zero means no new request, preserving a platform wake
 already armed. Ticks from superseded requests are harmless because `update` checks the current
-stage clock. Accepted input restarts Moving, including commands with no redraw. Hover and rejected
-input do not. While a button is held, a Tick requests no more wakes; release restarts the delay.
+stage clock. Accepted input restarts Moving, including commands with no redraw. Hover, rejected
+input and a press alone do not: a drag begins only after the pointer moves more than `kDragSlopPx`
+from the press, and a release without a drag leaves the model untouched. While a drag is active,
+a Tick requests no more wakes; release after a drag restarts the delay.
 After 150 ms Moving enters Settle; a separate wake at least 1 ms later enters Refine. These are
 initial scheduling constants, not G4 interaction measurements. Resize has no input timestamp, so
 its first Tick establishes the new clock; X11 supplies that Tick immediately after resize.

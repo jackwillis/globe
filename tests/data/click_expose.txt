@@ -1,0 +1,14 @@
+# A settled view survives exposes and a click: nothing is rendered again.
+# The times are far ahead of any real clock so the first ticks settle the view whatever the
+# platform's clock reads at startup.
+tick 1000000000000
+tick 1000000000150
+tick 1000000000151
+expose
+down 1000000001000 80 60
+up 1000000001010
+expose
+down 1000000002000 80 60
+move 1000000002010 82 61
+up 1000000002020
+expose

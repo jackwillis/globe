@@ -153,6 +153,14 @@ if(GLOBE_BUILD_TESTS)
       add_test(NAME x11_toolbar COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
                $<TARGET_FILE:test_x11_toolbar> $<TARGET_FILE:globe-x11>)
       set_tests_properties(x11_toolbar PROPERTIES TIMEOUT 20)
+      # A click and window exposes resend pixels; they never render or restart refinement.
+      add_test(NAME x11_click
+               COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
+                       ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_x11_click.py
+                       $<TARGET_FILE:globe-x11>
+                       --size 160x120 --script ${CMAKE_SOURCE_DIR}/tests/data/click_expose.txt
+                       --exit-when-done --verify-pixels --stats)
+      set_tests_properties(x11_click PROPERTIES TIMEOUT 60)
       # Nothing may be drawn while the window sits idle.
       add_test(NAME x11_idle
                COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
