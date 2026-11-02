@@ -140,3 +140,14 @@ cmake -S . -B build-rel -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build bui
 
 For the G4, cross-build as described in `docs/toolchain.md`, push with `maulctl push nb`, and run
 over `maulctl nb`. Nothing is compiled on maul.
+
+## One-shot stage wakes (2026-11-01)
+
+Host GCC ASan/UBSan build under a private depth-24 Xvfb, `--size 160x120 --script
+ tests/data/trace1.txt --idle-seconds 2 --stats` (the trace resizes to 200x150):
+**2 timer wakes**, final stage Refine, **0 idle frames**, **0.104 ms idle CPU** over two seconds.
+One correctness run, not a latency benchmark. Resize/expose events caused by the script are drained
+before measurement starts. No extra detail is drawn by the stage transitions yet. This verifies
+one-shot scheduling and quiescence on the host; it does not measure the G4 or progressive rendering.
+The integration test also rejected a missing-wake mutant (0 wakes, final Moving) and a periodic-wake
+mutant (1,888 wakes over two seconds, despite 0 idle frames), so frame count alone is insufficient.

@@ -194,6 +194,10 @@ std::optional<Msg> parse_message(std::string_view line) {
             }
             return Msg{PointerMove{t, x, y}};
         }
+    } else if (verb == "tick" && n == 2) {
+        if (parse_u64(tok[1], t)) {
+            return Msg{Tick{t}};
+        }
     } else if (verb == "up" && n == 2) {
         if (parse_u64(tok[1], t)) {
             return Msg{PointerUp{t}};
@@ -256,6 +260,9 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
         w.u64(key->time_ms);
         w.text(" ");
         w.text(command_name(key->command));
+    } else if (const auto* tick = std::get_if<Tick>(&msg)) {
+        w.text("tick ");
+        w.u64(tick->time_ms);
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
         w.text("resize ");
         w.integer(resize->width);

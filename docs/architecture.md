@@ -40,7 +40,7 @@ tools/                  atlas builder (Python), embed_atlas.py, Retro68 probe, p
 ## Data flow of a frame
 
 ```
-X event --> Msg --> update(Model&, Msg) --> Effects{redraw, quit}
+X event / one-shot wake --> Msg --> update(Model&, Msg) --> Effects{redraw, quit, wake_after_ms}
                                               |
                         (only if redraw)      v
         render_globe(Framebuffer&, Model.camera, Atlas, Palette, Layers)
@@ -48,8 +48,9 @@ X event --> Msg --> update(Model&, Msg) --> Effects{redraw, quit}
                 convert_pixels (RGB565 -> server layout) --> XPutImage + XSync
 ```
 
-`globe-x11` blocks in `XNextEvent` when idle and drains all queued events (keeping only the latest
-pointer position) before drawing, so a burst of motion costs one frame.
+`globe-x11` blocks in `select` until X input or a requested one-shot wake, then drains all queued
+events (keeping only the latest pointer position) before drawing. Once refinement scheduling
+finishes, it sleeps indefinitely until new input. There is no periodic timer.
 
 ## Measured behavior
 
@@ -66,3 +67,25 @@ layer checks reflect preferences even while the graticule is temporarily hidden 
 the drag-mode check means Trackball. Align-north is enabled for a tilted or upside-down north
 projection (tolerance 1e-12); zoom buttons are disabled at their respective radius limits.
 This supplies state only; the native toolbar window remains a later task.
+
+## Quality wake scheduling (2026-11-01)
+
+`Effects::wake_after_ms` requests one wake; zero means no new request, preserving a platform wake
+already armed. Ticks from superseded requests are harmless because `update` checks the current
+stage clock. Accepted input restarts Moving, including commands with no redraw. Hover and rejected
+input do not. While a button is held, a Tick requests no more wakes; release restarts the delay.
+After 150 ms Moving enters Settle; a separate wake at least 1 ms later enters Refine. These are
+initial scheduling constants, not G4 interaction measurements. Resize has no input timestamp, so
+its first Tick establishes the new clock; X11 supplies that Tick immediately after resize.
+
+The initial model also waits for a first Tick to establish its clock. X11 sends that Tick at
+startup. `tick TIME` traces cover the same transitions deterministically. No current stage enables
+additional geometry, so transitions request no redraw and the existing pixel pins remain intact.
+Bounded refinement rendering and cancellation of actual drawing jobs are still to be implemented
+before terrain; this change supplies only stage scheduling, not a progressive renderer.
+
+The Xvfb idle test checks two real timer wakes, final Refine state, zero idle frames and less than
+50 ms CPU over two seconds. Before measuring it drains pending resize/expose events from the
+script: those are legitimate redraws, not idle work. The old select-only wait could overlook X
+messages already buffered by XSync, so zero reported idle frames alone did not prove that all
+pending events had been handled.

@@ -204,6 +204,7 @@ Model initial_model(int width, int height) {
     m.layers = Layers{};
     m.drag_mode = DragMode::Turntable;
     m.stage = QualityStage::Moving;
+    m.stage_needs_time = true;
     m.dragging = false;
     m.drag_moved = false;
     m.drag_last = {0.0, 0.0};
@@ -216,6 +217,8 @@ Model initial_model(int width, int height) {
 
 Effects update(Model& model, const Msg& msg) {
     Effects fx;
+    bool input = false;
+    std::uint64_t input_ms = 0;
     if (const auto* down = std::get_if<PointerDown>(&msg)) {
         if (finite(down->x, down->y)) {
             const ScreenPoint p{down->x, down->y};
@@ -223,6 +226,8 @@ Effects update(Model& model, const Msg& msg) {
                 model.click_valid && down->time_ms >= model.click_ms &&
                 down->time_ms - model.click_ms <= kDoubleClickMs &&
                 distance_squared(p, model.click_pos) <= kDoubleClickSlopPx * kDoubleClickSlopPx;
+            input = true;
+            input_ms = down->time_ms;
             model.last_input_ms = down->time_ms;
             if (second_click && on_globe(model.camera, p)) {
                 // Bring the clicked point to the center, then zoom in on it.
@@ -261,6 +266,8 @@ Effects update(Model& model, const Msg& msg) {
             fx = set_camera(model, drag_camera(model, model.drag_last, to));
             model.drag_moved |= fx.redraw;
             model.drag_last = to;
+            input = true;
+            input_ms = move->time_ms;
             model.last_input_ms = move->time_ms;
         }
     } else if (const auto* up = std::get_if<PointerUp>(&msg)) {
@@ -268,12 +275,18 @@ Effects update(Model& model, const Msg& msg) {
         fx.redraw = model.dragging && model.drag_moved && model.layers.graticule;
         model.dragging = false;
         model.drag_moved = false;
+        input = true;
+        input_ms = up->time_ms;
         model.last_input_ms = up->time_ms;
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
         fx = set_camera(model, zoom_camera(model.camera, wheel->steps));
+        input = true;
+        input_ms = wheel->time_ms;
         model.last_input_ms = wheel->time_ms;
     } else if (const auto* command = std::get_if<CommandIssued>(&msg)) {
         fx = on_command(model, command->command);
+        input = true;
+        input_ms = command->time_ms;
         model.last_input_ms = command->time_ms;
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
         if (resize->width >= 1 && resize->height >= 1 && resize->width <= kMaxViewportDimension &&
@@ -291,10 +304,40 @@ Effects update(Model& model, const Msg& msg) {
             cam.center_x = resize->width / 2.0;
             cam.center_y = resize->height / 2.0;
             model.camera = cam;
+            model.stage = QualityStage::Moving;
+            model.stage_needs_time = true;
+            fx.wake_after_ms = kSettleDelayMs;
             fx.redraw = true;
+        }
+    } else if (const auto* tick = std::get_if<Tick>(&msg)) {
+        if (model.stage_needs_time) {
+            model.stage_since_ms = tick->time_ms;
+            model.stage_needs_time = false;
+        }
+        if (!model.dragging &&
+            (model.stage == QualityStage::Moving || model.stage == QualityStage::Settle)) {
+            const std::uint32_t delay =
+                model.stage == QualityStage::Moving ? kSettleDelayMs : kRefineDelayMs;
+            const std::uint64_t elapsed =
+                tick->time_ms >= model.stage_since_ms ? tick->time_ms - model.stage_since_ms : 0;
+            if (elapsed < delay) {
+                fx.wake_after_ms = delay - static_cast<std::uint32_t>(elapsed);
+            } else if (model.stage == QualityStage::Moving) {
+                model.stage = QualityStage::Settle;
+                model.stage_since_ms = tick->time_ms;
+                fx.wake_after_ms = kRefineDelayMs;
+            } else {
+                model.stage = QualityStage::Refine;
+            }
         }
     } else if (std::holds_alternative<Repaint>(msg)) {
         fx.redraw = true;
+    }
+    if (input) {
+        model.stage = QualityStage::Moving;
+        model.stage_since_ms = input_ms;
+        model.stage_needs_time = false;
+        fx.wake_after_ms = kSettleDelayMs;
     }
     return fx;
 }

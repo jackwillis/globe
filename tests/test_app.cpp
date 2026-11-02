@@ -452,6 +452,83 @@ void test_resize_and_expose() {
     CHECK(d.dragging && d.last_input_ms == 5);
 }
 
+void test_quality_wakes() {
+    Model m = fresh();
+    auto fx = update(m, Wheel{1000, 1});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
+    fx = update(m, Tick{1000 + kSettleDelayMs - 1});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == 1);
+    fx = update(m, Tick{1000 + kSettleDelayMs});
+    CHECK(m.stage == QualityStage::Settle && fx.wake_after_ms == kRefineDelayMs);
+    CHECK(!fx.redraw); // no new visual detail exists yet
+    fx = update(m, Tick{1000 + kSettleDelayMs + kRefineDelayMs});
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0 && !fx.redraw);
+    fx = update(m, Tick{999999});
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
+    // Every accepted input invalidates settled work, even a mode toggle with no redraw.
+    fx = update(m, CommandIssued{2000, Command::ToggleDragMode});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
+    fx = update(m, Tick{1999}); // obsolete timer from before the input
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
+    update(m, Tick{2150});
+    CHECK(m.stage == QualityStage::Settle);
+    fx = update(m, PointerDown{2151, 80.0, 60.0});
+    CHECK(m.stage == QualityStage::Moving);
+    fx = update(m, Tick{3000});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == 0); // held still
+    fx = update(m, PointerUp{3001});
+    CHECK(fx.wake_after_ms == kSettleDelayMs);
+    update(m, Tick{3151});
+    fx = update(m, Tick{3151});
+    CHECK(m.stage == QualityStage::Settle && fx.wake_after_ms == kRefineDelayMs);
+    fx = update(m, Tick{3152});
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
+    update(m, PointerMove{4000, 10.0, 10.0}); // hovering is not camera input
+    CHECK(m.stage == QualityStage::Refine);
+    update(m, PointerDown{4000, NAN, 0.0});
+    CHECK(m.stage == QualityStage::Refine);
+    fx = update(m, Resize{200, 100});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
+    // A resize has no timestamp; its first Tick establishes the new settle interval.
+    fx = update(m, Tick{5000});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
+    update(m, Tick{5150});
+    update(m, Tick{5151});
+    CHECK(m.stage == QualityStage::Refine);
+    fx = update(m, Repaint{});
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
+}
+
+void test_stage_trace_replay() {
+    const char* lines[] = {
+        "wheel 1000 1", "tick 1149", "tick 1150", "tick 1151", "key 1200 toggle_borders",
+        "tick 1201",    "tick 1350", "tick 1351"};
+    const QualityStage stages[] = {QualityStage::Moving, QualityStage::Moving, QualityStage::Settle,
+                                   QualityStage::Refine, QualityStage::Moving, QualityStage::Moving,
+                                   QualityStage::Settle, QualityStage::Refine};
+    Model a = fresh();
+    Model b = fresh();
+    for (std::size_t i = 0; i < sizeof(lines) / sizeof(lines[0]); ++i) {
+        const auto msg = parse_message(lines[i]);
+        CHECK(msg.has_value());
+        if (!msg) {
+            continue;
+        }
+        const Effects fa = update(a, *msg);
+        char buf[200];
+        const auto n = format_message(*msg, buf, sizeof buf);
+        const auto back = parse_message(std::string_view(buf, n));
+        CHECK(back.has_value());
+        if (!back) {
+            continue;
+        }
+        const Effects fb = update(b, *back);
+        CHECK(a.stage == stages[i] && b.stage == stages[i]);
+        CHECK(fa.redraw == fb.redraw && fa.wake_after_ms == fb.wake_after_ms);
+        CHECK(same_camera(a.camera, b.camera));
+    }
+}
+
 void test_toolbar_state() {
     Model m = fresh();
     const auto state = [](const Model& model, Command command) {
@@ -502,6 +579,7 @@ void test_trace_text_round_trip() {
         CommandIssued{10, Command::Quit},
         Resize{640, 480},
         Repaint{},
+        Tick{12345},
     };
     for (const Msg& msg : msgs) {
         char buf[200];
@@ -543,6 +621,10 @@ void test_trace_parse_rejects_malformed() {
         "down 1 2 inf",
         "move 1 2e999 3",
         "move 1 2 3abc",
+        "tick",
+        "tick -1",
+        "tick 1 2",
+        "tick +1",
         "up",
         "up 1 2",
         "up -4",
@@ -702,6 +784,8 @@ int main(int argc, char** argv) {
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();
+    test_quality_wakes();
+    test_stage_trace_replay();
     test_toolbar_state();
     test_trace_text_round_trip();
     test_trace_parse_rejects_malformed();

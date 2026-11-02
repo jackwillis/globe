@@ -3,7 +3,7 @@
 // One-line text form of a Msg, for recorded sessions and scripted benchmark input.
 //
 //   down TIME X Y | move TIME X Y | up TIME | wheel TIME STEPS | key TIME NAME
-//   resize W H | expose
+//   resize W H | expose | tick TIME
 //
 // Blank lines and lines starting with '#' are comments. Numbers are written with enough digits to
 // round-trip exactly. The legacy `key` verb represents CommandIssued messages.

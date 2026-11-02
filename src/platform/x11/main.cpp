@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
-// X11 front end: one window showing the globe. Blocks in XNextEvent when nothing changes, turns
+// X11 front end: one window showing the globe. Sleeps until input or a one-shot wake, turns
 // X events into Msgs, runs update(), and renders only when update() asks for a redraw.
 //
 //   globe-x11 [--atlas FILE] [--size WxH] [--script TRACE [--exit-when-done]]
@@ -19,6 +19,7 @@
 #include <sys/resource.h>
 #include <sys/select.h>
 
+#include <cerrno>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -121,11 +122,13 @@ class App {
         if (script_active_ && !load_script()) {
             return 2;
         }
+        apply(Tick{monotonic_ns() / 1000000ULL}); // establish the initial settle clock
         bool quit = false;
         while (!quit) {
+            if (!wait_events()) {
+                return 2;
+            }
             XEvent ev;
-            XNextEvent(dpy_, &ev); // blocks: no timer, no polling, no idle redraw
-            quit = handle(ev);
             while (!quit && XPending(dpy_) > 0) {
                 XNextEvent(dpy_, &ev);
                 quit = handle(ev);
@@ -164,6 +167,8 @@ class App {
                     static_cast<unsigned>(format_.green_mask),
                     static_cast<unsigned>(format_.blue_mask), format_.msb_first ? "true" : "false");
         std::printf("  \"frames\": %zu,\n", t_.render_ms.size());
+        std::printf("  \"wake_ticks\": %zu,\n  \"quality_stage\": %d,\n", wake_ticks_,
+                    static_cast<int>(model_.stage));
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -245,8 +250,14 @@ class App {
     }
 
     bool apply(const Msg& msg) {
-        const Effects fx = update(model_, msg);
+        Effects fx = update(model_, msg);
+        if (fx.redraw && std::holds_alternative<Resize>(msg)) {
+            fx.wake_after_ms = update(model_, Tick{monotonic_ns() / 1000000ULL}).wake_after_ms;
+        }
         need_redraw_ |= fx.redraw;
+        if (fx.wake_after_ms != 0) {
+            wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
+        }
         return fx.quit;
     }
 
@@ -272,29 +283,75 @@ class App {
         return false;
     }
 
+    // Sleep until input, one requested wake, or a measurement deadline. No periodic polling.
+    bool wait_events(std::uint64_t end_ms = 0) {
+        if (XPending(dpy_) > 0) {
+            return true;
+        }
+        const std::uint64_t now = monotonic_ns() / 1000000ULL;
+        std::uint64_t deadline = wake_at_ms_;
+        if (end_ms != 0 && (deadline == 0 || end_ms < deadline)) {
+            deadline = end_ms;
+        }
+        timeval tv{};
+        if (deadline != 0 && deadline > now) {
+            const std::uint64_t delay = deadline - now;
+            tv.tv_sec = static_cast<long>(delay / 1000);
+            tv.tv_usec = static_cast<long>((delay % 1000) * 1000);
+        }
+        fd_set set;
+        FD_ZERO(&set);
+        const int fd = ConnectionNumber(dpy_);
+        FD_SET(fd, &set);
+        const int ready = select(fd + 1, &set, nullptr, nullptr, deadline == 0 ? nullptr : &tv);
+        if (ready < 0 && errno != EINTR) {
+            std::perror("globe-x11: select");
+            return false;
+        }
+        const std::uint64_t after = monotonic_ns() / 1000000ULL;
+        if (ready == 0 && wake_at_ms_ != 0 && after >= wake_at_ms_) {
+            wake_at_ms_ = 0; // consume before update requests the next one-shot wake
+            ++wake_ticks_;
+            apply(Tick{after});
+        }
+        return true;
+    }
+
     void wait_idle() {
+        // Finish scripted resize/expose events before starting the quiet-idle measurement.
+        // XPending includes events already buffered by XSync, which select alone cannot see.
+        XSync(dpy_, False);
+        while (XPending(dpy_) > 0) {
+            XEvent ev;
+            XNextEvent(dpy_, &ev);
+            if (handle(ev)) {
+                return;
+            }
+        }
+        if (need_redraw_) {
+            present();
+            need_redraw_ = false;
+        }
         rusage a{};
         getrusage(RUSAGE_SELF, &a);
         const std::size_t frames0 = t_.render_ms.size();
         const std::uint64_t t0 = monotonic_ns();
-        const int fd = ConnectionNumber(dpy_);
-        while (ms_since(t0) < opt_.idle_seconds * 1000.0) {
-            fd_set set;
-            FD_ZERO(&set);
-            FD_SET(fd, &set);
-            timeval tv{0, 100000};
-            if (select(fd + 1, &set, nullptr, nullptr, &tv) > 0) {
-                while (XPending(dpy_) > 0) {
-                    XEvent ev;
-                    XNextEvent(dpy_, &ev);
-                    if (handle(ev)) {
-                        return;
-                    }
+        const std::uint64_t end_ms =
+            t0 / 1000000ULL + static_cast<std::uint64_t>(opt_.idle_seconds) * 1000;
+        while (monotonic_ns() / 1000000ULL < end_ms) {
+            if (!wait_events(end_ms)) {
+                break;
+            }
+            while (XPending(dpy_) > 0) {
+                XEvent ev;
+                XNextEvent(dpy_, &ev);
+                if (handle(ev)) {
+                    return;
                 }
-                if (need_redraw_) {
-                    present();
-                    need_redraw_ = false;
-                }
+            }
+            if (need_redraw_) {
+                present();
+                need_redraw_ = false;
             }
         }
         rusage b{};
@@ -433,6 +490,8 @@ class App {
     XImage* image_ = nullptr;
     PixelFormat format_{};
     std::optional<Framebuffer> fb_;
+    std::size_t wake_ticks_ = 0;
+    std::uint64_t wake_at_ms_ = 0;
     bool need_redraw_ = false;
     bool first_expose_ = false;
     bool script_active_ = false;

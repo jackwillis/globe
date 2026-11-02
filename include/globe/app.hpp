@@ -18,8 +18,7 @@
 
 namespace globe {
 
-// Rendering quality plan (design doc section 4). M1 only ever uses Moving; the rest are named so
-// the Model does not change shape when staged refinement arrives in M2.
+// Rendering quality plan (design doc section 4). Ticks advance Moving -> Settle -> Refine.
 enum class QualityStage : std::uint8_t { Moving, Settle, Refine, Decorate, Fetch };
 
 // How dragging turns the globe.
@@ -50,6 +49,8 @@ struct Model {
     Layers layers;
     DragMode drag_mode;
     QualityStage stage;
+    std::uint64_t stage_since_ms; // settle clock; separate from last user input for resize
+    bool stage_needs_time;        // initial state or resize awaits its first timestamped message
     bool dragging;
     bool drag_moved; // the camera changed since the button went down
     ScreenPoint drag_last;
@@ -87,13 +88,19 @@ struct Resize {
     int height;
 };
 struct Repaint {};
+struct Tick {
+    std::uint64_t time_ms;
+};
 
 using Msg =
-    std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint>;
+    std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint, Tick>;
 
 struct Effects {
     bool redraw = false;
     bool quit = false;
+    // Request one wake after this delay; 0 means no new wake request. Existing wakes may fire
+    // harmlessly after invalidation: update checks the current stage and input timestamp.
+    std::uint32_t wake_after_ms = 0;
 };
 
 // Fresh state for a viewport: north up, centered on a fixed home position, globe sized to fit.
@@ -124,6 +131,9 @@ ToolbarState toolbar_state(const Model& model);
 constexpr std::uint64_t kDoubleClickMs = 400;
 constexpr double kDoubleClickSlopPx = 6.0;
 constexpr double kDoubleClickZoom = 2.0;
+
+constexpr std::uint32_t kSettleDelayMs = 150;
+constexpr std::uint32_t kRefineDelayMs = 1; // separate event-loop turn for Settle work
 
 Effects update(Model& model, const Msg& msg);
 

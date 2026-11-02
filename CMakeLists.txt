@@ -106,7 +106,9 @@ if(GLOBE_BUILD_TESTS)
       endforeach()
       # Nothing may be drawn while the window sits idle.
       add_test(NAME x11_idle
-               COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24" $<TARGET_FILE:globe-x11>
+               COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
+                       ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_x11_wakes.py
+                       $<TARGET_FILE:globe-x11>
                        --size 160x120 --script ${CMAKE_SOURCE_DIR}/tests/data/trace1.txt
                        --idle-seconds 2 --stats)
       set_tests_properties(x11_idle PROPERTIES PASS_REGULAR_EXPRESSION "\"idle_frames\": 0,"
