@@ -469,6 +469,10 @@ void test_styles() {
     CHECK(format_message(style_command, style_text, sizeof(style_text)) > 0);
     auto formatted = parse_message(style_text);
     CHECK(formatted);
+    if (formatted) {
+        const auto* command = std::get_if<CommandIssued>(&*formatted);
+        CHECK(command && command->command == Command::CycleStyle && command->time_ms == 30);
+    }
     CHECK(!parse_message("style -1") && !parse_message("style 30 extra"));
     auto msg = parse_message("style 30");
     CHECK(msg);
