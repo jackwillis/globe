@@ -4,7 +4,7 @@
 // X events into Msgs, runs update(), and renders only when update() asks for a redraw.
 //
 //   globe-x11 [--atlas FILE] [--size WxH] [--script TRACE [--exit-when-done]]
-//             [--idle-seconds N] [--stats]
+//             [--idle-seconds N] [--verify-pixels] [--stats]
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
 // G / B toggle graticule / borders, N aligns north up, T switches between
@@ -47,6 +47,7 @@ struct Options {
     int height = 480;
     bool exit_when_done = false;
     bool stats = false;
+    bool verify_pixels = false;
     int idle_seconds = 0;
 };
 
@@ -149,7 +150,7 @@ class App {
                 }
             }
         }
-        return 0;
+        return pixels_ok_ ? 0 : 3;
     }
 
     void set_script(bool active) { script_active_ = active; }
@@ -169,6 +170,7 @@ class App {
         std::printf("  \"frames\": %zu,\n", t_.render_ms.size());
         std::printf("  \"wake_ticks\": %zu,\n  \"quality_stage\": %d,\n", wake_ticks_,
                     static_cast<int>(model_.stage));
+        std::printf("  \"verified_frames\": %zu,\n", verified_frames_);
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -364,6 +366,54 @@ class App {
         idle_frames_ = t_.render_ms.size() - frames0;
     }
 
+    // Test mode only: read the actual window, not the XImage we submitted. The generic
+    // converter is the oracle so an error in an optimized packing path cannot cancel out.
+    bool verify_window() {
+        if (!fb_) {
+            return false;
+        }
+        const Framebuffer& fb = *fb_;
+        XImage* actual = XGetImage(dpy_, win_, 0, 0, static_cast<unsigned>(fb.width()),
+                                   static_cast<unsigned>(fb.height()), AllPlanes, ZPixmap);
+        if (actual == nullptr) {
+            std::fprintf(stderr, "globe-x11: XGetImage failed\n");
+            return false;
+        }
+        const std::size_t stride = pixel_row_bytes(format_, fb.width());
+        std::vector<std::uint8_t> expected(stride * static_cast<std::size_t>(fb.height()));
+        if (!convert_pixels_generic(fb, format_, expected.data(), stride)) {
+            XDestroyImage(actual);
+            return false;
+        }
+        const unsigned long mask = format_.red_mask | format_.green_mask | format_.blue_mask;
+        const int bytes = format_.bits_per_pixel / 8;
+        bool ok = true;
+        for (int y = 0; y < fb.height() && ok; ++y) {
+            for (int x = 0; x < fb.width(); ++x) {
+                const std::uint8_t* p = expected.data() + static_cast<std::size_t>(y) * stride +
+                                        static_cast<std::size_t>(x) * bytes;
+                unsigned long want = 0;
+                for (int k = 0; k < bytes; ++k) {
+                    const int shift = 8 * (format_.msb_first ? bytes - 1 - k : k);
+                    want |= static_cast<unsigned long>(p[k]) << shift;
+                }
+                const unsigned long got = XGetPixel(actual, x, y) & mask;
+                if (got != want) {
+                    std::fprintf(stderr,
+                                 "globe-x11: pixel mismatch at %d,%d: got %lx expected %lx\n", x, y,
+                                 got, want);
+                    ok = false;
+                    break;
+                }
+            }
+        }
+        XDestroyImage(actual);
+        if (ok) {
+            ++verified_frames_;
+        }
+        return ok;
+    }
+
     void present() {
         if (!fb_ || image_ == nullptr) {
             return;
@@ -381,6 +431,9 @@ class App {
                   static_cast<unsigned>(fb.height()));
         XSync(dpy_, False);
         t_.present_ms.push_back(ms_since(t));
+        if (opt_.verify_pixels) {
+            pixels_ok_ &= verify_window();
+        }
     }
 
     // Returns true when the application should quit.
@@ -490,6 +543,8 @@ class App {
     std::optional<Framebuffer> fb_;
     std::size_t wake_ticks_ = 0;
     std::uint64_t wake_at_ms_ = 0;
+    bool pixels_ok_ = true;
+    std::size_t verified_frames_ = 0;
     bool need_redraw_ = false;
     bool first_expose_ = false;
     bool script_active_ = false;
@@ -522,11 +577,14 @@ int main(int argc, char** argv) {
                 std::fprintf(stderr, "bad --idle-seconds (0..3600)\n");
                 return 2;
             }
+        } else if (a == "--verify-pixels") {
+            opt.verify_pixels = true;
         } else if (a == "--stats") {
             opt.stats = true;
         } else {
-            std::fprintf(stderr, "usage: globe-x11 [--atlas FILE] [--size WxH] [--script TRACE "
-                                 "[--exit-when-done]] [--idle-seconds N] [--stats]\n");
+            std::fprintf(stderr,
+                         "usage: globe-x11 [--atlas FILE] [--size WxH] [--script TRACE "
+                         "[--exit-when-done]] [--idle-seconds N] [--verify-pixels] [--stats]\n");
             return 2;
         }
     }

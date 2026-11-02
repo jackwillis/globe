@@ -10,7 +10,7 @@ include/globe/          public, portable interfaces (no OS headers)
   trackball.hpp         trackball drag, zoom, re-orthonormalization (the Trackball DragMode)
   framebuffer.hpp       RGB565 framebuffer, one allocation
   raster.hpp            exact-clipping lines, disc fill
-  render.hpp            Scene (cached vertex vectors), render_globe(camera, scene, palette, layers)
+  render.hpp            Scene (cached vertex vectors and conservative polyline caps), render_globe
   atlas.hpp, crc32.hpp  GATL reader (zero-copy, validating)
   app.hpp, trace.hpp    Model / Msg / update / Effects; Command / toolbar_state; DragMode (Turntable default, Trackball);
                         double-click, align-north, graticule-hidden-while-dragging; text traces
@@ -89,3 +89,18 @@ The Xvfb idle test checks two real timer wakes, final Refine state, zero idle fr
 script: those are legitimate redraws, not idle work. The old select-only wait could overlook X
 messages already buffered by XSync, so zero reported idle frames alone did not prove that all
 pending events had been handled.
+
+## X11 readback verification (2026-11-01)
+
+`globe-x11 --verify-pixels` is a test option: after each XPutImage/XSync it XGetImages the actual
+window and compares every RGB pixel with the RGB565 framebuffer converted by the generic reference
+converter. XGetPixel decodes server layout; only unused padding bits are ignored. This catches
+incorrect fast packing, submission, byte order and row layout. Verification allocations and readback
+are absent from normal operation and excluded from presentation timing. A mismatch produces an
+error and exit code 3; `verified_frames` counts only entirely matching frames.
+
+Private-Xvfb tests at depth 24 and 16 replay the resize trace from an odd 161x121 initial viewport.
+Their Python runner checks successful process exit, actual depth, more than 100 presented frames,
+and `verified_frames == frames`. Both every-frame and single-frame pixel corruption mutants fail:
+a frame-count regular expression alone could wrongly accept the latter. These are host software
+server checks, not proof of behavior on the G4 desktop or Mac OS 9.
