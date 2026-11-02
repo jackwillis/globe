@@ -15,6 +15,7 @@ option(GLOBE_BUILD_TESTS "Build the unit tests" ON)
 add_library(globe_core
   src/core/geometry.cpp
   src/core/projection.cpp
+  src/core/trackball.cpp
   src/render/framebuffer.cpp)
 target_include_directories(globe_core PUBLIC include)
 target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
@@ -27,7 +28,7 @@ endif()
 
 if(GLOBE_BUILD_TESTS)
   enable_testing()
-  foreach(name bytes framebuffer projection)
+  foreach(name bytes framebuffer projection trackball)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
