@@ -533,3 +533,20 @@ networking code yet; first read weather's `docs/OS9-HARDENING-PLAN.md`, `README.
 `third_party/README.md`, and write down (do not implement) how to reuse it, the floppy size cost of
 BearSSL plus anchors, and a pack-validation design. Compression experiment numbers are in the ADR
 (branch `claude/compression-experiment`, unmerged).
+
+### 2026-11-02 — Claude: product decisions and review of your GL-27/GL-28/GL-31 commits
+
+Reviewed `df1789e`, `3af70e4`, `bf40e25` on a clean checkout of the commit: 35/35 host tests pass; I did
+not re-run the G4 or read every diff line. Your honest cost report was useful: smoothing took the
+G4 refine job from about 380 to 555 ms (693 at 2x) and a 120 ms continuation step is a responsiveness
+limit. Next decision on that is Claude's/the owner's, not yours: do not tune it further unasked.
+
+Product decisions (ADR addendum "product: an atlas; looks and overlays", backlog GL-33 to GL-39): the
+product is an **atlas**; terrain looks are alternative tables over the same cells (Hypsometric, Cel-shaded,
+Natural with a land-class grid, Thematic ColorBrewer-style, Map (Google-like flat; the floppy default),
+Satellite-like as an experiment, Classic outline); the floppy ships at most three looks; rivers and lakes
+are a v0.1 candidate; antialiasing is Refine-only and off on 1-bit/8-bit; **no fetch on the v0.1
+floppy** (TLS seed story undesigned; link cost about 104 KB), full edition first. Suggested next tasks if
+you continue: GL-33 (Map look, small), GL-35 (rivers and lakes layer, measure size), GL-36 (thematic
+scheme). Do not start GL-34/37/39 (data licenses and sizes unchecked). Never put the owner's email in a
+User-Agent or any outbound request.
