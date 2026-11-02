@@ -284,3 +284,36 @@ arithmetic coder, which relearns its statistics per tile). Recommendation of the
 floppy edition: average predictor plus a small adaptive range coder, untiled; inference (not
 measured): about 60 lines of decoder against 250+ for inflate and 600+ for lzma. Delta-varint alone
 (about 15 lines) is the cheap first step for atlas points. G4 decode speed was not measured.
+
+## Addendum, 2026-11-02 (product: an atlas; looks and overlays)
+
+Owner decisions after reviewing terrain looks.
+
+- **The product is an atlas** (information first: climate and biome facts in popups, country facts,
+  search), not a globe toy. The floppy edition will always be a struggle over what to cut; that is
+  accepted, and the size report (`docs/floppy-size.md`) is how each cut is decided.
+- **Terrain looks** are alternatives for one terrain-color step, each a table over the same cells
+  (no blending, no stacked duplicate fills): Hypsometric (built), Cel-shaded (built), **Natural**
+  (land-class grid by elevation band: biome picks the hue family, elevation the shade; needs a
+  class grid, e.g. a Koeppen-style classification, license and size unchecked), **Thematic**
+  (ColorBrewer-style classes on height, deliberately unnatural; good for low color depth),
+  **Map** (Google-like flat pale land, blue water, light borders, labels; needs no new data),
+  **Satellite-like** (experiment only: a baked color grid sampled from imagery at build time and drawn
+  as ordinary cells; no texture mapping; imagery license and floppy fit unchecked), and **Classic
+  outline** (black on white, 1-bit capable; GL-17).
+- **Default look: Map** for the floppy edition (needs no extra data); **Natural** is the full
+  edition's showpiece. The floppy ships at most three looks: Map, Hypsometric and Classic outline.
+- **Overlays** stack on any look: coastlines, borders, graticule, rivers and lakes (Natural Earth
+  vectors, cheap, a v0.1 candidate if small), relief shading, climate layers (full edition),
+  day/night terminator, labels and cities. Rivers and lakes are in scope for v0.1 if they stay small.
+- **Antialiasing:** Refine stage only, never while moving, off on 1-bit and 8-bit displays; lines and
+  the globe silhouette, not cell fills; a new pin set for the refined profile; cost on the G4 to be
+  measured first (expected to be a few times the plain 28 ms line pass; a guess).
+- **Satellite-like look: test it,** as a measured experiment (size, look, license), not a commitment.
+- **Internet on the floppy: not in v0.1.** Measured by Codex (link-only experiment, not a working
+  fetch): BearSSL plus three trust anchors adds about 104,206 bytes to the OS 9 data fork, against
+  930,436 bytes of floppy payload headroom, so size alone does not forbid it. The blockers are
+  elsewhere: weather requires a unique, safely persisted TLS seed per install, and a floppy is copied
+  between machines, so a shipped seed is unacceptable and a first-run seed story is undesigned; HTTP,
+  DNS and Open Transport code are not in that number. Fetch ships in the full edition first; the
+  floppy follows once the seed story and the full size are known. See `docs/fetch-design.md`.
