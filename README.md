@@ -1,40 +1,51 @@
 # Globe
 
-A tiny, offline-first, software-rendered interactive 3D Earth for PowerPC G4
-(NetBSD/X11 and classic Mac OS 9). Status: **M1** (responsive globe): an interactive X11 window on a bundled coarse atlas, a headless
-benchmark, and a replayable message core. Not yet run on the G4's real display.
+An interactive, software-rendered Earth for PowerPC G4: NetBSD/X11 and classic Mac OS 9.
+The current v2 work includes a gray moving land/ocean base, cancellable settled terrain,
+hypsometric and cel-shaded styles, Antarctic ice and a one-degree lake mask. The X11 edition
+also has a utility toolbar, country picking, city markers and scrolling information windows.
 
-- Design: [docs/v2-design.md](docs/v2-design.md)
-- What exists and how it fits together: [docs/architecture.md](docs/architecture.md)
-- Measured performance: [docs/perf/README.md](docs/perf/README.md)
-- Toolchains and measured limits: [docs/toolchain.md](docs/toolchain.md)
-- Relationship to the v1 prototype: [docs/prototype-notes.md](docs/prototype-notes.md)
+This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
+checks pass on host and G4. The OS 9 application is **built and packaged, not run**. CI is
+configured but has not run. Real-display timing and current hardware UI acceptance remain open.
+
+- [Current handoff](docs/handoff.md) and [prioritized backlog](docs/backlog.md)
+- [Architecture](docs/architecture.md), [design and ADR](docs/adr/0001-m2-to-m5-decisions.md)
+- [Terrain measurements](docs/terrain.md), [performance history](docs/perf/README.md)
+- [Toolchains](docs/toolchain.md) and [OS 9 acceptance](docs/os9-proof.md)
+
+## Build and use
 
 ```
 cmake -S . -B build -G Ninja
 cmake --build build
 ctest --test-dir build --output-on-failure
+./build/globe-x11
+./build/globe-bench --refine --convert --repeat 2 tests/data/bench_drag.txt
 ```
 
-```
-./build/globe-x11                      # needs a display (see keys below)
-./build/globe-bench tests/data/bench_drag.txt    # headless timing, JSON output
-```
+X11 requires an authorized display; the host UI tests use private Xvfb displays. For sanitizers,
+configure a separate build with `-DGLOBE_SANITIZE=ON`. The current host suite has 35 tests.
 
-Controls: drag to rotate (north stays up), wheel or `+`/`-` to zoom, double-click to zoom in and
-center on the point, arrows to turn, `N` aligns north up, `T` switches to trackball dragging (the
-point under the pointer follows it exactly, but the globe can roll), `G`/`B` toggle the graticule
-and borders (coastlines are always drawn), `R` resets, `Esc` or `Q` quits. The graticule is hidden
-while dragging.
+Drag to rotate north-up; T switches to trackball mode. Wheel or +/- zooms, double-click centers
+and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits.
+S cycles terrain styles. A click without dragging preserves the view; on X11 it can identify a
+country or nearby city. The Style toolbar button is checked for cel-shaded; F2 restores a hidden
+toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.
 
-`-DGLOBE_SANITIZE=ON` adds ASan and UBSan. `tools/probe-retro68.sh` compiles the core
-for PowerPC and 68k inside the Retro68 container (podman). Licence: GPL-3.0-or-later.
+## Two editions
 
-The two release builds are `tools/build-edition.sh full` (native X11) and
-`tools/build-edition.sh floppy` (classic PowerPC OS 9). Both emit size reports; the latter also
-creates a real 1.44 MB HFS image and verifies application forks after extraction. See
-[floppy measurements](docs/floppy-size.md), [OS 9 proof](docs/os9-proof.md),
-[local elevation import](docs/elevation-import.md), [toolbar](docs/toolbar.md),
-[countries](docs/country-format.md), [places](docs/place-format.md),
-[scaling](docs/perf/scaling.md) and [compression experiment](docs/perf/compression.md).
-OS 9 is built and packaged, not executed; CI is configured, not run in this repository.
+- `tools/build-edition.sh full`: native X11 executable with embedded atlas, elevation, countries
+  and places; local optional elevation packs. [Import](docs/elevation-import.md),
+  [toolbar](docs/toolbar.md), [countries](docs/country-format.md), [places](docs/place-format.md).
+- `tools/build-edition.sh floppy`: classic PowerPC OS 9 application with atlas and one-degree
+  elevation; no toolbar or place cards in this proof of life. It emits a MacBinary application,
+  a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md).
+
+Both use the same portable core and strict pack formats. Terrain is currently raw embedded v1
+data; [compression has been measured](docs/perf/compression.md), with runtime adoption still open.
+There is no fetch implementation yet; [the fetch design](docs/fetch-design.md) is for review.
+No relay is planned. Sources and attribution are in [data/SOURCES.md](data/SOURCES.md).
+
+`tools/probe-retro68.sh` compile-checks the portable code for PowerPC and 68k. License:
+GPL-3.0-or-later. The historical v1 prototype is retained as tag `v1`.

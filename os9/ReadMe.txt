@@ -5,8 +5,8 @@ Requires OS 9, Color QuickDraw and Appearance Manager. Partition: 24 MB preferre
 
 Drag to turn the globe; double-click to center and zoom. Arrow keys turn it.
 +/- zoom, R resets, G toggles graticule, B toggles borders, N aligns north,
-T switches turntable/trackball drag, Q or Escape quits. The window can grow.
-Moving shows outlines; pausing refines the elevation colors.
+T switches turntable/trackball drag, S cycles styles, Q or Escape quits. The window can grow.
+Moving shows gray land and outlines; pausing refines the elevation colors.
 
 This designated floppy edition contains the application, Natural Earth atlas
 and NOAA ETOPO one-degree elevation. It has no downloads, toolbar or place cards.

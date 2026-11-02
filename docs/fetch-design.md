@@ -2,7 +2,8 @@
 
 Status: **design for review, 2026-11-02**. No networking implementation is added to Globe. This follows
 the ADR's fetch-in-app addendum, superseding the older offline-only rule. No relay; two editions;
-the separate maps app remains later work. Hosting, UI and floppy inclusion are owner decisions.
+the separate maps app remains later work. Hosting and UI remain owner decisions. The newer product ADR decides full edition first and
+**no fetch on the v0.1 floppy**, pending a first-run seed story and complete feature measurements.
 
 ## Reuse boundary and provenance
 
@@ -101,7 +102,8 @@ if the selected host requires one. Never treat a body as a NUL-terminated string
 
 Proposed limits: 8 KiB response headers, 64 header fields, a small bounded HTTPS redirect count,
 no redirect to HTTP, and a body cap chosen before connection from the expected pack type/edition.
-Request identity encoding; reject unexpected compressed bodies rather than silently allocating
+The User-Agent contains product/version and a public project URL only; never include the owner's
+email in it or any outbound request. Request identity encoding; reject unexpected compressed bodies rather than silently allocating
 an unbounded decoded buffer. Size caps apply to streamed bytes even without Content-Length;
 short, overlong or ambiguous bodies fail. Use the original authority for each verified connection;
 redirect hosts must follow an owner-approved policy. Retain one whole-attempt deadline plus bounded
@@ -157,18 +159,17 @@ TLS symbols; it was discarded. A sizing-only entry call now retains the APIs; XC
 `br_ssl_client_init_full` and `br_hmac_drbg_generate`. All three builds embed identical elevation bytes.
 See [raw measurements](perf/fetch-tls-size-20261102.json).
 
-The component alone fits the current conservative floppy budget; this does **not** decide floppy
-networking inclusion. Retained TLS buffers and contexts need RAM too: weather's full-duplex record
+The component alone fits the current conservative floppy budget. The owner nevertheless excludes
+fetch from the v0.1 floppy because seed provisioning for copied disks is undesigned; full edition first. Retained TLS buffers and contexts need RAM too: weather's full-duplex record
 buffer is 33,178 bytes before client/verifier/DRBG, HTTP and OT state. A complete candidate must be
 rebuilt, HFS-packaged and timed on actual OS 9. The smaller custom cipher-profile opportunity is
-unmeasured; do not claim its saving. Full edition first is a proposal, not a third release.
+unmeasured; do not claim its saving. Full edition first is the owner decision; this does not introduce a third release.
 
 ## Review questions and acceptance before implementation
 
 Owner decisions: where are generated packs hosted (and which redirect authorities); which pack
-kinds/editions can fetch; manual URL versus curated catalog; update frequency and rollback policy;
-initial OS 9 provisioning UX; whether the measured crypto component justifies pursuing floppy
-networking; and whether a separately signed manifest is wanted in addition to HTTPS. Public source
+kinds the full edition can fetch; manual URL versus curated catalog; update frequency and rollback policy;
+a future OS 9 first-run provisioning UX before any later floppy networking; and whether a separately signed manifest is wanted in addition to HTTPS. Public source
 shapefiles/NetCDF are builder inputs, not ready-to-import runtime packs. No host is assumed here.
 
 Implementation gates: host TLS fixture tests for hostname, chain, time, abrupt EOF, cancelled

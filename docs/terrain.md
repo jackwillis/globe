@@ -37,6 +37,9 @@ Host/G4 refined pixels agree, as do the base-only checksums. The app replay hash
 PowerPC and 68k compile probes and G4 app/terrain tests pass. Mutants disabling Antarctic white,
 style propagation, smoothing and water rejection in the base are all caught.
 
+GL-28 subsequently marks inland water without changing the format; the current combined replay
+pin is efa030af1a10f887. The GL-27 timing snapshots above precede that data-only change.
+
 ## Earlier implementation measurements (historical)
 
 # Forward-projected settled terrain

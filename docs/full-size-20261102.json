@@ -1,0 +1,12 @@
+{
+  "edition": "full: native X11 app with embedded atlas, elevation, countries and places",
+  "measured_utc": "2026-11-02T23:38:26.915651+00:00",
+  "application": "globe-x11",
+  "executable_bytes": 343392,
+  "documents_bytes": 35149,
+  "payload_bytes": 378541,
+  "app_sha256": "84302768c8af6fc8c9d5596143243e2cf9e5f66684dc49905f3b3c3ad570d76f",
+  "payload_budget_bytes": null,
+  "execution": "host tests run; real G4 display not run",
+  "limits": "native dynamically linked executable; system libraries and optional imported packs excluded; no floppy-fit claim"
+}

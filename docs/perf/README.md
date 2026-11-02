@@ -1,4 +1,8 @@
-# Performance measurements (M1)
+# Performance measurements — historical M1 baseline
+
+These are the original baseline measurements. Later [scaling](scaling.md) and
+[current terrain costs](../terrain.md) supersede the
+original speed questions below.
 
 Measured 2026-11-01. Every number here comes from a run described below; nothing is extrapolated.
 Raw outputs are in this directory.

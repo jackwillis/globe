@@ -1,6 +1,6 @@
 # Globe — backlog and priorities
 
-Reconciled 2026-11-02 against `main` at `19c26a2`. The original backlog (written from `386f4c6`, so it
+Reconciled 2026-11-02; updated after the GL-27/28 and GL-31 design pass on `main`. The original backlog (written from `386f4c6`, so it
 could not see the merged side branches) is kept in structure; statuses below are checked against the
 repo, not assumed. Decisions live in `docs/adr/0001-m2-to-m5-decisions.md`; rules and history in
 `docs/handoff.md` and `docs/project-notes.md`.
@@ -22,8 +22,8 @@ after it, so a slip there cannot hold up the release.
 | --- | --- | --- | --- | --- | --- |
 | GL-1 | Run the existing OS 9 build on the G4 | S | Jack | open | The app is now `GlobeFloppy` (`GlobeFloppy.bin` MacBinary, both forks; `GlobeFloppy-1440.dsk` image), built with `tools/build-edition.sh floppy`. Launches; drag, double-click zoom, keys and cursors work; idle quiet; window moves and updates do not re-render; results into `docs/os9-proof.md` |
 | GL-2 | Get the work onto GitHub | S | Jack | changed | The five side branches are merged into `main` and deleted, so nothing to push but `main` itself (GitHub has an older commit). No Claude push: the owner pushes |
-| GL-3 | Merge `claude/click-rules` | M | Agent | partial | Merged (`d6ccb7f`, from `987cd37`): press without a drag leaves stage, generation and effects unchanged; expose resends cached pixels (reconciled with `4cd730b`; only `CMakeLists.txt` conflicted). Host: 34/34 tests, replay hash and goldens unchanged. **Open:** run the replay and `test_app` on the G4 |
-| GL-4 | Refresh stale docs | S | Agent | partial | Codex updated README for the two editions and notes; project notes and handoff are in `docs/`. **Open:** re-read README, `open-work.md` and the handoff comment on test counts for leftover "M1" and "uncommitted" wording |
+| GL-3 | Merge `claude/click-rules` | M | Agent | done | Merged (`d6ccb7f`, from `987cd37`): press without a drag leaves stage, generation and effects unchanged; expose resends cached pixels (reconciled with `4cd730b`; only `CMakeLists.txt` conflicted). Host: 34/34 tests, replay hash and goldens unchanged. 2026-11-02: current cross-built G4 test_app including click rules and replay passes, hash 9b4a458633a32d9d |
+| GL-4 | Refresh stale docs | S | Agent | done | Codex updated README for the two editions and notes; project notes and handoff are in `docs/`. 2026-11-02: current README/open-work/handoff, architecture, project and toolchain notes refreshed; superseded handoff/toolchain text archived; current host count 35 |
 | GL-5 | Get CI running and green on GitHub | M | Jack + Agent | open | `checks.yml` now also builds the full and floppy size reports (configured, never run). Unverified: `pipx` pins, Retro68 job |
 
 ## P1: make v0.1 fast and shippable
@@ -33,7 +33,7 @@ after it, so a slip there cannot hold up the release.
 | GL-6 | Draw the line layers once per refine | M | Agent | done | Merged (`12912d1`): lines stay per band (each band is presented complete) but each band skips arcs and polylines that cannot touch its rows. G4 640x480, median of 9: refine job 783-786 ms to 378-381 ms at 1x (1014-1020 to 388-394 at 2x); lines-only 456 to 82 ms; checksum `1228dcc860a92a77`, replay hash and goldens unchanged; 8 of 9 mutants caught (survivor practically equivalent). The 573 vs 786 ms mismatch was two different views. Original ticket text: biggest measured speed-up. Profile (G4, 640x480): refine 786 ms with terrain, 456 ms without; lines re-walked in all 30 bands, about 16 times their 28 ms single pass. Re-baseline first: `terrain.md` says about 573 ms, the later profile 786 ms. Refined checksum `1228dcc860a92a77` and moving-frame pins unchanged. Fold into GL-14 if that starts soon |
 | GL-7 | Measure real X11 display timing on the G4 | S | Jack | open | `globe-x11 --script ... --stats` from the desktop session; add to `docs/perf/` |
 | GL-8 | Mac-native polish for v0.1 | M | Agent | open | Menus with shortcuts, About box crediting Natural Earth, NOAA ETOPO 2022 and Wikidata, icon, Quit; window and view in Preferences |
-| GL-9 | Floppy size report | M | Agent | done (reports) | Codex, `48e810f`: `tools/build-edition.sh floppy|full`, `tools/floppy_report.py`, `docs/floppy-size.md`. Host test and policy pass; Retro68 builds and CI steps not re-run by Claude. **Open:** budget check actually running in CI |
+| GL-9 | Floppy size report | M | Agent | done (reports) | Codex, `48e810f`: `tools/build-edition.sh floppy|full`, `tools/floppy_report.py`, `docs/floppy-size.md`. 2026-11-02: local full/floppy builds, HFS fork roundtrip and size budget pass again; current reports include GL-27/28. CI remains unrun. **Open:** budget check actually running in CI |
 | GL-10 | Decide the minimum system and trim the partition | S | Jack | open | SIZE resource now 24 MiB preferred / 12 MiB minimum; reset from measured use |
 | GL-11 | Ship the v0.1 floppy edition | M | Jack + Agent | open | Disk image and archive, version stamp, attribution, README with screenshots |
 
@@ -64,11 +64,11 @@ stays unchanged and the G4 benchmark stays within noise.
 | GL-24 | Copy view as PICT | S | Agent | open | Bitmap first; vector after GL-15 |
 | GL-25 | Great-circle distance between two clicks | S | Agent | open | Tested against known city pairs |
 | GL-26 | Movable refinement focus and effect choice | S | Agent | open | Ripple, Dissolve, Sweep or Instant; replays stay deterministic |
-| GL-27 | Terrain look | M | Agent | done, with a cost to review | Codex `df1789e` (reviewed by Claude: 35/35 host tests on a clean checkout of the commit; read `docs/terrain.md`): gray 36x18 moving mask 4.3 ms on the G4, `S` cycles Hypsometric/Cel-shaded, Antarctica white, shaded cells. **Cost:** G4 refine job went from about 380/386 ms to 555/693 ms (1x/2x), a standard trace's final view refines in 802 ms, and the longest continuation step is 120 ms (responsiveness limit); the earlier microbenchmark predicted +78 ms. Refined pin changed to `27336cb8117e5e7f` by design. Original ticket: Flat gray base while moving, palette styles (`CycleStyle`, hypsometric default, cel-shaded second), Antarctica white by latitude rule (GELV ice-flag bit reserved). `fill_triangle_shaded` is merged and benchmarked (G4: +78 ms at 1x, none at 2x) but not wired into terrain |
-| GL-28 | Great Lakes and a lakes layer | M | Agent | done | Codex `3af70e4`: cell-center lakes marked in the reproducible one-degree pack (`docs/elevation-format.md`); refined pin now `efa030af1a10f887`. Original ticket: Source recorded in `data/SOURCES.md` (Natural Earth lakes 5.0.0, 110m/50m/10m; 67 cells touch a Great Lake at 50m); water cells not yet marked by the builder. Glaciated-areas source also recorded |
+| GL-27 | Terrain look | M | Agent | done, cost under review | Codex `df1789e`, reviewed by Claude on a clean checkout (35/35 host tests). Gray base, CycleStyle, two palettes, Antarctic white and shared-corner shading. G4 base about 4.3/5.3 ms; refine about 555/693 ms versus 380/386; longest continuation 120 ms. Owner/Claude decides further tuning; do not tune unasked. See terrain.md |
+| GL-28 | Great Lakes and a lakes layer | M | Agent | done (builder) | Codex `3af70e4`, reviewed by Claude: pinned 50m source, cell-center water mask (135 centers/132 changed; Great Lakes 30/29), twice-reproduced pack, unchanged GELV v1 proxy; host/G4 pin efa030af1a10f887. Runtime lake/rivers vectors belong to GL-35 |
 | GL-29 | Compression decision and a 0.25-degree terrain pack | L | Agent | partial | Measured (ADR): 1 degree 64,800 to 29,140; 0.25 degree 1,036,800 to 342,041 (average predictor + range coder); atlas delta-varint 32,480 to 26,736. **Open:** decoder timed on the G4, runtime container, import pack with size report |
 | GL-30 | Older systems and 68k feasibility spike | L | Jack + Agent | open | No Appearance Manager; 68k with FPU in an emulator; fixed-point projection costed |
-| GL-31 | Fetch inside the app, with TLS from `../weather` | L | Jack + Agent | design written (`bf40e25`) | `docs/fetch-design.md` exists (Codex; not reviewed by Claude). Owner decision 2026-11-02: in scope for v2, sequenced after v0.1, **full edition first, not in the v0.1 floppy** (seed story undesigned; TLS link cost measured at about 104 KB). Original:  Step 1 (Agent, S): written design only: how to reuse weather's BearSSL, trust anchors, seed provisioning, DNS and HTTP framing; floppy size cost of BearSSL plus anchors (may be full edition only); pack validation (version, checksum, size caps) that cannot damage baked data; which server hosts packs. No networking code before that is reviewed |
+| GL-31 | Fetch inside the app, with TLS from `../weather` | L | Jack + Agent | design written (`bf40e25`) | fetch-design.md: independent library, weather licensing/reuse, seed lifecycle, bounded binary framing and safe pack swap; retained-symbol crypto/anchors size delta 104,206 bytes. Owner: full edition first, no v0.1 floppy fetch. Hosting/UI and design review remain; no networking code before review |
 | GL-32 | Colors for deserts | S | Agent | open | Owner feedback: deserts are not deserty. Latitude tint first, or a land-cover grid as a further small versioned file; undecided |
 | GL-33 | Map look (Google-like flat style) | S | Agent | open | Default floppy look: flat pale land, blue water, light borders, labels and cities; reuses the flat moving base |
 | GL-34 | Land-class grid and the Natural look | L | Agent | open | Pick a classification (e.g. Koeppen-style), check license and size, build a small versioned grid, 2D palette (class x elevation band); answers Sahara vs Amazon |
@@ -91,10 +91,10 @@ stays unchanged and the G4 benchmark stays within noise.
 
 - **The OS 9 build has never run.** If GL-1 fails, P1 and P2 reorder around fixing it.
 - **Native QuickDraw speed is unknown.** GL-16 settles it; keep both surfaces until then.
-- **Refine timings disagree between docs** (573 ms vs 786 ms): re-baseline on the G4 before GL-6.
+- **Refine timings depend on view and quality.** GL-6 was re-baselined and measured; GL-27 costs are separately recorded in terrain.md. Do not compare different views as a regression.
 - **Floppy contents are open.** Working rule: the floppy edition is the default build minus optional
   data packs; the size report shows when it stops fitting. Two releases only, floppy and full.
 - **Fetch scope and size.** BearSSL plus anchors may not fit the floppy edition (GL-31).
 - **User or Auto?** Proposed: the user's layer choices always win; Auto adjusts detail and cadence only.
 - **Minimum supported system.** GL-10 decides it; GL-30 explores older systems and 68k.
-- **Never run on real hardware:** tip6 (X11), the OS 9 front end, and the click rules on the G4.
+- **Acceptance still open:** current real-display X11 timing and native OS 9 execution. G4 headless click rules/replay now pass; that is not GUI acceptance.

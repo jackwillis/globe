@@ -9,9 +9,9 @@ No Apple headers, implementations or binaries are copied into this repository. C
 Retro68's installed Multiversal interfaces and import libraries.
 
 The classic, non-Carbon front end supports dragging in both modes, double-click zoom, arrows,
-+/- zoom, R reset, G graticule, B borders, T drag mode, N north up, Q/Escape quit. Close, grow and
-window dragging use Toolbox tracking. It embeds the atlas and one-degree elevation, renders moving
-outlines then the same bounded settled terrain bands. Optional toolbar, country/city windows and
++/- zoom, R reset, G graticule, B borders, T drag mode, S terrain style, N north up, Q/Escape quit. Close, grow and
+window dragging use Toolbox tracking. It embeds the atlas and one-degree elevation, renders a moving
+gray land/ocean base and outlines then the same bounded settled terrain bands. Optional toolbar, country/city windows and
 acquisition are outside this D7 proof-of-life application.
 
 An offscreen 16-bit GWorld receives big-endian RGB555 via `pixel_format`; locked PixMap rowBytes
@@ -30,7 +30,7 @@ The pure sleep calculation tests overdue, one-ms, 150-ms, rounding and saturated
 and rounding-down mutants fail. A SIZE resource requests a 24 MiB partition, minimum 12 MiB.
 
 Actual build: Retro68 GNU 16.1.0, `-Os`, no exceptions/RTTI; linked and packaged successfully with
-no final compiler warnings. Designated data fork 233,020 bytes, resource fork 432 bytes, MacBinary 233,728
+no final compiler warnings. Designated data fork 237,116 bytes, resource fork 432 bytes, MacBinary 237,824
 bytes. Initial compile failures exposed an absent QDOffscreen.h and Carbon-only port accessors;
 the final code uses the available classic QuickDraw interfaces instead.
 

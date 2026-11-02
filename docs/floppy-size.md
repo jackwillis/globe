@@ -1,7 +1,7 @@
-# Two edition size report, 2026-11-01
+# Two edition size report, 2026-11-02
 
 These are local builds and measurements. CI steps now reproduce reports and upload build artifacts;
-CI has not run (no remote). Nothing was deployed or published. OS 9 was built and packaged, not run.
+CI has not run; origin exists and the owner handles publication. Nothing was deployed or published. OS 9 was built and packaged, not run.
 
 Exactly two release entry points:
 
@@ -16,15 +16,15 @@ before final release. No runtime codec or v1 layout was silently changed to impr
 
 | Floppy component | Bytes |
 | --- | ---: |
-| Application data fork | 233,020 |
+| Application data fork | 237,116 |
 | Application resource fork | 432 |
-| MacBinary transfer file (including fork padding/header) | 233,728 |
-| ReadMe and GPL license | 36,112 |
-| Installed file payload, excluding HFS allocation overhead | 269,564 |
+| MacBinary transfer file (including fork padding/header) | 237,824 |
+| ReadMe and GPL license | 36,143 |
+| Installed file payload, excluding HFS allocation overhead | 273,691 |
 | Conservative payload budget | 1,200,000 |
-| Payload budget headroom | 930,436 |
+| Payload budget headroom | 926,309 |
 | Raw HFS image (80 x 2 x 18 x 512) | 1,474,560 |
-| HFS free space after copies | 1,178,624 |
+| HFS free space after copies | 1,174,528 |
 
 Retro68 GNU 16.1.0, `-Os`, no exceptions/RTTI, classic non-Carbon PowerPC. Resources request
 24 MiB preferred and 12 MiB minimum application memory; disk fit is not a runtime memory claim.
@@ -34,8 +34,8 @@ bounds, image geometry/signature, roundtrip and payload budget are checked by `f
 HFS tools enforce actual disk fit; the Python signature check is not a general filesystem validator.
 Budget, fork-roundtrip and image-geometry mutants all fail the reporting test.
 
-The full edition's native, dynamically linked release executable is 330,360 bytes, plus the
-35,149-byte GPL license (365,509 total). This is a different executable format/platform from the
+The full edition's native, dynamically linked release executable is 343,392 bytes, plus the
+35,149-byte GPL license (378,541 total). This is a different executable format/platform from the
 OS 9 artifact, so these sizes do not compare runtime footprint. Both raw reports include hashes.
 The build products live in ignored build directories; binaries and disk images are not committed.
 
@@ -49,5 +49,8 @@ predictor plus DEFLATE (428,179), adaptive range coding (804,716) and predictor 
 Atlas delta-varint points measure 26,706 bytes versus 32,480 raw. These modern Python sizes do not
 choose the eventual target decoder; target speed and decoder memory remain unmeasured.
 
-See [floppy JSON](floppy-size-20261101.json), [full JSON](full-size-20261101.json),
+See [floppy JSON](floppy-size-20261102.json), [full JSON](full-size-20261102.json),
 [OS 9 scope and acceptance](os9-proof.md) and [remaining execution log](open-work.md).
+
+The 2026-11-01 JSON snapshots remain historical. Current snapshots above include GL-27 shading/base
+and GL-28 lake data; the size-only TLS experiment is separate and not linked into either release.
