@@ -1,0 +1,117 @@
+{
+ "what": "fill_triangle_shaded vs TerrainScene::draw_cell, 640x480, 1-degree grid (360x180), camera lat 20 lon 10, projection excluded, median of N repeats",
+ "source": "src/platform/bench/shade_bench.cpp; branch claude/smooth-quad; built -O2, G4 cross-built static",
+ "notes": [
+  "shaded path skips cells with any corner behind the horizon; flat path clips them (limb pixels differ slightly at radius 220)",
+  "corner values for the shaded path are cell means, computed outside the timing; checksums differ between flat and shaded by design",
+  "host vs G4 checksums per case are identical"
+ ],
+ "host": {
+  "width": 640,
+  "height": 480,
+  "repeats": 30,
+  "grid": "360x180",
+  "results": [
+   {
+    "cells_drawn_shaded": 32080
+   },
+   {
+    "case": "flat_draw_cell",
+    "radius_px": 220,
+    "median_ms": 2.376,
+    "min_ms": 2.355,
+    "max_ms": 2.415,
+    "pixels": 152080,
+    "ns_per_pixel": 15.6,
+    "checksum": "78db879c78beeefb"
+   },
+   {
+    "case": "shaded_two_triangles",
+    "radius_px": 220,
+    "median_ms": 3.76,
+    "min_ms": 3.733,
+    "max_ms": 3.999,
+    "pixels": 152056,
+    "ns_per_pixel": 24.7,
+    "checksum": "7cf7bedc7ce18e4d"
+   },
+   {
+    "cells_drawn_shaded": 7352
+   },
+   {
+    "case": "flat_draw_cell",
+    "radius_px": 440,
+    "median_ms": 2.013,
+    "min_ms": 1.992,
+    "max_ms": 2.056,
+    "pixels": 307200,
+    "ns_per_pixel": 6.6,
+    "checksum": "f6a64c5a5adbd3b9"
+   },
+   {
+    "case": "shaded_two_triangles",
+    "radius_px": 440,
+    "median_ms": 2.111,
+    "min_ms": 2.089,
+    "max_ms": 2.218,
+    "pixels": 307200,
+    "ns_per_pixel": 6.9,
+    "checksum": "5d459d330b94b9c5"
+   }
+  ]
+ },
+ "g4": {
+  "width": 640,
+  "height": 480,
+  "repeats": 30,
+  "grid": "360x180",
+  "results": [
+   {
+    "cells_drawn_shaded": 32080
+   },
+   {
+    "case": "flat_draw_cell",
+    "radius_px": 220,
+    "median_ms": 107.509,
+    "min_ms": 107.386,
+    "max_ms": 177.203,
+    "pixels": 152080,
+    "ns_per_pixel": 706.9,
+    "checksum": "78db879c78beeefb"
+   },
+   {
+    "case": "shaded_two_triangles",
+    "radius_px": 220,
+    "median_ms": 185.623,
+    "min_ms": 185.449,
+    "max_ms": 227.942,
+    "pixels": 152056,
+    "ns_per_pixel": 1220.8,
+    "checksum": "7cf7bedc7ce18e4d"
+   },
+   {
+    "cells_drawn_shaded": 7352
+   },
+   {
+    "case": "flat_draw_cell",
+    "radius_px": 440,
+    "median_ms": 106.403,
+    "min_ms": 106.318,
+    "max_ms": 135.362,
+    "pixels": 307200,
+    "ns_per_pixel": 346.4,
+    "checksum": "f6a64c5a5adbd3b9"
+   },
+   {
+    "case": "shaded_two_triangles",
+    "radius_px": 440,
+    "median_ms": 99.429,
+    "min_ms": 99.353,
+    "max_ms": 125.945,
+    "pixels": 307200,
+    "ns_per_pixel": 323.7,
+    "checksum": "5d459d330b94b9c5"
+   }
+  ]
+ }
+}

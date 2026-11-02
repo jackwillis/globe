@@ -11,6 +11,8 @@ namespace globe {
 namespace {
 
 constexpr double kBox = 1.0e6;
+// Largest shade value that still floors to palette index 255.
+constexpr double kMaxShade = 255.9999;
 
 // Liang-Barsky against [-kBox, kBox]^2; false if the segment misses the box entirely.
 bool clip_to_box(double& x0, double& y0, double& x1, double& y1) {
@@ -149,6 +151,86 @@ void fill_disc(Framebuffer& fb, double cx, double cy, double radius, Rgb565 colo
         const double hi = std::min(static_cast<double>(fb.width()), std::floor(cx + half - 0.5));
         if (lo <= hi) {
             fb.fill_span(y, static_cast<int>(lo), static_cast<int>(hi), color);
+        }
+    }
+}
+
+namespace {
+
+struct ShadeVertex {
+    double x, y, v;
+};
+
+// x of the edge a->b at height cy. Callers pass the endpoints with a.y < b.y, ordered the same
+// way for every triangle, so a shared edge gets bit-identical positions from both sides.
+double edge_x(const ShadeVertex& a, const ShadeVertex& b, double cy) {
+    return a.x + (cy - a.y) * (b.x - a.x) / (b.y - a.y);
+}
+
+bool before(const ShadeVertex& a, const ShadeVertex& b) {
+    return a.y < b.y || (a.y == b.y && a.x < b.x);
+}
+
+} // namespace
+
+void fill_triangle_shaded(Framebuffer& fb, double x0, double y0, double v0, double x1, double y1,
+                          double v1, double x2, double y2, double v2, const Rgb565* palette) {
+    const double all[9] = {x0, y0, v0, x1, y1, v1, x2, y2, v2};
+    for (int i = 0; i < 9; ++i) {
+        if (!std::isfinite(all[i]) || (i % 3 != 2 && std::fabs(all[i]) > kBox)) {
+            return;
+        }
+    }
+    ShadeVertex a{x0, y0, std::clamp(v0, 0.0, kMaxShade)};
+    ShadeVertex b{x1, y1, std::clamp(v1, 0.0, kMaxShade)};
+    ShadeVertex c{x2, y2, std::clamp(v2, 0.0, kMaxShade)};
+    if (before(b, a)) {
+        std::swap(a, b);
+    }
+    if (before(c, b)) {
+        std::swap(b, c);
+        if (before(b, a)) {
+            std::swap(a, b);
+        }
+    }
+    // a, b, c now run top to bottom (ties left to right).
+    const double det = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y);
+    if (!(std::fabs(det) > 1.0e-9)) {
+        return;
+    }
+    const double gx = ((b.v - a.v) * (c.y - a.y) - (c.v - a.v) * (b.y - a.y)) / det;
+    const double gy = ((c.v - a.v) * (b.x - a.x) - (b.v - a.v) * (c.x - a.x)) / det;
+
+    const double h = static_cast<double>(fb.height());
+    const double w = static_cast<double>(fb.width());
+    const int y_first =
+        std::max(fb.first_row(), static_cast<int>(std::clamp(std::ceil(a.y - 0.5), 0.0, h)));
+    const int y_end =
+        std::min(fb.end_row(), static_cast<int>(std::clamp(std::ceil(c.y - 0.5), 0.0, h)));
+    for (int y = y_first; y < y_end; ++y) {
+        const double cy = y + 0.5;
+        const double long_x = edge_x(a, c, cy);
+        const double short_x = cy < b.y ? edge_x(a, b, cy) : edge_x(b, c, cy);
+        const double left = std::min(long_x, short_x);
+        const double right = std::max(long_x, short_x);
+        const int xs = static_cast<int>(std::clamp(std::ceil(left - 0.5), 0.0, w));
+        const int xe = static_cast<int>(std::clamp(std::ceil(right - 0.5), 0.0, w)) - 1;
+        if (xs > xe) {
+            continue;
+        }
+        // Plane value at the first and last covered pixel centers, clamped so rounding can never
+        // index outside the palette. The truncated fixed-point step keeps every pixel between them.
+        const double row = a.v + gy * (cy - a.y) - gx * a.x;
+        const double vs = std::clamp(row + gx * (xs + 0.5), 0.0, kMaxShade);
+        const double ve = std::clamp(row + gx * (xe + 0.5), 0.0, kMaxShade);
+        std::int32_t value = static_cast<std::int32_t>(vs * 65536.0);
+        const std::int32_t step =
+            xe > xs ? static_cast<std::int32_t>((ve - vs) / (xe - xs) * 65536.0) : 0;
+        Rgb565* out =
+            fb.data() + static_cast<std::size_t>(y) * static_cast<std::size_t>(fb.stride());
+        for (int x = xs; x <= xe; ++x) {
+            out[x] = palette[value >> 16];
+            value += step;
         }
     }
 }

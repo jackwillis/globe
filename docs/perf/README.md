@@ -173,3 +173,8 @@ render costs about 0.58 seconds spread over cancellable continuations, versus 0.
 finer outlines only. New terrain checksum is pinned independently; moving-frame checksum remains
 unchanged. Per-band conversion and real-display submission are additional, not included in that
 render total. Raw host/G4 measurements are in terrain-*.json.
+
+## Shaded terrain fill (2026-11-01)
+
+`shade_bench` times `fill_triangle_shaded` (two triangles per 1-degree cell) against the existing flat `draw_cell` on the same cells, projection excluded ([raw](shade-fill-g4.json)). At 640x480 on the G4 with the globe radius at 220 px (about 3.8 px per cell, 152k pixels): flat 107.5 ms, shaded 185.6 ms (+78 ms; cost is per-cell and per-scanline setup, not per pixel). At radius 440 (2x zoom, full window): flat 106.4 ms, shaded 99.4 ms. Host: 2.4 vs 3.8 ms and 2.0 vs 2.1 ms. Frame checksums match host and G4 in all four cases.
+The existing G4 terrain refine renders in about 0.58 s in total, so smoothing adds roughly 13% at 1x and nothing at 2x. Not measured: the shaded fill wired into the real refine path, band cancellation, and real-display submission. The shaded path skips limb cells (a corner behind the horizon) that the flat path clips.

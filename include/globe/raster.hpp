@@ -20,4 +20,18 @@ void draw_line(Framebuffer& fb, double x0, double y0, double x1, double y1, Rgb5
 // only rows inside the buffer are touched. Non-finite or non-positive radius draws nothing.
 void fill_disc(Framebuffer& fb, double cx, double cy, double radius, Rgb565 color);
 
+// Fills a triangle, interpolating a scalar linearly across it (Gouraud shading of a palette
+// index). Each vertex carries a value; a covered pixel is painted `palette[floor(v)]` where v is
+// the plane through the three vertex values, evaluated at the pixel center. Values are clamped
+// to [0, 256) first, so `palette` must hold 256 entries.
+//
+// Pixel coverage uses the same center-sampling rule as the other primitives (a pixel is covered
+// when its center is inside; a center exactly on an edge belongs to the triangle below/right of
+// it). Edge positions are computed from the two endpoints in a canonical order, so two triangles
+// sharing an edge leave no gap and no overlap, in any vertex order and winding. Per-pixel work is
+// one add and one table lookup. Non-finite values or coordinates, coordinates beyond +-1e6, and
+// triangles with (near) zero area draw nothing: clip before calling.
+void fill_triangle_shaded(Framebuffer& fb, double x0, double y0, double v0, double x1, double y1,
+                          double v1, double x2, double y2, double v2, const Rgb565* palette);
+
 } // namespace globe
