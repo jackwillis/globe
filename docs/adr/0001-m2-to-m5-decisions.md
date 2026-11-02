@@ -215,3 +215,16 @@ Owner decisions after discussing streaming OpenStreetMap data. Design only; noth
   built on a modern machine and imported, or not built.
 - **Rendering streets** (hundreds of thousands of segments per city) needs tile culling and a zoom
   threshold, and is unmeasured on the G4.
+
+## Addendum, 2026-11-01 (two releases)
+
+Owner decision: the globe ships as **two releases, a floppy edition and a full edition**. Not a
+configuration matrix.
+
+- **Floppy:** must fit a 1.44 MB disk (the D8 size report decides what fits). Baked compressed
+  terrain at the coarse resolution, 110m vectors, the OS 9 front end.
+- **Full:** everything else: finer baked terrain or optional packs, extra layers, larger vector
+  packs, the NetBSD/X11 front end.
+- Both editions use the same source and the same pack formats; the difference is which data and
+  front ends are built in, selected at build time. Exactly what goes in each is open until the
+  floppy size report and the compression measurements exist.
