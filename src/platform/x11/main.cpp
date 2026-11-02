@@ -76,8 +76,8 @@ double ms_since(std::uint64_t t0) {
 
 class App {
   public:
-    App(Display* dpy, const Atlas& atlas, const Options& opt)
-        : dpy_(dpy), atlas_(atlas), opt_(opt), model_(initial_model(opt.width, opt.height)) {}
+    App(Display* dpy, const Scene& scene, const Options& opt)
+        : dpy_(dpy), scene_(scene), opt_(opt), model_(initial_model(opt.width, opt.height)) {}
 
     ~App() {
         if (image_ != nullptr) {
@@ -313,7 +313,7 @@ class App {
         }
         Framebuffer& fb = *fb_;
         std::uint64_t t = monotonic_ns();
-        render_globe(fb, model_.camera, atlas_, kDefaultPalette, effective_layers(model_));
+        render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_));
         t_.render_ms.push_back(ms_since(t));
         t = monotonic_ns();
         convert_pixels(fb, format_, reinterpret_cast<std::uint8_t*>(image_->data),
@@ -422,7 +422,7 @@ class App {
     }
 
     Display* dpy_;
-    const Atlas& atlas_;
+    const Scene& scene_;
     Options opt_;
     Model model_;
     Window win_ = 0;
@@ -497,6 +497,12 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    const auto scene = Scene::create(*atlas);
+    if (!scene) {
+        std::fprintf(stderr, "globe-x11: out of memory building the scene\n");
+        return 2;
+    }
+
     Display* dpy = XOpenDisplay(nullptr);
     if (dpy == nullptr) {
         std::fprintf(stderr, "globe-x11: cannot open display (is DISPLAY set and authorized?)\n");
@@ -504,7 +510,7 @@ int main(int argc, char** argv) {
     }
     int rc = 0;
     {
-        App app(dpy, *atlas, opt);
+        App app(dpy, *scene, opt);
         app.set_script(opt.script_path != nullptr);
         if (!app.init()) {
             rc = 1;

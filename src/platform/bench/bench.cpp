@@ -3,7 +3,8 @@
 // Headless benchmark: replays a recorded message trace through update() and render_globe(),
 // timing each frame, and prints one JSON object. No display, window system or network.
 //
-//   globe-bench [--atlas FILE] [--size WxH] [--repeat N] [--convert] [--layers gcb] TRACE
+//   globe-bench [--atlas FILE] [--size WxH] [--repeat N] [--convert] [--layers gcb] [--reference]
+//   TRACE
 //
 // The embedded atlas is used unless --atlas is given. With --convert each frame is also packed
 // into a 32-bit X-style pixel layout, to include that cost. With --layers, only the listed layers
@@ -76,6 +77,7 @@ int main(int argc, char** argv) {
     int height = 480;
     int repeat = 3;
     bool convert = false;
+    bool reference_path = false;
     bool force_layers = false;
     Layers forced{};
     for (int i = 1; i < argc; ++i) {
@@ -91,6 +93,8 @@ int main(int argc, char** argv) {
                 std::fprintf(stderr, "bad --repeat (1..1000)\n");
                 return 2;
             }
+        } else if (std::strcmp(argv[i], "--reference") == 0) {
+            reference_path = true; // compute vertex vectors per frame instead of using the Scene
         } else if (std::strcmp(argv[i], "--convert") == 0) {
             convert = true;
         } else if (std::strcmp(argv[i], "--layers") == 0 && i + 1 < argc) {
@@ -164,6 +168,13 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    const std::uint64_t t_scene0 = monotonic_ns();
+    const auto scene = Scene::create(*atlas);
+    const std::uint64_t t_scene1 = monotonic_ns();
+    if (!scene) {
+        std::fprintf(stderr, "scene allocation failed\n");
+        return 2;
+    }
     auto fb = Framebuffer::create(width, height);
     if (!fb) {
         std::fprintf(stderr, "framebuffer allocation failed\n");
@@ -203,8 +214,11 @@ int main(int argc, char** argv) {
         for (;;) {
             if (need_frame) {
                 const std::uint64_t t0 = monotonic_ns();
-                const RenderStats rs = render_globe(*fb, model.camera, *atlas, kDefaultPalette,
-                                                    effective_layers(model));
+                const RenderStats rs = reference_path
+                                           ? render_globe(*fb, model.camera, *atlas,
+                                                          kDefaultPalette, effective_layers(model))
+                                           : render_globe(*fb, model.camera, *scene,
+                                                          kDefaultPalette, effective_layers(model));
                 const std::uint64_t t1 = monotonic_ns();
                 render_ms.push_back(ms(t1 - t0));
                 frame_segments.push_back(rs.segments_visible);
@@ -264,6 +278,9 @@ int main(int argc, char** argv) {
     std::printf("  \"atlas_polylines\": %u,\n", atlas->polyline_count());
     std::printf("  \"atlas_points\": %u,\n", atlas->point_count());
     std::printf("  \"atlas_parse_ms\": %.4f,\n", ms(t_parse1 - t_parse0));
+    std::printf("  \"renderer\": \"%s\",\n", reference_path ? "reference" : "scene");
+    std::printf("  \"scene_build_ms\": %.4f,\n  \"scene_bytes\": %zu,\n", ms(t_scene1 - t_scene0),
+                scene->bytes());
     std::printf("  \"first_frame_ms_since_main\": %.4f,\n", first_frame_ms);
     std::printf("  \"total_ms\": %.2f,\n", ms(t_end - t_start));
     std::printf("  \"timer_overhead_ns\": %llu,\n", static_cast<unsigned long long>(overhead));
