@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "date": "2026-11-01",
+  "backend": "headless",
+  "display_mode": "none",
+  "os": "NetBSD",
+  "release": "11.0",
+  "architecture": "macppc",
+  "cpu": "PowerPC 7400 revision 2.9",
+  "compiler": "GCC 12.5.0",
+  "build_flags": "-O2 -std=c99 -Wall -Wextra -Wpedantic",
+  "width": 320,
+  "height": 240,
+  "frames_per_measurement": 120,
+  "points": 5389,
+  "elapsed_seconds": 3.120824,
+  "peak_rss_kib": 9344,
+  "measurements": {
+    "transform": {"average_ms":6.770724,"median_ms":7.133254,"p95_ms":7.338924,"p99_ms":8.156863,"effective_fps":147.695},
+    "raster": {"average_ms":6.278547,"median_ms":5.742517,"p95_ms":6.602089,"p99_ms":11.093846,"effective_fps":159.273},
+    "total_headless": {"average_ms":12.948145,"median_ms":12.667514,"p95_ms":13.926384,"p99_ms":14.472028,"effective_fps":77.231}
+  },
+  "limitations": ["No X11 conversion, submission, synchronization or frame pacing measured", "Peak RSS includes all benchmark stages", "Single short run, no warmup", "CPU clock from assignment, not measured"]
+}

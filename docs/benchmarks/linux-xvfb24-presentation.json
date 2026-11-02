@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "backend": "XPutImage_XSync",
+  "os": "Linux",
+  "release": "7.2.10-200.fc44.x86_64",
+  "architecture": "x86_64",
+  "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "width": 320,
+  "height": 240,
+  "frames": 120,
+  "elapsed_seconds": 4.143993,
+  "depth": 24,
+  "bits_per_pixel": 32,
+  "bytes_per_line": 1280,
+  "byte_order": 0,
+  "red_mask": 16711680,
+  "green_mask": 65280,
+  "blue_mask": 255,
+  "direct_packing": true,
+  "all_frames_identical": true,
+  "peak_rss_kib": 11356,
+  "presentation_frames": 120,
+  "measurements": {
+    "XPutPixel_conversion": {
+      "average_ms": 0.685776,
+      "median_ms": 0.660084,
+      "p95_ms": 0.849089,
+      "p99_ms": 0.951072,
+      "effective_fps": 1458.202
+    },
+    "lookup_conversion": {
+      "average_ms": 0.275639,
+      "median_ms": 0.260611,
+      "p95_ms": 0.311727,
+      "p99_ms": 0.49345,
+      "effective_fps": 3627.929
+    },
+    "colored_render": {
+      "average_ms": 0.312958,
+      "median_ms": 0.294755,
+      "p95_ms": 0.470376,
+      "p99_ms": 0.720608,
+      "effective_fps": 3195.313
+    },
+    "submission_and_flush": {
+      "average_ms": 0.103305,
+      "median_ms": 0.097343,
+      "p95_ms": 0.151135,
+      "p99_ms": 0.199025,
+      "effective_fps": 9680.096
+    },
+    "XSync_proxy": {
+      "average_ms": 0.064841,
+      "median_ms": 0.058741,
+      "p95_ms": 0.090491,
+      "p99_ms": 0.198875,
+      "effective_fps": 15422.319
+    },
+    "paced_frame": {
+      "average_ms": 33.399534,
+      "median_ms": 33.397157,
+      "p95_ms": 33.409561,
+      "p99_ms": 33.45146,
+      "effective_fps": 29.941
+    }
+  },
+  "date": "2026-11-01",
+  "build_flags": "-O2 -std=c99 -Wall -Wextra -Wpedantic",
+  "timing_clock": "CLOCK_MONOTONIC",
+  "display_mode": "Xvfb virtual display, Linux; not native G4 evidence"
+}

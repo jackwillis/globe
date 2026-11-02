@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "backend": "headless",
+  "workload": "place_markers_and_picking_only",
+  "os": "NetBSD",
+  "release": "11.0",
+  "architecture": "macppc",
+  "compiler": "12.5.0",
+  "width": 640,
+  "height": 480,
+  "places": 13,
+  "frames": 120,
+  "elapsed_seconds": 1.823692,
+  "build_flags": "-O2 -std=c99 -Wall -Wextra -Wpedantic",
+  "measurements": {
+    "marker_overlay": {
+      "average_ms": 0.081113,
+      "median_ms": 0.08687,
+      "p95_ms": 0.106515,
+      "p99_ms": 0.116818
+    },
+    "point_picking": {
+      "average_ms": 0.026339,
+      "median_ms": 0.025593,
+      "p95_ms": 0.030218,
+      "p99_ms": 0.030609
+    }
+  },
+  "date": "2026-11-01",
+  "display_mode": "no display",
+  "timing_clock": "CLOCK_MONOTONIC"
+}

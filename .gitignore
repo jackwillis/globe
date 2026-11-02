@@ -1,0 +1,13 @@
+/planet
+/planet-bench
+/planet-places-bench
+/planet-view-bench
+/planet-x11
+/planet-x11-bench
+*.ppm
+__pycache__/
+/test_pixels
+/test_places
+/test_planet
+/test_x11_input
+/test_ximage

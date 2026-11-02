@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "backend": "modeled_rgb565_no_display",
+  "os": "Linux",
+  "release": "7.2.10-200.fc44.x86_64",
+  "architecture": "x86_64",
+  "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "width": 640,
+  "height": 480,
+  "frames": 120,
+  "elapsed_seconds": 0.340965,
+  "depth": 16,
+  "bits_per_pixel": 16,
+  "bytes_per_line": 1280,
+  "byte_order": 1,
+  "red_mask": 63488,
+  "green_mask": 2016,
+  "blue_mask": 31,
+  "direct_packing": true,
+  "all_frames_identical": true,
+  "peak_rss_kib": 5924,
+  "presentation_frames": 0,
+  "measurements": {
+    "XPutPixel_conversion": {
+      "average_ms": 2.312029,
+      "median_ms": 2.174377,
+      "p95_ms": 2.876479,
+      "p99_ms": 3.47092,
+      "effective_fps": 432.52
+    },
+    "lookup_conversion": {
+      "average_ms": 0.300483,
+      "median_ms": 0.283163,
+      "p95_ms": 0.38215,
+      "p99_ms": 0.571667,
+      "effective_fps": 3327.977
+    }
+  },
+  "date": "2026-11-01",
+  "build_flags": "-O2 -std=c99 -Wall -Wextra -Wpedantic",
+  "timing_clock": "CLOCK_MONOTONIC",
+  "display_mode": "no display; modeled RGB565 MSB-first image"
+}

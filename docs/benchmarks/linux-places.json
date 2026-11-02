@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "backend": "headless",
+  "workload": "place_markers_and_picking_only",
+  "os": "Linux",
+  "release": "7.2.10-200.fc44.x86_64",
+  "architecture": "x86_64",
+  "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "width": 640,
+  "height": 480,
+  "places": 13,
+  "frames": 120,
+  "elapsed_seconds": 0.02551,
+  "build_flags": "-O2 -std=c99 -Wall -Wextra -Wpedantic",
+  "measurements": {
+    "marker_overlay": {
+      "average_ms": 0.001234,
+      "median_ms": 0.001162,
+      "p95_ms": 0.002114,
+      "p99_ms": 0.002555
+    },
+    "point_picking": {
+      "average_ms": 0.000498,
+      "median_ms": 0.000461,
+      "p95_ms": 0.000751,
+      "p99_ms": 0.000982
+    }
+  },
+  "date": "2026-11-01",
+  "display_mode": "no display",
+  "timing_clock": "CLOCK_MONOTONIC"
+}
