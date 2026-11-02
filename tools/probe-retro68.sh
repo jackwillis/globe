@@ -1,0 +1,28 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2026 Jack Willis
+# Compile the portable core and the feature probe with Retro68's PowerPC and 68k compilers inside
+# its container. Compile-only (-c): it answers "does this language/library subset build?", not
+# "does it run?". Usage: tools/probe-retro68.sh [image]   (CONTAINER=docker to override podman)
+set -eu
+cd "$(dirname "$0")/.."
+CONTAINER=${CONTAINER:-podman}
+IMAGE=${1:-${RETRO68_IMAGE:-ghcr.io/autc04/retro68}}
+STD=${STD:--std=c++20}
+TC=/Retro68-build/toolchain
+
+$CONTAINER run --rm -v "$PWD":/src:Z -w /src "$IMAGE" sh -ec '
+for cxx in powerpc-apple-macos-g++ m68k-apple-macos-g++; do
+	echo "== $cxx"
+	'"$TC"'/bin/$cxx --version | head -1
+	for f in tools/retro68-probe/probe.cpp src/core/geometry.cpp src/core/projection.cpp src/render/framebuffer.cpp; do
+		'"$TC"'/bin/$cxx '"$STD"' -fno-exceptions -fno-rtti -Wall -Wextra -Wpedantic -Iinclude -c "$f" -o /tmp/probe.o 2>&1 \
+			| grep -E "probe:|error|warning" || true
+		if '"$TC"'/bin/$cxx '"$STD"' -fno-exceptions -fno-rtti -Iinclude -c "$f" -o /tmp/probe.o 2>/dev/null; then
+			echo "ok   $f"
+		else
+			echo "FAIL $f"
+		fi
+	done
+done
+'
