@@ -159,3 +159,28 @@ These live in the portable core or in a shared platform rule so both front ends 
 - Before choosing, measure on real data: derive a 0.25 degree grid from the ETOPO source and
   compare plain DEFLATE, predictor plus DEFLATE and a range coder, plus delta-varint on the atlas
   points. Record the ratios here and in the floppy size report.
+
+## Addendum, 2026-11-01 (refine profile on the G4: the earlier guess was wrong)
+
+Measured by a profiling program on branch `claude/refine-profile` (commit `d30f16c`, based on `v2`
+at `b1dbaaa`, unmerged; `src/platform/bench/refine_profile.cpp`, `docs/perf/refine-profile-g4.json`).
+G4, 640x480, 1x zoom, median of 9 runs; host and G4 frame checksums match.
+
+- The real refine job takes **786 ms** with terrain and **456 ms** without, so terrain adds about
+  330 ms. At 2x zoom the job is 1014 ms and lines-only 709 ms.
+- **The line layers are the largest cost.** Drawn in one pass they cost 28 ms, but the refine job
+  walks every polyline again for each of its 30 bands, about 16 times that. This replaces the
+  earlier inference that corner projection dominated.
+- Terrain phases sum to about 215 ms: project all corners 18 ms, bound all cells 26 ms, scan all
+  cells once per band 47 ms, fill about 123 ms (by subtraction, not measured directly). About 115 ms
+  of the job is not covered by any phase (inferred: per-work-unit stepping overhead, not measured).
+- 32,098 of 64,800 cells are culled; 152,080 pixels are filled at 1x.
+- A hemisphere pre-test skips half of the corners but saves under 1 ms on the G4. **Corner culling
+  is not worth doing.**
+
+Fix order, ranked by the profile: (1) draw the line layers once per refine, not once per band
+(clip each polyline to the band, or cache per-band segment lists); (2) make the cell scan visit
+only cells overlapping the current band (or drop bands in favor of the cell dissolve, which has no
+per-band scan); (3) make the per-cell fill cheaper (shaded fill, or skip fills that change no pixel).
+The dissolve order and the layered stack above should be built with these in mind: lines are a
+separate top layer drawn once, not interleaved with terrain passes.
