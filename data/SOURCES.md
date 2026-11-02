@@ -84,3 +84,19 @@ Two independent conversions produced identical bytes; a later equivalent scalar 
 reproduced the same digest. Build environment: h5py 3.16.0, numpy 2.5.4, modern host Python.
 The data retains the source's CC0-1.0 status; conversion tools and runtime code are GPL-3.0-or-later.
 See `docs/elevation-format.md` for the mean-cell aggregation and quantization table decisions.
+
+## Country polygons (verified 2026-11-01)
+
+Natural Earth 1:110m Admin 0 Countries, version 5.1.1; 177 source records. Product page:
+https://www.naturalearthdata.com/downloads/110m-cultural-vectors/110m-admin-0-countries/
+Terms: https://www.naturalearthdata.com/about/terms-of-use/ (public domain).
+Exact ZIP: https://naturalearth.s3.amazonaws.com/110m_cultural/ne_110m_admin_0_countries.zip
+Actual bytes 214,976, SHA-256 `0f243aeac8ac6cf26f0417285b0bd33ac47f1b5bdb719fd3e0df37d03ea37110`.
+ZIP inspected: ESRI Polygon shapefile, UTF-8 DBF, VERSION.txt 5.1.1. Source is outside repo.
+Builder preserves multipart exteriors and holes, normalizes spherical orientation, quantizes to
+microdegrees and transliterates English ADMIN labels to ASCII for classic font portability.
+Two Russian source longitudes 180.00000000000006 are clamped within a 1e-9-degree source tolerance.
+Generated `countries.gpol`: 91,928 bytes, SHA-256
+`80c580fa759fc0325ae0d68129af7b6bca437d8ef8dbf5da38d9a0fdb7627c7d`.
+The source's generalized de facto boundaries and labels are cartographic conventions; small islands
+and some countries are absent at this scale. Made with Natural Earth.

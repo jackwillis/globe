@@ -37,9 +37,12 @@
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
 #include "globe/embedded_atlas.hpp"
+#include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
+#include "globe/trackball.hpp"
+#include "info_window.hpp"
 #include "pixel_format.hpp"
 
 using namespace globe;
@@ -88,8 +91,11 @@ class App {
   public:
     App(Display* dpy, const Scene& scene, ElevationPacks& packs, const Options& opt)
         : dpy_(dpy), scene_(scene), packs_(packs), opt_(opt),
-          model_(initial_model(opt.width, opt.height)) {
+          model_(initial_model(opt.width, opt.height)), info_(dpy) {
         packs_.register_levels(model_);
+        countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
+        if (countries_)
+            country_scene_ = CountryScene::create(*countries_);
     }
 
     ~App() {
@@ -210,6 +216,8 @@ class App {
                     packs_.count(), packs_.bytes());
         std::printf("  \"toolbar_commands\": %zu,\n  \"cursor_changes\": %zu,\n", toolbar_commands_,
                     cursor_changes_);
+        std::printf("  \"info_cards\": %zu,\n  \"info_scrolls\": %zu,\n", info_cards_,
+                    info_.scrolls());
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -313,6 +321,8 @@ class App {
         if (fx.wake_after_ms != 0) {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
+        if (std::holds_alternative<Resize>(msg))
+            info_.move(model_.camera.width + 20);
         if (toolbar_ && std::holds_alternative<Resize>(msg))
             XMoveWindow(dpy_, toolbar_, 0, model_.camera.height + 20);
         if (toolbar_ && toolbar_state(model_) != toolbar_cache_)
@@ -569,6 +579,8 @@ class App {
     }
     bool handle(XEvent& ev) {
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
+        if (info_.handle(ev))
+            return false;
         if (ev.xany.window == toolbar_) {
             if (ev.type == Expose && ev.xexpose.count == 0)
                 draw_toolbar();
@@ -632,7 +644,27 @@ class App {
             }
             return false;
         case ButtonRelease:
-            return ev.xbutton.button == Button1 ? apply(PointerUp{now}) : false;
+            if (ev.xbutton.button == Button1) {
+                if (model_.dragging && !model_.drag_moved && country_scene_ && countries_) {
+                    const double x =
+                        (pointer_.x - model_.camera.center_x) / model_.camera.radius_px;
+                    const double y =
+                        (pointer_.y - model_.camera.center_y) / model_.camera.radius_px;
+                    if (x * x + y * y <= 1) {
+                        const auto v = unproject_to_sphere(model_.camera, pointer_);
+                        const auto world = model_.camera.right * v.x + model_.camera.up * v.y +
+                                           model_.camera.forward * v.z;
+                        const auto id = country_scene_->pick(from_unit_vector(world));
+                        if (id) {
+                            info_.show(win_, country_card(*countries_, *id),
+                                       model_.camera.width + 20);
+                            ++info_cards_;
+                        }
+                    }
+                }
+                return apply(PointerUp{now});
+            }
+            return false;
         case MotionNotify: {
             XEvent next;
             while (XCheckTypedWindowEvent(dpy_, win_, MotionNotify, &next)) {
@@ -698,6 +730,10 @@ class App {
     ElevationPacks& packs_;
     Options opt_;
     Model model_;
+    InfoWindow info_;
+    std::optional<Countries> countries_;
+    std::optional<CountryScene> country_scene_;
+    std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
     std::array<Cursor, 3> cursors_{};
     CursorIntent cursor_ = CursorIntent::Arrow;

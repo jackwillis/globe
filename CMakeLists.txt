@@ -17,8 +17,10 @@ add_library(globe_core
   src/core/projection.cpp
   src/core/trackball.cpp
   src/core/app.cpp
+  src/core/countries.cpp
   src/core/trace.cpp
   src/data/elevation.cpp
+  src/data/countries.cpp
   src/data/atlas.cpp
   src/data/crc32.cpp
   src/render/framebuffer.cpp
@@ -62,6 +64,13 @@ if(Python3_FOUND)
   add_library(globe_embedded_elevation ${CMAKE_BINARY_DIR}/embedded_elevation.cpp)
   target_link_libraries(globe_embedded_elevation PUBLIC globe_core)
 
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/embedded_countries.cpp
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py
+      ${CMAKE_SOURCE_DIR}/data/countries.gpol ${CMAKE_BINARY_DIR}/embedded_countries.cpp Countries
+    DEPENDS data/countries.gpol tools/embed_atlas.py)
+  add_library(globe_embedded_countries ${CMAKE_BINARY_DIR}/embedded_countries.cpp)
+  target_link_libraries(globe_embedded_countries PUBLIC globe_core)
+
   add_executable(globe-bench src/platform/bench/bench.cpp)
   target_link_libraries(globe-bench PRIVATE globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                             globe_clock_posix)
@@ -70,9 +79,9 @@ endif()
 
 find_package(X11)
 if(X11_FOUND AND TARGET globe_embedded_atlas)
-  add_executable(globe-x11 src/platform/x11/main.cpp)
+  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
-  target_link_libraries(globe-x11 PRIVATE globe_embedded_atlas globe_embedded_elevation globe_platform_common
+  target_link_libraries(globe-x11 PRIVATE globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
 endif()
@@ -85,11 +94,12 @@ endif()
 if(GLOBE_BUILD_TESTS)
   enable_testing()
   if(Python3_FOUND)
+    add_test(NAME country_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_country_builder.py)
     add_test(NAME elevation_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_elevation_builder.py)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar)
+  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

@@ -81,6 +81,30 @@ int main(int argc, char** argv) {
         motion(80, 60);
         motion(0, 0);
         motion(80, 60);
+        XEvent press{};
+        press.xbutton.display = d;
+        press.xbutton.window = main;
+        press.xbutton.button = Button1;
+        press.xbutton.x = 80;
+        press.xbutton.y = 60;
+        press.xbutton.type = ButtonPress;
+        XSendEvent(d, main, False, ButtonPressMask, &press);
+        press.xbutton.type = ButtonRelease;
+        XSendEvent(d, main, False, ButtonReleaseMask, &press);
+        XFlush(d);
+        usleep(100000);
+        const auto info = find(d, "Globe information");
+        CHECK(info);
+        if (info) {
+            XEvent wheel{};
+            wheel.xbutton.display = d;
+            wheel.xbutton.window = info;
+            wheel.xbutton.type = ButtonPress;
+            wheel.xbutton.button = Button5;
+            XSendEvent(d, info, False, ButtonPressMask, &wheel);
+            XFlush(d);
+            usleep(20000);
+        }
         click(Command::AlignNorth); // disabled in initial north-up state
         click(Command::ToggleGraticule);
         click(Command::ToggleGraticule);
@@ -99,7 +123,9 @@ int main(int argc, char** argv) {
     waitpid(pid, &status, 0);
     CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0);
     CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);
-    CHECK(text.find("\"cursor_changes\": 3") != std::string::npos);
+    CHECK(text.find("\"cursor_changes\": 5") != std::string::npos);
+    CHECK(text.find("\"info_cards\": 1") != std::string::npos);
+    CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
     if (test::failures())
         std::fprintf(stderr, "%s\n", text.c_str());
     return TEST_MAIN_RESULT();
