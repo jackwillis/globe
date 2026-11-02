@@ -240,3 +240,47 @@ plus DEFLATE 428,179; adaptive order-0 byte range coding 804,716; predictor plus
 versus 32,480 (whole-file arithmetic 29,294 versus 35,068). See `docs/perf/compression.md` and raw
 JSON for method and limits. These are modern Python measurements, with no target decoder,
 G4 decode timing or runtime format change; the result does not choose the eventual codec.
+
+## Addendum, 2026-11-01 (fetch inside the app; supersedes the "no networking in the globe" rule)
+
+Owner answers: a **fetch tool inside the app** is wanted ("if it could work"); it is in scope for
+v2; and TLS on OS 9 is to be solved, with the sibling `weather` project as the starting point.
+
+- **Supersedes** the earlier statements that the globe has no networking code and no in-app
+  download manager. The no-relay decision stands. The maps app remains a separate, later project.
+- **Correction to the earlier claim that OS 9 cannot realistically do modern TLS.** Reading
+  `../weather`: it vendors BearSSL (MIT) in `third_party/bearssl`, generates trust anchors from a
+  pinned PEM (ISRG Root X1/X2, HARICA TLS RSA Root CA 2021), has DNS, HTTP framing and fetch
+  deadlines, and its README reports live verified-TLS fetches passing on "Mac OS 9 under Tiger
+  Classic" (an emulated environment, not necessarily real G4 OS 9 hardware; not independently
+  checked here). It requires a unique TLS seed provisioned separately and persisted safely in
+  Preferences (`docs/OS9-HARDENING-PLAN.md`: HMAC_DRBG seeded from provisioned material, never
+  truncate the only valid seed in place, refuse TLS if the seed is missing or short).
+- **Consequences to plan:** the fetch module needs its own library (no dependence on the globe's
+  portable core), a platform split (NetBSD sockets plus OS TLS or BearSSL; Open Transport on OS 9),
+  trust-anchor and seed handling, a strict pack validator in front of the importer (version,
+  checksum, size caps) so a bad download can never break the baked data, and a size budget check:
+  BearSSL plus trust anchors count against the floppy edition and may push networking into the
+  full edition only. How to reuse weather's code (vendor, copy with provenance, or a shared
+  repository) is undecided; check licenses (weather is the owner's project; BearSSL is MIT).
+- **Not decided:** which server hosts our packs (OpenStreetMap-derived data must be built and
+  hosted by the owner, since the public servers are not for bulk use), whether the floppy edition
+  can afford the code, the update policy and the user interface.
+
+## Addendum, 2026-11-01 (compression experiment, measured)
+
+Branch `claude/compression-experiment`, commit `57eb518` (unmerged; `tools/compression-experiment/run.py`,
+`docs/perf/compression-experiment.md`). The source NetCDF was readable; the derived 1 degree grid
+matches the committed `.gelv` byte for byte. Elevation sizes are cell payload only (header excluded).
+
+| Data | Raw | Best measured | Notes |
+| --- | --- | --- | --- |
+| Atlas points | 32,480 | delta-varint 26,736; plus deflate ~22,900; plus lzma ~20,000 | |
+| 1 degree grid | 64,800 | Paeth + arithmetic 29,140 (2.22x); avg + arithmetic 29,661; Paeth + deflate 33,895; plain deflate 41,238 | |
+| 0.25 degree grid | 1,036,800 | avg + arithmetic 342,041 (3.03x); avg + deflate 401,287 (2.58x) | |
+
+16-degree tiling overhead: +17% to +73% at 1 degree, +2% to +12% at 0.25 degree (worst for the
+arithmetic coder, which relearns its statistics per tile). Recommendation of the experiment for the
+floppy edition: average predictor plus a small adaptive range coder, untiled; inference (not
+measured): about 60 lines of decoder against 250+ for inflate and 600+ for lzma. Delta-varint alone
+(about 15 lines) is the cheap first step for atlas points. G4 decode speed was not measured.
