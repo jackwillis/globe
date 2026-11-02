@@ -100,3 +100,17 @@ Generated `countries.gpol`: 91,928 bytes, SHA-256
 `80c580fa759fc0325ae0d68129af7b6bca437d8ef8dbf5da38d9a0fdb7627c7d`.
 The source's generalized de facto boundaries and labels are cartographic conventions; small islands
 and some countries are absent at this scale. Made with Natural Earth.
+
+## City starter snapshot (retrieved 2026-11-01)
+
+Wikidata Query Service: https://query.wikidata.org/sparql ; exact query in
+`tools/places-builder/cities.sparql`. Structured data is CC0:
+https://www.wikidata.org/wiki/Wikidata:Licensing . Only entity labels, Q identifiers and coordinates
+are used; no surrounding wiki prose. Exact response retained in `wikidata-cities-20261101.json`:
+8,246 bytes, SHA-256 `cbd362a13849bbd00b78d43c29937a383e79796524f87d754f2b8e179cc3c9da`.
+The response has 20 entities; inspection found Q3139 is Alpes-Maritimes, not a city, so the builder
+explicitly excludes it. The resulting 19-place starter pack `cities.gplc` is 613 bytes, SHA-256
+`6dec1b1d5251ca86a3e353147b2cc6e553d7e8d24df02181beb9581f7afc06e4`.
+A second request for a corrected query received HTTP 429; the original successful response and its
+original query are retained and pinned, with the exclusion expressed in the builder. The app does
+not contact Wikidata. This is neither a complete gazetteer nor a ranking, and coordinates may change.

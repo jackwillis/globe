@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2026 Jack Willis
+# Small worldwide starter set; not a population ranking or a complete gazetteer.
+SELECT ?item ?itemLabel ?coord WHERE {
+  VALUES ?item { wd:Q60 wd:Q84 wd:Q90 wd:Q1490 wd:Q8686 wd:Q1748 wd:Q85 wd:Q1489 wd:Q174 wd:Q649 wd:Q8684 wd:Q3130 wd:Q3838 wd:Q34692 wd:Q64 wd:Q2807 wd:Q220 wd:Q3139 wd:Q35765 wd:Q1515 }
+  ?item wdt:P625 ?coord.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+} ORDER BY ?item ?coord

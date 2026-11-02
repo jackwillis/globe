@@ -39,6 +39,8 @@
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
+#include "globe/embedded_places.hpp"
+#include "globe/places.hpp"
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
 #include "globe/trackball.hpp"
@@ -93,6 +95,9 @@ class App {
         : dpy_(dpy), scene_(scene), packs_(packs), opt_(opt),
           model_(initial_model(opt.width, opt.height)), info_(dpy) {
         packs_.register_levels(model_);
+        places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
+        if (places_)
+            place_scene_ = PlaceScene::create(*places_);
         countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
         if (countries_)
             country_scene_ = CountryScene::create(*countries_);
@@ -490,6 +495,11 @@ class App {
         const auto step = refinement_->step(*fb_, model_.generation);
         refine_work_ms_ += ms_since(t);
         if (step.band_ready) {
+            if (place_scene_) {
+                fb_->clip_rows(step.first_row, step.end_row);
+                place_scene_->draw(*fb_, model_.camera);
+                fb_->clip_rows(0, fb_->height());
+            }
             ++refine_bands_;
             upload(step.first_row, step.end_row);
         }
@@ -654,8 +664,13 @@ class App {
                         const auto v = unproject_to_sphere(model_.camera, pointer_);
                         const auto world = model_.camera.right * v.x + model_.camera.up * v.y +
                                            model_.camera.forward * v.z;
+                        const auto city = place_scene_ ? place_scene_->pick(model_.camera, pointer_)
+                                                       : std::nullopt;
                         const auto id = country_scene_->pick(from_unit_vector(world));
-                        if (id) {
+                        if (city && places_) {
+                            info_.show(win_, place_card(*places_, *city), model_.camera.width + 20);
+                            ++info_cards_;
+                        } else if (id) {
                             info_.show(win_, country_card(*countries_, *id),
                                        model_.camera.width + 20);
                             ++info_cards_;
@@ -731,6 +746,8 @@ class App {
     Options opt_;
     Model model_;
     InfoWindow info_;
+    std::optional<Places> places_;
+    std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
     std::size_t info_cards_ = 0;
