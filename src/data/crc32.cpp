@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) 2026 Jack Willis
+#include "globe/crc32.hpp"
+
+#include <array>
+
+namespace globe {
+
+namespace {
+
+constexpr std::array<std::uint32_t, 256> make_table() {
+    std::array<std::uint32_t, 256> table{};
+    for (std::uint32_t i = 0; i < 256; ++i) {
+        std::uint32_t c = i;
+        for (int bit = 0; bit < 8; ++bit) {
+            c = (c & 1U) != 0 ? 0xEDB88320U ^ (c >> 1) : c >> 1;
+        }
+        table[i] = c;
+    }
+    return table;
+}
+
+constexpr std::array<std::uint32_t, 256> kTable = make_table();
+
+} // namespace
+
+std::uint32_t crc32(const std::uint8_t* data, std::size_t size) {
+    std::uint32_t c = 0xFFFFFFFFU;
+    for (std::size_t i = 0; i < size; ++i) {
+        c = kTable[(c ^ data[i]) & 0xFFU] ^ (c >> 8);
+    }
+    return c ^ 0xFFFFFFFFU;
+}
+
+} // namespace globe
