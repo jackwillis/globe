@@ -19,10 +19,10 @@ namespace globe {
 constexpr int kMaxViewportDimension = 4096;
 
 struct CameraParams {
-    LatLon center;       // geographic point shown at the viewport center
-    double heading_deg;  // compass direction shown toward screen-up; 0 = north up, 90 = east up
-    double radius_px;    // projected radius of the globe, > 0
-    int width;           // viewport size in pixels, 1..kMaxViewportDimension
+    LatLon center;      // geographic point shown at the viewport center
+    double heading_deg; // compass direction shown toward screen-up; 0 = north up, 90 = east up
+    double radius_px;   // projected radius of the globe, > 0
+    int width;          // viewport size in pixels, 1..kMaxViewportDimension
     int height;
 };
 
@@ -50,7 +50,9 @@ Vec3 to_camera_space(const Camera& camera, Vec3 world);
 // Orthographic projection of a camera-space point. Does not test visibility.
 ScreenPoint to_screen(const Camera& camera, Vec3 camera_point);
 
-constexpr bool is_front(Vec3 camera_point) { return camera_point.z >= 0.0; }
+constexpr bool is_front(Vec3 camera_point) {
+    return camera_point.z >= 0.0;
+}
 
 // The shorter great-circle arc between two unit vectors.
 struct Arc {
@@ -64,10 +66,9 @@ struct Arc {
 std::optional<Arc> clip_arc_to_front(Vec3 a, Vec3 b);
 
 // Writes unit vectors along the shorter great-circle arc from a to b into out, including both
-// endpoints, so that consecutive points are at most max_step_rad apart (to within rounding, about 1e-9
-// relative). Returns the number of
-// points written, or 0 if the arc is degenerate, max_step_rad is not positive and finite, or
-// capacity is too small. Never writes more than capacity points.
+// endpoints, so that consecutive points are at most max_step_rad apart (to within rounding, about
+// 1e-9 relative). Returns the number of points written, or 0 if the arc is degenerate, max_step_rad
+// is not positive and finite, or capacity is too small. Never writes more than capacity points.
 std::size_t subdivide_arc(Vec3 a, Vec3 b, double max_step_rad, Vec3* out, std::size_t capacity);
 
 } // namespace globe

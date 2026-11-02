@@ -57,7 +57,7 @@ int main() {
     CHECK(fb.pixel(0, 2) == 0xBBBB && fb.pixel(7, 2) == 0xBBBB);
     fb.fill_span(-1, 0, 7, 0xCCCC);
     fb.fill_span(4, 0, 7, 0xCCCC);
-    fb.fill_span(0, 20, 30, 0xCCCC); // entirely right of the buffer
+    fb.fill_span(0, 20, 30, 0xCCCC);   // entirely right of the buffer
     fb.fill_span(0, -30, -20, 0xCCCC); // entirely left of the buffer
     CHECK(fb.pixel(0, 0) == 0 && fb.pixel(7, 0) == 0 && fb.pixel(0, 3) == 0);
 

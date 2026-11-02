@@ -6,7 +6,9 @@
 
 namespace globe {
 
-double length(Vec3 v) { return std::sqrt(dot(v, v)); }
+double length(Vec3 v) {
+    return std::sqrt(dot(v, v));
+}
 
 Vec3 normalized(Vec3 v) {
     const double len = length(v);
@@ -54,6 +56,8 @@ LatLon from_unit_vector(Vec3 v) {
     return {lat, lon};
 }
 
-double angle_between(Vec3 a, Vec3 b) { return std::atan2(length(cross(a, b)), dot(a, b)); }
+double angle_between(Vec3 a, Vec3 b) {
+    return std::atan2(length(cross(a, b)), dot(a, b));
+}
 
 } // namespace globe

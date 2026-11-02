@@ -26,21 +26,23 @@ jobs:
         run: |
           sudo apt-get -o Acquire::Retries=3 update
           sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
-            cmake ninja-build clang-18 clang-format-18 clang-tidy-18
+            cmake ninja-build pipx
+          pipx install clang-format==22.1.8
+          pipx install clang-tidy==22.1.8
       - name: Repository policy
         run: tools/check-policy.sh
-      - name: Format check (clang-format 18)
+      - name: Format check (clang-format 22.1.8)
         run: |
-          git ls-files '*.cpp' '*.hpp' | xargs clang-format-18 --dry-run --Werror
+          git ls-files '*.cpp' '*.hpp' | xargs clang-format --dry-run --Werror
       - name: Configure (GCC, warnings, ASan/UBSan)
         run: cmake -S . -B build -G Ninja -DGLOBE_SANITIZE=ON
       - name: Build
         run: cmake --build build
       - name: Test
         run: ctest --test-dir build --output-on-failure
-      - name: Lint (clang-tidy 18)
+      - name: Lint (clang-tidy 22.1.8)
         run: |
-          git ls-files 'src/*.cpp' | xargs clang-tidy-18 -p build --quiet
+          git ls-files 'src/*.cpp' | xargs clang-tidy -p build --quiet
 
   clang:
     name: Host build with clang
@@ -53,8 +55,8 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get -o Acquire::Retries=3 update
-          sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends cmake ninja-build clang-18
-      - run: cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++-18
+          sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends cmake ninja-build clang
+      - run: cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
       - run: cmake --build build
       - run: ctest --test-dir build --output-on-failure
 

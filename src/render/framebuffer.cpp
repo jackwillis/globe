@@ -20,8 +20,8 @@ std::optional<Framebuffer> Framebuffer::create(int width, int height) {
 }
 
 void Framebuffer::clear(Rgb565 color) {
-    std::fill_n(pixels_.get(),
-                static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_), color);
+    std::fill_n(pixels_.get(), static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_),
+                color);
 }
 
 void Framebuffer::set_pixel(int x, int y, Rgb565 color) {

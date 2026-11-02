@@ -23,10 +23,18 @@ constexpr double kPi = 3.14159265358979323846;
 constexpr double kDegToRad = kPi / 180.0;
 constexpr double kRadToDeg = 180.0 / kPi;
 
-constexpr Vec3 operator+(Vec3 a, Vec3 b) { return {a.x + b.x, a.y + b.y, a.z + b.z}; }
-constexpr Vec3 operator-(Vec3 a, Vec3 b) { return {a.x - b.x, a.y - b.y, a.z - b.z}; }
-constexpr Vec3 operator*(Vec3 a, double s) { return {a.x * s, a.y * s, a.z * s}; }
-constexpr double dot(Vec3 a, Vec3 b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
+constexpr Vec3 operator+(Vec3 a, Vec3 b) {
+    return {a.x + b.x, a.y + b.y, a.z + b.z};
+}
+constexpr Vec3 operator-(Vec3 a, Vec3 b) {
+    return {a.x - b.x, a.y - b.y, a.z - b.z};
+}
+constexpr Vec3 operator*(Vec3 a, double s) {
+    return {a.x * s, a.y * s, a.z * s};
+}
+constexpr double dot(Vec3 a, Vec3 b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
 constexpr Vec3 cross(Vec3 a, Vec3 b) {
     return {a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x};
 }
@@ -44,7 +52,8 @@ Vec3 to_unit_vector(LatLon p);
 // is defined as 0. The vector need not be exactly unit length.
 LatLon from_unit_vector(Vec3 v);
 
-// Angle between two unit vectors, in radians, in [0, pi]. Stable for tiny and near-antipodal angles.
+// Angle between two unit vectors, in radians, in [0, pi]. Stable for tiny and near-antipodal
+// angles.
 double angle_between(Vec3 a, Vec3 b);
 
 } // namespace globe

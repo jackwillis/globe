@@ -1,4 +1,4 @@
-# Pinned to clang-format 18 (see docs/toolchain.md). Do not change without reformatting the tree.
+# Pinned to clang-format 22.1.8 (see docs/toolchain.md). Do not change without reformatting the tree.
 BasedOnStyle: LLVM
 IndentWidth: 4
 ColumnLimit: 100

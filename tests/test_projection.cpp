@@ -88,7 +88,7 @@ void test_camera_validation() {
 }
 
 void test_center_maps_to_screen_center() {
-    const double centers[][2] = {{0, 0},    {40.7, -74.0}, {-33.9, 151.2}, {89.0, 10.0},
+    const double centers[][2] = {{0, 0},     {40.7, -74.0}, {-33.9, 151.2}, {89.0, 10.0},
                                  {-89.0, 0}, {0, 179.9},    {0, -180},      {90, 33}};
     for (const auto& c : centers) {
         const Camera cam = camera_at(c[0], c[1], 0.0, 640, 480);

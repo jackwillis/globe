@@ -18,9 +18,8 @@ bool all_finite(const CameraParams& p) {
 } // namespace
 
 std::optional<Camera> make_camera(const CameraParams& params) {
-    if (!all_finite(params) || !(params.radius_px > 0.0) || params.width < 1 ||
-        params.height < 1 || params.width > kMaxViewportDimension ||
-        params.height > kMaxViewportDimension) {
+    if (!all_finite(params) || !(params.radius_px > 0.0) || params.width < 1 || params.height < 1 ||
+        params.width > kMaxViewportDimension || params.height > kMaxViewportDimension) {
         return std::nullopt;
     }
     double lat = params.center.lat_deg;

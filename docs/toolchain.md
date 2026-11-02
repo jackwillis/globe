@@ -13,14 +13,18 @@ Probe (`tools/retro68-probe/probe.cpp`) confirmed on all three cross targets: `<
 `<variant>`, `<span>`, `<array>`, `constexpr` table generation, `<type_traits>`, with
 exceptions and RTTI disabled.
 
+## Host checks (2026-11-01)
+
+CMake 4.3.0 + Ninja 1.13.2, GCC 16.2.1 with ASan/UBSan and clang 22.1.8: configure, build and
+`ctest` pass (3 of 3). `clang-tidy` 22.1.8 reports nothing on `src/`. The tree is formatted with
+`clang-format` 22.1.8, which CI pins via PyPI (`pipx`) rather than the distro package.
+
 ## Not measured
 
 - Nothing has been linked or run on a G4, under Retro68, or on NetBSD/macppc. Compiling is
   not evidence of speed, memory use or correct floating-point behavior there.
 - The NetBSD library check used the sysroot headers only; no libstdc++ link was attempted.
-- clang-format and clang-tidy are pinned to version 18 in CI. They were not installed on the
-  development machine when M0 was written, so the format and lint steps have not been run
-  locally and the CMake build has not been run locally (the tests were built with g++ directly).
+- The GitHub Actions workflow has never run (no remote yet).
 
 ## Lessons carried over from the weather project
 
