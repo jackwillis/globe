@@ -196,6 +196,32 @@ RenderQuality quality_for(const Model& model) {
     return {fine ? 1.5 : 3.0, fine, selected};
 }
 
+CursorIntent cursor_for(const Model& model, ScreenPoint pointer) {
+    if (model.dragging)
+        return CursorIntent::ClosedHand;
+    const double x = pointer.x - model.camera.center_x;
+    const double y = pointer.y - model.camera.center_y;
+    return std::isfinite(x) && std::isfinite(y) &&
+                   x * x + y * y <= model.camera.radius_px * model.camera.radius_px
+               ? CursorIntent::OpenHand
+               : CursorIntent::Arrow;
+}
+ButtonRect toolbar_button(Command command) {
+    const int i = static_cast<int>(command);
+    return {4 + (i % 4) * 100, 4 + (i / 4) * 32, 96, 28};
+}
+std::optional<Command> toolbar_hit(ScreenPoint pointer) {
+    if (!std::isfinite(pointer.x) || !std::isfinite(pointer.y))
+        return std::nullopt;
+    for (std::size_t i = 0; i < kCommandCount; ++i) {
+        const auto r = toolbar_button(static_cast<Command>(i));
+        if (pointer.x >= r.x && pointer.x < r.x + r.width && pointer.y >= r.y &&
+            pointer.y < r.y + r.height)
+            return static_cast<Command>(i);
+    }
+    return std::nullopt;
+}
+
 ToolbarState toolbar_state(const Model& model) {
     ToolbarState state{};
     const auto index = [](Command command) { return static_cast<std::size_t>(command); };

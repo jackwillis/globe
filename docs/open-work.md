@@ -10,7 +10,7 @@ HANDOFF-codex.md uncommitted. Follow ADR 0001 including the G4 terrain performan
 - [x] Ordered 4: cached forward cell terrain, hypsometric colors, black borders; bounded refinement,
       G4 before/after metric and deliberate pixel pins. Stop if measured settled rendering is too slow.
 - [x] Ordered 5: local elevation import and global resolution selection; multi-resolution builder.
-- [ ] Ordered 6: pure cursor intent and toolbar hit testing; X11 utility toolbar and cursor mapping.
+- [x] Ordered 6: pure cursor intent and toolbar hit testing; X11 utility toolbar and cursor mapping.
 - [ ] Ordered 7: GPOL country data, spherical picking with holes/poles/antimeridian, core InfoCard,
       scrolling X11 popup; GPLC cities afterwards.
 - [ ] Ordered 8: Retro68 OS 9 application proof of life, wake-driven sleep, GWorld conversion;

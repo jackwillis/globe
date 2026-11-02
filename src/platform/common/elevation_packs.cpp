@@ -86,14 +86,21 @@ bool ElevationPacks::import_file(const char* path) {
 }
 void ElevationPacks::register_levels(Model& model) const {
     for (unsigned i = 0; i < count_; ++i) {
-        const auto& grid = scenes_[i]->grid();
+        const auto& scene = scenes_[i];
+        if (!scene)
+            continue;
+        const auto& grid = scene->grid();
         update(model, RegisterElevation{i, grid.width(), grid.height()});
     }
 }
 TerrainScene* ElevationPacks::for_model(const Model& model) {
     const auto level = quality_for(model).elevation_level;
-    if (level < count_ && scenes_[level])
-        return &*scenes_[level];
-    return count_ && scenes_[0] ? &*scenes_[0] : nullptr;
+    if (level < count_) {
+        auto& chosen = scenes_[level];
+        if (chosen)
+            return &*chosen;
+    }
+    auto& first = scenes_[0];
+    return count_ && first ? &*first : nullptr;
 }
 } // namespace globe

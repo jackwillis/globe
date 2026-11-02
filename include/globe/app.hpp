@@ -135,10 +135,20 @@ struct CommandState {
     bool visible = true;
     bool enabled = true;
     bool checked = false;
+    bool operator==(const CommandState&) const = default;
 };
 constexpr std::size_t kCommandCount = static_cast<std::size_t>(Command::Quit) + 1;
 using ToolbarState = std::array<CommandState, kCommandCount>;
 ToolbarState toolbar_state(const Model& model);
+
+enum class CursorIntent : std::uint8_t { Arrow, OpenHand, ClosedHand };
+CursorIntent cursor_for(const Model& model, ScreenPoint pointer);
+struct ButtonRect {
+    int x, y, width, height;
+};
+constexpr int kToolbarWidth = 404, kToolbarHeight = 100;
+ButtonRect toolbar_button(Command command);
+std::optional<Command> toolbar_hit(ScreenPoint pointer);
 
 // Two presses within kDoubleClickMs and kDoubleClickSlopPx, the second on the globe, zoom in by
 // kDoubleClickZoom and center the globe on the clicked point.

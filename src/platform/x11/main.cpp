@@ -13,8 +13,10 @@
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
 // per redraw the way interactive use would. --idle-seconds waits that long afterwards and reports
 // CPU time used and frames drawn while idle. --stats prints a JSON timing summary.
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <sys/resource.h>
 #include <sys/select.h>
@@ -91,6 +93,11 @@ class App {
     }
 
     ~App() {
+        for (auto cursor : cursors_)
+            if (cursor)
+                XFreeCursor(dpy_, cursor);
+        if (toolbar_)
+            XDestroyWindow(dpy_, toolbar_);
         if (image_ != nullptr) {
             XDestroyImage(image_);
         }
@@ -117,14 +124,28 @@ class App {
         XStoreName(dpy_, win_, "Globe");
         XSelectInput(dpy_, win_,
                      ExposureMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask |
-                         PointerMotionMask | KeyPressMask);
+                         PointerMotionMask | KeyPressMask | EnterWindowMask | LeaveWindowMask);
         wm_delete_ = XInternAtom(dpy_, "WM_DELETE_WINDOW", False);
         XSetWMProtocols(dpy_, win_, &wm_delete_, 1);
         gc_ = XCreateGC(dpy_, win_, 0, nullptr);
         if (!make_buffers(opt_.width, opt_.height)) {
             return false;
         }
+        toolbar_ = XCreateSimpleWindow(dpy_, RootWindow(dpy_, screen), 0, opt_.height + 20,
+                                       kToolbarWidth, kToolbarHeight, 1, BlackPixel(dpy_, screen),
+                                       WhitePixel(dpy_, screen));
+        XStoreName(dpy_, toolbar_, "Globe tools");
+        XSetTransientForHint(dpy_, toolbar_, win_);
+        const Atom kind = XInternAtom(dpy_, "_NET_WM_WINDOW_TYPE_UTILITY", False);
+        XChangeProperty(dpy_, toolbar_, XInternAtom(dpy_, "_NET_WM_WINDOW_TYPE", False), XA_ATOM,
+                        32, PropModeReplace, reinterpret_cast<const unsigned char*>(&kind), 1);
+        XSetWMProtocols(dpy_, toolbar_, &wm_delete_, 1);
+        XSelectInput(dpy_, toolbar_, ExposureMask | ButtonPressMask | KeyPressMask);
+        cursors_ = {XCreateFontCursor(dpy_, XC_left_ptr), XCreateFontCursor(dpy_, XC_hand2),
+                    XCreateFontCursor(dpy_, XC_fleur)};
+        XDefineCursor(dpy_, win_, cursors_[0]);
         XMapWindow(dpy_, win_);
+        XMapWindow(dpy_, toolbar_);
         return true;
     }
 
@@ -187,6 +208,8 @@ class App {
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
         std::printf("  \"elevation_pack_count\": %u,\n  \"terrain_cache_bytes\": %zu,\n",
                     packs_.count(), packs_.bytes());
+        std::printf("  \"toolbar_commands\": %zu,\n  \"cursor_changes\": %zu,\n", toolbar_commands_,
+                    cursor_changes_);
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -290,6 +313,11 @@ class App {
         if (fx.wake_after_ms != 0) {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
+        if (toolbar_ && std::holds_alternative<Resize>(msg))
+            XMoveWindow(dpy_, toolbar_, 0, model_.camera.height + 20);
+        if (toolbar_ && toolbar_state(model_) != toolbar_cache_)
+            draw_toolbar();
+        update_cursor();
         return fx.quit;
     }
 
@@ -507,9 +535,72 @@ class App {
     }
 
     // Returns true when the application should quit.
+    void update_cursor() {
+        const auto intent = cursor_for(model_, pointer_);
+        if (intent != cursor_) {
+            cursor_ = intent;
+            XDefineCursor(dpy_, win_, cursors_[static_cast<unsigned>(intent)]);
+            ++cursor_changes_;
+        }
+    }
+    void draw_toolbar() {
+        toolbar_cache_ = toolbar_state(model_);
+        static constexpr std::array<const char*, kCommandCount> labels = {
+            "Left",  "Right",     "Up",      "Down",     "Zoom in",   "Zoom out",
+            "Reset", "Graticule", "Borders", "North up", "Trackball", "Quit"};
+        const int screen = DefaultScreen(dpy_);
+        const auto white = WhitePixel(dpy_, screen), black = BlackPixel(dpy_, screen);
+        XSetForeground(dpy_, gc_, white);
+        XFillRectangle(dpy_, toolbar_, gc_, 0, 0, kToolbarWidth, kToolbarHeight);
+        for (std::size_t i = 0; i < kCommandCount; ++i) {
+            const auto state = toolbar_cache_[i];
+            if (!state.visible)
+                continue;
+            const auto r = toolbar_button(static_cast<Command>(i));
+            XSetForeground(dpy_, gc_, state.checked ? black : white);
+            XFillRectangle(dpy_, toolbar_, gc_, r.x, r.y, r.width, r.height);
+            XSetForeground(dpy_, gc_, black);
+            if (state.enabled)
+                XDrawRectangle(dpy_, toolbar_, gc_, r.x, r.y, r.width - 1, r.height - 1);
+            XSetForeground(dpy_, gc_, state.checked ? white : black);
+            XDrawString(dpy_, toolbar_, gc_, r.x + 6, r.y + 18, labels[i],
+                        static_cast<int>(std::strlen(labels[i])));
+        }
+    }
     bool handle(XEvent& ev) {
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
+        if (ev.xany.window == toolbar_) {
+            if (ev.type == Expose && ev.xexpose.count == 0)
+                draw_toolbar();
+            if (ev.type == ClientMessage && static_cast<Atom>(ev.xclient.data.l[0]) == wm_delete_)
+                XUnmapWindow(dpy_, toolbar_);
+            if (ev.type == KeyPress)
+                return on_key(XLookupKeysym(&ev.xkey, 0), now);
+            if (ev.type == ButtonPress && ev.xbutton.button == Button1) {
+                const auto hit = toolbar_hit({double(ev.xbutton.x), double(ev.xbutton.y)});
+                if (hit) {
+                    const auto state = toolbar_state(model_)[static_cast<std::size_t>(*hit)];
+                    if (state.visible && state.enabled) {
+                        ++toolbar_commands_;
+                        return apply(CommandIssued{now, *hit});
+                    }
+                }
+            }
+            return false;
+        }
+        if (ev.type == MotionNotify || ev.type == ButtonPress || ev.type == ButtonRelease) {
+            pointer_ = {double(ev.xmotion.x), double(ev.xmotion.y)};
+            update_cursor();
+        }
         switch (ev.type) {
+        case EnterNotify:
+            pointer_ = {double(ev.xcrossing.x), double(ev.xcrossing.y)};
+            update_cursor();
+            return false;
+        case LeaveNotify:
+            pointer_ = {-1e20, -1e20};
+            update_cursor();
+            return false;
         case Expose:
             if (ev.xexpose.count == 0) {
                 first_expose_ = true;
@@ -566,6 +657,9 @@ class App {
 
     bool on_key(KeySym sym, std::uint64_t now) {
         switch (sym) {
+        case XK_F2:
+            XMapRaised(dpy_, toolbar_);
+            return false;
         case XK_Left:
             return apply(CommandIssued{now, Command::Left});
         case XK_Right:
@@ -604,7 +698,12 @@ class App {
     ElevationPacks& packs_;
     Options opt_;
     Model model_;
-    Window win_ = 0;
+    Window win_ = 0, toolbar_ = 0;
+    std::array<Cursor, 3> cursors_{};
+    CursorIntent cursor_ = CursorIntent::Arrow;
+    ScreenPoint pointer_{-1e20, -1e20};
+    ToolbarState toolbar_cache_{};
+    std::size_t toolbar_commands_ = 0, cursor_changes_ = 0;
     GC gc_ = nullptr;
     Visual* visual_ = nullptr;
     int depth_ = 0;

@@ -89,7 +89,7 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain)
+  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
@@ -126,6 +126,12 @@ if(GLOBE_BUILD_TESTS)
                          --exit-when-done --verify-pixels --stats)
         set_tests_properties(x11_pixels_${depth} PROPERTIES TIMEOUT 120)
       endforeach()
+      add_executable(test_x11_toolbar tests/test_x11_toolbar.cpp)
+      target_include_directories(test_x11_toolbar PRIVATE ${X11_INCLUDE_DIR})
+      target_link_libraries(test_x11_toolbar PRIVATE globe_core ${X11_LIBRARIES})
+      add_test(NAME x11_toolbar COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
+               $<TARGET_FILE:test_x11_toolbar> $<TARGET_FILE:globe-x11>)
+      set_tests_properties(x11_toolbar PROPERTIES TIMEOUT 20)
       # Nothing may be drawn while the window sits idle.
       add_test(NAME x11_idle
                COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
