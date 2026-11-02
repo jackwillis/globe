@@ -104,6 +104,14 @@ bool finite(double x, double y) {
     return std::isfinite(x) && std::isfinite(y);
 }
 
+double distance(ScreenPoint a, ScreenPoint b) {
+    return std::hypot(a.x - b.x, a.y - b.y);
+}
+
+bool on_globe(const Camera& cam, ScreenPoint p) {
+    return distance(p, {cam.center_x, cam.center_y}) <= cam.radius_px;
+}
+
 } // namespace
 
 double min_radius_px(int width, int height) {
@@ -114,6 +122,14 @@ double max_radius_px(int width, int height) {
     return kMaxRadiusFraction * short_side(width, height);
 }
 
+Layers effective_layers(const Model& model) {
+    Layers layers = model.layers;
+    if (model.dragging) {
+        layers.graticule = false;
+    }
+    return layers;
+}
+
 Model initial_model(int width, int height) {
     width = std::clamp(width, 1, kMaxViewportDimension);
     height = std::clamp(height, 1, kMaxViewportDimension);
@@ -122,7 +138,11 @@ Model initial_model(int width, int height) {
     m.layers = Layers{};
     m.stage = QualityStage::Moving;
     m.dragging = false;
+    m.drag_moved = false;
     m.drag_last = {0.0, 0.0};
+    m.click_valid = false;
+    m.click_pos = {0.0, 0.0};
+    m.click_ms = 0;
     m.last_input_ms = 0;
     return m;
 }
@@ -131,19 +151,46 @@ Effects update(Model& model, const Msg& msg) {
     Effects fx;
     if (const auto* down = std::get_if<PointerDown>(&msg)) {
         if (finite(down->x, down->y)) {
-            model.dragging = true;
-            model.drag_last = {down->x, down->y};
+            const ScreenPoint p{down->x, down->y};
+            const bool second_click = model.click_valid && down->time_ms >= model.click_ms &&
+                                      down->time_ms - model.click_ms <= kDoubleClickMs &&
+                                      distance(p, model.click_pos) <= kDoubleClickSlopPx;
             model.last_input_ms = down->time_ms;
+            if (second_click && on_globe(model.camera, p)) {
+                // Bring the clicked point to the center, then zoom in on it.
+                model.click_valid = false;
+                model.dragging = false;
+                model.drag_moved = false;
+                const Camera centered =
+                    drag_rotate(model.camera, p, {model.camera.center_x, model.camera.center_y});
+                fx = set_camera(model, zoomed(centered, kDoubleClickZoom,
+                                              min_radius_px(centered.width, centered.height),
+                                              max_radius_px(centered.width, centered.height)));
+            } else {
+                model.dragging = true;
+                model.drag_moved = false;
+                model.drag_last = p;
+                model.click_valid = true;
+                model.click_pos = p;
+                model.click_ms = down->time_ms;
+            }
         }
     } else if (const auto* move = std::get_if<PointerMove>(&msg)) {
         if (model.dragging && finite(move->x, move->y)) {
             const ScreenPoint to{move->x, move->y};
+            if (model.click_valid && distance(to, model.click_pos) > kDoubleClickSlopPx) {
+                model.click_valid = false; // it is a drag, not a click
+            }
             fx = set_camera(model, drag_rotate(model.camera, model.drag_last, to));
+            model.drag_moved |= fx.redraw;
             model.drag_last = to;
             model.last_input_ms = move->time_ms;
         }
     } else if (const auto* up = std::get_if<PointerUp>(&msg)) {
+        // The graticule was hidden while dragging; bring it back, but only if the drag drew.
+        fx.redraw = model.dragging && model.drag_moved && model.layers.graticule;
         model.dragging = false;
+        model.drag_moved = false;
         model.last_input_ms = up->time_ms;
     } else if (const auto* wheel = std::get_if<Wheel>(&msg)) {
         fx = set_camera(model, zoom_camera(model.camera, wheel->steps));

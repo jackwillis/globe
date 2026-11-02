@@ -39,7 +39,11 @@ struct Model {
     Layers layers;
     QualityStage stage;
     bool dragging;
+    bool drag_moved; // the camera changed since the button went down
     ScreenPoint drag_last;
+    bool click_valid; // a recent press that could become the first half of a double click
+    ScreenPoint click_pos;
+    std::uint64_t click_ms;
     std::uint64_t last_input_ms; // time of the most recent user input, from the message
 };
 
@@ -86,6 +90,16 @@ Model initial_model(int width, int height);
 // Smallest and largest allowed globe radius for a viewport.
 double min_radius_px(int width, int height);
 double max_radius_px(int width, int height);
+
+// Layers to draw for the current state. The graticule is hidden while a drag is in progress to
+// keep frames cheap; releasing the button redraws it.
+Layers effective_layers(const Model& model);
+
+// Two presses within kDoubleClickMs and kDoubleClickSlopPx, the second on the globe, zoom in by
+// kDoubleClickZoom and center the globe on the clicked point.
+constexpr std::uint64_t kDoubleClickMs = 400;
+constexpr double kDoubleClickSlopPx = 6.0;
+constexpr double kDoubleClickZoom = 2.0;
 
 Effects update(Model& model, const Msg& msg);
 

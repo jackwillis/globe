@@ -71,7 +71,7 @@ void test_drag() {
     CHECK(fx.redraw && same_camera(m.camera, drag_rotate(mid, {70.0, 60.0}, {60.0, 62.0})));
 
     fx = update(m, PointerUp{60});
-    CHECK(!fx.redraw && !m.dragging && m.last_input_ms == 60);
+    CHECK(fx.redraw && !m.dragging && m.last_input_ms == 60); // redraws to restore the graticule
     const Camera after = m.camera;
     fx = update(m, PointerMove{70, 20.0, 20.0});
     CHECK(!fx.redraw && same_camera(m.camera, after));
@@ -84,6 +84,144 @@ void test_drag() {
     CHECK(fx.redraw && basis_error(m.camera) < 1e-12);
     update(m, PointerDown{110, INFINITY, 1.0});
     CHECK(m.dragging); // still dragging from before: the bad down was ignored
+}
+
+void test_grid_hidden_while_dragging() {
+    Model m = fresh();
+    CHECK(effective_layers(m).graticule);
+    update(m, PointerDown{0, 80.0, 60.0});
+    CHECK(!effective_layers(m).graticule); // hidden from the press on
+    CHECK(effective_layers(m).coastlines && effective_layers(m).borders);
+    CHECK(m.layers.graticule); // the user's setting is untouched
+    Effects fx = update(m, PointerMove{16, 70.0, 60.0});
+    CHECK(fx.redraw && !effective_layers(m).graticule);
+    fx = update(m, PointerUp{32});
+    CHECK(fx.redraw && effective_layers(m).graticule); // back, with a redraw to show it
+
+    // A press and release with no motion drew nothing, so there is nothing to restore.
+    update(m, PointerDown{1000, 80.0, 60.0});
+    fx = update(m, PointerUp{1010});
+    CHECK(!fx.redraw && effective_layers(m).graticule);
+    // A drag that changed nothing visible (same point) also needs no restore.
+    update(m, PointerDown{2000, 80.0, 60.0});
+    update(m, PointerMove{2010, 80.0, 60.0});
+    CHECK(!update(m, PointerUp{2020}).redraw);
+    // With the graticule switched off there is nothing to bring back.
+    update(m, KeyDown{3000, Key::ToggleGraticule});
+    update(m, PointerDown{4000, 80.0, 60.0});
+    update(m, PointerMove{4010, 60.0, 60.0});
+    CHECK(!update(m, PointerUp{4020}).redraw);
+    CHECK(!effective_layers(m).graticule && !m.layers.graticule);
+    // Other layers follow the user's switches during a drag too.
+    update(m, KeyDown{5000, Key::ToggleBorders});
+    update(m, PointerDown{6000, 80.0, 60.0});
+    CHECK(!effective_layers(m).borders && effective_layers(m).coastlines);
+}
+
+void test_double_click() {
+    // Click twice quickly on the globe, off-center: the clicked point ends up centered, zoomed in.
+    {
+        Model m = fresh();
+        const Camera start = m.camera;
+        const ScreenPoint p{110.0, 50.0}; // inside the disc (radius 48 around 80,60)
+        CHECK(std::hypot(p.x - 80.0, p.y - 60.0) < start.radius_px);
+        const ScreenPoint p2{p.x + 2.0, p.y - 1.0}; // the second press, within the slop
+        update(m, PointerDown{1000, p.x, p.y});
+        update(m, PointerUp{1050});
+        const Effects fx = update(m, PointerDown{1200, p2.x, p2.y});
+        CHECK(fx.redraw && !m.dragging);
+        CHECK_NEAR(m.camera.radius_px, 2.0 * start.radius_px, 1e-9);
+        // The point under the second press (the one that triggers the action) is now centered.
+        const Vec3 under = unproject_to_sphere(start, p2);
+        const Vec3 world = start.right * under.x + start.up * under.y + start.forward * under.z;
+        const ScreenPoint where = to_screen(m.camera, to_camera_space(m.camera, world));
+        CHECK_NEAR(where.x, 80.0, 1e-6);
+        CHECK_NEAR(where.y, 60.0, 1e-6);
+        CHECK(basis_error(m.camera) < 1e-12);
+        // Moving with the button still held does not drag.
+        const Camera held = m.camera;
+        CHECK(!update(m, PointerMove{1210, 40.0, 40.0}).redraw && same_camera(m.camera, held));
+        update(m, PointerUp{1220});
+        // A third quick press is a new first click, not another double click.
+        const Camera before = m.camera;
+        update(m, PointerDown{1300, 80.0, 60.0});
+        CHECK(same_camera(m.camera, before) && m.dragging);
+    }
+    // Too slow, too far apart, or a drag in between: just two ordinary presses.
+    {
+        Model m = fresh();
+        const Camera start = m.camera;
+        update(m, PointerDown{0, 90.0, 60.0});
+        update(m, PointerUp{10});
+        update(m, PointerDown{kDoubleClickMs + 1, 90.0, 60.0}); // 1 ms late: a new first press
+        CHECK(same_camera(m.camera, start) && m.dragging);
+        update(m, PointerUp{450});
+        update(m, PointerDown{1000, 90.0, 60.0}); // 599 ms after the last press: also plain
+        CHECK(same_camera(m.camera, start));
+        update(m, PointerUp{1010});
+        update(m, PointerDown{1100, 90.0 + kDoubleClickSlopPx + 1.0, 60.0}); // quick but too far
+        CHECK(same_camera(m.camera, start));
+        update(m, PointerUp{1110});
+        // Exactly at the limits still counts.
+        update(m, PointerDown{3000, 90.0, 60.0});
+        update(m, PointerUp{3010});
+        update(m, PointerDown{3000 + kDoubleClickMs, 90.0 + kDoubleClickSlopPx, 60.0});
+        CHECK(m.camera.radius_px > start.radius_px);
+    }
+    {
+        Model m = fresh();
+        const Camera start = m.camera;
+        update(m, PointerDown{0, 90.0, 60.0});
+        update(m, PointerMove{10, 130.0, 60.0}); // a real drag
+        update(m, PointerUp{20});
+        const double radius_after_drag = m.camera.radius_px;
+        update(m, PointerDown{100, 130.0, 60.0}); // quickly pressed where the drag ended
+        CHECK(m.camera.radius_px == radius_after_drag && m.dragging);
+        (void)start;
+    }
+    {
+        // Off the globe (the second press): no zoom, ordinary drag start.
+        Model m = fresh();
+        const Camera start = m.camera;
+        update(m, PointerDown{0, 5.0, 5.0});
+        update(m, PointerUp{10});
+        update(m, PointerDown{100, 5.0, 5.0});
+        CHECK(same_camera(m.camera, start) && m.dragging);
+    }
+    {
+        // At the zoom limit the globe still recenters; time going backwards is not a double click.
+        Model m = fresh();
+        update(m, Wheel{0, 40});
+        const double max_r = m.camera.radius_px;
+        update(m, PointerDown{1000, 100.0, 60.0}); // inside the (huge) disc
+        update(m, PointerUp{1010});
+        const LatLon before = center_of(m.camera);
+        update(m, PointerDown{1100, 100.0, 60.0});
+        CHECK_NEAR(m.camera.radius_px, max_r, 1e-9);
+        CHECK(center_of(m.camera).lon_deg != before.lon_deg ||
+              center_of(m.camera).lat_deg != before.lat_deg);
+        Model n = fresh();
+        update(n, PointerDown{5000, 80.0, 60.0});
+        update(n, PointerUp{5010});
+        update(n, PointerDown{4000, 80.0, 60.0}); // earlier timestamp
+        CHECK(n.dragging && n.camera.radius_px == fresh().camera.radius_px);
+    }
+    {
+        // A lost release event: the second press arrives while still "dragging". It must end the
+        // drag, so later motion does not rotate the globe that was just zoomed.
+        Model m = fresh();
+        update(m, PointerDown{0, 90.0, 60.0});
+        update(m, PointerDown{100, 90.0, 60.0}); // no PointerUp in between
+        CHECK(!m.dragging && m.camera.radius_px > fresh().camera.radius_px);
+        const Camera zoomed_cam = m.camera;
+        CHECK(!update(m, PointerMove{110, 20.0, 20.0}).redraw && same_camera(m.camera, zoomed_cam));
+    }
+    // A non-finite press neither starts a drag nor counts as a click.
+    {
+        Model m = fresh();
+        update(m, PointerDown{0, std::nan(""), 60.0});
+        CHECK(!m.dragging && !m.click_valid);
+    }
 }
 
 void test_zoom_and_limits() {
@@ -381,6 +519,8 @@ int main(int argc, char** argv) {
     const std::string root = argc > 1 ? argv[1] : ".";
     test_initial_model();
     test_drag();
+    test_grid_hidden_while_dragging();
+    test_double_click();
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();

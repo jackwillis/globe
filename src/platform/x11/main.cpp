@@ -311,7 +311,7 @@ class App {
         }
         Framebuffer& fb = *fb_;
         std::uint64_t t = monotonic_ns();
-        render_globe(fb, model_.camera, atlas_, kDefaultPalette, model_.layers);
+        render_globe(fb, model_.camera, atlas_, kDefaultPalette, effective_layers(model_));
         t_.render_ms.push_back(ms_since(t));
         t = monotonic_ns();
         convert_pixels(fb, format_, reinterpret_cast<std::uint8_t*>(image_->data),
