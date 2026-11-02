@@ -17,6 +17,8 @@ constexpr double kMinRadiusFraction = 0.2;
 constexpr double kMaxRadiusFraction = 8.0;
 constexpr double kZoomStep = 1.1;  // per wheel step or key press
 constexpr int kMaxWheelSteps = 40; // 1.1^40 > 40: one message can cross the whole zoom range
+constexpr double kMaxTurntableLatitude = 89.9; // keeps the longitude defined at the pole
+constexpr double kArrowStepDegrees = 10.0;
 constexpr double kSin10Degrees = 0.17364817766693033; // arrow keys turn the globe about 10 degrees
 
 double short_side(int width, int height) {
@@ -44,6 +46,39 @@ Camera zoom_camera(const Camera& cam, int steps) {
                   max_radius_px(cam.width, cam.height));
 }
 
+// A camera looking at `center` with north up, at `like`'s radius and viewport.
+Camera north_up_camera(const Camera& like, LatLon center) {
+    center.lat_deg = std::clamp(center.lat_deg, -kMaxTurntableLatitude, kMaxTurntableLatitude);
+    const auto cam = make_camera({center, 0.0, like.radius_px, like.width, like.height});
+    return cam.value_or(like);
+}
+
+// Constant angle per pixel (one pixel is 1/radius radians), so zooming in slows the turn and
+// the rim of the globe behaves like the middle. Dragging right turns the globe east to west.
+Camera turntable_drag(const Camera& cam, ScreenPoint from, ScreenPoint to) {
+    if (to.x == from.x && to.y == from.y) {
+        return cam;
+    }
+    LatLon c = center_of(cam);
+    const double deg_per_px = kRadToDeg / cam.radius_px;
+    c.lon_deg -= (to.x - from.x) * deg_per_px;
+    c.lat_deg += (to.y - from.y) * deg_per_px;
+    return north_up_camera(cam, c);
+}
+
+Camera drag_camera(const Model& model, ScreenPoint from, ScreenPoint to) {
+    return model.drag_mode == DragMode::Turntable ? turntable_drag(model.camera, from, to)
+                                                  : drag_rotate(model.camera, from, to);
+}
+
+// Moves the view by whole degrees of latitude/longitude, keeping north up.
+Camera turntable_step(const Camera& cam, double dlon, double dlat) {
+    LatLon c = center_of(cam);
+    c.lon_deg += dlon;
+    c.lat_deg += dlat;
+    return north_up_camera(cam, c);
+}
+
 bool same_view(const Camera& a, const Camera& b) {
     return a.radius_px == b.radius_px && a.right.x == b.right.x && a.right.y == b.right.y &&
            a.right.z == b.right.z && a.up.x == b.up.x && a.up.y == b.up.y && a.up.z == b.up.z &&
@@ -66,15 +101,25 @@ Effects on_key(Model& model, Key key) {
     const double d = cam.radius_px * kSin10Degrees;
     const ScreenPoint c{cam.center_x, cam.center_y};
     Effects fx;
+    const bool turntable = model.drag_mode == DragMode::Turntable;
     switch (key) {
     case Key::Left:
-        return set_camera(model, drag_rotate(cam, c, {c.x - d, c.y}));
+        return set_camera(model, turntable ? turntable_step(cam, kArrowStepDegrees, 0.0)
+                                           : drag_rotate(cam, c, {c.x - d, c.y}));
     case Key::Right:
-        return set_camera(model, drag_rotate(cam, c, {c.x + d, c.y}));
+        return set_camera(model, turntable ? turntable_step(cam, -kArrowStepDegrees, 0.0)
+                                           : drag_rotate(cam, c, {c.x + d, c.y}));
     case Key::Up:
-        return set_camera(model, drag_rotate(cam, c, {c.x, c.y - d}));
+        return set_camera(model, turntable ? turntable_step(cam, 0.0, -kArrowStepDegrees)
+                                           : drag_rotate(cam, c, {c.x, c.y - d}));
     case Key::Down:
-        return set_camera(model, drag_rotate(cam, c, {c.x, c.y + d}));
+        return set_camera(model, turntable ? turntable_step(cam, 0.0, kArrowStepDegrees)
+                                           : drag_rotate(cam, c, {c.x, c.y + d}));
+    case Key::AlignNorth:
+        return set_camera(model, north_up_camera(cam, center_of(cam)));
+    case Key::ToggleDragMode:
+        model.drag_mode = turntable ? DragMode::Trackball : DragMode::Turntable;
+        return fx;
     case Key::ZoomIn:
         return set_camera(model, zoom_camera(cam, 1));
     case Key::ZoomOut:
@@ -140,6 +185,7 @@ Model initial_model(int width, int height) {
     Model m{};
     m.camera = home_camera(width, height);
     m.layers = Layers{};
+    m.drag_mode = DragMode::Turntable;
     m.stage = QualityStage::Moving;
     m.dragging = false;
     m.drag_moved = false;
@@ -166,8 +212,16 @@ Effects update(Model& model, const Msg& msg) {
                 model.click_valid = false;
                 model.dragging = false;
                 model.drag_moved = false;
-                const Camera centered =
-                    drag_rotate(model.camera, p, {model.camera.center_x, model.camera.center_y});
+                Camera centered = model.camera;
+                if (model.drag_mode == DragMode::Turntable) {
+                    const Vec3 under = unproject_to_sphere(model.camera, p);
+                    const Vec3 world = model.camera.right * under.x + model.camera.up * under.y +
+                                       model.camera.forward * under.z;
+                    centered = north_up_camera(model.camera, from_unit_vector(world));
+                } else {
+                    centered = drag_rotate(model.camera, p,
+                                           {model.camera.center_x, model.camera.center_y});
+                }
                 fx = set_camera(model, zoomed(centered, kDoubleClickZoom,
                                               min_radius_px(centered.width, centered.height),
                                               max_radius_px(centered.width, centered.height)));
@@ -187,7 +241,7 @@ Effects update(Model& model, const Msg& msg) {
                 distance_squared(to, model.click_pos) > kDoubleClickSlopPx * kDoubleClickSlopPx) {
                 model.click_valid = false; // it is a drag, not a click
             }
-            fx = set_camera(model, drag_rotate(model.camera, model.drag_last, to));
+            fx = set_camera(model, drag_camera(model, model.drag_last, to));
             model.drag_moved |= fx.redraw;
             model.drag_last = to;
             model.last_input_ms = move->time_ms;

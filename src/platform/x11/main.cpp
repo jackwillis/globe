@@ -7,7 +7,8 @@
 //             [--idle-seconds N] [--stats]
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
-// G / B / C toggle graticule / borders / coastlines, Esc or Q quits.
+// G / B / C toggle graticule / borders / coastlines, N aligns north up, T switches between
+// turntable and trackball dragging, Esc or Q quits.
 //
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
 // per redraw the way interactive use would. --idle-seconds waits that long afterwards and reports
@@ -408,6 +409,10 @@ class App {
             return apply(KeyDown{now, Key::ToggleBorders});
         case XK_c:
             return apply(KeyDown{now, Key::ToggleCoastlines});
+        case XK_n:
+            return apply(KeyDown{now, Key::AlignNorth});
+        case XK_t:
+            return apply(KeyDown{now, Key::ToggleDragMode});
         case XK_Escape:
         case XK_q:
             return apply(KeyDown{now, Key::Quit});

@@ -20,6 +20,13 @@ namespace globe {
 // the Model does not change shape when staged refinement arrives in M2.
 enum class QualityStage : std::uint8_t { Moving, Settle, Refine, Decorate, Fetch };
 
+// How dragging turns the globe.
+//  Turntable: the center's latitude and longitude change at a constant angle per pixel (scaled
+//             by zoom), so north always stays up and every part of the window behaves alike.
+//  Trackball: the point under the pointer follows it exactly; the globe can roll, and dragging
+//             near the rim turns it faster.
+enum class DragMode : std::uint8_t { Turntable, Trackball };
+
 enum class Key : std::uint8_t {
     Left,
     Right,
@@ -31,12 +38,15 @@ enum class Key : std::uint8_t {
     ToggleGraticule,
     ToggleBorders,
     ToggleCoastlines,
+    AlignNorth,     // rotate about the view axis so north is up; the center stays put
+    ToggleDragMode, // switch between Turntable and Trackball
     Quit,
 };
 
 struct Model {
     Camera camera;
     Layers layers;
+    DragMode drag_mode;
     QualityStage stage;
     bool dragging;
     bool drag_moved; // the camera changed since the button went down

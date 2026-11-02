@@ -52,6 +52,7 @@ void test_initial_model() {
 
 void test_drag() {
     Model m = fresh();
+    m.drag_mode = DragMode::Trackball; // exact grab-the-point behavior is the trackball's
     const Camera start = m.camera;
     // Moving without a button held does nothing.
     Effects fx = update(m, PointerMove{10, 90.0, 60.0});
@@ -84,6 +85,141 @@ void test_drag() {
     CHECK(fx.redraw && basis_error(m.camera) < 1e-12);
     update(m, PointerDown{110, INFINITY, 1.0});
     CHECK(m.dragging); // still dragging from before: the bad down was ignored
+}
+
+// North is up when the camera's right vector is horizontal (no y component) and up points north.
+bool north_is_up(const Camera& c) {
+    return std::fabs(c.right.y) < 1e-12 && c.up.y > 0.0;
+}
+
+void test_turntable_drag() {
+    Model m = fresh();
+    CHECK(m.drag_mode == DragMode::Turntable);
+    CHECK(north_is_up(m.camera));
+    const LatLon start = center_of(m.camera);
+    const double deg_per_px = 180.0 / kPi / m.camera.radius_px;
+
+    // Dragging right by 10 px turns the globe so the center moves west by 10 px of arc.
+    update(m, PointerDown{0, 80.0, 60.0});
+    Effects fx = update(m, PointerMove{16, 90.0, 60.0});
+    CHECK(fx.redraw);
+    CHECK_NEAR(center_of(m.camera).lon_deg, start.lon_deg - 10.0 * deg_per_px, 1e-9);
+    CHECK_NEAR(center_of(m.camera).lat_deg, start.lat_deg, 1e-9);
+    CHECK(north_is_up(m.camera));
+    // Dragging down brings northern latitudes toward the middle.
+    update(m, PointerMove{32, 90.0, 70.0});
+    CHECK_NEAR(center_of(m.camera).lat_deg, start.lat_deg + 10.0 * deg_per_px, 1e-9);
+    CHECK(north_is_up(m.camera));
+    update(m, PointerUp{48});
+
+    // The rim behaves like the middle: the same pixel move turns the globe the same amount,
+    // wherever on the window (even off the globe) it happens.
+    double turned[3];
+    const double xs[] = {80.0, 120.0, 150.0}; // center, near the rim (radius 48), outside
+    for (int i = 0; i < 3; ++i) {
+        Model t = fresh();
+        update(t, PointerDown{0, xs[i], 60.0});
+        update(t, PointerMove{16, xs[i] - 5.0, 60.0});
+        turned[i] = center_of(t.camera).lon_deg - start.lon_deg;
+    }
+    CHECK_NEAR(turned[0], turned[1], 1e-12);
+    CHECK_NEAR(turned[0], turned[2], 1e-12);
+    CHECK(turned[0] > 0.0);
+
+    // Zooming in slows the turn in proportion.
+    Model z = fresh();
+    update(z, Wheel{0, 7}); // radius scales by 1.1^7
+    const double r_ratio = z.camera.radius_px / fresh().camera.radius_px;
+    update(z, PointerDown{1, 80.0, 60.0});
+    update(z, PointerMove{2, 70.0, 60.0});
+    CHECK_NEAR((center_of(z.camera).lon_deg - start.lon_deg) * r_ratio, turned[0] * 2.0, 1e-9);
+
+    // The camera never rolls, however it is dragged; near the poles it neither jumps nor flips.
+    Model r = fresh();
+    update(r, PointerDown{0, 80.0, 60.0});
+    std::uint32_t seed = 3;
+    double x = 80.0;
+    double y = 60.0;
+    for (int i = 0; i < 2000; ++i) {
+        seed = seed * 1664525U + 1013904223U;
+        x += (static_cast<double>(seed >> 16) / 65536.0 - 0.5) * 30.0;
+        seed = seed * 1664525U + 1013904223U;
+        y += (static_cast<double>(seed >> 16) / 65536.0 - 0.5) * 30.0;
+        update(r, PointerMove{static_cast<std::uint64_t>(i), x, y});
+        CHECK(north_is_up(r.camera));
+        CHECK(basis_error(r.camera) < 1e-12);
+        const double lat = center_of(r.camera).lat_deg;
+        CHECK(lat <= 89.9 + 1e-9 && lat >= -89.9 - 1e-9);
+    }
+
+    // Dragging a long way toward a pole stops at the latitude limit and keeps the longitude.
+    Model p = fresh();
+    const double lon0 = center_of(p.camera).lon_deg;
+    update(p, PointerDown{0, 80.0, 60.0});
+    update(p, PointerMove{1, 80.0, 1.0e6});
+    CHECK_NEAR(center_of(p.camera).lat_deg, 89.9, 1e-9);
+    CHECK_NEAR(center_of(p.camera).lon_deg, lon0, 1e-6);
+    update(p, PointerMove{2, 80.0, -1.0e6});
+    CHECK_NEAR(center_of(p.camera).lat_deg, -89.9, 1e-9);
+    CHECK(north_is_up(p.camera));
+
+    // Longitude wraps freely.
+    Model w = fresh();
+    update(w, PointerDown{0, 80.0, 60.0});
+    update(w, PointerMove{1, 80.0 - 360.0 * (w.camera.radius_px * kPi / 180.0), 60.0});
+    CHECK_NEAR(std::fabs(center_of(w.camera).lon_deg), 0.0, 1e-6);
+    CHECK(basis_error(w.camera) < 1e-12);
+
+    // A move to the same place changes nothing and asks for no redraw.
+    Model same = fresh();
+    update(same, PointerDown{0, 80.0, 60.0});
+    CHECK(!update(same, PointerMove{1, 80.0, 60.0}).redraw);
+}
+
+void test_align_north_and_mode_toggle() {
+    // In trackball mode a drag can leave north tilted; N puts it back without moving the center.
+    Model m = fresh();
+    update(m, KeyDown{0, Key::ToggleDragMode});
+    CHECK(m.drag_mode == DragMode::Trackball);
+    update(m, PointerDown{1, 130.0, 60.0});
+    update(m, PointerMove{2, 120.0, 90.0});
+    update(m, PointerMove{3, 60.0, 100.0});
+    update(m, PointerMove{4, 40.0, 40.0});
+    update(m, PointerUp{5});
+    CHECK(!north_is_up(m.camera)); // the roll the trackball allows
+    const LatLon c = center_of(m.camera);
+    const double r = m.camera.radius_px;
+    Effects fx = update(m, KeyDown{6, Key::AlignNorth});
+    CHECK(fx.redraw && north_is_up(m.camera));
+    CHECK_NEAR(center_of(m.camera).lat_deg, c.lat_deg, 1e-9);
+    CHECK_NEAR(center_of(m.camera).lon_deg, c.lon_deg, 1e-9);
+    CHECK_NEAR(m.camera.radius_px, r, 0.0);
+    CHECK(basis_error(m.camera) < 1e-12);
+    // Already aligned: nothing to redraw.
+    CHECK(!update(m, KeyDown{7, Key::AlignNorth}).redraw);
+    // The toggle changes mode without redrawing, and back.
+    fx = update(m, KeyDown{8, Key::ToggleDragMode});
+    CHECK(!fx.redraw && m.drag_mode == DragMode::Turntable);
+    update(m, KeyDown{9, Key::ToggleDragMode});
+    CHECK(m.drag_mode == DragMode::Trackball);
+    // After switching to the turntable, the first drag also straightens a tilted view.
+    update(m, PointerDown{10, 130.0, 60.0});
+    update(m, PointerMove{11, 120.0, 90.0});
+    update(m, PointerMove{12, 60.0, 100.0});
+    CHECK(!north_is_up(m.camera));
+    update(m, PointerUp{13});
+    update(m, KeyDown{14, Key::ToggleDragMode});
+    update(m, PointerDown{1000, 80.0, 60.0});
+    update(m, PointerMove{1001, 81.0, 60.0});
+    CHECK(north_is_up(m.camera));
+}
+
+void test_double_click_keeps_north_up_in_turntable() {
+    Model m = fresh();
+    update(m, PointerDown{0, 110.0, 40.0});
+    update(m, PointerUp{10});
+    update(m, PointerDown{100, 110.0, 40.0});
+    CHECK(north_is_up(m.camera) && m.camera.radius_px > fresh().camera.radius_px);
 }
 
 void test_grid_hidden_while_dragging() {
@@ -510,7 +646,7 @@ void test_replay(const std::string& root) {
     render_globe(*fb, b.model.camera, *atlas, kDefaultPalette, b.model.layers);
     CHECK(std::memcmp(fa->data(), fb->data(), fa->byte_size()) == 0);
     std::printf("final frame hash %016llx\n", static_cast<unsigned long long>(fnv1a(*fa)));
-    CHECK(fnv1a(*fa) == 0xb3519ed59541d2b0ULL);
+    CHECK(fnv1a(*fa) == 0x9b4a458633a32d9dULL);
 }
 
 } // namespace
@@ -519,6 +655,9 @@ int main(int argc, char** argv) {
     const std::string root = argc > 1 ? argv[1] : ".";
     test_initial_model();
     test_drag();
+    test_turntable_drag();
+    test_align_north_and_mode_toggle();
+    test_double_click_keeps_north_up_in_turntable();
     test_grid_hidden_while_dragging();
     test_double_click();
     test_zoom_and_limits();

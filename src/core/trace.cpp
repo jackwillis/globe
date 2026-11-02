@@ -30,6 +30,8 @@ constexpr KeyEntry kKeys[] = {
     {"toggle_graticule", Key::ToggleGraticule},
     {"toggle_borders", Key::ToggleBorders},
     {"toggle_coastlines", Key::ToggleCoastlines},
+    {"align_north", Key::AlignNorth},
+    {"toggle_drag_mode", Key::ToggleDragMode},
     {"quit", Key::Quit},
 };
 
