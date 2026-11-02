@@ -137,15 +137,25 @@ void draw_graticule(Framebuffer& fb, const Camera& cam, Rgb565 color, RenderStat
 // Each vertex is transformed once and carried to the next segment.
 template <typename VertexAt>
 void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, AtlasLayer layer,
-                      Rgb565 color, RenderStats& stats, VertexAt vertex) {
+                      Rgb565 color, RenderStats& stats, VertexAt vertex,
+                      const PolylineCap* caps = nullptr) {
     AtlasCursor cursor;
     AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
     for (;;) {
+        const std::uint32_t index = cursor.index;
         const std::uint32_t first = cursor.first_point;
         if (!atlas.next(cursor, line)) {
             break;
         }
         if (line.layer != layer) {
+            continue;
+        }
+        // A cap wholly behind the horizon cannot contribute pixels. Radius is cached as its
+        // sine, so the frame loop needs only a dot product. Keep the tangent and a rounding
+        // margin; caps >= a hemisphere have sin_radius=1 and can never pass this test.
+        if (caps != nullptr &&
+            dot(caps[index].axis, cam.forward) < -caps[index].sin_radius - 1e-12) {
+            ++stats.polylines_culled;
             continue;
         }
         Vec3 prev = to_camera_space(cam, vertex(line, first, 0));
@@ -162,16 +172,33 @@ void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, At
 std::optional<Scene> Scene::create(const Atlas& atlas) {
     const std::size_t total = static_cast<std::size_t>(atlas.point_count()) + kGraticulePoints;
     std::unique_ptr<Vec3[]> storage(new (std::nothrow) Vec3[total]);
-    if (!storage) {
+    std::unique_ptr<PolylineCap[]> caps(new (std::nothrow) PolylineCap[atlas.polyline_count()]);
+    if (!storage || !caps) {
         return std::nullopt;
     }
     Vec3* out = storage.get();
     AtlasCursor cursor;
     AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
     while (atlas.next(cursor, line)) {
+        Vec3* first = out;
+        Vec3 sum{};
         for (std::uint16_t i = 0; i < line.point_count; ++i) {
-            *out++ = to_unit_vector(line.point(i));
+            *out = to_unit_vector(line.point(i));
+            sum = sum + *out++;
         }
+        PolylineCap cap{{0.0, 0.0, 0.0}, 1.0};
+        const double sum2 = dot(sum, sum);
+        if (sum2 > 1e-24) {
+            cap.axis = sum * (1.0 / std::sqrt(sum2));
+            double min_cos = 1.0;
+            for (std::uint16_t i = 0; i < line.point_count; ++i) {
+                min_cos = std::min(min_cos, dot(cap.axis, first[i]));
+            }
+            if (min_cos > 0.0) {
+                cap.sin_radius = std::sqrt(std::max(0.0, 1.0 - min_cos * min_cos));
+            }
+        }
+        caps[cursor.index - 1] = cap;
     }
     for (int p = 0; p < kParallels; ++p) {
         for (int s = 0; s < kParallelSamples; ++s) {
@@ -183,15 +210,16 @@ std::optional<Scene> Scene::create(const Atlas& atlas) {
             *out++ = meridian_point(m, s);
         }
     }
-    return Scene(atlas, std::move(storage));
+    return Scene(atlas, std::move(storage), std::move(caps));
 }
 
 std::size_t Scene::bytes() const {
-    return (static_cast<std::size_t>(atlas_.point_count()) + kGraticulePoints) * sizeof(Vec3);
+    return (static_cast<std::size_t>(atlas_.point_count()) + kGraticulePoints) * sizeof(Vec3) +
+           static_cast<std::size_t>(atlas_.polyline_count()) * sizeof(PolylineCap);
 }
 
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
-                         const Palette& palette, const Layers& layers) {
+                         const Palette& palette, const Layers& layers, bool cull_polylines) {
     RenderStats stats;
     fb.clear(palette.background);
     fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
@@ -213,11 +241,11 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& sce
     };
     if (layers.coastlines) {
         draw_atlas_layer(fb, camera, scene.atlas(), AtlasLayer::Coastline, palette.coastline, stats,
-                         vertex);
+                         vertex, cull_polylines ? scene.caps() : nullptr);
     }
     if (layers.borders) {
         draw_atlas_layer(fb, camera, scene.atlas(), AtlasLayer::Border, palette.border, stats,
-                         vertex);
+                         vertex, cull_polylines ? scene.caps() : nullptr);
     }
     return stats;
 }

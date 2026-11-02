@@ -156,3 +156,12 @@ before measurement starts. No extra detail is drawn by the stage transitions yet
 one-shot scheduling and quiescence on the host; it does not measure the G4 or progressive rendering.
 The integration test also rejected a missing-wake mutant (0 wakes, final Moving) and a periodic-wake
 mutant (1,888 wakes over two seconds, despite 0 idle frames), so frame count alone is insufficient.
+
+## Independent optimization pass (2026-11-01)
+
+The first three candidate improvements above are now implemented and measured, with unchanged
+pixel pins. See [pixel packing](pass-20261101-packing.md), [line overhead](pass-20261101-lines.md)
+and [polyline culling](pass-20261101-culling.md), with raw host/G4 JSON beside them. At 640x480 on
+the G4, mean render plus pack fell from 20.7097 + 17.0486 ms to 17.7811 + 6.9910 ms (about 37.8 to
+24.8 ms before X submission). Each step is one matching run; do not read that as real-display FPS.
+The Xvfb suite now verifies actual pixels at depths 24 and 16 as well as smoke/idle behavior.

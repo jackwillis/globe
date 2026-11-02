@@ -33,6 +33,7 @@ struct Layers {
 
 // What a frame cost, in countable terms (not time; timing belongs to the platform layer).
 struct RenderStats {
+    std::uint32_t polylines_culled = 0; // whole cached polylines proven behind the horizon
     std::uint32_t segments = 0;         // atlas and graticule segments considered
     std::uint32_t segments_visible = 0; // of those, with any part on the front hemisphere
     std::uint32_t lines_drawn = 0;      // straight line pieces rasterized after subdivision
@@ -46,15 +47,23 @@ constexpr Palette kDefaultPalette = {
     rgb565(200, 90, 80),   // border
 };
 
+// Conservative spherical cap. sin_radius == 1 disables culling for a cap >= 90 degrees or
+// a degenerate mean direction. Smaller caps contain every vertex and their shorter arcs.
+struct PolylineCap {
+    Vec3 axis;
+    double sin_radius;
+};
+
 // Geometry that does not depend on the camera, computed once: the unit vector of every atlas
 // vertex and of the graticule's sample points. A frame then needs one matrix-vector product per
 // vertex instead of four trigonometric calls, which matters on CPUs where libm is slow (a 467
-// MHz G4 spends over 100 ns per sin/cos). Costs 24 bytes per atlas vertex plus about 32 KB.
+// MHz G4 spends over 100 ns per sin/cos). Costs 24 bytes per atlas vertex, about 32 KB for
+// the graticule, and sizeof(PolylineCap) per atlas polyline.
 //
 // Holds the Atlas view, so the atlas bytes must outlive the Scene.
 class Scene {
   public:
-    // One allocation, made up front; nullopt if it fails.
+    // Two allocations, made up front (vectors and caps); nullopt if either fails.
     static std::optional<Scene> create(const Atlas& atlas);
 
     Scene(Scene&&) noexcept = default;
@@ -66,19 +75,21 @@ class Scene {
     const Atlas& atlas() const { return atlas_; }
     const Vec3* vertices() const { return storage_.get(); } // atlas point order
     const Vec3* graticule() const { return storage_.get() + atlas_.point_count(); }
+    const PolylineCap* caps() const { return caps_.get(); } // atlas polyline order
     std::size_t bytes() const;
 
   private:
-    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage)
-        : atlas_(atlas), storage_(std::move(storage)) {}
+    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps)
+        : atlas_(atlas), storage_(std::move(storage)), caps_(std::move(caps)) {}
 
     Atlas atlas_;
     std::unique_ptr<Vec3[]> storage_; // atlas vertices, then graticule samples
+    std::unique_ptr<PolylineCap[]> caps_;
 };
 
-// Clears the framebuffer to the background and draws one frame, using the precomputed vectors.
+// Clears the framebuffer and draws using cached vectors. Disable culling for reference checks.
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
-                         const Palette& palette, const Layers& layers);
+                         const Palette& palette, const Layers& layers, bool cull_polylines = true);
 
 // Reference path: same pixels, but computes every vertex's unit vector on the fly. Used by tests
 // to check the Scene path, and by the benchmark to show what the cache saves.

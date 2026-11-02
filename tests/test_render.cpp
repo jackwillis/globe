@@ -524,7 +524,7 @@ void test_scene_matches_reference(const std::string& root) {
             const RenderStats sa = render_globe(a, c, atlas, kTestPalette, layers);
             const RenderStats sb = render_globe(b, c, *scene, kTestPalette, layers);
             CHECK(std::memcmp(a.data(), b.data(), a.byte_size()) == 0);
-            CHECK(sa.segments == sb.segments && sa.segments_visible == sb.segments_visible &&
+            CHECK(sb.segments <= sa.segments && sa.segments_visible == sb.segments_visible &&
                   sa.lines_drawn == sb.lines_drawn);
         }
     }
@@ -547,22 +547,32 @@ void test_scene_matches_reference(const std::string& root) {
         return;
     }
     // Atlas vertices plus 605 parallel and 732 meridian samples, 24 bytes each.
-    CHECK(scene->bytes() == (8120U + 605U + 732U) * sizeof(Vec3));
+    CHECK(scene->bytes() ==
+          (8120U + 605U + 732U) * sizeof(Vec3) + atlas.polyline_count() * sizeof(PolylineCap));
     Framebuffer a = make_fb(80, 60);
     Framebuffer b = make_fb(80, 60);
+    Framebuffer unculled = make_fb(80, 60);
+    std::uint32_t culled = 0;
     Lcg rng{2024};
     const double radii[] = {3.0, 24.0, 40.0, 300.0, 5000.0};
     for (int i = 0; i < 40; ++i) {
         const Camera c = cam(rng.next() * 170 - 85, rng.next() * 360 - 180, rng.next() * 360,
                              radii[i % 5], 80, 60);
         render_globe(a, c, atlas, kDefaultPalette, Layers{});
-        render_globe(b, c, *scene, kDefaultPalette, Layers{});
+        const auto stats = render_globe(b, c, *scene, kDefaultPalette, Layers{});
+        culled += stats.polylines_culled;
+        const auto plain = render_globe(unculled, c, *scene, kDefaultPalette, Layers{}, false);
+        CHECK(plain.polylines_culled == 0);
+        CHECK(stats.segments_visible == plain.segments_visible);
+        CHECK(stats.lines_drawn == plain.lines_drawn);
+        CHECK(std::memcmp(b.data(), unculled.data(), b.byte_size()) == 0);
         if (std::memcmp(a.data(), b.data(), a.byte_size()) != 0) {
             std::printf("scene path differs from reference at camera %d\n", i);
             CHECK(false);
             break;
         }
     }
+    CHECK(culled > 0); // this must exercise culling, not merely compare two unculled paths
 }
 
 void test_extreme_cameras(const std::string& root) {
