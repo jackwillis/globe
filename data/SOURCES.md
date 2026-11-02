@@ -170,3 +170,28 @@ layers). Nothing reads these files yet.
   degree, whether the elevation file already shows the Great Lakes as water, and any builder cost.
 - The ZIPs are not committed; they are kept at `~/scratch/globe-data/naturalearth/` on the
   development laptop. 50m (about 253 KB) is the likely build-time input; it never ships to the target.
+
+## World cities pack (retrieved 2026-11-02)
+
+Wikidata Query Service (`https://query.wikidata.org/sparql`), structured data under CC0
+(https://www.wikidata.org/wiki/Wikidata:Licensing). Only Q identifiers, English labels, coordinates,
+population and country identifiers are used; no wiki prose. Exact query:
+`tools/places-builder/cities-large.sparql`. One request, HTTP 200, no retry needed; response retained
+unmodified as `data/wikidata-cities-large-20261102.json`: 352,844 bytes, SHA-256
+`88958f1d3f969c3d2423f299e2c460b397ff1af7dd3c61273d0a3098d569b98f`, 534 rows. The query uses
+`SAMPLE()` for coordinates and country, so re-running may differ; the retained response is the pin.
+
+Selection (in the builder, not the query): population at least 1,000,000, at most 30 cities per
+country by population (cap chosen because China has 252 of the 534 rows; with the cap the pack has
+304 cities in 94 countries). Generated `data/cities.gplc`: 9,641 bytes, SHA-256
+`89b154930fa6017cf31c765f038dbcb8fdfd8e66ffadbfc16356c0dcebc95089`, replacing the 19-city starter
+(613 bytes, SHA-256 `6dec1b1d5251ca86a3e353147b2cc6e553d7e8d24df02181beb9581f7afc06e4`, kept as
+`tests/data/cities-starter19.gplc`). Regenerate:
+
+```
+python3 tools/places-builder/build_places.py --large data/wikidata-cities-large-20261102.json data/cities.gplc
+```
+
+Not verified: Wikidata population and coordinates are community data and may be wrong or outdated for
+individual cities; no city was checked by hand beyond the label transliteration. Population is each
+item's largest statement, so figures mix definitions. Not a complete gazetteer and not a ranking.

@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2026 Jack Willis
+# World cities for the GPLC pack. Rule: instances (direct P31) of city (Q515) or big city
+# (Q1549591) that have coordinates, an English label and a population statement of at least
+# 1,000,000. Population is the largest statement on the item (definitions differ: city proper,
+# prefecture-level, urban area), so this is a selection rule, not a ranking. Country (P17) is
+# kept for the builder's per-country cap. Wikidata structured data is CC0. Coordinates come from
+# SAMPLE() and are therefore not reproducible from the query alone: the retained response is the pin.
+SELECT ?item (SAMPLE(?label) AS ?itemLabel) (SAMPLE(?c) AS ?coord) (MAX(?p) AS ?pop) (SAMPLE(?country) AS ?country) WHERE {
+  VALUES ?class { wd:Q515 wd:Q1549591 }
+  ?item wdt:P31 ?class; wdt:P1082 ?p; wdt:P625 ?c.
+  FILTER(?p >= 1000000)
+  ?item rdfs:label ?label. FILTER(LANG(?label) = "en")
+  OPTIONAL { ?item wdt:P17 ?country. }
+} GROUP BY ?item
+ORDER BY ?item
