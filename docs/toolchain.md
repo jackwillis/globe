@@ -25,7 +25,10 @@ The three unit tests were cross-built on the laptop (`powerpc--netbsd-g++` 12.5.
 -static -fno-exceptions -fno-rtti`, stripped, about 0.9 MB each since libstdc++ is linked
 statically), pushed to `/tmp` on maul with `maulctl push nb`, and run there: NetBSD 11.0 macppc
 (G4, big-endian). `bytes`, `framebuffer` and `projection` all printed `ok`, exit 0. `trackball` was added the same
-way later that day (`ok`, exit 0, 1.94 s user for the whole test including a 200,000-drag drift check). Nothing was
+way later that day (`ok`, exit 0, 1.94 s user for the whole test including a 200,000-drag drift check). `atlas`
+followed (`ok`, exit 0, 1.63 s user, 3.2 s real): the little-endian decoder read the real
+`data/atlas.gatl` on big-endian PowerPC and reproduced the checksums computed by the Python
+decoder, so byte-order handling is confirmed on hardware, not only by construction. Nothing was
 compiled on maul. No timing was taken; these are correctness runs only.
 
 ## Not measured

@@ -14,13 +14,13 @@ terrain (M5), the Mac OS 9 front end.
 
 ## Steps (one narrow commit group each, tests first)
 
-1. **Trackball camera.** Orientation-based camera, screen-to-sphere unprojection, drag as
+1. **Trackball camera.** *(done)* Orientation-based camera, screen-to-sphere unprojection, drag as
    rotation between two sphere points, zoom as radius, renormalization against drift. Tests:
    drag round trip, no heading drift over many small drags, poles, zoom limits.
-2. **Atlas format and builder** (`tools/atlas-builder`, laptop only). Versioned, fixed
+2. **Atlas format and builder** *(done)* (`tools/atlas-builder`, laptop only). Versioned, fixed
    little-endian, quantized lon/lat, explicit polyline boundaries, deterministic output,
    provenance and attribution embedded. Prints byte size. Documented in `docs/atlas-format.md`.
-3. **Atlas decoder** (`src/data`). Bounded, validating, no hidden allocation; rejects truncated,
+3. **Atlas decoder** *(done)* (`src/data`). Bounded, validating, no hidden allocation; rejects truncated,
    oversized and corrupt input. Mutation test over every byte position of a small atlas.
 4. **Line rasterizer and layers** (`src/render`). Viewport clipping, integer Bresenham into
    RGB565, ocean disc, coastlines, borders, optional graticule, built on the M0 horizon clipping
