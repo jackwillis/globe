@@ -33,6 +33,21 @@ roughly 12 frames per second before anything is sent to the X server. The host i
 faster. The frame checksum is identical on both machines (`979403b5c7eeb68f`), so the same pixels
 are drawn.
 
+## After hiding the graticule while dragging (same trace, same machines)
+
+The graticule is no longer drawn while a drag is in progress (`effective_layers`), and is redrawn
+when the button is released (6 extra frames in this trace: 1,128 instead of 1,122).
+
+| | render mean | render p50 | render p95 | render max | pack mean |
+| --- | --- | --- | --- | --- | --- |
+| Host (`host-release-640-no-grid-while-dragging.json`) | 0.84 ms | 0.84 ms | 0.95 ms | 1.73 ms | see file |
+| G4 (`g4-640-no-grid-while-dragging.json`), one run | 48.0 ms | 47.3 ms | 60.0 ms | 134 ms | 17.0 ms |
+
+On the G4 a drag frame (render plus pack) went from about 81 ms to about 65 ms, roughly 12 to 15
+frames per second. Zoom steps and key presses in the trace still draw the grid, so the saving is
+smaller than the 15.7 ms the graticule costs per frame. One G4 run only; the earlier baseline had
+three.
+
 ## Where the time goes (G4, mean ms per frame, layers forced with `--layers`)
 
 | Layers drawn | render mean | added by that layer |

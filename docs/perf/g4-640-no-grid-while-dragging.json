@@ -1,0 +1,53 @@
+{
+  "tool": "globe-bench",
+  "compiler": "12.5.0",
+  "optimized": "yes",
+  "viewport": "640x480",
+  "layers": "as traced",
+  "trace_messages": 377,
+  "repeats": 3,
+  "atlas_bytes": 35068,
+  "atlas_polylines": 467,
+  "atlas_points": 8120,
+  "atlas_parse_ms": 0.7383,
+  "first_frame_ms_since_main": 79.6976,
+  "total_ms": 73377.73,
+  "timer_overhead_ns": 1562,
+  "peak_rss_kb": 8992,
+  "frame_buffer_bytes": 614400,
+  "frames": 1128,
+  "render_ms": {
+    "count": 1128,
+    "min": 2.0149,
+    "mean": 48.0215,
+    "p50": 47.2979,
+    "p95": 60.0332,
+    "max": 134.1021
+  },
+  "convert_ms": {
+    "count": 1128,
+    "min": 16.5752,
+    "mean": 16.9878,
+    "p50": 16.6329,
+    "p95": 17.0298,
+    "max": 41.6982
+  },
+  "visible_segments_per_frame": {
+    "count": 1128,
+    "min": 0.0,
+    "mean": 4958.0984,
+    "p50": 5110.0,
+    "p95": 5757.0,
+    "max": 5906.0
+  },
+  "lines_per_frame": {
+    "count": 1128,
+    "min": 0.0,
+    "mean": 6078.9202,
+    "p50": 6209.0,
+    "p95": 7072.0,
+    "max": 10885.0
+  },
+  "frame_checksum": "979403b5c7eeb68f",
+  "limits": "render and optional pixel packing only; no X11 submission, no display, no idle CPU; peak_rss_kb is ru_maxrss as the OS reports it (kilobytes on Linux and NetBSD); times are wall clock, not CPU time"
+}
