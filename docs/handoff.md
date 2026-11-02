@@ -1,13 +1,70 @@
 # Handoff for Codex (unattended work) — Globe v2
 
-Written 2026-11-01 by Claude; updated after the design decisions the same day. **This file is deliberately uncommitted.** Do not `git add` it until
-the owner (Jack) says so. When you stop, append a dated note at the bottom (what you did, what you
-verified, what you did not).
+Written 2026-11-01 by Claude; **refreshed 2026-11-02** (see "Current pass" below, which supersedes any
+older statement in this file about branches, the remote, or this file being uncommitted). The file is
+now committed. When you stop, append a dated note at the bottom (what you did, what you verified, what
+you did not).
 
 Read first: `docs/v2-design.md` (intent), `docs/architecture.md` (what exists), `docs/perf/README.md`
 (measurements), `docs/m1-plan.md` (plan and status), `docs/toolchain.md` (what was verified where).
 
-## State
+## Current pass (2026-11-02) — start here
+
+**State.** Branch is `main` (the owner renamed `v2` to `main`; tag `v1` holds the old prototype). An
+`origin` remote exists on GitHub but **do not push, merge remote branches, tag or force anything**; the
+owner pushes. Tip at writing: see `git log -1`. 34 host tests pass. All Claude side branches are merged
+and deleted. Read `docs/backlog.md` (ticket IDs below), `docs/project-notes.md` and the ADR addenda at the
+end of `docs/adr/0001-m2-to-m5-decisions.md` before touching anything.
+
+**Pins that must not change unless the change is intended and explained in the commit:**
+replay hash `0x9b4a458633a32d9d` (`tests/test_app.cpp`), bench checksum `41c7adb508763323` for
+`--repeat 2`, refined checksum `1228dcc860a92a77`, goldens in `tests/golden`. Terrain pixels change by
+design in GL-27, so re-pin those with a stated reason and verify host and G4 agree.
+
+**Behavior rules from the owner (binding, already implemented in the core):** a click without a drag
+changes nothing; moving or exposing a window never re-renders (resend cached pixels); no relay; two
+releases only (floppy, full). Done since your last pass: GL-6 (lines skipped per band: G4 refine
+786 to 380 ms, identical pixels), click rules, five side branches merged, size reports (yours).
+
+**Maul.** Owner's builds `/tmp/globe-x11-tip3` to `tip7` are theirs: never delete, overwrite or kill
+them. Push test binaries under new names. Never compile on maul. Display is the owner's.
+
+**Your tasks, in order** (files here do not overlap with what Claude will touch: Claude reviews and
+stays out of `src/render/terrain.cpp`, `src/core/app.cpp` and the toolbar until you stop):
+
+1. **GL-27 terrain look** (ADR addenda "terrain look", "layered refinement", "refine profile"):
+   a. Flat gray land and flat ocean base for the Moving stage. Coastlines are polylines, not polygons,
+      so fill from a coarse decimated elevation grid; time it on the G4 and report it. The settled
+      frame must not depend on this base.
+   b. Palette styles: runtime-selectable 256-entry tables for the terrain-color step; hypsometric default,
+      cel-shaded second (flat height classes, optional latitude bias). Add a `CycleStyle` `Command`,
+      toolbar button, trace verb and tests. Antarctica always ice white by a latitude rule (land south
+      of about -60) applied before the palette lookup. Do not change the GELV v1 format; if an ice-flag
+      bit needs a format change, write the proposal in the ADR and stop.
+   c. Wire `fill_triangle_shaded` (merged, `src/render/raster.cpp`) into the terrain draw to smooth the
+      1-degree grid, only if the G4 settled-frame cost is acceptable; report before/after G4 numbers
+      (earlier microbenchmark: +78 ms at 1x, none at 2x). Mind the limb: the shaded path skips cells
+      with a corner behind the horizon.
+2. **GL-28 lakes in the builder:** download-verify the Natural Earth lakes layer recorded in
+   `data/SOURCES.md` (ZIPs are in `~/scratch/globe-data/naturalearth/`; not committed), mark water cells
+   at build time in the elevation pack builder without changing the v1 format; document the rule
+   (50 percent area or cell center: the source check found 29 vs 30 Great Lakes cells, pick one and say why).
+3. **GL-4 docs:** re-read README, `docs/open-work.md` and this file for stale wording ("M1", "uncommitted",
+   test counts) and fix it.
+4. **GL-31 design only:** write `docs/fetch-design.md` (no networking code): how to reuse `../weather`'s
+   BearSSL, trust anchors, seed provisioning, DNS and HTTP framing; size cost of BearSSL plus anchors
+   for the floppy edition; a pack validator (version, checksum, size caps) that cannot damage baked data;
+   open questions for the owner.
+
+**Not yours yet:** the center-biased dissolve and surface/theme refactors (GL-12 to GL-19), runtime
+compression (measure first; numbers are in the ADR), anything networked, the maps app.
+
+**Method reminders:** tests first, mutation-check new tests, portability probe (`tools/probe-retro68.sh`)
+after core changes, `tools/check-policy.sh`, clang-format, narrow commits with your own
+`Co-Authored-By:` trailer, report what was measured vs inferred vs not run (G4 display, OS 9 and CI have
+never run). Cross-build recipe is in "Commands" below.
+
+## State (historical, as of 2026-11-01; superseded by the section above)
 
 Branch `v2`, tip `b80b78e` at the time of this update (plus the housekeeping commit after it), no
 remote, working tree clean apart from this file. Built so far: portable core (projection, trackball
