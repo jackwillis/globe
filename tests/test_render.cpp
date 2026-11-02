@@ -10,6 +10,7 @@
 
 #include "atlas_util.hpp"
 #include "check.hpp"
+#include "globe/projection.hpp"
 #include "globe/raster.hpp"
 #include "globe/render.hpp"
 
@@ -245,6 +246,12 @@ std::uint16_t lon_q(double lon) {
 std::uint16_t lat_q(double lat) {
     return static_cast<std::uint16_t>((lat + 90.0) / 360.0 * 65536.0);
 }
+double lon_q_to_deg(std::uint16_t q) {
+    return q * (360.0 / 65536.0) - 180.0;
+}
+double lat_q_to_deg(std::uint16_t q) {
+    return q * (360.0 / 65536.0) - 90.0;
+}
 
 // A hand-made world: the equator from -150 to 150 (coast), the lon 0 meridian from -80 to 80
 // (border), and a small coastline on the far side at lon 180 (hidden when facing lon 0).
@@ -378,6 +385,157 @@ void test_render_properties() {
     CHECK(sa.segments_visible > 0 && sa.segments_visible < sa.segments);
 }
 
+// Long arcs are drawn as short straight pieces through points of the chord, normalized onto the
+// sphere. The result must stay on the true great circle to within a pixel or two, whatever the
+// arc length, including arcs long enough to use the exact (slow) normalization.
+void test_long_arcs_follow_the_great_circle() {
+    struct Case {
+        double lat0, lon0, lat1, lon1;
+    };
+    const Case cases[] = {
+        {0, -5, 0, 5},      // short: one straight piece
+        {10, -30, 25, 20},  // about 50 degrees
+        {50, -70, -40, 60}, // oblique, well over 100 degrees
+        {35, -80, -35, 80}, // about 165 degrees: the exact (slow) normalization path
+        {80, -170, 80, 10}, // over the pole
+    };
+    for (const Case& k : cases) {
+        const double radii[] = {60.0, 300.0};
+        for (const double radius : radii) {
+            Poly line{1, {{lon_q(k.lon0), lat_q(k.lat0)}, {lon_q(k.lon1), lat_q(k.lat1)}}};
+            const Bytes bytes = make_atlas({line}, "arc");
+            const Atlas atlas = parse_or_die(bytes);
+            // Center the view on the arc's midpoint so it is on screen at every zoom.
+            const Vec3 a =
+                to_unit_vector({lat_q_to_deg(lat_q(k.lat0)), lon_q_to_deg(lon_q(k.lon0))});
+            const Vec3 b =
+                to_unit_vector({lat_q_to_deg(lat_q(k.lat1)), lon_q_to_deg(lon_q(k.lon1))});
+            const LatLon mid = from_unit_vector(normalized(a + b));
+            // An arc through the view center projects to a straight line, where point spacing
+            // cannot show. At low zoom, tilt the camera so the arc projects to a true curve;
+            // zoomed in, stay centered so the arc is still on screen.
+            const double tilt = radius <= 100.0 ? 25.0 : 0.0;
+            const Camera c = cam(mid.lat_deg + tilt, mid.lon_deg, 0, radius, 160, 160);
+            Framebuffer actual = make_fb(160, 160);
+            render_globe(actual, c, atlas, kTestPalette, Layers{false, true, false});
+
+            // Expected: the exact great-circle arc, sampled far more finely than any pixel.
+            Framebuffer expected = make_fb(160, 160);
+            expected.clear(0);
+            Vec3 pts[1601];
+            const std::size_t n =
+                subdivide_arc(a, b, angle_between(a, b) / 1600.0 * 1.0001, pts, 1601);
+            CHECK(n > 100);
+            bool have_prev = false;
+            ScreenPoint prev{0, 0};
+            for (std::size_t i = 0; i < n; ++i) {
+                const Vec3 v = to_camera_space(c, pts[i]);
+                if (!is_front(v)) {
+                    have_prev = false;
+                    continue;
+                }
+                const ScreenPoint p = to_screen(c, v);
+                if (have_prev) {
+                    draw_line(expected, prev.x, prev.y, p.x, p.y, kInk);
+                }
+                prev = p;
+                have_prev = true;
+            }
+            const auto want = pixels_set(expected, kInk);
+            const auto got = pixels_set(actual, kTestPalette.coastline);
+            // Compare symmetrically, ignoring the last pixel of each end (clipping at the horizon
+            // may end the two on slightly different pixels).
+            const auto near_any = [](const std::vector<std::pair<int, int>>& set, int x, int y) {
+                for (const auto& q : set) {
+                    const int dx = q.first - x;
+                    const int dy = q.second - y;
+                    if (dx * dx + dy * dy <= 2 * 2) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            int far_got = 0;
+            for (const auto& q : got) {
+                far_got += near_any(want, q.first, q.second) ? 0 : 1;
+            }
+            int far_want = 0;
+            for (const auto& q : want) {
+                far_want += near_any(got, q.first, q.second) ? 0 : 1;
+            }
+            if (far_got > 2 || far_want > 2 || got.empty()) {
+                std::printf("arc (%g,%g)->(%g,%g) r=%g: %d drawn pixels and %d exact pixels are "
+                            "more than 2px away (%zu vs %zu)\n",
+                            k.lat0, k.lon0, k.lat1, k.lon1, radius, far_got, far_want, got.size(),
+                            want.size());
+            }
+            CHECK(!got.empty());
+            CHECK(far_got <= 2 && far_want <= 2);
+        }
+    }
+}
+
+// The Scene (cached vertex vectors) must draw exactly what the reference path draws.
+void test_scene_matches_reference(const std::string& root) {
+    // Synthetic atlas first: golden scenes, all layer combinations.
+    {
+        const Bytes bytes = synthetic_atlas();
+        const Atlas atlas = parse_or_die(bytes);
+        const auto scene = Scene::create(atlas);
+        CHECK(scene.has_value());
+        if (!scene) {
+            return;
+        }
+        CHECK(scene->bytes() > 0);
+        Framebuffer a = make_fb(64, 48);
+        Framebuffer b = make_fb(64, 48);
+        for (int mask = 0; mask < 8; ++mask) {
+            const Layers layers{(mask & 1) != 0, (mask & 2) != 0, (mask & 4) != 0};
+            const Camera c = cam(30, 40, 20, 22, 64, 48);
+            const RenderStats sa = render_globe(a, c, atlas, kTestPalette, layers);
+            const RenderStats sb = render_globe(b, c, *scene, kTestPalette, layers);
+            CHECK(std::memcmp(a.data(), b.data(), a.byte_size()) == 0);
+            CHECK(sa.segments == sb.segments && sa.segments_visible == sb.segments_visible &&
+                  sa.lines_drawn == sb.lines_drawn);
+        }
+    }
+    // The real atlas, many random cameras, including extreme zoom.
+    std::FILE* f = std::fopen((root + "/data/atlas.gatl").c_str(), "rb");
+    CHECK(f != nullptr);
+    if (!f) {
+        return;
+    }
+    Bytes bytes;
+    std::uint8_t buf[4096];
+    std::size_t n = 0;
+    while ((n = std::fread(buf, 1, sizeof buf, f)) > 0)
+        bytes.insert(bytes.end(), buf, buf + n);
+    std::fclose(f);
+    const Atlas atlas = parse_or_die(bytes);
+    const auto scene = Scene::create(atlas);
+    CHECK(scene.has_value());
+    if (!scene) {
+        return;
+    }
+    // Atlas vertices plus 605 parallel and 732 meridian samples, 24 bytes each.
+    CHECK(scene->bytes() == (8120U + 605U + 732U) * sizeof(Vec3));
+    Framebuffer a = make_fb(80, 60);
+    Framebuffer b = make_fb(80, 60);
+    Lcg rng{2024};
+    const double radii[] = {3.0, 24.0, 40.0, 300.0, 5000.0};
+    for (int i = 0; i < 40; ++i) {
+        const Camera c = cam(rng.next() * 170 - 85, rng.next() * 360 - 180, rng.next() * 360,
+                             radii[i % 5], 80, 60);
+        render_globe(a, c, atlas, kDefaultPalette, Layers{});
+        render_globe(b, c, *scene, kDefaultPalette, Layers{});
+        if (std::memcmp(a.data(), b.data(), a.byte_size()) != 0) {
+            std::printf("scene path differs from reference at camera %d\n", i);
+            CHECK(false);
+            break;
+        }
+    }
+}
+
 void test_extreme_cameras(const std::string& root) {
     // Many random and extreme cameras over the real atlas: no crash, no sanitizer finding.
     std::FILE* f = std::fopen((root + "/data/atlas.gatl").c_str(), "rb");
@@ -433,6 +591,8 @@ int main(int argc, char** argv) {
     test_fill_disc();
     test_golden_frames(root);
     test_render_properties();
+    test_long_arcs_follow_the_great_circle();
+    test_scene_matches_reference(root);
     test_extreme_cameras(root);
     return TEST_MAIN_RESULT();
 }

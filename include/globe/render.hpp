@@ -5,7 +5,11 @@
 // the same inputs give the same pixels within one build.
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
+#include <memory>
+#include <optional>
+#include <utility>
 
 #include "globe/atlas.hpp"
 #include "globe/framebuffer.hpp"
@@ -42,7 +46,42 @@ constexpr Palette kDefaultPalette = {
     rgb565(200, 90, 80),   // border
 };
 
-// Clears the framebuffer to the background and draws one frame.
+// Geometry that does not depend on the camera, computed once: the unit vector of every atlas
+// vertex and of the graticule's sample points. A frame then needs one matrix-vector product per
+// vertex instead of four trigonometric calls, which matters on CPUs where libm is slow (a 467
+// MHz G4 spends over 100 ns per sin/cos). Costs 24 bytes per atlas vertex plus about 32 KB.
+//
+// Holds the Atlas view, so the atlas bytes must outlive the Scene.
+class Scene {
+  public:
+    // One allocation, made up front; nullopt if it fails.
+    static std::optional<Scene> create(const Atlas& atlas);
+
+    Scene(Scene&&) noexcept = default;
+    Scene& operator=(Scene&&) noexcept = default;
+    Scene(const Scene&) = delete;
+    Scene& operator=(const Scene&) = delete;
+    ~Scene() = default;
+
+    const Atlas& atlas() const { return atlas_; }
+    const Vec3* vertices() const { return storage_.get(); } // atlas point order
+    const Vec3* graticule() const { return storage_.get() + atlas_.point_count(); }
+    std::size_t bytes() const;
+
+  private:
+    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage)
+        : atlas_(atlas), storage_(std::move(storage)) {}
+
+    Atlas atlas_;
+    std::unique_ptr<Vec3[]> storage_; // atlas vertices, then graticule samples
+};
+
+// Clears the framebuffer to the background and draws one frame, using the precomputed vectors.
+RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
+                         const Palette& palette, const Layers& layers);
+
+// Reference path: same pixels, but computes every vertex's unit vector on the fly. Used by tests
+// to check the Scene path, and by the benchmark to show what the cache saves.
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atlas,
                          const Palette& palette, const Layers& layers);
 

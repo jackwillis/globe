@@ -61,8 +61,9 @@ ScreenPoint to_screen(const Camera& camera, Vec3 camera_point) {
 }
 
 std::optional<Arc> clip_arc_to_front(Vec3 a, Vec3 b) {
-    if (length(cross(a, b)) < kNearAntipodalSin && dot(a, b) < 0.0) {
-        return std::nullopt;
+    const Vec3 c = cross(a, b);
+    if (dot(c, c) < kNearAntipodalSin * kNearAntipodalSin && dot(a, b) < 0.0) {
+        return std::nullopt; // squared comparison: no square root on the common path
     }
     const bool a_front = is_front(a);
     const bool b_front = is_front(b);
