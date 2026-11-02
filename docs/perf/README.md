@@ -173,3 +173,14 @@ render costs about 0.58 seconds spread over cancellable continuations, versus 0.
 finer outlines only. New terrain checksum is pinned independently; moving-frame checksum remains
 unchanged. Per-band conversion and real-display submission are additional, not included in that
 render total. Raw host/G4 measurements are in terrain-*.json.
+
+## Refine profile (2026-11-01, `refine-profile-g4.json`)
+
+`globe-refine-profile` times the settled terrain refine frame by phase at 640x480 (host median of
+51 runs, G4 median of 9; host and G4 frame checksums match). G4, 1x zoom: the real `RefinementJob`
+takes 786 ms with terrain and 456 ms without it; the terrain phases are about 215 ms (project
+corners 18, bound cells 26, per-band cell scan 47, fills 123 by subtraction). The same line layers
+drawn in one pass cost 28 ms, so band-by-band line drawing is about 16x a single pass. About 115 ms
+of the job is not accounted for by any measured phase (inferred to be per-work-unit stepping
+overhead). A hemisphere pre-test before projecting skips half the corners but saves under 1 ms on
+the G4.

@@ -1,0 +1,129 @@
+{
+ "what": "Settled terrain refine frame profile, 640x480, 1-degree grid, embedded data. Medians in ms. host = x86-64 Linux Release; g4 = Power Mac G4 NetBSD, cross-built -O2 static. Measured on v2 tip b1dbaaa plus src/platform/bench/refine_profile.cpp.",
+ "notes": [
+  "cell_scan_only calls draw_cell with a band no cell can match, once per band over all cells: exactly the loop the refine job runs per band",
+  "fill_derived = cell_scan_and_fill - cell_scan_only (inferred by subtraction)",
+  "refine_job_lines_only runs RefinementJob with terrain off: background, disc, graticule, coastlines, borders drawn band by band",
+  "lines_single_pass is render_globe over the whole frame with the same layers (Moving-stage renderer)",
+  "project_with_hemisphere_pretest is an experiment on a local copy of the world vectors; library unchanged; margin 0.0275 exceeds a 1-degree cell diagonal, so it should skip only fully hidden cells (argued, not checked against the downstream cull)",
+  "frame checksums are identical host vs G4 for both cases"
+ ],
+ "host": {
+  "width": 640,
+  "height": 480,
+  "repeat": 51,
+  "zoom_1x": {
+   "radius_px": 220,
+   "bands": 30,
+   "counts": {
+    "corners": 65341,
+    "cells": 64800,
+    "cells_culled": 32098,
+    "corners_front": 32612,
+    "corners_kept_by_pretest": 33386,
+    "cell_band_fills": 38944,
+    "pixels_filled": 152080
+   },
+   "median_ms": {
+    "project_all_corners": 0.569,
+    "bound_all_cells": 0.455,
+    "cell_scan_only": 5.427,
+    "cell_scan_and_fill": 8.673,
+    "fill_derived": 3.246,
+    "phase_sum": 9.697,
+    "refine_job_with_terrain": 17.018,
+    "refine_job_lines_only": 8.172,
+    "project_with_hemisphere_pretest": 0.4,
+    "lines_single_pass": 0.456
+   },
+   "checksum_phases": "aa22f90676c522b5",
+   "checksum_job": "cf55e45eae838297"
+  },
+  "zoom_2x": {
+   "radius_px": 440,
+   "bands": 30,
+   "counts": {
+    "corners": 65341,
+    "cells": 64800,
+    "cells_culled": 32098,
+    "corners_front": 32612,
+    "corners_kept_by_pretest": 33386,
+    "cell_band_fills": 34044,
+    "pixels_filled": 307200
+   },
+   "median_ms": {
+    "project_all_corners": 0.374,
+    "bound_all_cells": 0.295,
+    "cell_scan_only": 3.492,
+    "cell_scan_and_fill": 5.388,
+    "fill_derived": 1.896,
+    "phase_sum": 6.056,
+    "refine_job_with_terrain": 20.407,
+    "refine_job_lines_only": 11.708,
+    "project_with_hemisphere_pretest": 0.276,
+    "lines_single_pass": 0.567
+   },
+   "checksum_phases": "6661350819985900",
+   "checksum_job": "eca1d7571db504f9"
+  }
+ },
+ "g4": {
+  "width": 640,
+  "height": 480,
+  "repeat": 9,
+  "zoom_1x": {
+   "radius_px": 220,
+   "bands": 30,
+   "counts": {
+    "corners": 65341,
+    "cells": 64800,
+    "cells_culled": 32098,
+    "corners_front": 32612,
+    "corners_kept_by_pretest": 33386,
+    "cell_band_fills": 38944,
+    "pixels_filled": 152080
+   },
+   "median_ms": {
+    "project_all_corners": 18.178,
+    "bound_all_cells": 26.234,
+    "cell_scan_only": 47.104,
+    "cell_scan_and_fill": 170.364,
+    "fill_derived": 123.26,
+    "phase_sum": 214.776,
+    "refine_job_with_terrain": 785.979,
+    "refine_job_lines_only": 456.466,
+    "project_with_hemisphere_pretest": 17.132,
+    "lines_single_pass": 28.089
+   },
+   "checksum_phases": "aa22f90676c522b5",
+   "checksum_job": "cf55e45eae838297"
+  },
+  "zoom_2x": {
+   "radius_px": 440,
+   "bands": 30,
+   "counts": {
+    "corners": 65341,
+    "cells": 64800,
+    "cells_culled": 32098,
+    "corners_front": 32612,
+    "corners_kept_by_pretest": 33386,
+    "cell_band_fills": 34044,
+    "pixels_filled": 307200
+   },
+   "median_ms": {
+    "project_all_corners": 18.117,
+    "bound_all_cells": 26.092,
+    "cell_scan_only": 47.403,
+    "cell_scan_and_fill": 174.493,
+    "fill_derived": 127.089,
+    "phase_sum": 218.702,
+    "refine_job_with_terrain": 1014.353,
+    "refine_job_lines_only": 708.655,
+    "project_with_hemisphere_pretest": 17.248,
+    "lines_single_pass": 36.13
+   },
+   "checksum_phases": "6661350819985900",
+   "checksum_job": "eca1d7571db504f9"
+  }
+ }
+}
