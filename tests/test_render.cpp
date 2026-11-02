@@ -618,6 +618,104 @@ void test_refinement_bands() {
     CHECK(zero.step(actual, 10, 0).work_units == 0 && zero.active());
 }
 
+// The refinement job redraws a band at a time, but must not re-walk every arc for every band:
+// over the whole frame each visible arc is drawn about once, and the pixels still equal the
+// single-pass renderer exactly. Cameras include high zoom, where arcs are long and bulge.
+void test_refinement_draws_each_arc_once(const std::string& root) {
+    std::FILE* f = std::fopen((root + "/data/atlas.gatl").c_str(), "rb");
+    CHECK(f != nullptr);
+    if (!f) {
+        return;
+    }
+    Bytes bytes;
+    std::uint8_t buf[4096];
+    std::size_t n = 0;
+    while ((n = std::fread(buf, 1, sizeof buf, f)) > 0)
+        bytes.insert(bytes.end(), buf, buf + n);
+    std::fclose(f);
+    const Atlas atlas = parse_or_die(bytes);
+    const auto scene = Scene::create(atlas);
+    CHECK(scene.has_value());
+    if (!scene)
+        return;
+    Lcg rng{2026};
+    const double radii[] = {60.0, 110.0, 400.0, 1500.0};
+    std::uint64_t job_segments = 0, single_segments = 0;
+    std::uint64_t skipped = 0, polylines_skipped = 0;
+    for (int i = 0; i < 24; ++i) {
+        const int w = 200, h = 150;
+        const Camera c = cam(rng.next() * 160 - 80, rng.next() * 360 - 180, rng.next() * 360,
+                             radii[i % 4], w, h);
+        auto expected = make_fb(w, h);
+        auto actual = make_fb(w, h);
+        const RenderQuality quality{1.5, false};
+        const auto single =
+            render_globe(expected, c, *scene, kDefaultPalette, Layers{}, true, quality);
+        actual.clear(0x5555);
+        RefinementJob job(c, *scene, kDefaultPalette, Layers{}, quality, 1);
+        while (job.active())
+            job.step(actual, 1);
+        CHECK(std::memcmp(actual.data(), expected.data(), actual.byte_size()) == 0);
+        job_segments += job.stats().segments;
+        single_segments += single.segments;
+        skipped += job.stats().segments_skipped;
+        polylines_skipped += job.stats().polylines_skipped;
+    }
+    // Before the fix every one of the ~10 bands re-walked all segments (ratio near the band
+    // count); now an arc is considered only by the bands it can touch.
+    CHECK(skipped > 0);
+    CHECK(polylines_skipped > 0);
+    CHECK(job_segments * 10 <= single_segments * 25);
+}
+
+// Long arcs bulge away from their chord, so an arc whose endpoints both lie outside a band can
+// still cross it. Two-point polylines spanning 100 to 160 degrees put the band edges where the
+// bulge matters; every frame must still equal the single-pass render exactly.
+void test_refinement_long_arc_bulge() {
+    std::vector<Poly> polys;
+    const int spans[] = {100, 130, 160};
+    for (int lat = -70; lat <= 70; lat += 35) {
+        for (int span : spans) {
+            for (int start = -180; start < 180; start += 90) {
+                int lon0 = start;
+                int lon1 = start + span;
+                if (lon1 > 180)
+                    lon1 -= 360;
+                polys.push_back(Poly{1, {{lon_q(lon0), lat_q(lat)}, {lon_q(lon1), lat_q(lat)}}});
+            }
+        }
+    }
+    const Bytes bytes = make_atlas(polys, "long arcs");
+    const Atlas atlas = parse_or_die(bytes);
+    const auto scene = Scene::create(atlas);
+    CHECK(scene.has_value());
+    if (!scene)
+        return;
+    Lcg rng{99};
+    unsigned skipped = 0;
+    for (int i = 0; i < 300; ++i) {
+        const int w = 120, h = 70 + static_cast<int>(rng.next() * 60);
+        const Camera c = cam(rng.next() * 170 - 85, rng.next() * 360 - 180, rng.next() * 360,
+                             30.0 + rng.next() * 200.0, w, h);
+        auto expected = make_fb(w, h);
+        auto actual = make_fb(w, h);
+        const RenderQuality quality{1.5, false};
+        render_globe(expected, c, *scene, kDefaultPalette, Layers{false, true, true}, true,
+                     quality);
+        actual.clear(0x3333);
+        RefinementJob job(c, *scene, kDefaultPalette, Layers{false, true, true}, quality, 1);
+        while (job.active())
+            job.step(actual, 1);
+        if (std::memcmp(actual.data(), expected.data(), actual.byte_size()) != 0) {
+            std::printf("refinement differs from single pass at camera %d\n", i);
+            CHECK(false);
+            break;
+        }
+        skipped += job.stats().segments_skipped;
+    }
+    CHECK(skipped > 100);
+}
+
 void test_extreme_cameras(const std::string& root) {
     // Many random and extreme cameras over the real atlas: no crash, no sanitizer finding.
     std::FILE* f = std::fopen((root + "/data/atlas.gatl").c_str(), "rb");
@@ -677,6 +775,8 @@ int main(int argc, char** argv) {
     test_long_arcs_follow_the_great_circle();
     test_scene_matches_reference(root);
     test_refinement_bands();
+    test_refinement_draws_each_arc_once(root);
+    test_refinement_long_arc_bulge();
     test_extreme_cameras(root);
     return TEST_MAIN_RESULT();
 }

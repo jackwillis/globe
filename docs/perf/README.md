@@ -189,3 +189,17 @@ drawn in one pass cost 28 ms, so band-by-band line drawing is about 16x a single
 of the job is not accounted for by any measured phase (inferred to be per-work-unit stepping
 overhead). A hemisphere pre-test before projecting skips half the corners but saves under 1 ms on
 the G4.
+
+## Lines once per refine (GL-6, `gl6-lines-once-g4.json`)
+
+The refinement job redraws each 16-row band, so every band used to re-walk all arcs. Each arc is now
+tested against the band's rows first (endpoint rows plus a chord-bulge allowance `R * 0.31 * |a-b|^2`
+and a margin, with a cached-cap row test per polyline) and skipped when it cannot touch the band.
+Final pixels are unchanged: bench refine checksum `1228dcc860a92a77` on host and G4, and the profile
+job checksums equal the base build's at both zooms. G4, 640x480, median of 9: the profile's refine job
+at 1x zoom fell from 783-786 ms to 378-381 ms with terrain and from 456 ms to 82 ms lines-only (a
+single pass is 28 ms); at 2x from 1014-1020 ms to 388-394 ms. The bench's refine frame (the drag
+trace's final, deeper view) fell from about 575 ms to about 445 ms. That is the "573 ms" figure in
+`terrain.md`: a different view from the profile's centered 1x globe, which explains the 573 vs 786 ms
+discrepancy. One base run at 1495 ms was disturbed and is not used. Not measured: real-display
+submission and the OS 9 front end.
