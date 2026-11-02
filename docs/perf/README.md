@@ -203,3 +203,23 @@ trace's final, deeper view) fell from about 575 ms to about 445 ms. That is the 
 `terrain.md`: a different view from the profile's centered 1x globe, which explains the 573 vs 786 ms
 discrepancy. One base run at 1495 ms was disturbed and is not used. Not measured: real-display
 submission and the OS 9 front end.
+
+## GL-29: compressed grid and point decoders on the G4 (2026-11-02)
+
+`globe-codec-bench` (`src/platform/bench/codec_bench.cpp`) times the prototype decoders in
+`src/data/grid_codec.cpp` (average predictor plus adaptive binary range coder, untiled, one stream) and
+`src/data/point_codec.cpp` (delta zigzag varint), against vectors from `tools/grid-codec/grid_codec.py`.
+Median of 15, `-O2` static cross build, two G4 runs agreed (`compression-decode-g4.json`):
+
+| Data | Cells / points | Stored | G4 | Host |
+| --- | --- | --- | --- | --- |
+| 1 degree grid | 64,800 | 29,693 (raw 64,800) | 19.0 ms, 293 ns/cell | 1.7 ms |
+| 0.25 degree grid | 1,036,800 | 342,073 (raw 1,036,800) | 301 ms, 290 ns/cell | 22.8 ms |
+| Atlas points | 8,120 | 26,736 (raw 32,480) | 1.2 ms, 151 ns/point | 0.017 ms |
+
+Decoded-cell CRC-32s (`86ea25c2`, `4716f1a5`) and the atlas tail sum match between host and G4.
+Code size (PowerPC object text, excluding `crc32`): grid decoder 2,064 bytes at `-O2`, 1,476 at `-Os`;
+point decoder 696 and 476. Both compile warning-free with the Retro68 PowerPC and 68k compilers
+(compile only). Not measured: running on OS 9, tiled decoding, decode into the terrain scene, or
+real floppy reads. Cost reading (inference): a 1 degree pack costs about 19 ms once at load, and a
+0.25 degree pack about 0.3 s, so it should decode once at load or per region, not per frame.
