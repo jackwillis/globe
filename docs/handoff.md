@@ -375,3 +375,14 @@ and ice-shelf lines; ask before changing it. New owner requests are GL-42 (style
 GL-43 (delay a country pick for double clicks) and GL-44 (highlight the focused country), see the
 backlog. Next for Codex: GL-41 on top of `main` (the WIP branch is a starting point, not trusted),
 then GL-43/44. Memory is tight on the laptop: build with `-j2`.
+
+### 2026-11-02 — Claude, unattended pass: GL-43, GL-44, GL-42, GL-41 done
+
+`main` now has: a click picks only after the 400 ms double-click window (core pending pick,
+`Effects::pick`); the picked country is outlined in orange on the shown copy of the frame (X11);
+`P` opens a looks palette window (X11); GL-41 progressive line reveal (Codex's draft, ported to
+circle-only and finished: 16-point chunks, 30 ms paced rings, canonical repair, identical settled
+pixels; G4 +45-60 ms compute, 480 ms of pauses). Host 40/40 (x11_idle/x11_repaint can fail only
+under parallel ctest load and pass alone), Retro68 probe clean, OS 9 floppy build packaged
+(not run). Not done: dithered country fill, OS 9 picking and palette, GL-38 antialiasing,
+GL-35 rivers, GL-36, GL-40 (needs format approval). Tip17 is the latest G4 build.
