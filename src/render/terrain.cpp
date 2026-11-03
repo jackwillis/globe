@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #include "globe/terrain.hpp"
 #include "globe/raster.hpp"
+#include "globe/render.hpp"
 #include <algorithm>
 #include <cmath>
 #include <new>
@@ -92,7 +93,7 @@ Rgb565 hypsometric_color(std::int16_t meters) {
 std::size_t TerrainScene::required_bytes(const Elevation& grid) {
     return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) *
                (2 * sizeof(Vec3) + 1) +
-           static_cast<std::size_t>(grid.width()) * grid.height() * sizeof(CellBands) + 1024;
+           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 1) + 1024;
 }
 std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
     const auto corners = static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1);
@@ -115,7 +116,8 @@ std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
         }
     TerrainScene scene(grid, std::move(world), std::move(projected), std::move(bands));
     scene.values_.reset(new (std::nothrow) std::uint8_t[corners]);
-    if (!scene.values_)
+    scene.passes_.reset(new (std::nothrow) std::uint8_t[cells]);
+    if (!scene.values_ || !scene.passes_)
         return std::nullopt;
     for (unsigned i = 0; i < 256; ++i) {
         const auto height = grid.value(static_cast<std::uint8_t>(i));
@@ -168,6 +170,73 @@ void TerrainScene::bound_cell(std::size_t index, int height, int band_rows) {
         (height + band_rows - 1) / band_rows,
         static_cast<int>(std::clamp(high, 0.0, static_cast<double>(height))) / band_rows + 1);
     bands_[index] = {static_cast<std::int16_t>(begin), static_cast<std::int16_t>(end)};
+}
+void TerrainScene::assign_pass(std::size_t index, const Camera& camera, ScreenPoint focus) {
+    if (bands_[index].first == bands_[index].end) {
+        passes_[index] = 255;
+        return;
+    }
+    // L(u) = -2 log(u), u at the midpoint of each of 256 bins. Generated offline;
+    // a fixed integer hash supplies the bin, independent of scheduling and focus.
+    static constexpr double falloff[256] = {
+        12.476649250, 10.279424673, 9.257773425, 8.584828952, 8.082200095, 7.680858704, 7.346750535,
+        7.060548848,  6.810222562,  6.587771292, 6.387604375, 6.205660818, 6.038897600, 5.884975518,
+        5.742057590,  5.608674841,  5.483634127, 5.365953127, 5.254813425, 5.149525958, 5.049505117,
+        4.954249019,  4.863324271,  4.776354047, 4.693008654, 4.612997985, 4.536065423, 4.461982880,
+        4.390546714,  4.321574362,  4.254901522, 4.190379797, 4.127874710, 4.067264011, 4.008436241,
+        3.951289496,  3.895730368,  3.841673023, 3.789038406, 3.737753545, 3.687750941, 3.638968034,
+        3.591346737,  3.544833013,  3.499376511, 3.454930237, 3.411450264, 3.368895467, 3.327227293,
+        3.286409550,  3.246408216,  3.207191274, 3.168728550, 3.130991581, 3.093953486, 3.057588847,
+        3.021873613,  2.986784993,  2.952301380, 2.918402264, 2.885068159, 2.852280539, 2.820021775,
+        2.788275077,  2.757024441,  2.726254604, 2.695950994, 2.666099693, 2.636687398, 2.607701384,
+        2.579129469,  2.550959990,  2.523181765, 2.495784077, 2.468756638, 2.442089576, 2.415773407,
+        2.389799016,  2.364157639,  2.338840846, 2.313840520, 2.289148848, 2.264758302, 2.240661625,
+        2.216851820,  2.193322137,  2.170066061, 2.147077302, 2.124349785, 2.101877638, 2.079655188,
+        2.057676944,  2.035937600,  2.014432016, 1.993155220, 1.972102394, 1.951268872, 1.930650133,
+        1.910241793,  1.890039601,  1.870039434, 1.850237292, 1.830629292, 1.811211664, 1.791980746,
+        1.772932983,  1.754064919,  1.735373194, 1.716854543, 1.698505790, 1.680323847, 1.662305707,
+        1.644448446,  1.626749215,  1.609205243, 1.591813829, 1.574572343, 1.557478222, 1.540528968,
+        1.523722146,  1.507055383,  1.490526363, 1.474132829, 1.457872577, 1.441743457, 1.425743372,
+        1.409870273,  1.394122160,  1.378497080, 1.362993127, 1.347608435, 1.332341186, 1.317189598,
+        1.302151933,  1.287226491,  1.272411608, 1.257705660, 1.243107055, 1.228614238, 1.214225686,
+        1.199939911,  1.185755455,  1.171670890, 1.157684819, 1.143795874, 1.130002716, 1.116304032,
+        1.102698537,  1.089184972,  1.075762103, 1.062428721, 1.049183639, 1.036025697, 1.022953755,
+        1.009966696,  0.997063426,  0.984242869, 0.971503972, 0.958845702, 0.946267045, 0.933767004,
+        0.921344604,  0.908998885,  0.896728908, 0.884533749, 0.872412499, 0.860364270, 0.848388186,
+        0.836483389,  0.824649035,  0.812884296, 0.801188356, 0.789560416, 0.777999690, 0.766505406,
+        0.755076803,  0.743713136,  0.732413671, 0.721177687, 0.710004473, 0.698893333, 0.687843582,
+        0.676854543,  0.665925554,  0.655055962, 0.644245125, 0.633492411, 0.622797198, 0.612158875,
+        0.601576840,  0.591050500,  0.580579272, 0.570162582, 0.559799864, 0.549490563, 0.539234130,
+        0.529030026,  0.518877720,  0.508776689, 0.498726416, 0.488726395, 0.478776126, 0.468875116,
+        0.459022879,  0.449218938,  0.439462821, 0.429754064, 0.420092210, 0.410476806, 0.400907410,
+        0.391383583,  0.381904892,  0.372470912, 0.363081224, 0.353735412, 0.344433070, 0.335173794,
+        0.325957188,  0.316782860,  0.307650424, 0.298559499, 0.289509710, 0.280500686, 0.271532061,
+        0.262603475,  0.253714571,  0.244864999, 0.236054412, 0.227282468, 0.218548830, 0.209853164,
+        0.201195142,  0.192574439,  0.183990735, 0.175443713, 0.166933062, 0.158458473, 0.150019642,
+        0.141616268,  0.133248055,  0.124914710, 0.116615943, 0.108351468, 0.100121004, 0.091924271,
+        0.083760994,  0.075630902,  0.067533725, 0.059469198, 0.051437059, 0.043437048, 0.035468910,
+        0.027532392,  0.019627243,  0.011753217, 0.003910070};
+    auto hash = static_cast<std::uint32_t>(index);
+    hash ^= hash >> 16;
+    hash *= 0x7feb352dU;
+    hash ^= hash >> 15;
+    hash *= 0x846ca68bU;
+    hash ^= hash >> 16;
+    const auto x = index % grid_.width(), y = index / grid_.width();
+    const auto first = y * (grid_.width() + 1) + x;
+    const auto a = projected_[first], b = projected_[first + 1],
+               c = projected_[first + grid_.width() + 2], d = projected_[first + grid_.width() + 1];
+    const double dx = (a.x + b.x + c.x + d.x) * 0.25 - focus.x;
+    const double dy = (a.y + b.y + c.y + d.y) * 0.25 - focus.y;
+    const double distance = dx * dx + dy * dy;
+    double threshold = camera.radius_px * (360.0 / grid_.width()) * kDegToRad;
+    threshold = threshold * threshold * falloff[hash & 255U];
+    unsigned pass = 0;
+    while (pass + 1 < kDissolvePasses && distance >= threshold) {
+        threshold *= 2.25; // sigma grows geometrically by 1.5 per pass
+        ++pass;
+    }
+    passes_[index] = static_cast<std::uint8_t>(pass);
 }
 void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
                              TerrainStyle style, bool smooth) const {

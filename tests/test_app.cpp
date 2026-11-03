@@ -717,6 +717,40 @@ void test_toolbar_state() {
     CHECK(!state(m, Command::ZoomIn).enabled && state(m, Command::ZoomOut).enabled);
 }
 
+void test_refinement_focus() {
+    auto m = initial_model(200, 150);
+    CHECK(!m.refinement_focus);
+    CHECK(quality_for(m).focus.x == m.camera.center_x);
+    update(m, PointerDown{100, 70, 60});
+    update(m, PointerMove{100, 71, 61});
+    update(m, PointerUp{101});
+    CHECK(m.refinement_focus && m.refinement_focus->x == 71 && m.refinement_focus->y == 61);
+    update(m, PointerDown{1000, 70, 60});
+    update(m, PointerMove{1010, 100, 80});
+    update(m, PointerUp{1020});
+    CHECK(m.refinement_focus->x == 100 && m.refinement_focus->y == 80);
+    update(m, PointerDown{2000, 80, 70});
+    update(m, PointerUp{2010});
+    update(m, PointerDown{2020, 80, 70});
+    CHECK(m.refinement_focus->x == m.camera.center_x);
+    CHECK(m.refinement_focus->y == m.camera.center_y);
+    for (const char* order : {"rows", "center", "dissolve"}) {
+        auto msg = parse_message(std::string("order 3000 ") + order);
+        CHECK(msg && std::holds_alternative<SetRefinementOrder>(*msg));
+        if (!msg)
+            continue;
+        auto generation = m.generation;
+        CHECK(update(m, *msg).redraw && m.generation > generation);
+        CHECK(quality_for(m).order == std::get<SetRefinementOrder>(*msg).order);
+        char text[100];
+        auto n = format_message(*msg, text, sizeof text);
+        CHECK(std::string(text, n) == std::string("order 3000 ") + order);
+    }
+    CHECK(!parse_message("order 1 random"));
+    update(m, Resize{300, 200});
+    CHECK(!m.refinement_focus);
+}
+
 void test_trace_text_round_trip() {
     const Msg msgs[] = {
         PointerDown{12, 1.0 / 3.0, -2.5e-7},
@@ -928,6 +962,7 @@ void test_replay(const std::string& root) {
 
 int main(int argc, char** argv) {
     const std::string root = argc > 1 ? argv[1] : ".";
+    test_refinement_focus();
     test_initial_model();
     test_drag();
     test_turntable_drag();

@@ -51,6 +51,8 @@ struct ElevationLevel {
 struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
     TerrainStyle terrain_style = TerrainStyle::Hypsometric;
+    std::optional<ScreenPoint> refinement_focus;
+    RefinementOrder refinement_order = RefinementOrder::Rows;
     Camera camera;
     Layers layers;
     DragMode drag_mode;
@@ -59,8 +61,9 @@ struct Model {
     std::uint64_t stage_since_ms; // settle clock; separate from last user input for resize
     bool stage_needs_time;        // initial state or resize awaits its first timestamped message
     bool dragging;
-    bool drag_active; // the pointer has moved past kDragSlopPx since the button went down
-    bool drag_moved;  // the camera changed since the button went down
+    bool drag_active;           // the pointer has moved past kDragSlopPx since the button went down
+    bool drag_moved;            // the camera changed since the button went down
+    ScreenPoint pointer_last{}; // last finite pointer coordinate, including motion inside drag slop
     ScreenPoint drag_last;
     bool click_valid; // a recent press that could become the first half of a double click
     ScreenPoint click_pos;
@@ -100,13 +103,18 @@ struct Tick {
     std::uint64_t time_ms;
 };
 
+struct SetRefinementOrder {
+    std::uint64_t time_ms;
+    RefinementOrder order;
+};
+
 struct RegisterElevation {
     unsigned level;
     std::uint32_t width, height;
 };
 
 using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint,
-                         Tick, RegisterElevation>;
+                         Tick, RegisterElevation, SetRefinementOrder>;
 
 struct Effects {
     bool redraw = false;
@@ -166,7 +174,8 @@ constexpr double kDoubleClickZoom = 2.0;
 // A press alone changes nothing: no stage change, no new generation, no redraw. A drag begins once
 // the pointer is more than kDragSlopPx from where the button went down; the globe then follows the
 // pointer from that press position, so nothing lags. A release without a drag leaves the model
-// untouched, and platforms treat it as a click (country picking).
+// visibly untouched, and platforms treat it as a click (country picking). The release records
+// the next refinement focus without invalidating the current frame.
 constexpr double kDragSlopPx = 3.0;
 
 constexpr std::uint32_t kSettleDelayMs = 150;

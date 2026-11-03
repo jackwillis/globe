@@ -32,7 +32,7 @@ class TerrainScene {
     }
     std::size_t bytes() const {
         return corner_count() * 2 * sizeof(Vec3) + cell_count() * sizeof(CellBands) +
-               sizeof(colors_) + corner_count();
+               sizeof(colors_) + corner_count() + cell_count();
     }
     Rgb565 color(std::uint8_t index, TerrainStyle style = TerrainStyle::Hypsometric) const {
         return colors_[style == TerrainStyle::CelShaded ? 1 : 0][index];
@@ -42,6 +42,9 @@ class TerrainScene {
     std::uint64_t token() const { return token_; }
     void project_corner(std::size_t index, const Camera& camera);
     void bound_cell(std::size_t index, int height, int band_rows);
+    void assign_pass(std::size_t index, const Camera& camera, ScreenPoint focus);
+    std::uint8_t cell_pass(std::size_t index) const { return passes_[index]; }
+    CellBands cell_bands(std::size_t index) const { return bands_[index]; }
     void draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
                    TerrainStyle style = TerrainStyle::Hypsometric, bool smooth = true) const;
 
@@ -55,6 +58,7 @@ class TerrainScene {
     std::unique_ptr<CellBands[]> bands_;
     std::array<std::array<Rgb565, 256>, 2> colors_{};
     std::unique_ptr<std::uint8_t[]> values_;
+    std::unique_ptr<std::uint8_t[]> passes_;
     unsigned first_land_ = 256;
     std::uint64_t token_ = 0;
 };

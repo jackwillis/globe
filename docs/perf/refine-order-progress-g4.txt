@@ -1,0 +1,11 @@
+final frame hash 9b4a458633a32d9d
+ok
+ok
+focus 0 pass 3 06ef02552458476b
+focus 0 pass 7 9d259810bc72e811
+focus 0 pass 11 2450389886133737
+focus 0 pass 17 19dd1b02e4cb2a8b
+focus 1 pass 3 c35050f52df87ba2
+focus 1 pass 7 328a85d8d155b334
+focus 1 pass 11 9cd0b424da83e482
+focus 1 pass 17 19dd1b02e4cb2a8b

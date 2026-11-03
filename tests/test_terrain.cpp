@@ -5,6 +5,7 @@
 #include "globe/elevation.hpp"
 #include "globe/render.hpp"
 #include "globe/terrain.hpp"
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <vector>
@@ -205,8 +206,104 @@ void test_appearance() {
     fb->clear(456);
     CHECK(render(TerrainStyle::Hypsometric, true) == smooth);
 }
+void test_orders() {
+    auto bytes = land_grid();
+    // Contrasting neighbors expose order-dependent edge ownership and clipped limb overlaps.
+    for (std::size_t i = 552; i < bytes.size(); ++i)
+        bytes[i] = static_cast<std::uint8_t>((i * 73) % 256);
+    store_le32(bytes.data() + 36,
+               crc32_extend(crc32(bytes.data(), 36), bytes.data() + 40, bytes.size() - 40));
+    auto grid = Elevation::parse(bytes.data(), bytes.size());
+    auto ab = atlas_util::make_atlas({{2, {{32768, 5461}, {32768, 27307}}}}, "orders");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    CHECK(grid && atlas);
+    if (!grid || !atlas)
+        return;
+    auto terrain = TerrainScene::create(*grid);
+    auto scene = Scene::create(*atlas);
+    auto fb = Framebuffer::create(100, 81);
+    CHECK(terrain && scene && fb);
+    if (!terrain || !scene || !fb)
+        return;
+    for (double radius : {35.0, 90.0}) {
+        auto camera = *make_camera({{30, 10}, 13, radius, 100, 81});
+        std::vector<Rgb565> reference;
+        for (auto order :
+             {RefinementOrder::Rows, RefinementOrder::CenterOut, RefinementOrder::Dissolve}) {
+            for (ScreenPoint focus : {ScreenPoint{50, 40}, ScreenPoint{5, 7}, ScreenPoint{95, 75},
+                                      ScreenPoint{-100, 200}}) {
+                RenderQuality q{1.5, true};
+                q.order = order;
+                q.focus = focus;
+                fb->clear(0xABCD);
+                RefinementJob job(camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
+                unsigned steps = 0, ready = 0;
+                int first_ready = -1;
+                std::uint32_t before_last = 0;
+                while (job.active() && ++steps < 200000) {
+                    const auto step = job.step(*fb, 1, 256);
+                    CHECK(step.work_units <= 256);
+                    if (step.band_ready && first_ready < 0)
+                        first_ready = step.first_row;
+                    ready += step.band_ready;
+                    if (step.band_ready && ready == kDissolvePasses - 1)
+                        before_last = job.stats().dissolve_slices;
+                }
+                CHECK(!job.active() && ready > 0);
+                if (order == RefinementOrder::CenterOut) {
+                    const int expected = static_cast<int>(std::clamp(focus.y, 0.0, 80.0)) /
+                                         kRefineBandRows * kRefineBandRows;
+                    CHECK(first_ready == expected);
+                }
+                if (order == RefinementOrder::Dissolve) {
+                    std::uint32_t slices = 0;
+                    for (std::size_t i = 0; i < terrain->cell_count(); ++i) {
+                        const auto b = terrain->cell_bands(i);
+                        slices += static_cast<unsigned>(b.end - b.first);
+                    }
+                    CHECK(job.stats().dissolve_slices - before_last == slices);
+                }
+                auto pixels = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
+                if (reference.empty())
+                    reference = pixels;
+                CHECK(pixels == reference);
+                // Generation cancellation must preserve every pixel, even at a pass boundary.
+                RefinementJob cancelled(camera, *scene, kDefaultPalette, Layers{}, q, 4, &*terrain);
+                while (cancelled.active() && !cancelled.step(*fb, 4, 256).band_ready) {
+                }
+                auto before = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
+                CHECK(cancelled.step(*fb, 5, 256).work_units == 0);
+                CHECK(!cancelled.active());
+                CHECK(std::equal(before.begin(), before.end(), fb->data()));
+            }
+        }
+    }
+    // Pattern is stable and focus biased, with both early and late cells.
+    const auto camera = *make_camera({{0, 0}, 0, 35, 100, 81});
+    for (std::size_t i = 0; i < terrain->corner_count(); ++i)
+        terrain->project_corner(i, camera);
+    unsigned early = 0, late = 0, changed = 0, changed_y = 0;
+    for (std::size_t i = 0; i < terrain->cell_count(); ++i) {
+        terrain->bound_cell(i, 81, kRefineBandRows);
+        terrain->assign_pass(i, camera, {50, 40});
+        auto pass = terrain->cell_pass(i);
+        terrain->assign_pass(i, camera, {50, 40});
+        CHECK(terrain->cell_pass(i) == pass);
+        if (pass == 255)
+            continue;
+        CHECK(pass < kDissolvePasses);
+        early += pass < 5;
+        late += pass >= 5;
+        terrain->assign_pass(i, camera, {5, 40});
+        changed += terrain->cell_pass(i) != pass;
+        terrain->assign_pass(i, camera, {50, 7});
+        changed_y += terrain->cell_pass(i) != pass;
+    }
+    CHECK(early > 0 && late > 0 && changed > 0 && changed_y > 0);
+}
 } // namespace
 int main() {
+    test_orders();
     test_terrain();
     test_appearance();
     return TEST_MAIN_RESULT();
