@@ -204,3 +204,34 @@ python3 tools/places-builder/build_places.py --large data/wikidata-cities-large-
 Not verified: Wikidata population and coordinates are community data and may be wrong or outdated for
 individual cities; no city was checked by hand beyond the label transliteration. Population is each
 item's largest statement, so figures mix definitions. Not a complete gazetteer and not a ranking.
+
+## GL-34 land classes — source check, 2026-11-02
+
+Chosen: **RESOLVE Ecoregions 2017**, Dinerstein et al. (2017), *An Ecoregion-Based Approach to
+Protecting Half the Terrestrial Realm*, BioScience 67(6), 534–545,
+https://doi.org/10.1093/biosci/bix014 . Official source/download/license page:
+https://ecoregions.world/ ; archive https://storage.googleapis.com/teow2016/Ecoregions2017.zip .
+The official page explicitly licenses the shapefile under **CC BY 4.0**; every one of its 847
+DBF records independently says `CC-BY 4.0`. License: https://creativecommons.org/licenses/by/4.0/ .
+This permits commercial redistribution and adaptation with attribution, license link and a change
+notice, including distribution with GPL-3.0 software. The derived dataset retains CC BY 4.0;
+this does not relicense the upstream data as public domain or change the code's GPL license.
+No noncommercial/share-alike condition or software restriction is added. See LANDCLASS-NOTICE.txt.
+
+Downloaded archive: **149,248,653 bytes**, SHA-256
+`be36d6209e443038d02e309f0447c6e7f2a62f5fe60c605ffe90d064952f2a60`.
+Stored outside Git at `/tmp/globe-landclass-source/Ecoregions2017.zip` (ephemeral; retain separately
+for later reproduction). Members: SHP 243,042,148 bytes, DBF 1,027,078, SHX 6,876, PRJ 257.
+PRJ is WGS84 / EPSG:4326 geographic longitude/latitude. DBF has 847 records: 846 named ecoregions
+plus one N/A rock/ice record, 14 numbered biomes. All license fields checked before builder work.
+The archive contains no separate license file; preserve the official license page and DBF evidence.
+Exact explicitly supplied download header: `User-Agent: globe-builder/0.1 (offline data build tool)`.
+No email/contact details, authentication or cookies were supplied.
+
+This is a **biome regionalization, not a contemporary land-cover survey**: potential forest biomes
+can include cultivated/urban land, and biome boundaries have their own resolution/uncertainty.
+At one degree small features disappear. It is preferable here to guessing deserts from latitude
+or deriving semantic classes from shaded RGB imagery. Natural Earth raster terms were also checked
+(public domain) but those display images are not a categorical biome grid. Original WWF data was
+not substituted for the specifically licensed RESOLVE 2017 archive. Greenland ice remains outside
+this assignment (GL-40); N/A is unknown, not an ice flag.

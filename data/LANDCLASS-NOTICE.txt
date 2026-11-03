@@ -1,0 +1,11 @@
+Globe one-degree land-class grid
+Derived from RESOLVE Ecoregions 2017, Dinerstein et al. (2017),
+An Ecoregion-Based Approach to Protecting Half the Terrestrial Realm,
+BioScience 67(6), 534-545. https://doi.org/10.1093/biosci/bix014
+Source: https://ecoregions.world/
+Data license: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Changes by Jack Willis (2026): cell-center sampling at one degree, simplified
+biome classes, south-first grid, deterministic grid_codec compression.
+This is a display approximation of biomes, not current forest/land-use coverage.
+Code is separately licensed under GPL-3.0-or-later. No endorsement is implied.
