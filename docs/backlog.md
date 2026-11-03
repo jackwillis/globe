@@ -1,6 +1,6 @@
 # Globe — backlog and priorities
 
-Reconciled 2026-11-02; updated after the GL-27/28 and GL-31 design pass on `main`. The original backlog (written from `386f4c6`, so it
+Reconciled 2026-11-02; updated after GL-19/26 experiments and the GL-40 proposal on `main`. The original backlog (written from `386f4c6`, so it
 could not see the merged side branches) is kept in structure; statuses below are checked against the
 repo, not assumed. Decisions live in `docs/adr/0001-m2-to-m5-decisions.md`; rules and history in
 `docs/handoff.md` and `docs/project-notes.md`.
@@ -23,7 +23,7 @@ after it, so a slip there cannot hold up the release.
 | GL-1 | Run the existing OS 9 build on the G4 | S | Jack | open | The app is now `GlobeFloppy` (`GlobeFloppy.bin` MacBinary, both forks; `GlobeFloppy-1440.dsk` image), built with `tools/build-edition.sh floppy`. Launches; drag, double-click zoom, keys and cursors work; idle quiet; window moves and updates do not re-render; results into `docs/os9-proof.md` |
 | GL-2 | Get the work onto GitHub | S | Jack | changed | The five side branches are merged into `main` and deleted, so nothing to push but `main` itself (GitHub has an older commit). No Claude push: the owner pushes |
 | GL-3 | Merge `claude/click-rules` | M | Agent | done | Merged (`d6ccb7f`, from `987cd37`): press without a drag leaves stage, generation and effects unchanged; expose resends cached pixels (reconciled with `4cd730b`; only `CMakeLists.txt` conflicted). Host: 34/34 tests, replay hash and goldens unchanged. 2026-11-02: current cross-built G4 test_app including click rules and replay passes, hash 9b4a458633a32d9d |
-| GL-4 | Refresh stale docs | S | Agent | done | Codex updated README for the two editions and notes; project notes and handoff are in `docs/`. 2026-11-02: current README/open-work/handoff, architecture, project and toolchain notes refreshed; superseded handoff/toolchain text archived; current host count 35 |
+| GL-4 | Refresh stale docs | S | Agent | done | Codex updated README for the two editions and notes; project notes and handoff are in `docs/`. 2026-11-02: current README/open-work/handoff, architecture, project and toolchain notes refreshed; superseded handoff/toolchain text archived; current host count 36 |
 | GL-5 | Get CI running and green on GitHub | M | Jack + Agent | open | `checks.yml` now also builds the full and floppy size reports (configured, never run). Unverified: `pipx` pins, Retro68 job |
 
 ## P1: make v0.1 fast and shippable
@@ -51,7 +51,7 @@ stays unchanged and the G4 benchmark stays within noise.
 | GL-16 | Native QuickDraw surface | L | Jack + Agent | open | OS 9 draws into an offscreen GWorld; double clipping before 16-bit coordinates; A/B benchmark on the G4 |
 | GL-17 | Classic outline style | M | Agent | open | A style is a theme plus a profile; 1-bit displays |
 | GL-18 | Display detection and the Auto profile | M | Agent | open | Pure profile choice; a governor never removes a layer the user turned on |
-| GL-19 | Refinement ordering experiment | M | Agent | open | Cells-outward buckets vs rows vs the center-biased random dissolve already specified in the ADR ("refinement order"); decision recorded there. Terrain painted outward hides outlines already on screen: choose per-segment buckets or a brief flash |
+| GL-19 | Refinement ordering experiment | M | Agent | experiment done; default decision open | `880df12`: trace-selectable rows / focus-outward bands / 16-pass Gaussian dissolve, identical final pixels at several foci; host/G4 progress and final hashes match. G4 dissolve about 14–15% slower; no proven worst-step improvement over matched rows. Rows remain default pending owner acceptance; see refinement-order.md |
 
 ## P3: features and later data work
 
@@ -63,14 +63,14 @@ stays unchanged and the G4 benchmark stays within noise.
 | GL-23 | Start at the Map control panel location | S | Agent | open | Confirm `ReadLocation` in the Retro68 headers |
 | GL-24 | Copy view as PICT | S | Agent | open | Bitmap first; vector after GL-15 |
 | GL-25 | Great-circle distance between two clicks | S | Agent | open | Tested against known city pairs |
-| GL-26 | Movable refinement focus and effect choice | S | Agent | open | Ripple, Dissolve, Sweep or Instant; replays stay deterministic |
+| GL-26 | Movable refinement focus and effect choice | S | Agent | partial | Release/click/double-click focus is deterministic model state, consumed by the GL-19 trace-selected experiment. Ripple/Sweep/Instant and a user-facing effect chooser remain open |
 | GL-27 | Terrain look | M | Agent | done, cost under review | Codex `df1789e`, reviewed by Claude on a clean checkout (35/35 host tests). Gray base, CycleStyle, two palettes, Antarctic white and shared-corner shading. G4 base about 4.3/5.3 ms; refine about 555/693 ms versus 380/386; longest continuation 120 ms. Owner/Claude decides further tuning; do not tune unasked. See terrain.md |
 | GL-28 | Great Lakes and a lakes layer | M | Agent | done (builder) | Codex `3af70e4`, reviewed by Claude: pinned 50m source, cell-center water mask (135 centers/132 changed; Great Lakes 30/29), twice-reproduced pack, unchanged GELV v1 proxy; host/G4 pin efa030af1a10f887. Runtime lake/rivers vectors belong to GL-35 |
 | GL-29 | Compression decision and a 0.25-degree terrain pack | L | Agent | partial | Measured (ADR): 1 degree 64,800 to 29,140; 0.25 degree 1,036,800 to 342,041 (average predictor + range coder); atlas delta-varint 32,480 to 26,736. **Open:** decoder timed on the G4, runtime container, import pack with size report |
 | GL-30 | Older systems and 68k feasibility spike | L | Jack + Agent | open | No Appearance Manager; 68k with FPU in an emulator; fixed-point projection costed |
 | GL-31 | Fetch inside the app, with TLS from `../weather` | L | Jack + Agent | design written (`bf40e25`) | fetch-design.md: independent library, weather licensing/reuse, seed lifecycle, bounded binary framing and safe pack swap; retained-symbol crypto/anchors size delta 104,206 bytes. Owner: full edition first, no v0.1 floppy fetch. Hosting/UI and design review remain; no networking code before review |
 | GL-32 | Colors for deserts | S | Agent | open | Owner feedback: deserts are not deserty. Latitude tint first, or a land-cover grid as a further small versioned file; undecided |
-| GL-40 | Ice flag for Greenland and glaciers | M | Agent | proposal first | Antarctica is white by a latitude rule; Greenland is not covered. Mark ice at build time from Natural Earth glaciated areas (50m), cell-center like the lakes; needs a GELV flag mechanism or v2, so write the ADR proposal before any data change |
+| GL-40 | Ice flag for Greenland and glaciers | M | Agent | proposal written; format review required | `802841d`: ADR rechecks pinned 50m glaciated polygons, center/even-odd mask, v1 incompatibility, proposed v2 bit plane (+8,100 bytes at 1 degree), strict validation/test plan. No builder/decoder/data change; stop until format approval |
 | GL-33 | Map look (Google-like flat style) | S | Agent | open | Default floppy look: flat pale land, blue water, light borders, labels and cities; reuses the flat moving base |
 | GL-34 | Land-class grid and the Natural look | L | Agent | open | Pick a classification (e.g. Koeppen-style), check license and size, build a small versioned grid, 2D palette (class x elevation band); answers Sahara vs Amazon |
 | GL-35 | Rivers and lakes layer | M | Agent | open | Natural Earth rivers/lakes as a vector layer (atlas-format layer); measure size and G4 cost; v0.1 candidate if small |

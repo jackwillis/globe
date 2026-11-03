@@ -14,10 +14,10 @@ click/present-only rules, local elevation imports, X11 toolbar/cursors/country a
 OS 9 proof and two edition reports. GL-27 adds the gray base, palettes, smoothing and Antarctic
 white; GL-28 adds the lake-aware one-degree pack. Fetch is [design only](fetch-design.md).
 
-Host GCC sanitizer and clang suites pass 35/35. G4 app tests include click rules and reproduce
+Host GCC sanitizer and clang suites pass 36/36. G4 app tests include click rules and reproduce
 9b4a458633a32d9d; terrain tests pass and combined lake-aware replay agrees with the host at
 efa030af1a10f887. These are NetBSD headless checks, not OS 9 execution or current GUI acceptance.
-Owner builds tip3–tip7 remain theirs and must not be deleted, overwritten or killed.
+Owner builds tip3–tip8 remain theirs and must not be deleted, overwritten or killed.
 
 ## Measurements and limits
 
@@ -40,12 +40,20 @@ exceptions/RTTI or frame allocations in the portable core. Retro68 printf lacks 
 meaningful tests, deliberately reject mutants, run both portability probes after core changes,
 and distinguish bounded work counts from wall-clock guarantees.
 
-Surface/pass/theme refactors, dissolve ordering, desert color and runtime compression are later
-scopes. The maps app is separate; there is no relay. In-app fetching is now wanted, but its design
-needs review, hosting decisions and seed/OT acceptance before implementation. Keep that future
+Surface/pass/theme refactors, desert color and runtime compression are later scopes. Dissolve
+ordering is now an opt-in experiment (GL-19); rows remain default. The maps app is separate; there
+is no relay. In-app fetching is now wanted, but its design needs review, hosting decisions and seed/OT acceptance before implementation. Keep that future
 library independent of Globe's renderer and never damage immutable baked data on a failed import.
 
 The product ADR now calls this an atlas. Map is the intended floppy default; Natural needs a
 land-class source, and other looks/overlays have separate tickets. No fetch on the v0.1 floppy;
 full edition first. The owner/Claude retains the smoothing cost/tuning decision. Their current
 review note is preserved verbatim in the handoff; no further terrain tuning was done here.
+
+The 2026-11-02 continuation implements GL-19 and the focus part of GL-26: trace-selectable row,
+center-out and Gaussian orders with unchanged settled pins, G4 progress hashes and measured costs.
+See [refinement-order.md](refinement-order.md); dissolve costs about 14–15% more overall and is not
+a proven responsiveness improvement over the matched baseline. Smoothing remains unchanged.
+GL-40 is [an ADR proposal](adr/0001-m2-to-m5-decisions.md) only: v1 has no lossless ice bit, and the
+proposed v2 plane needs review before builder/decoder/data work. The dated handoff records failures,
+verification and stopping point.

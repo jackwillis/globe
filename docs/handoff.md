@@ -2,6 +2,8 @@
 
 Current operating instructions, refreshed 2026-11-02. This file is committed. Older notes and
 superseded branch/remote/test-count statements are [archived](history/handoff-20261101.md).
+Latest continuation: GL-19/26 experiment and GL-40 proposal complete; see the final dated note and
+[experiment report](refinement-order.md). Rows remain default; ice format awaits review.
 Read [backlog](backlog.md), [project notes](project-notes.md) and the [ADR](adr/0001-m2-to-m5-decisions.md).
 Append a dated note at the bottom when a pass ends: changes, verification, failures and limits.
 
@@ -42,7 +44,7 @@ must wait for source license/size checks.
 
 ## Current validation and pins
 
-Host GCC ASan/UBSan and clang suites: **35/35**. Both Xvfb depths, pixel readback, toolbar/popup,
+Host GCC ASan/UBSan and clang suites: **36/36**. Both Xvfb depths, pixel readback, toolbar/popup,
 repaint and quiet-idle tests pass. PowerPC and 68k portable compile probes pass; the current OS 9
 application builds and HFS fork roundtrip/budget checks pass, **not run**. CI is configured, not run.
 G4 app/terrain tests and headless benchmarks pass. Earlier X11 builds were owner-tried; current
@@ -61,11 +63,11 @@ reports. Work counts are bounded; no hard wall-clock promise or real-display tim
 
 ## Hardware and portability rules
 
-Never compile on maul. Owner binaries `/tmp/globe-x11-tip3` through `tip7` are theirs: do not kill,
+Never compile on maul. Owner binaries `/tmp/globe-x11-tip3` through `tip8` are theirs: do not kill,
 delete or overwrite them. Cross-build locally and push tests under fresh names with
 `~/.local/bin/maulctl push nb FILE NAME`; restore chmod 755, run headless. Do not change desktop
-display access. `/tmp` can disappear after reboot. Current pass names start `gl27-20261102-` or
-`gl28-20261102-`; they are tests, not owner acceptance builds.
+display access. `/tmp` can disappear after reboot. Pass names include `gl19-20261102-*`, `gl27-20261102-*` and
+`gl28-20261102-*`; they are tests, not owner acceptance builds.
 
 No OS/window headers, clocks, exceptions/RTTI, std::hypot, printf %ll/%z, or hidden frame allocations
 in `include/globe`, `src/core`, `src/data`, `src/render`. The existing trace formatter is the reviewed
@@ -198,3 +200,60 @@ Merged and tested at `1e6ea18` (36/36 host tests; branches gone); owner has `/tm
 
 Rules still apply: no push, no email or personal contact details in any outbound request, new maul file
 names only, never touch `tip3` to `tip8`.
+
+### 2026-11-02 — Codex: GL-19/26 experiment and GL-40 proposal completed
+
+Read the refreshed handoff/backlog, project notes and ADR, including the owner's newest two-task
+assignment. Completed that continuation; the older next-scope suggestions were not substituted.
+
+- `880df12` (GL-19): model focus records click/drag release, motion inside slop, and double-click
+  center; initial/resize fallback is view center. Trace `order TIME rows|center|dissolve` compares
+  existing rows, focus-outward bands and 16 deterministic Gaussian cell passes. One pass byte per
+  cell, fixed hash, 256-entry offline log table and squared distances; no clock/RNG or frame
+  allocation. Last pass explicitly repaints all cells in canonical order, with four admitted
+  16-row cell slices per experimental continuation; lines run once afterward. Cancellation remains
+  checked at every step. Smoothing/rasterization untouched. Rows remain default, not a product
+  decision to switch. GL-26 focus is complete; broader effect UI/Ripple/Sweep/Instant remain open.
+- Matched G4 nine-run medians: rows -> dissolve totals 692.629 -> 796.017 ms (profile 1x),
+  686.689 -> 781.978 ms (2x/off-center), 644.300 -> 732.341 ms (trace). Dissolve's first complete
+  pass: 84.284 / 81.787 / 84.168 ms; final lines: 43.609 / 44.438 / 38.117 ms. Worst observed
+  dissolve step 26.207 ms, versus rows 70.753 ms in this run. The trace's matched worst steps are
+  25.125 vs 24.539 ms, essentially equal: **no demonstrated scheduling improvement over today's
+  rows**, and no hard timing promise. The historical 120 ms event did not recur in rows either.
+  Dissolve is about 14–15% slower overall. See refinement-order.md and perf/refine-order-*.json
+  for method, every order/view, median maxima, worst maxima and exclusions. No smoothing tuning.
+- G4 app and terrain unit tests pass. All eight progress snapshots (two foci, passes 3/7/11 and
+  settled) match host hashes. All three G4 full-frame view hashes agree across orders and with
+  host; separate two-repeat G4 replay checks retain **efa030af1a10f887** for rows, center and
+  dissolve. App hash **9b4a458633a32d9d** and outline goldens unchanged. No pin file changed.
+  Host contact sheet `build/gl19-progress.png` inspected: screen-space pattern follows the focus.
+- `802841d` (GL-40): proposal only in the ADR. Rehashed/inspected 50m glaciated 4.1.0 source:
+  f48644b4523482501bcd380c4b7345ba574ab79b87df753447d772ea239b7daf, 216,484 bytes,
+  377 records / 395 parts / 18,868 points. Cell-center/even-odd with holes/date-line wrap and
+  height preservation; v1 cannot carry a lossless flag under its strict LUT/length/zero-flag
+  rules. Proposed v2 one-bit plane adds 8,100 bytes at one degree, 129,600 at quarter degree;
+  exact CRC/length/padding/compatibility and independent/mutation tests specified. These are
+  format arithmetic, not built data. **Stopped at proposal for review.** No builder, decoder,
+  data file or new format assignment changed.
+
+Verification: final GCC ASan/UBSan **36/36** (62.01 s), clang **36/36** (40.75 s), including both
+private X11 depths and existing refined-pin tests extended through both experimental trace orders.
+PowerPC and 68k Retro68 probes pass with no printed FAIL. Format, touched-source lint, policy and
+diff checks pass. OS 9 app links/packages with identical HFS fork roundtrip and passes budget:
+data fork 241,234 bytes (+4,118 over prior snapshot), payload 277,809, HFS free 1,170,432. Its
+separate size snapshot is in perf/refine-order-floppy-size.json; built/packaged, **not executed**.
+
+Tests first failed on absent APIs. Five final mutants fail: lost release focus, center replaced by
+rows, ignored horizontal focus, omitted final full repaint, and ignored generation cancellation.
+Focus-distance and repaint mutants initially survived final-pixel assertions; independent x/y
+focus checks and final-pass slice coverage caught them after strengthening the tests. Restored
+normal tests pass. Clang found a missing test algorithm include; lint found unchecked fixed-camera
+optionals; both fixed. A new coverage assertion initially refreshed its counter during the last
+pass instead of at entry; corrected the test. Sandbox LeakSanitizer cannot run under ptrace;
+final sanitizer suite ran outside that restriction and passes.
+
+Limits: headless G4 only; no real-display/scanout, native OS 9 or CI acceptance. Dissolve temporarily
+omits outlines until final lines and uploads full frames per pass; presentation costs are excluded,
+so owner hands-on acceptance is still required before changing the default. No push, remote merge,
+tag, compilation on maul, display-access change or touch to owner tip3–tip8. No additional backlog
+work, networking, ice data, smoothing tuning or pass/surface/theme refactor in this continuation.

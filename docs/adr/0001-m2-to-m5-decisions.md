@@ -400,3 +400,15 @@ bit order, reversed rows, omitted holes, ignored mask and v1 flag acceptance. Re
 ice cells white, neighboring rock/water untouched, no smoothing bleed; test cancellation/import
 fallback, host/G4 pixels and edition size. Deliberate ice pixels need explained new refined pins.
 **Stop here until the format proposal is reviewed; no builder, decoder or data changes for GL-40.**
+
+## Experiment result, 2026-11-02 (GL-19 / GL-26; default unchanged)
+
+`880df12` implements the focus and order comparison above. [The report](../refinement-order.md)
+records deterministic cell passes, final canonical repaint, lines after terrain, unchanged settled
+pins, host/G4 progress equality and matched nine-run G4 measurements. Dissolve costs about 14–15%
+more overall in the three measured views. Its worst step in this run is below the historical
+120 ms, but matched rows also avoid that spike; no responsiveness improvement is established.
+Screen-space focus gives the requested round pattern in inspected snapshots. Rows remain default;
+owner hands-on/presentation acceptance decides whether to switch. No smoothing tuning or general
+pass/surface refactor was done. GL-26's broader effect chooser remains open. GL-40 remains the
+proposal above, with no format or data change.
