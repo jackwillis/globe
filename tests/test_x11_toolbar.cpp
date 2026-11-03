@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
         press.xbutton.display = d;
         press.xbutton.window = main;
         press.xbutton.button = Button1;
-        press.xbutton.x = 80;
+        press.xbutton.x = 90;
         press.xbutton.y = 60;
         press.xbutton.type = ButtonPress;
         XSendEvent(d, main, False, ButtonPressMask, &press);
