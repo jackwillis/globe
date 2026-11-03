@@ -8,7 +8,8 @@
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
 // G / B toggle graticule / borders, N aligns north up, T switches between
-// turntable and trackball dragging, Esc or Q quits.
+// turntable and trackball dragging, S cycles the terrain style, O cycles the refinement order
+// (rows, center-out, dissolve; experiment), Esc or Q quits.
 //
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
 // per redraw the way interactive use would. --idle-seconds waits that long afterwards and reports
@@ -763,6 +764,13 @@ class App {
             return apply(CommandIssued{now, Command::AlignNorth});
         case XK_s:
             return apply(CommandIssued{now, Command::CycleStyle});
+        case XK_o: {
+            const auto next =
+                model_.refinement_order == RefinementOrder::Rows        ? RefinementOrder::CenterOut
+                : model_.refinement_order == RefinementOrder::CenterOut ? RefinementOrder::Dissolve
+                                                                        : RefinementOrder::Rows;
+            return apply(SetRefinementOrder{now, next});
+        }
         case XK_t:
             return apply(CommandIssued{now, Command::ToggleDragMode});
         case XK_Escape:
