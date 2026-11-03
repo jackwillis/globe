@@ -14,10 +14,14 @@ markers and scrolling information windows.
 
 ![Map look, Antarctica in white](docs/images/antarctica-map.png)
 
-Screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
+The OS 9 floppy build in Classic under Mac OS X Tiger on the G4 (2026-11-02):
+
+![OS 9 build in Tiger Classic, Map look](docs/images/os9-tiger-classic.png)
+
+The other screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
 
 This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
-checks pass on host and G4. The OS 9 application is **built and packaged, not run**. CI is
+checks pass on host and G4. The OS 9 application is built and packaged, and **launched and rendered once under Tiger Classic** (an emulated OS 9, 2026-11-02; see below); drag, zoom and keys there, and real OS 9 hardware, are still untested. CI is
 configured but has not run. Real-display timing and current hardware UI acceptance remain open.
 
 - [Current handoff](docs/handoff.md) and [prioritized backlog](docs/backlog.md)

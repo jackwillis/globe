@@ -94,7 +94,7 @@ stays unchanged and the G4 benchmark stays within noise.
 
 ## Open decisions and risks
 
-- **The OS 9 build has never run.** If GL-1 fails, P1 and P2 reorder around fixing it.
+- **The OS 9 build has run once, under Tiger Classic (emulated), and rendered; interaction and real hardware are untested.** If GL-1 fails, P1 and P2 reorder around fixing it.
 - **Native QuickDraw speed is unknown.** GL-16 settles it; keep both surfaces until then.
 - **Refine timings depend on view and quality.** GL-6 was re-baselined and measured; GL-27 costs are separately recorded in terrain.md. Do not compare different views as a regression.
 - **Floppy contents are open.** Working rule: the floppy edition is the default build minus optional

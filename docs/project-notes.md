@@ -20,7 +20,7 @@ line reveal after the terrain (GL-41), a click that waits out the double-click w
 
 Host suite 40/40; refined pins Map `e86d02e2424d2a47`, Relief `1c3eac3bcc2d3b8f`, replay hash
 `9b4a458633a32d9d`, all equal on the G4 (headless). The Retro68 probe is clean and the OS 9 floppy
-build packages; **not run on OS 9**, CI never run, real-display timing (GL-7) unmeasured.
+build packages; launched and rendered once under Tiger Classic (2026-11-02, emulated; interaction untested), CI never run, real-display timing (GL-7) unmeasured.
 Owner builds tip3-tip17 on maul remain theirs and must not be deleted, overwritten or killed.
 
 ## Measurements and limits

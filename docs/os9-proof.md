@@ -1,4 +1,4 @@
-# OS 9 proof of life — built, not run
+# OS 9 proof of life — launched once in Tiger Classic
 
 Build the OS 9 floppy edition locally with `tools/build-edition.sh floppy` (Retro68 container).
 Transfer `build-os9-floppy/GlobeFloppy.bin` as MacBinary and decode on the Mac; preserve both forks.
@@ -36,3 +36,17 @@ the final code uses the available classic QuickDraw interfaces instead.
 
 Not executed in an emulator or on OS 9. The owner must verify launch, drag/cursor behavior, input,
 resize/expose, colors and quiet idle on hardware. The G4 headless NetBSD tests are not OS 9 tests.
+
+## First run, 2026-11-02 (Tiger Classic on maul)
+
+Mac OS X 10.4.11 on maul, reached with `maulctl osx`. `GlobeFloppy-1440.dsk` was pushed to `/tmp`,
+attached with `hdiutil attach -imagekey diskimage-class=CRawDiskImage` (the plain `.dsk` is not
+recognized; the raw-image key is), and `open /Volumes/Globe/GlobeFloppy` started Classic
+(`Classic Startup`, `TruBlueEnvironment`) and the app. A `screencapture` of the Tiger desktop shows the Globe
+window open and the **Map look rendered correctly** (land classes, sea, graticule): see
+`docs/images/os9-tiger-classic.png`. The app volume holds `GlobeFloppy` (245,370-byte data fork),
+`ReadMe`, `License` and `DataCredit`.
+
+Not yet checked there: drag and cursors, double-click zoom, keys (`S`, `R`, ...), resize and expose,
+refinement timing and quiet idle. Tiger Classic is an emulated environment, so this is evidence the
+build launches and draws on OS 9 APIs, not real OS 9 hardware acceptance (GL-1 stays open).
