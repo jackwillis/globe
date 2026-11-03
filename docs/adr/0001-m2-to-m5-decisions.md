@@ -317,3 +317,28 @@ Owner decisions after reviewing terrain looks.
   between machines, so a shipped seed is unacceptable and a first-run seed story is undesigned; HTTP,
   DNS and Open Transport code are not in that number. Fetch ships in the full edition first; the
   floppy follows once the seed story and the full size are known. See `docs/fetch-design.md`.
+
+## Addendum, 2026-11-02 (refinement focus and a bell-curve dissolve)
+
+Owner idea: refine outward from the last touchpoint, as a diffuse bell-curve dissolve. This refines
+the earlier "center-biased dissolve" decision; nothing is implemented. Backlog GL-19 and GL-26.
+
+- **Focus:** the last pointer position (release of a drag, a click, or the double-click center), a
+  message-derived part of the model; the view center when there is none. No clock or RNG state, so
+  replays and host/G4 checksums stay deterministic.
+- **Pattern:** each cell has a fixed pseudo-random value u from a hash of its index. At pass k the
+  spread sigma_k grows (geometric, from about one cell to beyond the disc), and a cell is drawn at the
+  first pass where its squared distance d2 from the focus satisfies d2 < sigma_k^2 * L(u), with
+  L(u) = -2 ln u. That is a Gaussian falloff: dense near the touchpoint, sparse far away, every cell
+  eventually drawn, and the last pass draws everything left, so the settled image is order-independent.
+- **No libm per cell:** L(u) comes from a 256-entry table indexed by a hash byte; d2 is a squared screen
+  distance (or 1 - dot with the focus unit vector for a sphere-based bell); the pass is found by
+  comparing against a small table of sigma_k^2 (at most about 16 compares). The G4's libm
+  (sqrt 1.2 us, `log` unmeasured) must stay out of the per-cell path.
+- **Bookkeeping:** one byte per cell for its pass, filled in the pass that already culls hidden cells;
+  each pass scans the bytes (or a counting-sorted index list). Cancellation between passes.
+- **Open:** outlines already on screen are hidden by cells painted over them, so lines must be redrawn
+  after the dissolve or between passes; the line pass is about 28 ms in one go, so redraw cost is
+  tolerable but must be measured. Screen-space distance looks round on screen; sphere distance is
+  uniform on the globe but compresses near the limb. Choose by looking at it on the G4. The dissolve
+  changes how refinement feels, not how long it takes.
