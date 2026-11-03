@@ -40,6 +40,7 @@
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_places.hpp"
+#include "globe/highlight.hpp"
 #include "globe/places.hpp"
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
@@ -319,6 +320,8 @@ class App {
             model_.camera.right * v.x + model_.camera.up * v.y + model_.camera.forward * v.z;
         const auto city = place_scene_ ? place_scene_->pick(model_.camera, at) : std::nullopt;
         const auto id = country_scene_->pick(from_unit_vector(world));
+        const auto before = focused_country_;
+        focused_country_ = city ? std::nullopt : id; // a place card, or the sea, clears the focus
         if (city && places_) {
             info_.show(win_, place_card(*places_, *city), model_.camera.width + 20);
             ++info_cards_;
@@ -326,6 +329,8 @@ class App {
             info_.show(win_, country_card(*countries_, *id), model_.camera.width + 20);
             ++info_cards_;
         }
+        if (focused_country_ != before && frame_valid_ && !need_redraw_ && fb_)
+            upload(0, fb_->height());
     }
     bool apply(const Msg& msg) {
         // Repaint is a presentation request. Keep the cached frame and any in-flight job.
@@ -595,7 +600,20 @@ class App {
             return;
         Framebuffer& fb = *fb_;
         std::uint64_t t = monotonic_ns();
-        convert_pixels(fb, format_, reinterpret_cast<std::uint8_t*>(image_->data),
+        // The focused country is drawn on a copy, so the frame itself stays exactly as rendered
+        // and clearing the focus needs no re-render.
+        const Framebuffer* shown = &fb;
+        if (focused_country_ && countries_ &&
+            (!overlay_fb_ || overlay_fb_->width() != fb.width() ||
+             overlay_fb_->height() != fb.height()))
+            overlay_fb_ = Framebuffer::create(fb.width(), fb.height());
+        if (focused_country_ && countries_ && overlay_fb_) {
+            std::memcpy(overlay_fb_->data(), fb.data(), fb.byte_size());
+            draw_country_outline(*overlay_fb_, model_.camera, *countries_, *focused_country_,
+                                 kCountryHighlight);
+            shown = &*overlay_fb_;
+        }
+        convert_pixels(*shown, format_, reinterpret_cast<std::uint8_t*>(image_->data),
                        static_cast<std::size_t>(image_->bytes_per_line));
         t_.pack_ms.push_back(ms_since(t));
         t = monotonic_ns();
@@ -784,6 +802,8 @@ class App {
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
+    std::optional<std::uint32_t> focused_country_;
+    std::optional<Framebuffer> overlay_fb_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
     std::array<Cursor, 3> cursors_{};

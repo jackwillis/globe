@@ -30,7 +30,7 @@ configure a separate build with `-DGLOBE_SANITIZE=ON`. The current host suite ha
 Drag to rotate north-up; T switches to trackball mode. Wheel or +/- zooms, double-click centers
 and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits.
 S cycles terrain styles; A click without dragging preserves the view; on X11 it identifies a
-country or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
+country (outlined in orange) or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
 toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.
 
 ## Two editions
