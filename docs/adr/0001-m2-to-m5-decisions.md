@@ -342,3 +342,61 @@ the earlier "center-biased dissolve" decision; nothing is implemented. Backlog G
   tolerable but must be measured. Screen-space distance looks round on screen; sphere distance is
   uniform on the globe but compresses near the limb. Choose by looking at it on the G4. The dissolve
   changes how refinement feels, not how long it takes.
+
+## Proposal, 2026-11-02 (GL-40: Greenland and glacier ice, no implementation)
+
+Use Natural Earth's **50m glaciated-areas 4.1.0** polygons as a build-time input, independently of
+ETOPO elevation. Rechecked the local ZIP against [the source record](../../data/SOURCES.md):
+216,484 bytes, SHA-256 `f48644b4523482501bcd380c4b7345ba574ab79b87df753447d772ea239b7daf`,
+377 Polygon records, 395 parts, 18,868 points. This proposal uses the already recorded public-domain
+source; no download, source ZIP, generated grid or data-file change is part of this pass.
+
+Rasterization should reuse the lakes' **cell-center, even-odd ring rule**, longitude unwrapping,
+hole handling and south-first rows, after factoring out a strictly validated generic polygon
+reader. Pin this layer's hash, version, shape type and record count separately from lakes. A
+cell-center ice classification does not imply fractional coverage; small glaciers can disappear at
+one degree. Do not equate ETOPO's ice-surface height with ice coverage. Preserve the height index,
+including below-sea-level samples: coverage and height are independent facts. This also lets the
+actual Antarctic ice mask replace the coarse south-of-60-degree rule after approval, preserving
+exposed coastal rock where the source and grid resolution allow it.
+
+**GELV v1 has no lossless ice mechanism.** Its flags and reserved fields must be zero, length is
+exactly `552 + cells`, all 256 LUT entries are strictly increasing heights, and the cell byte is
+entirely a height index. Setting a header flag or appending a bitmap is rejected by existing
+decoders; stealing an index, changing the LUT to a white sentinel, or treating high elevations as
+ice loses heights or marks mountains incorrectly. The lake -1 m proxy is explicitly lossy and is
+not a precedent for silently adding ice semantics. A separate optional companion pack could leave
+v1 intact, but needs its own shape/extent/height-pack identity checks and coordinated lifetime;
+that is a new format too, not an existing v1 flag.
+
+**Recommended for review: GELV v2 with one mandatory packed ice bit per cell.** Retain the 40-byte
+header, 256 signed-height LUT and height-index plane, set version 2, and define only flag bit 0 as
+"ice plane present" (required; all other flag/reserved bits rejected). Append `ceil(cells/8)` bytes,
+row-major in the same cell order, cell zero in the least-significant bit; unused high bits of the
+last byte must be zero. The existing CRC algorithm covers all header metadata and both planes,
+excluding only its own field. Exact length and checked cell limits remain mandatory. Old v1
+decoders reject v2 cleanly and retain baked v1 data. A future decoder may accept both versions,
+using today's latitude fallback for v1 only; never reinterpret v1 bytes as flags. This is a
+proposal, not a reserved or implemented version assignment.
+
+| Global grid | Existing GELV bytes | Ice-plane bytes | Proposed v2 bytes |
+| --- | ---: | ---: | ---: |
+| 360 x 180 (1 degree) | 65,352 | 8,100 | 73,452 |
+| 1,440 x 720 (0.25 degree) | 1,037,352 | 129,600 | 1,166,952 |
+
+These are exact **uncompressed format arithmetic**, not a rebuilt pack, compressed-size estimate
+or measured executable/disk delta. A zero-copy bit view needs no expanded per-cell flag allocation;
+reader/render code size and any combined compression must be measured separately. The source ZIP
+is builder-only. Existing cache/peak-memory guards must include the input-plane bytes.
+
+After format approval, test synthetic exterior/hole/island polygons, exact center-on-edge policy,
+antimeridian/polar rings and south-first ordering; pin independent Greenland interior/coastal-rock,
+Antarctic exposed-rock, alpine-glacier and ice-over-negative-height samples. Cross-check selected
+centers with an independent point-in-polygon implementation. Rebuild twice from the pinned source;
+prove height bytes/LUT unchanged, CRC and padding deterministic, and that v1 still parses unchanged.
+Exercise every truncation, trailing byte, unsupported version/flag, overflow, mismatched extent,
+corrupt CRC and nonzero padding; repair CRC in structural rejection tests. Mutation-check flipped
+bit order, reversed rows, omitted holes, ignored mask and v1 flag acceptance. Render both styles:
+ice cells white, neighboring rock/water untouched, no smoothing bleed; test cancellation/import
+fallback, host/G4 pixels and edition size. Deliberate ice pixels need explained new refined pins.
+**Stop here until the format proposal is reviewed; no builder, decoder or data changes for GL-40.**
