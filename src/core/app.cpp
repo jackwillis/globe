@@ -359,8 +359,8 @@ Effects update(Model& model, const Msg& msg) {
         input_ms = command->time_ms;
         model.last_input_ms = command->time_ms;
     } else if (const auto* order = std::get_if<SetRefinementOrder>(&msg)) {
-        if (order->order == RefinementOrder::Rows || order->order == RefinementOrder::CenterOut ||
-            order->order == RefinementOrder::Dissolve) {
+        if (order->order == RefinementOrder::Rectangle || order->order == RefinementOrder::Circle ||
+            order->order == RefinementOrder::Globe) {
             model.refinement_order = order->order;
             fx.redraw = true;
             input = true;

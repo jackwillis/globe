@@ -14,13 +14,11 @@
 #include "globe/atlas.hpp"
 #include "globe/framebuffer.hpp"
 #include "globe/projection.hpp"
+#include "globe/refine_order.hpp"
 #include "globe/terrain_style.hpp"
 
 namespace globe {
 class TerrainScene;
-
-enum class RefinementOrder : std::uint8_t { Rows, CenterOut, Dissolve };
-constexpr unsigned kDissolvePasses = 16;
 
 struct RenderQuality {
     double max_chord_px = 3.0;
@@ -31,7 +29,7 @@ struct RenderQuality {
     // Draw the coarse gray land mask under the lines. Off: while moving, the globe is plain vectors
     // (owner's choice, 2026-11-02); the mask stays available for a later style.
     bool gray_base = false;
-    RefinementOrder order = RefinementOrder::Rows;
+    RefinementOrder order = RefinementOrder::Circle;
     ScreenPoint focus{};
 };
 
@@ -51,7 +49,7 @@ struct Layers {
 
 // What a frame cost, in countable terms (not time; timing belongs to the platform layer).
 struct RenderStats {
-    std::uint32_t dissolve_slices = 0;   // admitted cell/16-row slices, including the final repaint
+    std::uint32_t terrain_slices = 0;    // admitted cell/16-row slices, including the final repaint
     std::uint32_t polylines_culled = 0;  // whole cached polylines proven behind the horizon
     std::uint32_t segments = 0;          // atlas and graticule segments considered
     std::uint32_t segments_visible = 0;  // of those, with any part on the front hemisphere
@@ -150,11 +148,9 @@ class RefinementJob {
     RenderQuality quality_;
     std::uint64_t generation_;
     bool active_ = true;
-    bool dissolve() const { return terrain_ && quality_.order == RefinementOrder::Dissolve; }
-    int ordered_band(int ordinal) const;
-    unsigned dissolve_pass_ = 0;
+    PassPlan plan_{};
+    unsigned pass_ = 0;
     int cell_band_ = -1;
-    int band_ordinal_ = 0;
     int band_first_ = 0;
     int row_ = 0;
     int phase_ = 0;

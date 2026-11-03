@@ -14,9 +14,9 @@ assert stats['refine_steps']>0 and stats['refine_ms']>0,stats
 assert 0<stats['terrain_cache_bytes']<=32*1024*1024,stats
 
 # Order selection goes through the same trace/model path as the interactive frontend.
-# Preserve the established sampled final-frame pin for both experimental orders.
+# Preserve the established sampled final-frame pin for every order.
 import tempfile
-for order in ('center', 'dissolve'):
+for order in ('rectangle', 'circle', 'globe'):
     original=Path(sys.argv[-1]).read_text()
     with tempfile.NamedTemporaryFile(mode='w',suffix='.trace') as trace:
         trace.write(original+'\norder 8000 '+order+'\n');trace.flush()

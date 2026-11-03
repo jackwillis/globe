@@ -4,6 +4,7 @@
 #include "globe/elevation.hpp"
 #include "globe/framebuffer.hpp"
 #include "globe/projection.hpp"
+#include "globe/refine_order.hpp"
 #include "globe/terrain_style.hpp"
 #include <array>
 #include <cstddef>
@@ -42,7 +43,7 @@ class TerrainScene {
     std::uint64_t token() const { return token_; }
     void project_corner(std::size_t index, const Camera& camera);
     void bound_cell(std::size_t index, int height, int band_rows);
-    void assign_pass(std::size_t index, const Camera& camera, ScreenPoint focus);
+    void assign_pass(std::size_t index, const PassPlan& plan);
     std::uint8_t cell_pass(std::size_t index) const { return passes_[index]; }
     CellBands cell_bands(std::size_t index) const { return bands_[index]; }
     void draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
