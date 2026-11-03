@@ -97,6 +97,10 @@ if(Python3_FOUND)
                                             globe_clock_posix)
   target_compile_options(globe-bench PRIVATE -Wall -Wextra -Wpedantic)
 
+  add_executable(globe-line-reveal-bench src/platform/bench/line_reveal_bench.cpp)
+  target_link_libraries(globe-line-reveal-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
+      globe_embedded_landclasses globe_platform_common globe_clock_posix)
+
   add_executable(globe-landclass-bench src/platform/bench/landclass_bench.cpp)
   target_link_libraries(globe-landclass-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
       globe_embedded_landclasses globe_platform_common globe_clock_posix)
@@ -132,6 +136,10 @@ if(GLOBE_SANITIZE)
 endif()
 
 if(GLOBE_BUILD_TESTS)
+  add_executable(test_line_reveal tests/test_line_reveal.cpp)
+  target_link_libraries(test_line_reveal PRIVATE globe_core)
+  add_test(NAME line_reveal COMMAND test_line_reveal)
+  set_tests_properties(line_reveal PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   add_executable(test_landclasses tests/test_landclasses.cpp)
   target_link_libraries(test_landclasses PRIVATE globe_core)
   add_test(NAME landclasses COMMAND test_landclasses)

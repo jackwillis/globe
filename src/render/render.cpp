@@ -206,14 +206,59 @@ void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, At
 
 } // namespace
 
+std::size_t line_chunk_count(const Atlas& atlas) {
+    std::size_t count = kParallels * ((kParallelSamples - 2) / 15 + 1) +
+                        kMeridians * ((kMeridianSamples - 2) / 15 + 1);
+    AtlasCursor cursor;
+    AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
+    while (atlas.next(cursor, line))
+        count += (line.point_count - 2) / 15 + 1;
+    return count;
+}
+bool build_line_chunks(const Atlas& atlas, LineChunk* output, std::size_t capacity) {
+    if (!output || capacity < line_chunk_count(atlas))
+        return false;
+    std::size_t at = 0;
+    const auto add = [&](std::uint32_t first, std::uint32_t count, LineLayer layer) {
+        for (std::uint32_t start = 0; start + 1 < count; start += 15)
+            output[at++] = {first + start,
+                            static_cast<std::uint16_t>(std::min<std::uint32_t>(16, count - start)),
+                            layer};
+    };
+    AtlasCursor cursor;
+    AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
+    for (;;) {
+        const auto first = cursor.first_point;
+        if (!atlas.next(cursor, line))
+            break;
+        add(first, line.point_count,
+            line.layer == AtlasLayer::Coastline ? LineLayer::Coastline : LineLayer::Border);
+    }
+    auto first = atlas.point_count();
+    for (int p = 0; p < kParallels; ++p) {
+        add(first, kParallelSamples, LineLayer::Graticule);
+        first += kParallelSamples;
+    }
+    for (int m = 0; m < kMeridians; ++m) {
+        add(first, kMeridianSamples, LineLayer::Graticule);
+        first += kMeridianSamples;
+    }
+    return true;
+}
+
 std::optional<Scene> Scene::create(const Atlas& atlas) {
     const std::size_t total = static_cast<std::size_t>(atlas.point_count()) + kGraticulePoints;
+    const auto chunk_count = globe::line_chunk_count(atlas);
+    std::unique_ptr<LineChunk[]> chunks(new (std::nothrow) LineChunk[chunk_count]);
+    std::unique_ptr<std::uint8_t[]> chunk_passes(new (std::nothrow) std::uint8_t[chunk_count]);
     std::unique_ptr<Vec3[]> storage(new (std::nothrow) Vec3[total]);
     std::unique_ptr<PolylineCap[]> caps(new (std::nothrow) PolylineCap[atlas.polyline_count()]);
-    if (!storage || !caps) {
+    if (!storage || !caps || !chunks || !chunk_passes) {
         return std::nullopt;
     }
     Vec3* out = storage.get();
+    if (!build_line_chunks(atlas, chunks.get(), chunk_count))
+        return std::nullopt;
     AtlasCursor cursor;
     AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
     while (atlas.next(cursor, line)) {
@@ -247,12 +292,37 @@ std::optional<Scene> Scene::create(const Atlas& atlas) {
             *out++ = meridian_point(m, s);
         }
     }
-    return Scene(atlas, std::move(storage), std::move(caps));
+    return Scene(atlas, std::move(storage), std::move(caps), std::move(chunks),
+                 std::move(chunk_passes), chunk_count);
 }
 
 std::size_t Scene::bytes() const {
     return (static_cast<std::size_t>(atlas_.point_count()) + kGraticulePoints) * sizeof(Vec3) +
-           static_cast<std::size_t>(atlas_.polyline_count()) * sizeof(PolylineCap);
+           static_cast<std::size_t>(atlas_.polyline_count()) * sizeof(PolylineCap) +
+           line_workspace_bytes();
+}
+
+void Scene::prepare_line_chunk(std::size_t i, const Camera& camera, const PassPlan& plan,
+                               Layers layers) const {
+    const auto chunk = chunks_[i];
+    if ((chunk.layer == LineLayer::Graticule && !layers.graticule) ||
+        (chunk.layer == LineLayer::Coastline && !layers.coastlines) ||
+        (chunk.layer == LineLayer::Border && !layers.borders)) {
+        chunk_passes_[i] = 255;
+        return;
+    }
+    const auto middle = chunk.first + (chunk.count - 1) / 2;
+    auto mid = storage_[middle];
+    if (chunk.count % 2 == 0)
+        mid = (mid + storage_[middle + 1]) * 0.5;
+    unsigned pass;
+    if (plan.order == RefinementOrder::Globe)
+        pass = plan.pass_for_dot(dot(normalized(mid), plan.focus_world));
+    else {
+        const auto p = to_screen(camera, to_camera_space(camera, mid));
+        pass = plan.pass_at(p.x, p.y);
+    }
+    chunk_passes_[i] = static_cast<std::uint8_t>(pass);
 }
 
 Palette palette_for_style(Palette palette, TerrainStyle style) {
@@ -341,6 +411,8 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
         if (quality_.terrain_style != TerrainStyle::Map)
             palette_.border = rgb565(0, 0, 0);
     }
+    if (terrain_ != nullptr && quality_.progressive_lines)
+        line_token_ = scene_->claim_lines();
     if (terrain_ != nullptr)
         plan_ = make_pass_plan(camera_, quality_.focus);
     quality_.max_chord_px = std::isfinite(quality_.max_chord_px)
@@ -352,7 +424,8 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
     RenderStep result;
     if (!active_ || generation != generation_ ||
         (terrain_ != nullptr && terrain_->token() != terrain_token_) ||
-        fb.width() != camera_.width || fb.height() != camera_.height) {
+        (line_token_ != 0 && scene_->line_token() != line_token_) || fb.width() != camera_.width ||
+        fb.height() != camera_.height) {
         active_ = false;
         return result;
     }
@@ -362,6 +435,7 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
     result.first_row = terrain_ != nullptr ? 0 : band_first_;
     result.end_row =
         terrain_ != nullptr ? fb.height() : std::min(band_first_ + kRefineBandRows, fb.height());
+    result.line_prepare = phase_ == -3;
     const int saved_first = fb.first_row();
     const int saved_end = fb.end_row();
     fb.clip_rows(result.first_row, result.end_row);
@@ -379,8 +453,43 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             terrain_->assign_pass(prepare_index_, plan_);
             ++prepare_index_;
             if (prepare_index_ == terrain_->cell_count()) {
+                phase_ = quality_.progressive_lines ? -3 : 0;
+                prepare_index_ = 0;
+                if (quality_.progressive_lines)
+                    break; // isolate line preparation for measurement
+            }
+        } else if (phase_ == -3) {
+            scene_->prepare_line_chunk(prepare_index_++, camera_, plan_, layers_);
+            ++stats_.line_chunks_prepared;
+            if (prepare_index_ == scene_->line_chunk_count()) {
                 phase_ = 0;
                 prepare_index_ = 0;
+                break;
+            }
+        } else if (phase_ == 8) {
+            if (chunk_index_ == scene_->line_chunk_count()) {
+                ++line_pass_;
+                chunk_index_ = 0;
+                result.band_ready = true;
+                result.wake_after_ms = kLineRevealDelayMs;
+                if (line_pass_ == kRefinePasses)
+                    phase_ = 1; // canonical layer-order repair at crossings
+            } else if (scene_->line_chunk_pass(chunk_index_) != line_pass_) {
+                ++chunk_index_;
+            } else {
+                const auto chunk = scene_->line_chunk(chunk_index_);
+                const auto* points = scene_->vertices() + chunk.first;
+                const auto a = to_camera_space(camera_, points[chunk_segment_ - 1]);
+                const auto b = to_camera_space(camera_, points[chunk_segment_]);
+                const auto color = chunk.layer == LineLayer::Graticule   ? palette_.graticule
+                                   : chunk.layer == LineLayer::Coastline ? palette_.coastline
+                                                                         : palette_.border;
+                draw_arc(fb, camera_, a, b, color, stats_, quality_.max_chord_px);
+                ++stats_.reveal_segments;
+                if (++chunk_segment_ == chunk.count) {
+                    chunk_segment_ = 1;
+                    ++chunk_index_;
+                }
             }
         } else if (phase_ == 7) {
             // Pass k paints the cells of ring k. The last pass repaints all in canonical index
@@ -410,7 +519,7 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 ++pass_;
                 result.band_ready = true;
                 if (last)
-                    phase_ = 1; // Lines once, above every terrain pass.
+                    phase_ = quality_.progressive_lines ? 8 : 1; // Lines after all terrain passes.
             }
             // Bound a fill continuation by four 16-row cell slices as well as work units. This
             // changes scheduling, not smoothing or rasterization.

@@ -336,6 +336,10 @@ class App {
             upload(0, fb_->height());
     }
     bool apply(const Msg& msg) {
+        if (std::holds_alternative<Tick>(msg) && refine_waiting_) {
+            refine_waiting_ = false;
+            wake_at_ms_ = 0;
+        }
         // Repaint is a presentation request. Keep the cached frame and any in-flight job.
         if (std::holds_alternative<Repaint>(msg)) {
             if (!need_redraw_ && fb_)
@@ -346,6 +350,7 @@ class App {
         const auto old_stage = model_.stage;
         Effects fx = update(model_, msg);
         if (model_.generation != old_generation) {
+            refine_waiting_ = false;
             if (refinement_)
                 refinement_->cancel();
             if (old_stage == QualityStage::Refine)
@@ -407,7 +412,7 @@ class App {
 
     // Sleep until input, one requested wake, or a measurement deadline. No periodic polling.
     bool wait_events(std::uint64_t end_ms = 0) {
-        if (XPending(dpy_) > 0 || (refinement_ && refinement_->active())) {
+        if (XPending(dpy_) > 0 || (refinement_ && refinement_->active() && !refine_waiting_)) {
             return true;
         }
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
@@ -536,7 +541,7 @@ class App {
     }
 
     void refine_step() {
-        if (!fb_ || !refinement_ || !refinement_->active())
+        if (!fb_ || !refinement_ || !refinement_->active() || refine_waiting_)
             return;
         const std::uint64_t t = monotonic_ns();
         const auto step = refinement_->step(*fb_, model_.generation);
@@ -549,6 +554,10 @@ class App {
             }
             ++refine_bands_;
             upload(step.first_row, step.end_row);
+        }
+        if (step.wake_after_ms) {
+            refine_waiting_ = true;
+            wake_at_ms_ = monotonic_ns() / 1000000ULL + step.wake_after_ms;
         }
     }
 
@@ -835,6 +844,7 @@ class App {
     PixelFormat format_{};
     std::optional<Framebuffer> fb_;
     std::size_t wake_ticks_ = 0;
+    bool refine_waiting_ = false;
     std::uint64_t wake_at_ms_ = 0;
     std::optional<RefinementJob> refinement_;
     std::size_t refine_bands_ = 0;

@@ -81,11 +81,15 @@ class Application {
                 copy(0, fb_->height());
                 redraw_ = false;
             }
-            const bool work = job_ && job_->active();
+            const bool work = job_ && job_->active() && !job_waiting_;
             if (work) {
                 const auto band = job_->step(*fb_, model_.generation);
                 if (band.band_ready)
                     copy(band.first_row, band.end_row);
+                if (band.wake_after_ms) {
+                    job_waiting_ = true;
+                    wake_ = now_ms() + band.wake_after_ms;
+                }
             }
             Point pointer;
             GetMouse(&pointer);
@@ -94,10 +98,10 @@ class Application {
                        static_cast<short>(pointer.h + 1)};
             RectRgn(mouse_region_, &mouse);
             EventRecord event{};
-            WaitNextEvent(
-                everyEvent, &event,
-                static_cast<long>(classic_wait_ticks(now_ms(), wake_, job_ && job_->active())),
-                mouse_region_);
+            WaitNextEvent(everyEvent, &event,
+                          static_cast<long>(classic_wait_ticks(
+                              now_ms(), wake_, job_ && job_->active() && !job_waiting_)),
+                          mouse_region_);
             const auto time = now_ms();
             SetPortWindowPort(window_);
             Point local = event.where;
@@ -201,10 +205,15 @@ class Application {
         UnlockPixels(pix);
     }
     bool apply(const Msg& msg) {
+        if (std::holds_alternative<Tick>(msg) && job_waiting_) {
+            job_waiting_ = false;
+            wake_ = 0;
+        }
         const auto generation = model_.generation;
         const auto stage = model_.stage;
         auto fx = update(model_, msg);
         if (generation != model_.generation && job_) {
+            job_waiting_ = false;
             job_->cancel();
             if (stage == QualityStage::Refine)
                 fx.redraw = true;
@@ -281,6 +290,7 @@ class Application {
     std::optional<TerrainScene> terrain_;
     std::optional<Framebuffer> fb_;
     std::optional<RefinementJob> job_;
+    bool job_waiting_ = false;
     std::uint64_t wake_ = 0;
     bool redraw_ = true;
     CursorIntent cursor_ = CursorIntent::Arrow;
