@@ -396,3 +396,7 @@ probe clean, OS 9 floppy build packages. Not done: the settled-frame cache (GL-4
 split, OS 9 picking and palette, dithered country fill, GL-38/35/36/40, GL-5 CI (first push to
 GitHub may start it), GL-7 X11 display timing, real OS 9 hardware. maul was left booted into Tiger.
 `main` was pushed to origin on 2026-11-03 at the owner's explicit request (no tags).
+
+CI ran on GitHub for the first time (run 41576444739): everything passes except clang-tidy on
+three lines of `src/platform/bench/codec_bench.cpp` (lines 98 and 116 implicit widening, line 138
+`atoi`). Fix those first next session; the size-report step after lint has not run yet. See GL-5.
