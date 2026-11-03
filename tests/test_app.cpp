@@ -733,6 +733,9 @@ void test_refinement_focus() {
     update(m, PointerDown{2000, 80, 70});
     update(m, PointerUp{2010});
     update(m, PointerDown{2020, 80, 70});
+    // The model keeps the touchpoint; the render focus is halfway to the view center.
+    CHECK(quality_for(m).focus.x == (m.refinement_focus->x + m.camera.center_x) * 0.5);
+    CHECK(quality_for(m).focus.y == (m.refinement_focus->y + m.camera.center_y) * 0.5);
     CHECK(m.refinement_focus->x == m.camera.center_x);
     CHECK(m.refinement_focus->y == m.camera.center_y);
     for (const char* order : {"rectangle", "circle", "globe"}) {

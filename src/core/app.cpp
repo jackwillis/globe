@@ -201,8 +201,11 @@ RenderQuality quality_for(const Model& model) {
     }
     RenderQuality quality{fine ? 1.5 : 3.0, fine, selected, model.terrain_style};
     quality.order = model.refinement_order;
-    quality.focus =
-        model.refinement_focus.value_or(ScreenPoint{model.camera.center_x, model.camera.center_y});
+    // Refinement spreads from halfway between the last touchpoint and the view center, so it
+    // leans toward what the user touched without leaving the middle of the picture behind.
+    const ScreenPoint center{model.camera.center_x, model.camera.center_y};
+    const ScreenPoint touch = model.refinement_focus.value_or(center);
+    quality.focus = {(touch.x + center.x) * 0.5, (touch.y + center.y) * 0.5};
     return quality;
 }
 

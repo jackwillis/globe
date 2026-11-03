@@ -24,6 +24,11 @@ The parser is strict: `rows`, `center`, `dissolve` and `square` are unknown name
 
 ## Focus
 
+The refinement spreads from **halfway between the recorded touchpoint and the view center**
+(`quality_for` in `src/core/app.cpp`; the model still stores the raw touchpoint). The owner asked for
+this so refinement leans toward what was touched without leaving the middle of the picture for last.
+Final pixels are unaffected, so no pin moves. The paragraph below describes the recorded touchpoint.
+
 The focus is model state, never a clock read: a click or drag release records the last finite
 pointer coordinate (including motion inside the drag slop), a double click records the resulting
 view center, and the initial state, a resize and a non-finite value use the viewport center. A
