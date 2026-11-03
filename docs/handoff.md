@@ -329,3 +329,35 @@ Tests: every-pixel equality against the unpaced result for all three orders and 
 oracle for chunk passes; cancellation mid-reveal; mutation checks. Append a dated note here.
 
 Owner update: the refinement focus is now always the view center (no touchpoint state in the Model).
+
+### 2026-11-02 — QUEUED for Codex: do this only AFTER your current GL-34/33 pass is committed (written by Claude)
+
+Do not start or fold this into the current pass. Finish, verify and commit GL-34/33 and append your
+dated note first. Then, as a separate pass (separate commits), do the owner decisions below.
+Do GL-41 (progressive line reveal) after this pass, not before.
+
+Owner decisions:
+1. **Circle only.** Remove the `rectangle` and `globe` refinement orders and the order choice:
+   `RefinementOrder`, the pass plan's other branches and the globe cosine table, `SetRefinementOrder`,
+   the `order` trace verb (it becomes unknown), the X11 `O` key, the toolbar/popup entries if any,
+   OS 9 key handling if any, README lines, and tests/benches that only exist for other orders.
+   Keep the circle pass plan and the view-center focus. Final pixels must be unchanged: refined
+   pin, replay hash and goldens must not move except for intended look changes in item 3.
+   (G4: circle 711/765/635 ms against globe 793/765/725; owner prefers circle.)
+2. **Remove Cel-shaded** entirely from `TerrainStyle`, the cycle, its palette, tests and the
+   floppy conditional. Remove dead code, do not leave a disabled style.
+3. **Looks: Map and Relief.** Owner is letting go of the hybrid. Looks are Map (default,
+   Google-Maps-like) and Relief (a plain hypsometric tint, green to tan to brown, high ground
+   white like a classic atlas; no gray base, no cel). Drop the separate Natural look unless you can
+   show it is not redundant with Map; its land-class colors belong to Map. `S` cycles the looks.
+4. **Map is too pastel.** Make it punchier: stronger water blue, richer greens for forest and
+   grass, warmer tan for desert, less white mixed in. Keep the class palette in one small table
+   so the owner can nudge saturation in one place. Show the palette values in your note.
+5. **Antarctica reads brown** (tips 11-14). The only white rule is `meters >= 0 && latitude < -60`
+   in `terrain_color`. Before fixing, render a south-pole view and read pixel colors to find the
+   cause; suspects: smoothing blending brown at the white/non-white boundary, bedrock elevations
+   at or below 0 skipping the rule, edge cells above -60, the high-elevation tint. Antarctica must
+   be white in both looks. Report what you measured. Greenland ice stays out of scope (GL-40).
+Verify as usual (host suites, ASan/UBSan, policy, Retro68 probes, G4 timings of the looks),
+mutation-check changed tests, update docs (`refinement-order.md` shrinks to circle only, `terrain.md`,
+`README`), update the backlog, append a dated note. No push, tag or remote merge.
