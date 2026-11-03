@@ -1,140 +1,119 @@
-# Refinement-order experiment (GL-19 / GL-26, 2026-11-02)
+# Refinement order (GL-19 / GL-26, concluded 2026-11-02)
 
-Rows remain the default. To compare an experiment, append one of these timestamped messages to a
-trace; both front ends and the headless replay derive the choice from the same model:
+The settled terrain refines **outward from the last touchpoint** in one of three shapes. The
+experiment with rows, center-out bands and a Gaussian dissolve is over: the owner found the dissolve
+odd and asked for the top-down and row orders to go. They are removed; their raw measurements stay
+in `docs/perf/refine-order-*.json` for the record.
+
+| Order | Shape | Distance from the focus |
+| --- | --- | --- |
+| `circle` (default) | expanding circles | Euclidean screen distance |
+| `rectangle` | expanding rectangles shaped like the viewport, reaching its edges together | `max(|dx| / width, |dy| / height)` |
+| `globe` | rings of equal great-circle angle on the sphere | angle between the cell and the focus point on the sphere |
+
+Compare them in the X11 program with the `O` key (rectangle, circle, globe), or in any replay with
+a timestamped trace line, handled by the same model path in every front end:
 
 ```
-order 8000 rows
-order 8000 center
-order 8000 dissolve
+order 8000 rectangle
+order 8000 circle
+order 8000 globe
 ```
 
-`center` visits 16-row bands outward from the focus band, ties upward. `dissolve` uses 16
-screen-space Gaussian cell passes. No toolbar/effect chooser, pass/surface refactor or smoothing
-tuning is included. The experiment can be reviewed before choosing a new default.
+The parser is strict: `rows`, `center`, `dissolve` and `square` are unknown names.
 
-## Focus and deterministic pattern
+## Focus
 
-A click or drag release records the last finite pointer coordinate, including motion within drag
-slop. A double click records the resulting view center. Focus is model state, not a clock read;
-initial state and resize use the viewport center. A plain click still leaves the visible frame,
-render generation and wake requests unchanged; it only records the focus for future work. The
-existing `up TIME` trace has no coordinates, so release uses the last recorded down/move position.
+The focus is model state, never a clock read: a click or drag release records the last finite
+pointer coordinate (including motion inside the drag slop), a double click records the resulting
+view center, and the initial state, a resize and a non-finite value use the viewport center. A
+plain click still leaves the visible frame, render generation and wake requests unchanged; it only
+records the focus for future work. For `globe`, a focus outside the globe's disc falls back to the
+view center, because there is no point of the sphere under it.
 
-During the existing per-cell bounds preparation, one byte per cell stores its first eligible
-pass (255 for hidden/empty cells). A fixed unsigned 32-bit index hash selects a bin in an offline
-256-entry table `L[i] = -2 ln((i + 0.5) / 256)`. Distance is from the average projected corners to
-the screen focus. Starting sigma is the projected nominal longitudinal cell size; its square
-multiplies by 2.25 at each pass (sigma grows by 1.5). Squared-distance comparisons choose the pass;
-there is no per-cell log/sqrt, clock, mutable random generator, sort or frame allocation.
-Screen space was chosen to match a round on-screen bell; a sphere-distance variant is not built.
+## How a refinement runs
 
-Every pass scans the byte array in index order, drawing eligible cells. The last pass redraws
-**all** visible cells in canonical index order, even those painted earlier. This deliberately pays
-for a final full fill and preserves existing edge ownership if clipped limb polygons overlap;
-final-pixel equality does not depend on assuming a nonoverlapping mesh. Cells use the existing
-rasterizer and 16-row clip slices, preserving its rounding and avoiding a giant whole-cell fill.
-The experiment returns after at most four admitted slices or the requested work-unit budget.
-Rows and center-out use the existing row renderer unchanged.
+With terrain, one job paints the whole frame in 16 passes:
 
-Lines redraw **once after all terrain passes**, above the terrain, through the existing bounded
-arc/polyline continuation with a full-height clip. Earlier terrain passes can be shown without
-outlines: this is a visible experiment tradeoff. Each completed dissolve pass reports the full
-frame as ready; the final lines report another completed frame. The front ends continue to own
-packing/presentation. Cancellation checks generation, framebuffer size and terrain workspace
-ownership at every continuation, including pass boundaries. No hard wall-clock limit is promised.
+1. Project the cell corners and bound each cell's 16-row slices (as before).
+2. The same loop assigns each visible cell a pass byte (255 for hidden cells) from a **per-view
+   plan** computed once per job: `make_pass_plan` in `src/render/terrain.cpp`, the data in
+   `include/globe/refine_order.hpp`.
+3. Pass k clears nothing and draws the cells whose byte is k, with the existing rasterizer in
+   16-row clip slices (at most four slices or the work-unit budget per continuation).
+4. The last pass repaints **every** visible cell in canonical index order. This costs a final full
+   fill, and it keeps today's edge ownership where clipped limb polygons overlap, so the settled
+   image is identical for every order and every focus.
+5. The lines (graticule, coastlines, borders) are drawn once, above all terrain, through the
+   existing bounded arc/polyline continuation. Earlier passes therefore show terrain without
+   outlines.
 
-The additional persistent workspace is exactly one byte per cell (64,800 bytes for the bundled
-grid), included in `required_bytes()`, `bytes()` and the 32 MiB allocation guard. The 256 doubles
-are a 2,048-byte read-only table, outside that heap workspace. The current OS 9 link/package report
-is [recorded separately](perf/refine-order-floppy-size.json); it builds and fits, not executed.
+Cancellation checks the generation, the framebuffer size and the terrain workspace owner at every
+continuation, including pass boundaries. Without terrain the outline-only refine keeps its
+top-down 16-row bands (there is nothing to order).
 
-## Measurement method
+### Pass assignment, per cell
 
-`globe-refine-order --repeat 9 [--trace PATH]` uses the bundled lake-aware data, 640x480, 64 work
-units per step, and all three orders on each of these identical views:
+- **circle:** squared distance of the cell's projected center (mean of its four corners) against 15
+  squared thresholds, equal-width steps from 0 to the farthest point of the disc.
+- **rectangle:** `max(|dx| * height, |dy| * width)` against 15 thresholds scaled by
+  `width * height`, so there is no division. Steps run from 0 to the largest value over the four
+  viewport corners seen from the focus, so with a centered focus the left/right and top/bottom
+  edges are reached in the same pass.
+- **globe:** the mean of the four corner dot products with the focus unit vector against 15
+  cosines of `k * 11.25` degrees. The cosines are exact literals generated offline, so every
+  platform assigns the same pass whatever its libm.
 
-- Profile 1x: 30 N / 10 E, radius 220, center focus, all line layers.
-- Profile 2x: the same camera direction, radius 440, focus (80,80), all line layers.
-- Standard `tests/data/bench_drag.txt` final camera/focus and its traced layer choices.
+No `sqrt`, `log`, `acos`, division, clock or random generator runs per cell (the plan itself does one
+`sqrt` per job). The extra per-view state is one byte per cell, already in `required_bytes()`.
 
-Timing starts after the initial outline frame and job construction; includes projection, bounds,
-assignment, clearing, terrain, scanning, continuation overhead and final lines. It excludes input
-replay, framebuffer/cache allocation, checksumming, packing, uploads and scanout. "First pass"
-means first complete band for the row orders, first complete cell pass for dissolve, not first
-changed pixel; those amounts of completed work differ. Total/first/final-lines are medians of nine.
-The report gives both the median of each run's longest continuation and the **largest** continuation
-observed across all nine runs. Wall-clock interruptions count; these are not CPU-only times.
-`final_lines_ms` is measured from completion of dissolve pass 16 to completion of the lines;
-zero for row orders means not separately timed, not free lines.
+## Measured on the G4
 
-Host: local GCC Release. G4: locally cross-built NetBSD/macppc GCC 12.5, `-O2 -static`, no compilation
-on target, fresh `/tmp/gl19-20261102-*` names, headless only. Raw host/G4 JSON and progress hashes
-are in `docs/perf/refine-order-*`. Full-frame hashes here use FNV-1a over every RGB565 pixel with
-the standard 64-bit basis; the existing replay pin uses a different sampled, repeated-frame hash.
-They must not be compared as though they were the same hash function.
+`globe-refine-order --repeat 9` (`src/platform/bench/refine_order.cpp`): 640x480, 64 work units per
+step, three identical views, headless, locally cross-built NetBSD/macppc `-O2 -static`, new
+`/tmp` names, medians of nine, two complete runs (`docs/perf/refine-shapes-g4-run1.json`,
+`-run2.json`). Timing starts after the initial outline frame and job construction and includes
+projection, bounds, assignment, clearing, terrain, scanning, continuation overhead and the final
+lines; it excludes packing, uploads and scanout. Wall-clock interruptions count. "First pass" is the
+first completed pass, not the first changed pixel.
 
-## G4 results and decision
-
-| View | Order | First completed band/pass ms | Total ms | Worst step across 9 runs ms |
+| View | Order | First pass ms | Total ms (run 1 / run 2) | Worst step ms (run 1 / run 2) |
 | --- | --- | ---: | ---: | ---: |
-| profile_1x | rows | 66.509 | 692.629 | 70.753 |
-| profile_1x | center | 76.377 | 672.606 | 26.373 |
-| profile_1x | dissolve | 84.284 | 796.017 | 26.207 |
-| profile_2x_offcenter | rows | 119.257 | 686.689 | 24.613 |
-| profile_2x_offcenter | center | 77.100 | 699.826 | 25.080 |
-| profile_2x_offcenter | dissolve | 81.787 | 781.978 | 25.746 |
-| trace | rows | 66.450 | 644.300 | 25.125 |
-| trace | center | 76.299 | 643.818 | 24.797 |
-| trace | dissolve | 84.168 | 732.341 | 24.539 |
+| profile 1x | rectangle | 78 | 791 / 792 | 86 / 101 |
+| profile 1x | circle | 78 | 711 / 711 | 25 / 25 |
+| profile 1x | globe | 83-84 | 793 / 793 | 28 / 25 |
+| profile 2x, off-center | rectangle | 77 | 707 / 706 | 25 / 31 |
+| profile 2x, off-center | circle | 78 | 765 / 766 | 24 / 25 |
+| profile 2x, off-center | globe | 86 | 765 / 759 | 24 / 25 |
+| trace final view | rectangle | 78 | 723 / 723 | 30 / 25 |
+| trace final view | circle | 77 | 635 / 635 | 24 / 25 |
+| trace final view | globe | 83 | 725 / 734 | 24 / 25 |
 
-Dissolve costs about 14–15% more total time in these matched views, including its explicit final
-full-cell repaint. Its final line redraw costs 43.609 / 44.438 / 38.117 ms (the two profile views
-and trace respectively). First-pass latency is longer than rows at 1x and in the trace; it is
-shorter at 2x with the off-center focus, where the baseline's first top band covers different work.
+For comparison, the retired orders in `refine-order-g4.json` (same views): rows 693 / 687 / 644 ms
+total, center-out 673 / 700 / 644, dissolve 796 / 782 / 732. Against the retired top-down rows:
+**circle is within about 3 percent at 1x and in the trace view, and about 11 percent slower at 2x**;
+rectangle and globe are about 11-14 percent slower than circle at 1x and in the trace view, and
+equal or faster at 2x. The reason for the differences is not established (the final full repaint is common to all; cache
+behavior across cell orders is a guess). The first order measured in each view (rectangle) shows a
+cold-start worst step of 86-101 ms at 1x; the retired rows order, also measured first, showed 71 ms
+for the same reason, so read that cell as warm-up, not as a property of the shape.
 
-The worst dissolve step was 26.207 ms over these 27 G4 runs, versus the older reported 120.132 ms
-continuation. **That does not prove a scheduling improvement over today's baseline:** rows also
-stayed below 120 ms in this run (worst 70.753 ms), and the trace's 25.125 vs 24.539 ms worst is
-essentially equal. Interrupted wall times vary substantially; the per-run median maxima are also
-in the raw report. Do not claim a hard response deadline or attribute the historical 120 ms spike
-to smoothing. Smoothing and cell rasterization were not tuned.
+**Final images are identical** across all orders on host and G4 for every view:
+`19dd1b02e4cb2a8b` (profile 1x), `572eba5730155418` (profile 2x) and `9e6de6b83f243a80` (trace), the
+same hashes the retired row, center-out and dissolve orders produced. The sampled refined pin in
+`tests/golden/refine-checksum.txt`, the app replay hash and the outline goldens did not change.
 
-Host and G4 full-frame hashes agree for every order in all three views:
-`19dd1b02e4cb2a8b`, `572eba5730155418`, `9e6de6b83f243a80`. The established app replay
-`9b4a458633a32d9d`, sampled refined replay `efa030af1a10f887` and outline goldens remain unchanged.
-No pin file changed. Progress snapshots use two distinct foci at passes 3, 7, 11 and settled with
-lines; the host contact sheet was visually inspected. This is headless evidence, not desktop or
-scanout acceptance. Full-frame uploads at every dissolve pass may add display cost; it is excluded
-from the measured totals and remains owner acceptance work.
+Not measured: scanout, X uploads at every pass (each completed pass reports a ready frame), and any
+OS 9 execution. This is headless evidence only; whether the circle default is the right feel is the
+owner's hands-on call (`O` key).
 
-**Retain as an opt-in experiment; keep rows as the default.** The screen-space pattern visibly
-tracks the touchpoint, but total time, blank outlines during terrain, and presentation cadence
-need the owner's hands-on decision. This pass does not make that product choice.
+## Verification
 
-## Verification and failures
-
-GCC ASan/UBSan and clang: 36/36 each, including both private X11 depths and the codec tests merged
-before this pass. Tests compare every pixel for several foci (including outside the viewport),
-zoom levels, contrasting neighboring terrain and limb clipping; verify center-out first-band
-selection, per-pass/final-full-fill work, deterministic focus-sensitive assignment, cancellation
-at pass boundaries and exact trace/model roundtrips. The existing refined-pin test now also
-replays center and dissolve through the actual benchmark, not only a constructed quality profile.
-
-Five mutants are rejected: lost release focus, center-out replaced by rows, ignored horizontal
-focus, omitted final full repaint, and ignored generation cancellation. Initially the focus-distance and
-final-repaint mutants survived final-image-only tests: final pixels alone cannot prove focus
-or the required final repaint. Independent x/y focus assertions and admitted-slice coverage now
-catch both. The restored code passes again. G4 app and terrain unit tests also pass; all eight
-partial/settled snapshot hashes match the host. Separate G4 replay validation (two repetitions per
-order, `perf/refine-order-replays-g4.json`) reproduces `efa030af1a10f887` for rows, center and dissolve;
-its timings are validation-run means/maxima, not the nine-run medians above. New tests first failed on the missing APIs. Clang
-caught a missing test `<algorithm>` include; lint caught unchecked fixed-camera optionals. Those
-were fixed. A test counter initially updated during the final pass instead of only at its entry;
-the pass-boundary snapshot fixed that assertion. Sanitizer execution required leaving the process
-sandbox because LeakSanitizer cannot operate under ptrace; the unrestricted run passes.
-
-Both PowerPC and 68k Retro68 compile probes pass (no printed FAIL); the OS 9 application links,
-packages with identical HFS fork roundtrip and meets budget. Current OS 9 data fork 241,234 bytes,
-payload 277,809, HFS free 1,170,432; data-fork delta +4,118 from the prior 237,116-byte snapshot.
-No native OS 9 runtime, CI, current real-display or smoothing-tuning claim.
+Tests (`tests/test_terrain.cpp`, `test_app.cpp`, `test_refine.py`) compare every pixel for several
+foci (center, corners, off-viewport, off-center), two zoom levels, contrasting neighbors and limb
+clipping, for all three orders; check each cell's pass against an independent oracle (the cell's
+position computed from latitude and longitude, not from the production projection); check the
+globe fallback, non-finite foci, and on a 160x120 viewport that the rectangle reaches the same
+fraction of each axis in the same pass; check cancellation at a pass boundary; and replay each
+order through the benchmark against the refined pin. Mutation checks and the build matrix are in the
+commit history of the change that introduced this file.

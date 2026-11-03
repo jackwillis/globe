@@ -55,7 +55,7 @@ bool run(const char* name, const Camera& camera, ScreenPoint focus, const Scene&
                 if (step.band_ready) {
                     if (first_ms < 0)
                         first_ms = ms(b - start);
-                    if (++ready == kDissolvePasses && o == 2)
+                    if (++ready == kRefinePasses)
                         line_start = b;
                 }
             }
@@ -78,9 +78,9 @@ bool run(const char* name, const Camera& camera, ScreenPoint focus, const Scene&
                     "\"worst_step_ms\":%.3f,"
                     "\"final_lines_ms\":%.3f,\"checksum\":\"%016llx\"}",
                     comma || o ? ",\n" : "", name,
-                    o == 0   ? "rows"
-                    : o == 1 ? "center"
-                             : "dissolve",
+                    o == 0   ? "rectangle"
+                    : o == 1 ? "circle"
+                             : "globe",
                     focus.x, focus.y, median(first), median(total), median(longest),
                     *std::max_element(longest.begin(), longest.end()), median(lines),
                     static_cast<unsigned long long>(hash));

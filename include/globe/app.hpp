@@ -52,7 +52,7 @@ struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
     TerrainStyle terrain_style = TerrainStyle::Hypsometric;
     std::optional<ScreenPoint> refinement_focus;
-    RefinementOrder refinement_order = RefinementOrder::Rows;
+    RefinementOrder refinement_order = RefinementOrder::Circle;
     Camera camera;
     Layers layers;
     DragMode drag_mode;

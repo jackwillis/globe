@@ -3,7 +3,7 @@
 // One-line text form of a Msg, for recorded sessions and scripted benchmark input.
 //
 //   down TIME X Y | move TIME X Y | up TIME | wheel TIME STEPS | key TIME NAME
-//   order TIME rows|center|dissolve
+//   order TIME rectangle|circle|globe
 //   resize W H | expose | tick TIME | elevation LEVEL WIDTH HEIGHT | style TIME
 //
 // Blank lines and lines starting with '#' are comments. Numbers are written with enough digits to

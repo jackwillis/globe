@@ -39,6 +39,7 @@ bool same_camera(const Camera& a, const Camera& b) {
 
 void test_initial_model() {
     const Model m = fresh();
+    CHECK(m.refinement_order == RefinementOrder::Circle); // the default order
     CHECK(m.camera.width == 160 && m.camera.height == 120);
     CHECK_NEAR(m.camera.radius_px, 0.4 * 120.0, 1e-12);
     CHECK_NEAR(m.camera.center_x, 80.0, 0.0);
@@ -734,7 +735,7 @@ void test_refinement_focus() {
     update(m, PointerDown{2020, 80, 70});
     CHECK(m.refinement_focus->x == m.camera.center_x);
     CHECK(m.refinement_focus->y == m.camera.center_y);
-    for (const char* order : {"rows", "center", "dissolve"}) {
+    for (const char* order : {"rectangle", "circle", "globe"}) {
         auto msg = parse_message(std::string("order 3000 ") + order);
         CHECK(msg && std::holds_alternative<SetRefinementOrder>(*msg));
         if (!msg)
@@ -747,6 +748,9 @@ void test_refinement_focus() {
         CHECK(std::string(text, n) == std::string("order 3000 ") + order);
     }
     CHECK(!parse_message("order 1 random"));
+    // The retired names and the brief-lived "square" are unknown.
+    for (const char* old : {"rows", "center", "dissolve", "square"})
+        CHECK(!parse_message(std::string("order 1 ") + old));
     update(m, Resize{300, 200});
     CHECK(!m.refinement_focus);
 }

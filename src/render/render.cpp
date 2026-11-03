@@ -328,31 +328,11 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
         phase_ = -2;
         palette_.border = rgb565(0, 0, 0);
     }
-    if (!std::isfinite(quality_.focus.x) || !std::isfinite(quality_.focus.y))
-        quality_.focus = {camera_.center_x, camera_.center_y};
-    band_first_ = ordered_band(0) * kRefineBandRows;
-    row_ = band_first_;
+    if (terrain_ != nullptr)
+        plan_ = make_pass_plan(camera_, quality_.order, quality_.focus);
     quality_.max_chord_px = std::isfinite(quality_.max_chord_px)
                                 ? std::clamp(quality_.max_chord_px, 0.25, 16.0)
                                 : kMaxChordPx;
-}
-
-int RefinementJob::ordered_band(int ordinal) const {
-    const int count = (camera_.height + kRefineBandRows - 1) / kRefineBandRows;
-    if (quality_.order != RefinementOrder::CenterOut)
-        return ordinal;
-    const int center = static_cast<int>(std::clamp(quality_.focus.y, 0.0,
-                                                   static_cast<double>(camera_.height - 1))) /
-                       kRefineBandRows;
-    // Visit rows by distance from the focus band; ties go upward. At most 1024 bands.
-    int found = 0;
-    for (int distance = 0; distance < count; ++distance) {
-        if (center - distance >= 0 && found++ == ordinal)
-            return center - distance;
-        if (distance && center + distance < count && found++ == ordinal)
-            return center + distance;
-    }
-    return count;
 }
 
 RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units) {
@@ -365,9 +345,10 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
     }
     if (max_work_units == 0)
         return result;
-    result.first_row = dissolve() ? 0 : band_first_;
+    // With terrain the whole frame is one focus-ordered job; without it, top-down 16-row bands.
+    result.first_row = terrain_ != nullptr ? 0 : band_first_;
     result.end_row =
-        dissolve() ? fb.height() : std::min(band_first_ + kRefineBandRows, fb.height());
+        terrain_ != nullptr ? fb.height() : std::min(band_first_ + kRefineBandRows, fb.height());
     const int saved_first = fb.first_row();
     const int saved_end = fb.end_row();
     fb.clip_rows(result.first_row, result.end_row);
@@ -382,19 +363,18 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             }
         } else if (phase_ == -1) {
             terrain_->bound_cell(prepare_index_, fb.height(), kRefineBandRows);
-            if (dissolve())
-                terrain_->assign_pass(prepare_index_, camera_, quality_.focus);
+            terrain_->assign_pass(prepare_index_, plan_);
             ++prepare_index_;
             if (prepare_index_ == terrain_->cell_count()) {
                 phase_ = 0;
                 prepare_index_ = 0;
             }
         } else if (phase_ == 7) {
-            // Earlier passes paint selected cells. The last repaints all in canonical index
+            // Pass k paints the cells of ring k. The last pass repaints all in canonical index
             // order: clipped limb polygons can overlap and must keep today's ownership.
-            const bool last = dissolve_pass_ + 1 == kDissolvePasses;
+            const bool last = pass_ + 1 == kRefinePasses;
             const auto pass = terrain_->cell_pass(terrain_cell_);
-            if (pass != 255 && (last || pass == dissolve_pass_)) {
+            if (pass != 255 && (last || pass == pass_)) {
                 const auto bands = terrain_->cell_bands(terrain_cell_);
                 if (cell_band_ < 0)
                     cell_band_ = bands.first;
@@ -407,34 +387,29 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                     ++terrain_cell_;
                     cell_band_ = -1;
                 }
-                ++stats_.dissolve_slices;
+                ++stats_.terrain_slices;
                 ++fills;
             } else {
                 ++terrain_cell_;
             }
             if (terrain_cell_ == terrain_->cell_count()) {
                 terrain_cell_ = 0;
-                ++dissolve_pass_;
+                ++pass_;
                 result.band_ready = true;
                 if (last)
                     phase_ = 1; // Lines once, above every terrain pass.
             }
-            // Bound the experimental fill continuation by four 16-row cell slices as well
-            // as work units. This changes scheduling, not smoothing or rasterization.
+            // Bound a fill continuation by four 16-row cell slices as well as work units. This
+            // changes scheduling, not smoothing or rasterization.
             if (fills == 4)
                 break;
-        } else if (phase_ == 6) {
-            terrain_->draw_cell(fb, terrain_cell_++, band_first_ / kRefineBandRows, kRefineBandRows,
-                                quality_.terrain_style, quality_.smooth_terrain);
-            if (terrain_cell_ == terrain_->cell_count())
-                phase_ = 1;
         } else if (phase_ == 0) {
             fb.clip_rows(row_, row_ + 1);
             fb.fill_span(row_, 0, fb.width() - 1, palette_.background);
             fill_disc(fb, camera_.center_x, camera_.center_y, camera_.radius_px, palette_.ocean);
             fb.clip_rows(result.first_row, result.end_row);
             if (++row_ == result.end_row) {
-                phase_ = dissolve() ? 7 : terrain_ != nullptr ? 6 : 1;
+                phase_ = terrain_ != nullptr ? 7 : 1;
                 terrain_cell_ = 0;
             }
         } else if (phase_ == 1 || phase_ == 2) {
@@ -502,14 +477,13 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             }
         } else {
             result.band_ready = true;
-            if (dissolve()) {
+            if (terrain_ != nullptr) {
                 active_ = false;
             } else {
-                ++band_ordinal_;
-                active_ = band_ordinal_ < (fb.height() + kRefineBandRows - 1) / kRefineBandRows;
-                band_first_ = ordered_band(band_ordinal_) * kRefineBandRows;
+                band_first_ = result.end_row;
                 row_ = band_first_;
                 phase_ = 0;
+                active_ = band_first_ < fb.height();
             }
         }
     }

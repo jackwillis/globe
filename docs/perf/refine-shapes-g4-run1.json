@@ -1,0 +1,11 @@
+{"repeat":9,"work_units":64,"results":[
+{"view":"profile_1x","order":"rectangle","focus":[320.0,240.0],"first_pass_ms":78.236,"total_ms":790.857,"median_longest_step_ms":24.601,"worst_step_ms":86.356,"final_lines_ms":43.395,"checksum":"19dd1b02e4cb2a8b"},
+{"view":"profile_1x","order":"circle","focus":[320.0,240.0],"first_pass_ms":77.652,"total_ms":710.720,"median_longest_step_ms":22.970,"worst_step_ms":24.890,"final_lines_ms":43.438,"checksum":"19dd1b02e4cb2a8b"},
+{"view":"profile_1x","order":"globe","focus":[320.0,240.0],"first_pass_ms":83.384,"total_ms":792.892,"median_longest_step_ms":23.084,"worst_step_ms":27.585,"final_lines_ms":43.444,"checksum":"19dd1b02e4cb2a8b"},
+{"view":"profile_2x_offcenter","order":"rectangle","focus":[80.0,80.0],"first_pass_ms":77.150,"total_ms":706.592,"median_longest_step_ms":5.695,"worst_step_ms":24.688,"final_lines_ms":44.327,"checksum":"572eba5730155418"},
+{"view":"profile_2x_offcenter","order":"circle","focus":[80.0,80.0],"first_pass_ms":77.708,"total_ms":765.420,"median_longest_step_ms":5.397,"worst_step_ms":24.159,"final_lines_ms":44.326,"checksum":"572eba5730155418"},
+{"view":"profile_2x_offcenter","order":"globe","focus":[80.0,80.0],"first_pass_ms":85.534,"total_ms":764.800,"median_longest_step_ms":5.314,"worst_step_ms":24.153,"final_lines_ms":44.313,"checksum":"572eba5730155418"},
+{"view":"trace","order":"rectangle","focus":[320.0,240.0],"first_pass_ms":77.620,"total_ms":722.966,"median_longest_step_ms":5.241,"worst_step_ms":30.238,"final_lines_ms":37.986,"checksum":"9e6de6b83f243a80"},
+{"view":"trace","order":"circle","focus":[320.0,240.0],"first_pass_ms":77.439,"total_ms":634.963,"median_longest_step_ms":0.933,"worst_step_ms":24.083,"final_lines_ms":37.999,"checksum":"9e6de6b83f243a80"},
+{"view":"trace","order":"globe","focus":[320.0,240.0],"first_pass_ms":82.516,"total_ms":724.726,"median_longest_step_ms":5.318,"worst_step_ms":24.401,"final_lines_ms":37.987,"checksum":"9e6de6b83f243a80"}
+]}

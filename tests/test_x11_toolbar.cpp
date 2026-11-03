@@ -147,7 +147,8 @@ int main(int argc, char** argv) {
     CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0);
     if (repaint_test) {
         CHECK(text.find("\"frames\": 1,") != std::string::npos);
-        CHECK(text.find("\"refine_bands\": 8,") != std::string::npos);
+        // 16 focus passes plus the final lines frame.
+        CHECK(text.find("\"refine_bands\": 17,") != std::string::npos);
     } else {
         CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);
         CHECK(text.find("\"cursor_changes\": 5") != std::string::npos);
