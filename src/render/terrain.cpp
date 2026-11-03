@@ -14,7 +14,7 @@ struct Stop {
 };
 constexpr Stop stops[] = {{-11000, 4, 12, 48},  {-2000, 12, 54, 112},  {-200, 30, 105, 168},
                           {-1, 80, 160, 205},   {0, 78, 134, 67},      {1000, 143, 158, 83},
-                          {3000, 151, 110, 69}, {5000, 190, 165, 130}, {9000, 255, 255, 255}};
+                          {3000, 151, 110, 69}, {4500, 200, 185, 160}, {6000, 255, 255, 255}};
 void fill_polygon(Framebuffer& fb, const Vec3* p, int count, Rgb565 color) {
     if (count < 3)
         return;
@@ -61,38 +61,23 @@ void fill_polygon(Framebuffer& fb, const Vec3* p, int count, Rgb565 color) {
 Rgb565 terrain_color(std::int16_t meters, double latitude, TerrainStyle style) {
     if (meters >= 0 && latitude < -60)
         return rgb565(255, 255, 255);
-    if (style == TerrainStyle::Map || style == TerrainStyle::Natural)
-        return landclass_color(meters, LandClass::Unknown, style);
-    if (style == TerrainStyle::Hypsometric)
-        return hypsometric_color(meters);
-    if (meters < -2000)
-        return rgb565(8, 36, 96);
-    if (meters < 0)
-        return rgb565(32, 108, 170);
-    if (meters < 200)
-        return rgb565(80, 144, 72);
-    if (meters < 1000)
-        return rgb565(152, 176, 88);
-    if (meters < 3000)
-        return rgb565(160, 120, 72);
-    if (meters < 5000)
-        return rgb565(200, 176, 144);
-    return rgb565(248, 248, 248);
+    if (style == TerrainStyle::Map)
+        return landclass_color(meters, LandClass::Unknown);
+    return hypsometric_color(meters);
 }
-Rgb565 landclass_color(std::int16_t meters, LandClass kind, TerrainStyle style) {
+// The Map land palette, one row per class (Unknown, Desert, Forest, GrassShrub, Tundra). Change the
+// saturation of the whole look here; relief shading lifts each color a little per 500 m of height.
+Rgb565 landclass_color(std::int16_t meters, LandClass kind) {
     if (meters < 0)
-        return style == TerrainStyle::Map ? rgb565(164, 202, 224) : hypsometric_color(meters);
+        return kMapOcean;
     struct Color {
         int r, g, b;
     };
     static constexpr Color map[kLandClassCount] = {
-        {223, 226, 213}, {238, 225, 193}, {201, 220, 186}, {223, 227, 200}, {220, 220, 207}};
-    static constexpr Color natural[kLandClassCount] = {
-        {156, 161, 133}, {213, 180, 112}, {54, 115, 64}, {151, 168, 87}, {166, 167, 139}};
+        {206, 214, 170}, {236, 208, 140}, {102, 166, 92}, {176, 200, 110}, {196, 204, 178}};
     const auto i = static_cast<unsigned>(kind);
-    const auto c = (style == TerrainStyle::Map ? map : natural)[i < kLandClassCount ? i : 0];
-    const int band = std::clamp(static_cast<int>(meters), 0, 6000) / 500;
-    const int lift = band * (style == TerrainStyle::Map ? 1 : 5);
+    const auto c = map[i < kLandClassCount ? i : 0];
+    const int lift = std::clamp(static_cast<int>(meters), 0, 6000) / 500 * 2;
     return rgb565(static_cast<std::uint8_t>(std::min(255, c.r + lift)),
                   static_cast<std::uint8_t>(std::min(255, c.g + lift)),
                   static_cast<std::uint8_t>(std::min(255, c.b + lift)));
@@ -114,7 +99,7 @@ Rgb565 hypsometric_color(std::int16_t meters) {
 std::size_t TerrainScene::required_bytes(const Elevation& grid) {
     return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) *
                (2 * sizeof(Vec3) + 1) +
-           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 2) + 6144;
+           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 2) + 3072;
 }
 std::optional<TerrainScene> TerrainScene::create(const Elevation& grid,
                                                  const LandClasses* classes) {
@@ -146,14 +131,9 @@ std::optional<TerrainScene> TerrainScene::create(const Elevation& grid,
         const auto height = grid.value(static_cast<std::uint8_t>(i));
         if (height >= 0 && scene.first_land_ == 256)
             scene.first_land_ = i;
-        for (unsigned kind = 0; kind < kLandClassCount; ++kind) {
-            scene.class_colors_[0][kind][i] =
-                landclass_color(height, static_cast<LandClass>(kind), TerrainStyle::Map);
-            scene.class_colors_[1][kind][i] =
-                landclass_color(height, static_cast<LandClass>(kind), TerrainStyle::Natural);
-        }
-        scene.colors_[0][i] = terrain_color(height, 0, TerrainStyle::Hypsometric);
-        scene.colors_[1][i] = terrain_color(height, 0, TerrainStyle::CelShaded);
+        for (unsigned kind = 0; kind < kLandClassCount; ++kind)
+            scene.class_colors_[kind][i] = landclass_color(height, static_cast<LandClass>(kind));
+        scene.colors_[i] = terrain_color(height, 0, TerrainStyle::Relief);
     }
     for (std::uint32_t y = 0; y < grid.height(); ++y)
         for (std::uint32_t x = 0; x < grid.width(); ++x) {
@@ -269,9 +249,7 @@ void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int b
         const auto a = value(first), b = value(first + 1), c = value(first + grid_.width() + 2),
                    d = value(first + grid_.width() + 1);
         const auto* palette =
-            (style == TerrainStyle::Map || style == TerrainStyle::Natural)
-                ? class_colors_[style == TerrainStyle::Natural ? 1 : 0][class_cells_[index]].data()
-                : colors_[style == TerrainStyle::CelShaded ? 1 : 0].data();
+            style == TerrainStyle::Map ? class_colors_[class_cells_[index]].data() : colors_.data();
         fill_triangle_shaded(fb, input[0].x, input[0].y, a, input[1].x, input[1].y, b, input[2].x,
                              input[2].y, c, palette);
         fill_triangle_shaded(fb, input[0].x, input[0].y, a, input[2].x, input[2].y, c, input[3].x,

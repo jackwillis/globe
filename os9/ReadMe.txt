@@ -7,7 +7,7 @@ Drag to turn the globe; double-click to center and zoom. Arrow keys turn it.
 +/- zoom, R resets, G toggles graticule, B toggles borders, N aligns north,
 T switches turntable/trackball drag, S cycles styles, Q or Escape quits. The window can grow.
 Moving shows outlines; pausing refines the selected look.
-S cycles Map (default), Natural and Hypsometric in this floppy edition.
+S switches between Map (default) and Relief.
 
 This designated floppy edition contains the application, Natural Earth atlas
 NOAA ETOPO one-degree elevation and RESOLVE one-degree biome classes. It has no downloads, toolbar or place cards.

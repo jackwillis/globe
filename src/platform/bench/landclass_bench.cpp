@@ -34,8 +34,7 @@ int main(int argc, char** argv) {
                 static_cast<unsigned long>(LandClasses::bytes()),
                 static_cast<unsigned long>(terrain->bytes()));
     bool comma = false;
-    for (auto style : {TerrainStyle::Map, TerrainStyle::Natural, TerrainStyle::Hypsometric,
-                       TerrainStyle::CelShaded})
+    for (auto style : {TerrainStyle::Map, TerrainStyle::Relief})
         for (double radius : {220., 440.}) {
             const auto camera = make_camera({{30, 10}, 0, radius, 640, 480});
             if (!camera)
@@ -63,10 +62,7 @@ int main(int argc, char** argv) {
                 hash = h;
             }
             std::sort(times.begin(), times.end());
-            const char* name = style == TerrainStyle::Map           ? "Map"
-                               : style == TerrainStyle::Natural     ? "Natural"
-                               : style == TerrainStyle::Hypsometric ? "Hypsometric"
-                                                                    : "Cel-shaded";
+            const char* name = style == TerrainStyle::Map ? "Map" : "Relief";
             std::printf("%s{\"look\":\"%s\",\"radius\":%.0f,\"median_ms\":%.3f,\"worst_step_ms\":%."
                         "3f,\"checksum\":\"%016llx\"}",
                         comma ? ",\n" : "", name, radius, times[times.size() / 2], worst,

@@ -14,8 +14,8 @@ assert stats['frame_checksum']==expected,stats
 assert stats['refine_steps']>0 and stats['refine_ms']>0,stats
 assert 0<stats['terrain_cache_bytes']<=32*1024*1024,stats
 
-# Changing the default look must not alter the existing Hypsometric terrain path.
+# Relief (one style cycle from the Map default) is pinned separately; it changed once, when high ground turned white from 6,000 m.
 with tempfile.NamedTemporaryFile(mode='w',suffix='.trace') as trace:
-    trace.write(Path(sys.argv[-1]).read_text()+'\nstyle 8000\nstyle 8001\n');trace.flush()
+    trace.write(Path(sys.argv[-1]).read_text()+'\nstyle 8000\n');trace.flush()
     legacy=json.loads(subprocess.run(sys.argv[1:-1]+[trace.name],capture_output=True,text=True,check=True).stdout)
-    assert legacy['frame_checksum']=='efa030af1a10f887',legacy
+    assert legacy['frame_checksum']=='1c3eac3bcc2d3b8f',legacy

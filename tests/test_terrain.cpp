@@ -39,9 +39,9 @@ void test_terrain() {
         return;
     CHECK(terrain->bytes() <= kTerrainCacheBudget);
     CHECK(terrain->bytes() == TerrainScene::required_bytes(*elevation));
-    CHECK(terrain->color(192, TerrainStyle::CelShaded) != terrain->color(192));
-    CHECK(terrain_color(1000, -80, TerrainStyle::Hypsometric) == rgb565(255, 255, 255));
-    CHECK(terrain_color(-1000, -80, TerrainStyle::Hypsometric) != rgb565(255, 255, 255));
+    CHECK(terrain->color(192, TerrainStyle::Map, LandClass::Forest) != terrain->color(192));
+    CHECK(terrain_color(1000, -80, TerrainStyle::Relief) == rgb565(255, 255, 255));
+    CHECK(terrain_color(-1000, -80, TerrainStyle::Relief) != rgb565(255, 255, 255));
     auto base = Framebuffer::create(80, 61);
     CHECK(base);
     if (base) {
@@ -81,7 +81,7 @@ void test_terrain() {
     CHECK(fb->pixel(44, 34) == terrain->color(192));
     CHECK(fb->pixel(40, 30) == rgb565(0, 0, 0)); // borders above terrain are black
     CHECK(fb->pixel(0, 0) == kDefaultPalette.background);
-    for (auto style : {TerrainStyle::Hypsometric, TerrainStyle::CelShaded}) {
+    for (auto style : {TerrainStyle::Relief, TerrainStyle::Map}) {
         const auto polar = *make_camera({{-80, 0}, 0, 25, 80, 61});
         RefinementJob ice(polar, *scene, kDefaultPalette, {false, false, false},
                           {1.5, true, 0, style}, 2, &*terrain);
@@ -196,16 +196,14 @@ void test_appearance() {
         return std::vector<Rgb565>(fb->data(), fb->data() + 100 * 80);
     };
     fb->clear(123);
-    auto flat = render(TerrainStyle::Hypsometric, false);
-    auto smooth = render(TerrainStyle::Hypsometric, true);
+    auto flat = render(TerrainStyle::Relief, false);
+    auto smooth = render(TerrainStyle::Relief, true);
     CHECK(flat != smooth);
-    auto cel = render(TerrainStyle::CelShaded, true);
-    CHECK(cel != smooth);
+    CHECK(render(TerrainStyle::Map, true) != smooth);
     terrain->draw_base(*fb, camera);
-    CHECK(render(TerrainStyle::Hypsometric, true) ==
-          smooth); // settled image independent of moving base
+    CHECK(render(TerrainStyle::Relief, true) == smooth); // settled image independent of moving base
     fb->clear(456);
-    CHECK(render(TerrainStyle::Hypsometric, true) == smooth);
+    CHECK(render(TerrainStyle::Relief, true) == smooth);
 }
 // Pass of a cell computed independently of the production code, from the screen position of the
 // cell center.
@@ -314,14 +312,13 @@ void test_orders() {
     CHECK(bad.focus.x == camera.center_x && bad.focus.y == camera.center_y);
 }
 void test_landclass_looks() {
-    CHECK(landclass_color(100, LandClass::Desert, TerrainStyle::Natural) !=
-          landclass_color(100, LandClass::Forest, TerrainStyle::Natural));
-    CHECK(landclass_color(100, LandClass::Desert, TerrainStyle::Map) !=
-          landclass_color(100, LandClass::Forest, TerrainStyle::Map));
-    CHECK(landclass_color(-100, LandClass::Desert, TerrainStyle::Map) ==
-          landclass_color(-100, LandClass::Forest, TerrainStyle::Map));
-    CHECK(terrain_color(2000, -80, TerrainStyle::Natural) == rgb565(255, 255, 255));
-    CHECK(terrain_color(2000, 75, TerrainStyle::Natural) != rgb565(255, 255, 255));
+    CHECK(landclass_color(100, LandClass::Desert) != landclass_color(100, LandClass::Forest));
+    CHECK(landclass_color(-100, LandClass::Desert) == kMapOcean);
+    CHECK(landclass_color(-100, LandClass::Desert) == landclass_color(-100, LandClass::Forest));
+    CHECK(terrain_color(2000, -80, TerrainStyle::Map) == rgb565(255, 255, 255));
+    CHECK(terrain_color(2000, 75, TerrainStyle::Map) != rgb565(255, 255, 255));
+    CHECK(terrain_color(6000, 0, TerrainStyle::Relief) == rgb565(255, 255, 255)); // high ground
+    CHECK(terrain_color(3000, 0, TerrainStyle::Relief) != rgb565(255, 255, 255));
     auto bytes = land_grid();
     auto grid = Elevation::parse(bytes.data(), bytes.size());
     CHECK(grid);
@@ -352,7 +349,7 @@ void test_landclass_looks() {
     CHECK(scene && fb);
     if (!scene || !fb)
         return;
-    for (auto style : {TerrainStyle::Map, TerrainStyle::Natural}) {
+    for (auto style : {TerrainStyle::Map}) {
         for (auto point : {LatLon{23.5, 13.5}, LatLon{-3.5, -62.5}}) {
             auto camera = make_camera({point, 0, 35, 100, 80});
             CHECK(camera);
@@ -365,7 +362,7 @@ void test_landclass_looks() {
             // Uniform 1,000 m heights make the exact center-pixel palette value an independent
             // oracle.
             const auto kind = point.lat_deg > 0 ? LandClass::Desert : LandClass::Forest;
-            CHECK(fb->pixel(50, 40) == landclass_color(grid->value(192), kind, style));
+            CHECK(fb->pixel(50, 40) == landclass_color(grid->value(192), kind));
         }
     }
 }

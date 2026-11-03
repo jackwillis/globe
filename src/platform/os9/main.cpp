@@ -22,9 +22,8 @@
 // AppearanceLib exports the function; OS 9 provides arrow=0, closed hand=8, open hand=9.
 extern "C" std::int32_t SetThemeCursor(std::uint32_t cursor);
 using namespace globe;
-static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Natural);
-static_assert(next_terrain_style(TerrainStyle::Natural) == TerrainStyle::Hypsometric);
-static_assert(next_terrain_style(TerrainStyle::Hypsometric) == TerrainStyle::Map);
+static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Relief);
+static_assert(next_terrain_style(TerrainStyle::Relief) == TerrainStyle::Map);
 namespace {
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;

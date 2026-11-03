@@ -257,10 +257,10 @@ std::size_t Scene::bytes() const {
 
 Palette palette_for_style(Palette palette, TerrainStyle style) {
     if (style == TerrainStyle::Map) {
-        palette.ocean = rgb565(164, 202, 224);
-        palette.coastline = rgb565(139, 163, 151);
-        palette.border = rgb565(185, 180, 168);
-        palette.graticule = rgb565(133, 173, 190);
+        palette.ocean = kMapOcean;
+        palette.coastline = rgb565(80, 118, 104);
+        palette.border = rgb565(158, 148, 132);
+        palette.graticule = rgb565(120, 168, 206);
     }
     return palette;
 }

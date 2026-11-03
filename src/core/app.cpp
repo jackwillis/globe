@@ -235,7 +235,7 @@ ToolbarState toolbar_state(const Model& model) {
     state[index(Command::ToggleGraticule)].checked = model.layers.graticule;
     state[index(Command::ToggleBorders)].checked = model.layers.borders;
     state[index(Command::ToggleDragMode)].checked = model.drag_mode == DragMode::Trackball;
-    state[index(Command::CycleStyle)].checked = model.terrain_style == TerrainStyle::CelShaded;
+    state[index(Command::CycleStyle)].checked = model.terrain_style == TerrainStyle::Relief;
     // World north is +Y. Its screen projection must point up, with no sideways component.
     state[index(Command::AlignNorth)].enabled =
         std::fabs(model.camera.right.y) > 1e-12 || model.camera.up.y < 0.0;
