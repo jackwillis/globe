@@ -300,3 +300,31 @@ Do:
 
 Verify as before (36/36 host, ASan/UBSan, policy, Retro68 probes), mutation-check new tests,
 append a dated note here. No compiling on maul; owner/Claude push test builds.
+
+### 2026-11-02 — Assignment for Codex, after GL-34/33: progressive line reveal (GL-41, written by Claude)
+
+Owner request: after the terrain has finished refining, the vector layers (graticule, coastlines,
+borders) should reveal outward from the refinement focus (halfway between the last touchpoint and
+the view center, see `quality_for`) in the selected order shape (rectangle/circle/globe), instead of
+all appearing at once. Plain lines while dragging stay as they are. Do GL-34/33 first; this touches
+`src/render/terrain.cpp` too.
+
+Design to start from (change it if measurement says so):
+- Walk each polyline once per job and cut it into chunks of about 16 points; give each chunk the
+  pass of its midpoint from the same pass plan the cells use (`make_pass_plan`). Store small
+  (arc, start, count, pass) entries, not per-segment data; report the bytes. No per-pass re-walk:
+  that is the 16x mistake GL-6 removed.
+- After all terrain passes (the final canonical repaint stays as is), draw pass k's chunks, report
+  the frame ready, then pass k+1. Cancellation at every step as now.
+- Pacing: a timer wake between steps so the sweep is visible; step time is one named constant,
+  start at about 30 ms (about half a second in total) and make it easy for the owner to tune. Any
+  input cancels the reveal as it cancels refinement. Clocks only through the existing wake/Tick
+  path, never inside the core; replays stay deterministic.
+- The settled image must be pixel-identical to today's for every order and focus: refined pin,
+  replay hash and goldens must not move. Chunk boundaries must not drop or double-draw a segment
+  (draw the shared end point once) and clipped limb polyline behavior must be unchanged.
+- Measure on the G4 (1x/2x, median of 9): line-walk plus chunking cost, total settle time, worst
+  step, memory. X11 upload cost per step is unmeasured (GL-7 is the owner's); say so.
+- Outline-only refine (no terrain) keeps its top-down bands unless trivial to include.
+Tests: every-pixel equality against the unpaced result for all three orders and several foci;
+oracle for chunk passes; cancellation mid-reveal; mutation checks. Append a dated note here.
