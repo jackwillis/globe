@@ -264,7 +264,7 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& sce
     RenderStats stats;
     fb.clear(palette.background);
     fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
-    if (base)
+    if (base && quality.gray_base)
         base->draw_base(fb, camera);
     if (layers.graticule) {
         const Vec3* grid = scene.graticule();
@@ -295,12 +295,12 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& sce
 }
 
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atlas,
-                         const Palette& palette, const Layers& layers, const TerrainScene* base) {
+                         const Palette& palette, const Layers& layers,
+                         const TerrainScene* /*base*/) {
+    // The reference path never draws the gray base: plain vectors, matching the default quality.
     RenderStats stats;
     fb.clear(palette.background);
     fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
-    if (base)
-        base->draw_base(fb, camera);
     if (layers.graticule) {
         draw_graticule(fb, camera, palette.graticule, stats, parallel_point, meridian_point);
     }

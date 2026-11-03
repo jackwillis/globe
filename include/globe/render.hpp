@@ -25,6 +25,9 @@ struct RenderQuality {
     unsigned elevation_level = 0;
     TerrainStyle terrain_style = TerrainStyle::Hypsometric;
     bool smooth_terrain = true;
+    // Draw the coarse gray land mask under the lines. Off: while moving, the globe is plain vectors
+    // (owner's choice, 2026-11-02); the mask stays available for a later style.
+    bool gray_base = false;
 };
 
 struct Palette {

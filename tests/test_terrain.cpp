@@ -92,6 +92,18 @@ void test_terrain() {
     while (moving.active())
         moving.step(*fb, 2, 256);
     CHECK(fb->pixel(44, 34) == kDefaultPalette.ocean);
+    {
+        // The moving frame is plain vectors by default; the gray base only appears when asked for.
+        RenderQuality plain;
+        render_globe(*fb, camera, *scene, kDefaultPalette, {false, false, false}, true, plain,
+                     &*terrain);
+        CHECK(fb->pixel(44, 34) == kDefaultPalette.ocean);
+        RenderQuality gray;
+        gray.gray_base = true;
+        render_globe(*fb, camera, *scene, kDefaultPalette, {false, false, false}, true, gray,
+                     &*terrain);
+        CHECK(fb->pixel(44, 34) == kMovingLand);
+    }
     // Opposite hemispheres use different colors; a hidden cell must never paint through.
     for (unsigned y = 0; y < 180; ++y)
         for (unsigned x = 0; x < 360; ++x)

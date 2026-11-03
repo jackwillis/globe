@@ -90,3 +90,10 @@ used as the strict-interior oracle. Disabled terrain, missing fill, border color
 and horizon inclusion mutants are rejected. Host GCC sanitizer/clang suites pass 21/21; G4 terrain
 unit tests pass. Retro68 PowerPC/68k compile only. Private-Xvfb readback now includes settled bands;
 its test wrapper's exit status is authoritative (the previous permissive idle regex was removed).
+
+## Plain vectors while moving (owner decision, 2026-11-02)
+
+The gray moving land mask is off by default: `RenderQuality::gray_base` is false, so a drag shows
+plain vectors again. The mask code (`TerrainScene::draw_base`) and its tests stay for a possible
+later style. The reference (atlas) render path never draws the base. The "71e66eac3bde93c7" moving
+benchmark checksum above describes the mask-on build; the default moving frames are outline-only.
