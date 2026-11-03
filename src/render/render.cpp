@@ -342,7 +342,7 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
             palette_.border = rgb565(0, 0, 0);
     }
     if (terrain_ != nullptr)
-        plan_ = make_pass_plan(camera_, quality_.order, quality_.focus);
+        plan_ = make_pass_plan(camera_, quality_.focus);
     quality_.max_chord_px = std::isfinite(quality_.max_chord_px)
                                 ? std::clamp(quality_.max_chord_px, 0.25, 16.0)
                                 : kMaxChordPx;

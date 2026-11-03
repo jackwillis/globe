@@ -51,7 +51,6 @@ struct ElevationLevel {
 struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
     TerrainStyle terrain_style = TerrainStyle::Map;
-    RefinementOrder refinement_order = RefinementOrder::Circle;
     Camera camera;
     Layers layers;
     DragMode drag_mode;
@@ -101,18 +100,13 @@ struct Tick {
     std::uint64_t time_ms;
 };
 
-struct SetRefinementOrder {
-    std::uint64_t time_ms;
-    RefinementOrder order;
-};
-
 struct RegisterElevation {
     unsigned level;
     std::uint32_t width, height;
 };
 
 using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint,
-                         Tick, RegisterElevation, SetRefinementOrder>;
+                         Tick, RegisterElevation>;
 
 struct Effects {
     bool redraw = false;

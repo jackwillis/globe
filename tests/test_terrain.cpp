@@ -208,11 +208,9 @@ void test_appearance() {
     CHECK(render(TerrainStyle::Hypsometric, true) == smooth);
 }
 // Pass of a cell computed independently of the production code, from the screen position of the
-// cell center (Rectangle, Circle) or the angle of its center on the sphere (Globe).
-void check_assignment(TerrainScene& terrain, const Camera& camera, RefinementOrder order,
-                      ScreenPoint focus) {
-    const auto plan = make_pass_plan(camera, order, focus);
-    const double w = camera.width, h = camera.height;
+// cell center.
+void check_assignment(TerrainScene& terrain, const Camera& camera, ScreenPoint focus) {
+    const auto plan = make_pass_plan(camera, focus);
     const auto& grid = terrain.grid();
     unsigned seen = 0;
     for (std::size_t i = 0; i < terrain.cell_count(); ++i) {
@@ -231,30 +229,9 @@ void check_assignment(TerrainScene& terrain, const Camera& camera, RefinementOrd
                                                   grid.height();
         const auto v = to_camera_space(camera, to_unit_vector({lat, lon}));
         const auto p = to_screen(camera, v);
-        double distance = 0.0, step = 1.0;
-        if (order == RefinementOrder::Globe) {
-            // The plan averages the four corner dots; the oracle does the same from lat/lon.
-            const Vec3 f = plan.focus_world;
-            const double half_w = (grid.east_deg() - grid.west_deg()) / grid.width() / 2.0;
-            const double half_h = (grid.north_deg() - grid.south_deg()) / grid.height() / 2.0;
-            double mean = 0.0;
-            for (double sy : {-1.0, 1.0})
-                for (double sx : {-1.0, 1.0})
-                    mean += dot(f, to_unit_vector({lat + sy * half_h, lon + sx * half_w})) * 0.25;
-            distance = std::acos(std::clamp(mean, -1.0, 1.0)) / kDegToRad;
-            step = 180.0 / kRefinePasses;
-        } else if (order == RefinementOrder::Circle) {
-            const double rx = focus.x - camera.center_x, ry = focus.y - camera.center_y;
-            distance = std::hypot(p.x - plan.focus.x, p.y - plan.focus.y);
-            step = (std::hypot(rx, ry) + camera.radius_px) / kRefinePasses;
-        } else {
-            const double dx = std::max(std::fabs(plan.focus.x), std::fabs(w - plan.focus.x));
-            const double dy = std::max(std::fabs(plan.focus.y), std::fabs(h - plan.focus.y));
-            // Scaled by width * height, as the plan does.
-            distance =
-                std::max(std::fabs(p.x - plan.focus.x) * h, std::fabs(p.y - plan.focus.y) * w);
-            step = std::max(dx * h, dy * w) / kRefinePasses;
-        }
+        const double rx = focus.x - camera.center_x, ry = focus.y - camera.center_y;
+        const double distance = std::hypot(p.x - plan.focus.x, p.y - plan.focus.y);
+        const double step = (std::hypot(rx, ry) + camera.radius_px) / kRefinePasses;
         const double expect = distance / step;
         // Skip cells within a hair of a ring boundary (rounding of the oracle's own arithmetic).
         const double tolerance = 0.01;
@@ -283,16 +260,13 @@ void test_orders() {
     CHECK(terrain && scene && fb);
     if (!terrain || !scene || !fb)
         return;
-    const RefinementOrder orders[] = {RefinementOrder::Rectangle, RefinementOrder::Circle,
-                                      RefinementOrder::Globe};
     for (double radius : {35.0, 90.0}) {
         auto camera = *make_camera({{30, 10}, 13, radius, 100, 81});
         std::vector<Rgb565> reference;
-        for (auto order : orders) {
+        {
             for (ScreenPoint focus : {ScreenPoint{50, 40}, ScreenPoint{5, 7}, ScreenPoint{95, 75},
                                       ScreenPoint{-100, 200}, ScreenPoint{15, 40}}) {
                 RenderQuality q{1.5, true};
-                q.order = order;
                 q.focus = focus;
                 fb->clear(0xABCD);
                 RefinementJob job(camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
@@ -316,7 +290,7 @@ void test_orders() {
                 auto pixels = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
                 if (reference.empty())
                     reference = pixels;
-                CHECK(pixels == reference); // identical for every order and every focus
+                CHECK(pixels == reference); // identical for every focus
                 // Generation cancellation must preserve every pixel, even at a pass boundary.
                 RefinementJob cancelled(camera, *scene, kDefaultPalette, Layers{}, q, 4, &*terrain);
                 while (cancelled.active() && !cancelled.step(*fb, 4, 256).band_ready) {
@@ -328,55 +302,16 @@ void test_orders() {
             }
         }
     }
-    // Rings: each cell lands in the pass given by its distance from the focus, per shape.
-    // A large globe so cells are several pixels wide and a one-corner error moves a cell across a
-    // ring boundary.
+    // Rings: each cell lands in the pass given by its distance from the focus. A large globe so
+    // cells are several pixels wide and a one-corner error moves a cell across a ring boundary.
     const auto camera = *make_camera({{0, 0}, 0, 200, 100, 81});
     for (std::size_t i = 0; i < terrain->corner_count(); ++i)
         terrain->project_corner(i, camera);
-    for (auto order : orders)
-        for (ScreenPoint focus : {ScreenPoint{50, 40}, ScreenPoint{20, 30}, ScreenPoint{70, 55}})
-            check_assignment(*terrain, camera, order, focus);
-    // Globe out takes the view center when the focus is off the disc.
-    {
-        const auto off = make_pass_plan(camera, RefinementOrder::Globe, {-100, 200});
-        const auto center = make_pass_plan(camera, RefinementOrder::Globe, {50, 40.5});
-        CHECK(dot(off.focus_world, center.focus_world) > 1.0 - 1e-12);
-        CHECK(off.focus.x == camera.center_x && off.focus.y == camera.center_y);
-        const auto on = make_pass_plan(camera, RefinementOrder::Globe, {90, 40});
-        CHECK(dot(on.focus_world, center.focus_world) < 0.99);
-    }
-    // A non-finite focus is the view center, for every shape.
-    for (auto order : orders) {
-        const auto bad = make_pass_plan(camera, order, {std::nan(""), 3});
-        CHECK(bad.focus.x == camera.center_x && bad.focus.y == camera.center_y);
-    }
-    // Rectangle: on a non-square viewport the left/right edges and the top/bottom edges are
-    // reached in the same pass (normalized distance), and the corners in the last pass.
-    {
-        const auto wide = *make_camera({{0, 0}, 0, 50, 160, 120});
-        const auto plan = make_pass_plan(wide, RefinementOrder::Rectangle, {80, 60});
-        const unsigned left = plan.pass_at(0, 60), right = plan.pass_at(159.9, 60);
-        const unsigned top = plan.pass_at(80, 0), bottom = plan.pass_at(80, 119.9);
-        CHECK(left == right && top == bottom && left == top);
-        CHECK(plan.pass_at(0, 0) == kRefinePasses - 1 &&
-              plan.pass_at(160, 120) == kRefinePasses - 1);
-        CHECK(plan.pass_at(80, 60) == 0);
-        // Same fraction of the way to the edges, same pass: this is what normalizing buys.
-        for (double t : {0.1, 0.3, 0.45}) {
-            const unsigned across = plan.pass_at(80 - t * 160, 60);
-            CHECK(across == plan.pass_at(80 + t * 160, 60));
-            CHECK(across == plan.pass_at(80, 60 - t * 120));
-            CHECK(across == plan.pass_at(80, 60 + t * 120));
-            CHECK(across > 0 && across < kRefinePasses - 1);
-        }
-        // Off-center focus: edges are reached in order of their normalized distance.
-        const auto skew = make_pass_plan(wide, RefinementOrder::Rectangle, {40, 30});
-        CHECK(skew.pass_at(0, 30) <= skew.pass_at(159.9, 30));
-        CHECK(skew.pass_at(40, 0) <= skew.pass_at(40, 119.9));
-        // The farthest viewport corner is the last pass for any focus.
-        CHECK(skew.pass_at(159.9, 119.9) == kRefinePasses - 1);
-    }
+    for (ScreenPoint focus : {ScreenPoint{50, 40}, ScreenPoint{20, 30}, ScreenPoint{70, 55}})
+        check_assignment(*terrain, camera, focus);
+    // A non-finite focus is the view center.
+    const auto bad = make_pass_plan(camera, {std::nan(""), 3});
+    CHECK(bad.focus.x == camera.center_x && bad.focus.y == camera.center_y);
 }
 void test_landclass_looks() {
     CHECK(landclass_color(100, LandClass::Desert, TerrainStyle::Natural) !=

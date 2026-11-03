@@ -39,7 +39,6 @@ bool same_camera(const Camera& a, const Camera& b) {
 
 void test_initial_model() {
     const Model m = fresh();
-    CHECK(m.refinement_order == RefinementOrder::Circle); // the default order
     CHECK(m.camera.width == 160 && m.camera.height == 120);
     CHECK_NEAR(m.camera.radius_px, 0.4 * 120.0, 1e-12);
     CHECK_NEAR(m.camera.center_x, 80.0, 0.0);
@@ -733,21 +732,8 @@ void test_refinement_focus() {
     update(m, PointerUp{101});
     CHECK(quality_for(m).focus.x == m.camera.center_x);
     CHECK(quality_for(m).focus.y == m.camera.center_y);
-    for (const char* order : {"rectangle", "circle", "globe"}) {
-        auto msg = parse_message(std::string("order 3000 ") + order);
-        CHECK(msg && std::holds_alternative<SetRefinementOrder>(*msg));
-        if (!msg)
-            continue;
-        auto generation = m.generation;
-        CHECK(update(m, *msg).redraw && m.generation > generation);
-        CHECK(quality_for(m).order == std::get<SetRefinementOrder>(*msg).order);
-        char text[100];
-        auto n = format_message(*msg, text, sizeof text);
-        CHECK(std::string(text, n) == std::string("order 3000 ") + order);
-    }
-    CHECK(!parse_message("order 1 random"));
-    // The retired names and the brief-lived "square" are unknown.
-    for (const char* old : {"rows", "center", "dissolve", "square"})
+    // The orders are gone: the verb is unknown whatever its argument.
+    for (const char* old : {"rows", "center", "dissolve", "square", "circle", "rectangle", "globe"})
         CHECK(!parse_message(std::string("order 1 ") + old));
     update(m, Resize{300, 200});
     CHECK(quality_for(m).focus.x == m.camera.center_x);

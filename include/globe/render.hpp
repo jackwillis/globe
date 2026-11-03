@@ -29,7 +29,6 @@ struct RenderQuality {
     // Draw the coarse gray land mask under the lines. Off: while moving, the globe is plain vectors
     // (owner's choice, 2026-11-02); the mask stays available for a later style.
     bool gray_base = false;
-    RefinementOrder order = RefinementOrder::Circle;
     ScreenPoint focus{};
 };
 

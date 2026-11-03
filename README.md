@@ -29,7 +29,7 @@ configure a separate build with `-DGLOBE_SANITIZE=ON`. The current host suite ha
 
 Drag to rotate north-up; T switches to trackball mode. Wheel or +/- zooms, double-click centers
 and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits.
-S cycles terrain styles; O (X11 only) cycles the refinement order: rectangle, circle, globe (default circle). A click without dragging preserves the view; on X11 it can identify a
+S cycles terrain styles; A click without dragging preserves the view; on X11 it can identify a
 country or nearby city. The Style toolbar button is checked for cel-shaded; F2 restores a hidden
 toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.
 

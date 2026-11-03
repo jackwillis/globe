@@ -195,13 +195,6 @@ std::optional<Msg> parse_message(std::string_view line) {
             }
             return Msg{PointerMove{t, x, y}};
         }
-    } else if (verb == "order" && n == 3 && parse_u64(tok[1], t)) {
-        if (std::strcmp(tok[2], "rectangle") == 0)
-            return Msg{SetRefinementOrder{t, RefinementOrder::Rectangle}};
-        if (std::strcmp(tok[2], "circle") == 0)
-            return Msg{SetRefinementOrder{t, RefinementOrder::Circle}};
-        if (std::strcmp(tok[2], "globe") == 0)
-            return Msg{SetRefinementOrder{t, RefinementOrder::Globe}};
     } else if (verb == "style" && n == 2 && parse_u64(tok[1], t)) {
         return Msg{CommandIssued{t, Command::CycleStyle}};
     } else if (verb == "tick" && n == 2) {
@@ -280,12 +273,6 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
         w.u64(key->time_ms);
         w.text(" ");
         w.text(command_name(key->command));
-    } else if (const auto* order = std::get_if<SetRefinementOrder>(&msg)) {
-        w.text("order ");
-        w.u64(order->time_ms);
-        w.text(order->order == RefinementOrder::Rectangle ? " rectangle"
-               : order->order == RefinementOrder::Circle  ? " circle"
-                                                          : " globe");
     } else if (const auto* tick = std::get_if<Tick>(&msg)) {
         w.text("tick ");
         w.u64(tick->time_ms);

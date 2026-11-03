@@ -109,12 +109,6 @@ if(Python3_FOUND)
   target_link_libraries(globe-shade-bench PRIVATE globe_embedded_elevation globe_platform_common globe_clock_posix)
   target_compile_options(globe-shade-bench PRIVATE -Wall -Wextra -Wpedantic)
 
-  add_executable(globe-refine-order src/platform/bench/refine_order.cpp)
-  target_include_directories(globe-refine-order PRIVATE src/platform/common)
-  target_link_libraries(globe-refine-order PRIVATE globe_embedded_atlas globe_embedded_elevation
-                                                   globe_platform_common globe_clock_posix)
-  target_compile_options(globe-refine-order PRIVATE -Wall -Wextra -Wpedantic)
-
   add_executable(globe-refine-profile src/platform/bench/refine_profile.cpp)
   target_include_directories(globe-refine-profile PRIVATE src/platform/common)
   target_link_libraries(globe-refine-profile PRIVATE globe_embedded_atlas globe_embedded_elevation

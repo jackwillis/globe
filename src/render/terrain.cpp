@@ -211,72 +211,23 @@ void TerrainScene::bound_cell(std::size_t index, int height, int band_rows) {
 }
 unsigned PassPlan::pass_at(double x, double y) const {
     const double dx = x - focus.x, dy = y - focus.y;
+    const double v = dx * dx + dy * dy;
     unsigned pass = 0;
-    if (order == RefinementOrder::Rectangle) {
-        // Normalized Chebyshev distance max(|dx| / width, |dy| / height), scaled by width * height
-        // so no division is needed: max(|dx| * height, |dy| * width).
-        const double v = std::max(std::fabs(dx) * height, std::fabs(dy) * width);
-        while (pass < kRefinePasses - 1 && v >= limit[pass])
-            ++pass;
-    } else {
-        const double v = dx * dx + dy * dy;
-        while (pass < kRefinePasses - 1 && v >= limit[pass])
-            ++pass;
-    }
-    return pass;
-}
-unsigned PassPlan::pass_for_dot(double d) const {
-    unsigned pass = 0;
-    while (pass < kRefinePasses - 1 && d <= limit[pass])
+    while (pass < kRefinePasses - 1 && v >= limit[pass])
         ++pass;
     return pass;
 }
-PassPlan make_pass_plan(const Camera& camera, RefinementOrder order, ScreenPoint focus) {
+PassPlan make_pass_plan(const Camera& camera, ScreenPoint focus) {
     PassPlan plan;
-    plan.order = order;
-    plan.width = std::max(1.0, static_cast<double>(camera.width));
-    plan.height = std::max(1.0, static_cast<double>(camera.height));
     plan.focus = std::isfinite(focus.x) && std::isfinite(focus.y)
                      ? focus
                      : ScreenPoint{camera.center_x, camera.center_y};
-    if (order == RefinementOrder::Globe) {
-        // The focus on the sphere; off the disc (or no focus) the view center.
-        const double rx = plan.focus.x - camera.center_x, ry = plan.focus.y - camera.center_y;
-        plan.focus_world = camera.forward;
-        if (rx * rx + ry * ry <= camera.radius_px * camera.radius_px) {
-            const Vec3 v = unproject_to_sphere(camera, plan.focus);
-            plan.focus_world = camera.right * v.x + camera.up * v.y + camera.forward * v.z;
-        } else {
-            plan.focus = {camera.center_x, camera.center_y};
-        }
-        // cos(k * 180 / 16 degrees), k = 1..15, generated offline (exact literals, so every
-        // platform assigns the same pass whatever its libm).
-        static constexpr double cosines[kRefinePasses - 1] = {
-            0.98078528040323043,  0.92387953251128674,  0.83146961230254524,  0.70710678118654757,
-            0.55557023301960229,  0.38268343236508984,  0.19509032201612833,  0.0,
-            -0.19509032201612819, -0.38268343236508973, -0.55557023301960196, -0.70710678118654746,
-            -0.83146961230254535, -0.92387953251128674, -0.98078528040323043};
-        for (unsigned k = 0; k < kRefinePasses - 1; ++k)
-            plan.limit[k] = cosines[k];
-        return plan;
-    }
-    const double fx = plan.focus.x, fy = plan.focus.y;
-    double farthest = 0.0;
-    const bool squared = order == RefinementOrder::Circle;
-    if (order == RefinementOrder::Rectangle) {
-        // Largest scaled Chebyshev distance to the four viewport corners.
-        const double dx = std::max(std::fabs(fx), std::fabs(plan.width - fx));
-        const double dy = std::max(std::fabs(fy), std::fabs(plan.height - fy));
-        farthest = std::max(dx * plan.height, dy * plan.width);
-    } else {
-        // Circle: reach the far side of the disc.
-        const double rx = fx - camera.center_x, ry = fy - camera.center_y;
-        farthest = std::sqrt(rx * rx + ry * ry) + camera.radius_px;
-    }
-    farthest = std::max(farthest, 1e-9);
+    // Reach the far side of the disc.
+    const double rx = plan.focus.x - camera.center_x, ry = plan.focus.y - camera.center_y;
+    const double farthest = std::max(std::sqrt(rx * rx + ry * ry) + camera.radius_px, 1e-9);
     for (unsigned k = 0; k < kRefinePasses - 1; ++k) {
         const double edge = farthest * (k + 1) / kRefinePasses;
-        plan.limit[k] = squared ? edge * edge : edge;
+        plan.limit[k] = edge * edge;
     }
     return plan;
 }
@@ -289,19 +240,9 @@ void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan) {
     const auto first = y * (grid_.width() + 1) + x;
     const auto a = first, b = first + 1, c = first + grid_.width() + 2,
                d = first + grid_.width() + 1;
-    unsigned pass;
-    if (plan.order == RefinementOrder::Globe) {
-        // The mean of the four corner dots is the dot of the corner mean (a cell is far smaller
-        // than a pass ring), without normalizing.
-        const double mean = (dot(world_[a], plan.focus_world) + dot(world_[b], plan.focus_world) +
-                             dot(world_[c], plan.focus_world) + dot(world_[d], plan.focus_world)) *
-                            0.25;
-        pass = plan.pass_for_dot(mean);
-    } else {
-        pass = plan.pass_at(
-            (projected_[a].x + projected_[b].x + projected_[c].x + projected_[d].x) * 0.25,
-            (projected_[a].y + projected_[b].y + projected_[c].y + projected_[d].y) * 0.25);
-    }
+    const unsigned pass = plan.pass_at(
+        (projected_[a].x + projected_[b].x + projected_[c].x + projected_[d].x) * 0.25,
+        (projected_[a].y + projected_[b].y + projected_[c].y + projected_[d].y) * 0.25);
     passes_[index] = static_cast<std::uint8_t>(pass);
 }
 void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,

@@ -100,8 +100,7 @@ benchmark checksum above describes the mask-on build; the default moving frames 
 
 ## Refinement order (GL-19 / GL-26, concluded 2026-11-02)
 
-The settled terrain refines outward from the view center as rectangles, circles (default) or
-rings of equal great-circle angle; the rows, center-out and dissolve orders are gone.
+The settled terrain refines circle-outward from the view center; every other order was tried and removed.
 [Design, measurements and limits](refinement-order.md). The cell rasterizer/smoothing is unchanged,
 and all settled pins remain unchanged. The added workspace is one byte per cell, included in the
 existing 32 MiB allocation guard.

@@ -198,7 +198,6 @@ RenderQuality quality_for(const Model& model) {
         }
     }
     RenderQuality quality{fine ? 1.5 : 3.0, fine, selected, model.terrain_style};
-    quality.order = model.refinement_order;
     // Refinement always radiates from the view center.
     quality.focus = {model.camera.center_x, model.camera.center_y};
     return quality;
@@ -351,15 +350,6 @@ Effects update(Model& model, const Msg& msg) {
         input = true;
         input_ms = command->time_ms;
         model.last_input_ms = command->time_ms;
-    } else if (const auto* order = std::get_if<SetRefinementOrder>(&msg)) {
-        if (order->order == RefinementOrder::Rectangle || order->order == RefinementOrder::Circle ||
-            order->order == RefinementOrder::Globe) {
-            model.refinement_order = order->order;
-            fx.redraw = true;
-            input = true;
-            input_ms = order->time_ms;
-            model.last_input_ms = input_ms;
-        }
     } else if (const auto* resize = std::get_if<Resize>(&msg)) {
         if (resize->width >= 1 && resize->height >= 1 && resize->width <= kMaxViewportDimension &&
             resize->height <= kMaxViewportDimension &&
