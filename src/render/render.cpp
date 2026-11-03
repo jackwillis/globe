@@ -315,13 +315,8 @@ void Scene::prepare_line_chunk(std::size_t i, const Camera& camera, const PassPl
     auto mid = storage_[middle];
     if (chunk.count % 2 == 0)
         mid = (mid + storage_[middle + 1]) * 0.5;
-    unsigned pass;
-    if (plan.order == RefinementOrder::Globe)
-        pass = plan.pass_for_dot(dot(normalized(mid), plan.focus_world));
-    else {
-        const auto p = to_screen(camera, to_camera_space(camera, mid));
-        pass = plan.pass_at(p.x, p.y);
-    }
+    const auto p = to_screen(camera, to_camera_space(camera, mid));
+    const unsigned pass = plan.pass_at(p.x, p.y);
     chunk_passes_[i] = static_cast<std::uint8_t>(pass);
 }
 

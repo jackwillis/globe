@@ -88,65 +88,54 @@ int main() {
         CHECK(camera);
         if (!camera)
             return 1;
-        for (auto order :
-             {RefinementOrder::Rectangle, RefinementOrder::Circle, RefinementOrder::Globe})
-            for (ScreenPoint focus :
-                 {ScreenPoint{50, 40}, ScreenPoint{5, 10}, ScreenPoint{-20, 100}}) {
-                RenderQuality q{1.5, true, 0, TerrainStyle::Map};
-                q.order = order;
-                q.focus = focus;
-                q.progressive_lines = false;
-                RefinementJob reference(*camera, *scene, kDefaultPalette, Layers{}, q, 1,
-                                        &*terrain);
-                while (reference.active())
-                    CHECK(reference.step(*fb, 1, 256).wake_after_ms == 0);
-                auto expected = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
-                q.progressive_lines = true;
-                RefinementJob reveal(*camera, *scene, kDefaultPalette, Layers{}, q, 2, &*terrain);
-                unsigned pauses = 0;
-                bool checked = false;
-                while (reveal.active()) {
-                    const auto step = reveal.step(*fb, 2, 64);
-                    CHECK(step.work_units <= 64);
-                    if (step.line_prepare &&
-                        reveal.stats().line_chunks_prepared == scene->line_chunk_count()) {
-                        checked = true;
-                        const auto plan = make_pass_plan(*camera, order, focus);
-                        for (std::size_t i = 0; i < scene->line_chunk_count(); ++i) {
-                            const auto chunk = scene->line_chunk(i);
-                            const unsigned middle = chunk.first + (chunk.count - 1) / 2;
-                            auto mid = scene->vertices()[middle];
-                            if (chunk.count % 2 == 0)
-                                mid = (mid + scene->vertices()[middle + 1]) * .5;
-                            unsigned pass = 0;
-                            if (order == RefinementOrder::Globe)
-                                pass = plan.pass_for_dot(dot(normalized(mid), plan.focus_world));
-                            else {
-                                auto p = to_screen(*camera, to_camera_space(*camera, mid));
-                                pass = plan.pass_at(p.x, p.y);
-                            }
-                            CHECK(scene->line_chunk_pass(i) == pass);
-                        }
-                    }
-                    if (step.wake_after_ms) {
-                        CHECK(step.band_ready);
-                        CHECK(step.wake_after_ms == kLineRevealDelayMs);
-                        ++pauses;
+        for (ScreenPoint focus : {ScreenPoint{50, 40}, ScreenPoint{5, 10}, ScreenPoint{-20, 100}}) {
+            RenderQuality q{1.5, true, 0, TerrainStyle::Map};
+            q.focus = focus;
+            q.progressive_lines = false;
+            RefinementJob reference(*camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
+            while (reference.active())
+                CHECK(reference.step(*fb, 1, 256).wake_after_ms == 0);
+            auto expected = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
+            q.progressive_lines = true;
+            RefinementJob reveal(*camera, *scene, kDefaultPalette, Layers{}, q, 2, &*terrain);
+            unsigned pauses = 0;
+            bool checked = false;
+            while (reveal.active()) {
+                const auto step = reveal.step(*fb, 2, 64);
+                CHECK(step.work_units <= 64);
+                if (step.line_prepare &&
+                    reveal.stats().line_chunks_prepared == scene->line_chunk_count()) {
+                    checked = true;
+                    const auto plan = make_pass_plan(*camera, focus);
+                    for (std::size_t i = 0; i < scene->line_chunk_count(); ++i) {
+                        const auto chunk = scene->line_chunk(i);
+                        const unsigned middle = chunk.first + (chunk.count - 1) / 2;
+                        auto mid = scene->vertices()[middle];
+                        if (chunk.count % 2 == 0)
+                            mid = (mid + scene->vertices()[middle + 1]) * .5;
+                        const auto p = to_screen(*camera, to_camera_space(*camera, mid));
+                        const unsigned pass = plan.pass_at(p.x, p.y);
+                        CHECK(scene->line_chunk_pass(i) == pass);
                     }
                 }
-                CHECK(checked && pauses == kRefinePasses);
-                CHECK(reveal.stats().line_chunks_prepared == scene->line_chunk_count());
-                CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
-                RefinementJob cancelled(*camera, *scene, kDefaultPalette, Layers{}, q, 3,
-                                        &*terrain);
-                while (cancelled.active() && !cancelled.step(*fb, 3).wake_after_ms) {
+                if (step.wake_after_ms) {
+                    CHECK(step.band_ready);
+                    CHECK(step.wake_after_ms == kLineRevealDelayMs);
+                    ++pauses;
                 }
-                auto before = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
-                CHECK(cancelled.active());
-                CHECK(cancelled.step(*fb, 4).work_units == 0);
-                CHECK(!cancelled.active());
-                CHECK(std::equal(before.begin(), before.end(), fb->data()));
             }
+            CHECK(checked && pauses == kRefinePasses);
+            CHECK(reveal.stats().line_chunks_prepared == scene->line_chunk_count());
+            CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
+            RefinementJob cancelled(*camera, *scene, kDefaultPalette, Layers{}, q, 3, &*terrain);
+            while (cancelled.active() && !cancelled.step(*fb, 3).wake_after_ms) {
+            }
+            auto before = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
+            CHECK(cancelled.active());
+            CHECK(cancelled.step(*fb, 4).work_units == 0);
+            CHECK(!cancelled.active());
+            CHECK(std::equal(before.begin(), before.end(), fb->data()));
+        }
     }
     // Independent terrain caches still share the Scene line-pass workspace.
     auto other = TerrainScene::create(*elevation);

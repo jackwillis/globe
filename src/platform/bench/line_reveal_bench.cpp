@@ -84,80 +84,74 @@ int main(int argc, char** argv) {
         if (!camera)
             return 1;
         std::uint64_t reference = 0;
-        for (auto order :
-             {RefinementOrder::Rectangle, RefinementOrder::Circle, RefinementOrder::Globe})
-            for (bool paced : {false, true}) {
-                std::vector<double> wall, compute, prepare, lines, repair, first;
-                double worst = 0;
-                std::uint64_t hash = 0;
-                unsigned scheduled = 0, pauses = 0;
-                for (int r = 0; r < repeat; ++r) {
-                    RenderQuality q{1.5, true, 0, TerrainStyle::Map};
-                    q.order = order;
-                    q.focus = radius == 220 ? ScreenPoint{320, 240} : ScreenPoint{200, 160};
-                    q.progressive_lines = paced;
-                    const auto start = monotonic_ns();
-                    RefinementJob job(*camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
-                    std::uint64_t slept = 0, prepare_ns = 0, terrain_end = 0, repair_start = 0,
-                                  first_at = 0;
-                    unsigned ready = 0;
-                    scheduled = 0;
-                    pauses = 0;
-                    while (job.active()) {
-                        auto a = monotonic_ns();
-                        const auto step = job.step(*fb, 1);
-                        auto b = monotonic_ns();
-                        worst = std::max(worst, ms(b - a));
-                        if (step.line_prepare)
-                            prepare_ns += b - a;
-                        if (step.band_ready && ++ready == kRefinePasses)
-                            terrain_end = b;
-                        if (step.wake_after_ms) {
-                            if (!first_at)
-                                first_at = b;
-                            ++pauses;
-                            scheduled += step.wake_after_ms;
-                            auto s = monotonic_ns();
-                            sleep_ms(step.wake_after_ms);
-                            slept += monotonic_ns() - s;
-                            if (pauses == kRefinePasses)
-                                repair_start = monotonic_ns();
-                        }
+        for (bool paced : {false, true}) {
+            std::vector<double> wall, compute, prepare, lines, repair, first;
+            double worst = 0;
+            std::uint64_t hash = 0;
+            unsigned scheduled = 0, pauses = 0;
+            for (int r = 0; r < repeat; ++r) {
+                RenderQuality q{1.5, true, 0, TerrainStyle::Map};
+                q.focus = radius == 220 ? ScreenPoint{320, 240} : ScreenPoint{200, 160};
+                q.progressive_lines = paced;
+                const auto start = monotonic_ns();
+                RefinementJob job(*camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
+                std::uint64_t slept = 0, prepare_ns = 0, terrain_end = 0, repair_start = 0,
+                              first_at = 0;
+                unsigned ready = 0;
+                scheduled = 0;
+                pauses = 0;
+                while (job.active()) {
+                    auto a = monotonic_ns();
+                    const auto step = job.step(*fb, 1);
+                    auto b = monotonic_ns();
+                    worst = std::max(worst, ms(b - a));
+                    if (step.line_prepare)
+                        prepare_ns += b - a;
+                    if (step.band_ready && ++ready == kRefinePasses)
+                        terrain_end = b;
+                    if (step.wake_after_ms) {
+                        if (!first_at)
+                            first_at = b;
+                        ++pauses;
+                        scheduled += step.wake_after_ms;
+                        auto s = monotonic_ns();
+                        sleep_ms(step.wake_after_ms);
+                        slept += monotonic_ns() - s;
+                        if (pauses == kRefinePasses)
+                            repair_start = monotonic_ns();
                     }
-                    const auto end = monotonic_ns();
-                    wall.push_back(ms(end - start));
-                    compute.push_back(ms(end - start - slept));
-                    prepare.push_back(ms(prepare_ns));
-                    lines.push_back(terrain_end ? ms(end - terrain_end - slept) : 0);
-                    repair.push_back(repair_start ? ms(end - repair_start) : 0);
-                    first.push_back(first_at ? ms(first_at - start) : 0);
-                    auto current = checksum(*fb);
-                    if (r && current != hash)
-                        return 1;
-                    hash = current;
-                    if (paced && (pauses != kRefinePasses ||
-                                  job.stats().line_chunks_prepared != scene->line_chunk_count()))
-                        return 1;
                 }
-                if (!reference)
-                    reference = hash;
-                if (reference != hash)
+                const auto end = monotonic_ns();
+                wall.push_back(ms(end - start));
+                compute.push_back(ms(end - start - slept));
+                prepare.push_back(ms(prepare_ns));
+                lines.push_back(terrain_end ? ms(end - terrain_end - slept) : 0);
+                repair.push_back(repair_start ? ms(end - repair_start) : 0);
+                first.push_back(first_at ? ms(first_at - start) : 0);
+                auto current = checksum(*fb);
+                if (r && current != hash)
                     return 1;
-                std::printf("%s{\"radius\":%.0f,\"order\":\"%s\",\"paced\":%s,\"wall_median_ms\":%."
-                            "3f,\"compute_median_ms\":%.3f,\"prepare_median_ms\":%.3f,\"lines_"
-                            "compute_median_ms\":%.3f,\"canonical_median_ms\":%.3f,\"first_reveal_"
-                            "median_ms\":%.3f,\"worst_step_ms\":%.3f,\"scheduled_delay_ms\":%u,"
-                            "\"pauses\":%u,\"checksum\":\"%016llx\"}",
-                            comma ? ",\n" : "", radius,
-                            order == RefinementOrder::Rectangle ? "rectangle"
-                            : order == RefinementOrder::Circle  ? "circle"
-                                                                : "globe",
-                            paced ? "true" : "false", median(wall), median(compute),
-                            median(prepare), median(lines), median(repair), median(first), worst,
-                            scheduled, pauses, static_cast<unsigned long long>(hash));
-                comma = true;
-                std::fflush(stdout);
+                hash = current;
+                if (paced && (pauses != kRefinePasses ||
+                              job.stats().line_chunks_prepared != scene->line_chunk_count()))
+                    return 1;
             }
+            if (!reference)
+                reference = hash;
+            if (reference != hash)
+                return 1;
+            std::printf("%s{\"radius\":%.0f,\"paced\":%s,\"wall_median_ms\":%."
+                        "3f,\"compute_median_ms\":%.3f,\"prepare_median_ms\":%.3f,\"lines_"
+                        "compute_median_ms\":%.3f,\"canonical_median_ms\":%.3f,\"first_reveal_"
+                        "median_ms\":%.3f,\"worst_step_ms\":%.3f,\"scheduled_delay_ms\":%u,"
+                        "\"pauses\":%u,\"checksum\":\"%016llx\"}",
+                        comma ? ",\n" : "", radius, paced ? "true" : "false", median(wall),
+                        median(compute), median(prepare), median(lines), median(repair),
+                        median(first), worst, scheduled, pauses,
+                        static_cast<unsigned long long>(hash));
+            comma = true;
+            std::fflush(stdout);
+        }
     }
     std::printf("\n]}\n");
     return 0;
