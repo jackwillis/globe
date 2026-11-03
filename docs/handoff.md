@@ -171,3 +171,30 @@ No pushes, remote merges, tags, maul compilation, owner-binary changes or displa
 No CI, current G4 desktop/scanout, native OS 9 runtime or live TLS claim. No further smoothing tuning,
 Map look, river vectors, thematic look, class/imagery grid, antialiasing, pass/surface refactor,
 dissolve or runtime compression in this pass. Those remain separate backlog scopes/owner gates.
+
+### 2026-11-02 — Claude: next tasks for Codex (bell-curve dissolve; Greenland ice)
+
+Merged and tested at `1e6ea18` (36/36 host tests; branches gone); owner has `/tmp/globe-x11-tip8` on maul.
+
+1. **GL-19/GL-26: refinement focus and bell-curve dissolve.** Design is in the ADR addendum "refinement
+   focus and a bell-curve dissolve" (`5a929c4`): read it first. Implement it as an experiment that can
+   be compared with today's rows and a center-out row order, switchable in code or by a trace verb so a
+   replay can pick the order. Requirements: focus is model state set by pointer release, click and
+   double-click center (view center otherwise); per-cell hash randomness (no clock, no RNG state);
+   Gaussian falloff through a 256-entry table and squared-distance compares, no `sqrt`/`log` per cell;
+   one pass byte per cell, last pass draws everything; cancellation between passes; lines redrawn after
+   or between passes (measure the cost); the **settled image must be identical for every order and every
+   focus**, with a test that proves it (several foci, hash of the final frame). Do not change any pin
+   unless explained; the final refined checksum should not change at all. Mutation-check the tests.
+   Measure on the G4: time to first pass, total refine time, longest continuation step (the smoothing
+   work left a 120 ms step; report whether the dissolve shortens the worst step). Commit as GL-19.
+   Do not tune the smoothing cost; the owner has not decided yet.
+2. **Greenland and glaciers (GL-40): write the proposal only.** Antarctica is white by a latitude rule;
+   Greenland is not covered, so its ice sheet is elevation-colored. Propose, in the ADR, how to mark ice
+   at build time from the Natural Earth glaciated-areas 50m layer (`data/SOURCES.md`; ZIPs in
+   `~/scratch/globe-data/naturalearth/`): cell-center even-odd like the lakes, which GELV v1 mechanism
+   could carry the flag without breaking v1 decoders (or whether v2 is needed), size effect, and a
+   test plan. If it needs a format change, stop after the proposal. Do not change data files.
+
+Rules still apply: no push, no email or personal contact details in any outbound request, new maul file
+names only, never touch `tip3` to `tip8`.
