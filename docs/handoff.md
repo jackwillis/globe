@@ -329,20 +329,3 @@ Tests: every-pixel equality against the unpaced result for all three orders and 
 oracle for chunk passes; cancellation mid-reveal; mutation checks. Append a dated note here.
 
 Owner update: the refinement focus is now always the view center (no touchpoint state in the Model).
-
-### 2026-11-02 — Owner decision for Codex (GL-33/34): two looks, Map and Relief (written by Claude)
-
-Owner: let go of the hybrid relief look. Looks are now **Map** (default; Google-Maps-like, muted
-land tinted by land class, blue water, light relief) and **Relief** (a normal hypsometric tint,
-green to tan to brown to white; no gray base, no cel-shading). The cel-shaded style is retired and
-a separate Natural look is no longer wanted (its land-class colors belong to Map). `S` cycles the
-two. Adjust your in-progress work accordingly; remove, do not keep dead styles. Pins change only
-for an intended default-look change; re-pin with reasons and host/G4 evidence.
-
-**Antarctica reads brown to the owner** (tips 11-13, Hypsometric). The only white rule is
-`meters >= 0 && latitude < -60` in `terrain_color` (`src/render/terrain.cpp`). Before fixing, render
-a south-pole view and read the pixel colors to find the cause; suspects: smoothing blends brown at
-the white/non-white boundary, the elevation source being bedrock (interior cells at or below 0
-skipping the rule), the peninsula or edge cells at latitude above -60, the high-elevation tint.
-Report what you measured. Antarctica must be white in both looks; also keep Greenland out of scope
-(GL-40 stays a proposal).
