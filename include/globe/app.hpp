@@ -66,6 +66,9 @@ struct Model {
     ScreenPoint click_pos;
     std::uint64_t click_ms;
     std::uint64_t last_input_ms; // time of the most recent user input, from the message
+    bool pick_pending; // a plain click waits kPickDelayMs for a second click before it picks
+    ScreenPoint pick_pos;
+    std::uint64_t pick_due_ms;
 };
 
 // Messages. Coordinates are viewport pixels; time_ms is a monotonic clock supplied by the
@@ -121,6 +124,10 @@ struct Effects {
     // may be rendered or restarted for it: the model did not change. A platform with no valid
     // frame yet (the first expose, or after its buffers were recreated) renders instead.
     bool present_only = false;
+    // A plain click was not followed by a second click in time: pick the country or place under
+    // `pick_at` (view coordinates). The model is unchanged; nothing is rendered for it.
+    bool pick = false;
+    ScreenPoint pick_at{};
 };
 
 // Fresh state for a viewport: north up, centered on a fixed home position, globe sized to fit.
@@ -160,6 +167,9 @@ std::optional<Command> toolbar_hit(ScreenPoint pointer);
 // Two presses within kDoubleClickMs and kDoubleClickSlopPx, the second on the globe, zoom in by
 // kDoubleClickZoom and center the globe on the clicked point.
 constexpr std::uint64_t kDoubleClickMs = 400;
+// A plain click picks only after this long without a second click, so a double click zooms and
+// does not also open a card. It must not be shorter than kDoubleClickMs.
+constexpr std::uint64_t kPickDelayMs = kDoubleClickMs;
 constexpr double kDoubleClickSlopPx = 6.0;
 constexpr double kDoubleClickZoom = 2.0;
 

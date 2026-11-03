@@ -263,6 +263,9 @@ Model initial_model(int width, int height) {
     m.click_pos = {0.0, 0.0};
     m.click_ms = 0;
     m.last_input_ms = 0;
+    m.pick_pending = false;
+    m.pick_pos = {0.0, 0.0};
+    m.pick_due_ms = 0;
     return m;
 }
 
@@ -278,6 +281,7 @@ Effects update(Model& model, const Msg& msg) {
                 down->time_ms - model.click_ms <= kDoubleClickMs &&
                 distance_squared(p, model.click_pos) <= kDoubleClickSlopPx * kDoubleClickSlopPx;
             model.last_input_ms = down->time_ms;
+            model.pick_pending = false; // a second press (or a drag) cancels the waiting pick
             if (second_click && on_globe(model.camera, p)) {
                 // Bring the clicked point to the center, then zoom in on it.
                 model.click_valid = false;
@@ -333,6 +337,15 @@ Effects update(Model& model, const Msg& msg) {
         fx.redraw = model.dragging && model.drag_moved && model.layers.graticule;
         // Only a drag that changed the view restarts the settle clock; a plain click does not.
         input = model.dragging && model.drag_moved;
+        if (model.dragging && !model.drag_moved) {
+            // A plain click: pick after the double-click window, unless a second click comes.
+            // While settling, the settle wakes already serve the pending pick (see Tick).
+            model.pick_pending = true;
+            model.pick_pos = model.drag_last;
+            model.pick_due_ms = up->time_ms + kPickDelayMs;
+            if (model.stage == QualityStage::Refine)
+                fx.wake_after_ms = static_cast<std::uint32_t>(kPickDelayMs);
+        }
         model.dragging = false;
         model.drag_active = false;
         model.drag_moved = false;
@@ -366,6 +379,7 @@ Effects update(Model& model, const Msg& msg) {
             cam.center_x = resize->width / 2.0;
             cam.center_y = resize->height / 2.0;
             model.camera = cam;
+            model.pick_pending = false;
             model.stage = QualityStage::Moving;
             model.stage_needs_time = true;
             ++model.generation;
@@ -393,6 +407,16 @@ Effects update(Model& model, const Msg& msg) {
                 model.stage = QualityStage::Refine;
             }
         }
+        if (model.pick_pending) {
+            if (tick->time_ms >= model.pick_due_ms) {
+                model.pick_pending = false;
+                fx.pick = true;
+                fx.pick_at = model.pick_pos;
+            } else {
+                const auto left = static_cast<std::uint32_t>(model.pick_due_ms - tick->time_ms);
+                fx.wake_after_ms = fx.wake_after_ms != 0 ? std::min(fx.wake_after_ms, left) : left;
+            }
+        }
     } else if (const auto* pack = std::get_if<RegisterElevation>(&msg)) {
         if (pack->level < kElevationLevels && pack->height > 0 && pack->width <= 32768 &&
             pack->width == 2 * static_cast<std::uint64_t>(pack->height) &&
@@ -411,6 +435,7 @@ Effects update(Model& model, const Msg& msg) {
         fx.present_only = true; // the model is unchanged: show the existing pixels again
     }
     if (input) {
+        model.pick_pending = false; // the view changed: a waiting pick is stale
         ++model.generation;
         model.stage = QualityStage::Moving;
         model.stage_since_ms = input_ms;

@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
         press.xbutton.type = ButtonRelease;
         XSendEvent(d, main, False, ButtonReleaseMask, &press);
         XFlush(d);
-        usleep(100000);
+        usleep(700000); // the card waits out the double-click window
         const auto info = find(d, "Globe information");
         CHECK(info);
         if (info) {

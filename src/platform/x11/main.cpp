@@ -306,6 +306,27 @@ class App {
         return true;
     }
 
+    // The core decides when (a plain click that was not the first half of a double click).
+    void pick_at(ScreenPoint at) {
+        if (!country_scene_ || !countries_)
+            return;
+        const double x = (at.x - model_.camera.center_x) / model_.camera.radius_px;
+        const double y = (at.y - model_.camera.center_y) / model_.camera.radius_px;
+        if (x * x + y * y > 1)
+            return;
+        const auto v = unproject_to_sphere(model_.camera, at);
+        const auto world =
+            model_.camera.right * v.x + model_.camera.up * v.y + model_.camera.forward * v.z;
+        const auto city = place_scene_ ? place_scene_->pick(model_.camera, at) : std::nullopt;
+        const auto id = country_scene_->pick(from_unit_vector(world));
+        if (city && places_) {
+            info_.show(win_, place_card(*places_, *city), model_.camera.width + 20);
+            ++info_cards_;
+        } else if (id) {
+            info_.show(win_, country_card(*countries_, *id), model_.camera.width + 20);
+            ++info_cards_;
+        }
+    }
     bool apply(const Msg& msg) {
         // Repaint is a presentation request. Keep the cached frame and any in-flight job.
         if (std::holds_alternative<Repaint>(msg)) {
@@ -338,6 +359,8 @@ class App {
             else
                 need_redraw_ = true;
         }
+        if (fx.pick)
+            pick_at(fx.pick_at);
         if (fx.wake_after_ms != 0) {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
@@ -686,28 +709,6 @@ class App {
             return false;
         case ButtonRelease:
             if (ev.xbutton.button == Button1) {
-                if (model_.dragging && !model_.drag_moved && country_scene_ && countries_) {
-                    const double x =
-                        (pointer_.x - model_.camera.center_x) / model_.camera.radius_px;
-                    const double y =
-                        (pointer_.y - model_.camera.center_y) / model_.camera.radius_px;
-                    if (x * x + y * y <= 1) {
-                        const auto v = unproject_to_sphere(model_.camera, pointer_);
-                        const auto world = model_.camera.right * v.x + model_.camera.up * v.y +
-                                           model_.camera.forward * v.z;
-                        const auto city = place_scene_ ? place_scene_->pick(model_.camera, pointer_)
-                                                       : std::nullopt;
-                        const auto id = country_scene_->pick(from_unit_vector(world));
-                        if (city && places_) {
-                            info_.show(win_, place_card(*places_, *city), model_.camera.width + 20);
-                            ++info_cards_;
-                        } else if (id) {
-                            info_.show(win_, country_card(*countries_, *id),
-                                       model_.camera.width + 20);
-                            ++info_cards_;
-                        }
-                    }
-                }
                 return apply(PointerUp{now});
             }
             return false;

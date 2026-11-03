@@ -454,6 +454,77 @@ void test_resize_and_expose() {
     CHECK(d.dragging && d.last_input_ms == 5);
 }
 
+void test_pick_delay() {
+    const auto settled = [] {
+        auto m = fresh();
+        update(m, Tick{0});
+        update(m, Tick{200});
+        update(m, Tick{300});
+        return m;
+    };
+    {
+        // A lone click picks once, after the double-click window, at the pressed point.
+        auto m = settled();
+        update(m, PointerDown{1000, 80.0, 60.0});
+        auto fx = update(m, PointerUp{1010});
+        CHECK(!fx.pick && fx.wake_after_ms == kPickDelayMs && m.pick_pending);
+        fx = update(m, Tick{1200});
+        CHECK(!fx.pick && m.pick_pending && fx.wake_after_ms == 1010 + kPickDelayMs - 1200);
+        fx = update(m, Tick{1010 + kPickDelayMs - 1});
+        CHECK(!fx.pick);
+        fx = update(m, Tick{1010 + kPickDelayMs});
+        CHECK(fx.pick && fx.pick_at.x == 80.0 && fx.pick_at.y == 60.0 && !m.pick_pending);
+        CHECK(!fx.redraw && fx.wake_after_ms == 0);
+        CHECK(!update(m, Tick{5000}).pick); // fires once
+    }
+    {
+        // A double click zooms and never picks.
+        auto m = settled();
+        update(m, PointerDown{1000, 80.0, 60.0});
+        update(m, PointerUp{1010});
+        update(m, PointerDown{1200, 81.0, 60.0});
+        CHECK(!m.pick_pending);
+        update(m, PointerUp{1210});
+        bool picked = false;
+        for (std::uint64_t t = 1250; t < 3000; t += 50)
+            picked |= update(m, Tick{t}).pick;
+        CHECK(!picked);
+    }
+    {
+        // A press that becomes a drag, a wheel step and a command all cancel a waiting pick.
+        auto m = settled();
+        update(m, PointerDown{1000, 80.0, 60.0});
+        update(m, PointerUp{1010});
+        update(m, Wheel{1100, 1});
+        CHECK(!m.pick_pending);
+        m = settled();
+        update(m, PointerDown{1000, 80.0, 60.0});
+        update(m, PointerUp{1010});
+        update(m, CommandIssued{1100, Command::CycleStyle});
+        CHECK(!m.pick_pending);
+        m = settled();
+        update(m, PointerDown{1000, 80.0, 60.0});
+        update(m, PointerUp{1010});
+        update(m, PointerDown{1500, 80.0, 60.0}); // later than a double click, still cancels
+        update(m, PointerMove{1510, 120.0, 90.0});
+        update(m, PointerUp{1600});
+        CHECK(!m.pick_pending);
+    }
+    {
+        // A drag never picks, and a click while settling still gets its pick through the settle
+        // wakes.
+        auto m = fresh();
+        update(m, Tick{0});
+        update(m, PointerDown{10, 80.0, 60.0});
+        update(m, PointerUp{20});
+        CHECK(m.pick_pending);
+        bool picked = false;
+        for (std::uint64_t t = 30; t < 1000; t += 50)
+            picked |= update(m, Tick{t}).pick;
+        CHECK(picked);
+    }
+}
+
 void test_styles() {
     auto m = fresh();
     CHECK(m.terrain_style == TerrainStyle::Map);
@@ -563,8 +634,8 @@ void test_quality_wakes() {
     CHECK(m.stage == QualityStage::Settle && fx.wake_after_ms == 0 && m.generation == generation);
     fx = update(m, Tick{3000});
     CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
-    fx = update(m, PointerUp{3001}); // a click: no drag, so nothing at all happens
-    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0 && !fx.redraw &&
+    fx = update(m, PointerUp{3001}); // a click: nothing changes; only the pick wake is requested
+    CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == kPickDelayMs && !fx.redraw &&
           m.generation == generation);
     // A real drag holds the settle clock until release, then restarts it.
     update(m, PointerDown{3100, 80.0, 60.0});
@@ -620,7 +691,8 @@ void test_click_changes_nothing() {
     }
     CHECK(effective_layers(m).graticule);
     fx = update(m, PointerUp{1020});
-    CHECK(!fx.redraw && fx.wake_after_ms == 0 && !m.dragging && !m.drag_active);
+    CHECK(!fx.redraw && !m.dragging && !m.drag_active);
+    CHECK(fx.wake_after_ms == (before.stage == QualityStage::Refine ? kPickDelayMs : 0));
     CHECK(m.stage == before.stage && m.generation == before.generation &&
           same_camera(m.camera, before.camera));
     // The release of a click still ends the press (platforms pick on dragging && !drag_moved).
@@ -958,6 +1030,7 @@ int main(int argc, char** argv) {
     test_zoom_and_limits();
     test_keys();
     test_resize_and_expose();
+    test_pick_delay();
     test_styles();
     test_elevation_selection();
     test_quality_profile_and_generation();
