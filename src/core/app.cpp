@@ -136,9 +136,7 @@ Effects on_command(Model& model, Command command) {
         fx.redraw = true;
         return fx;
     case Command::CycleStyle:
-        model.terrain_style = model.terrain_style == TerrainStyle::Hypsometric
-                                  ? TerrainStyle::CelShaded
-                                  : TerrainStyle::Hypsometric;
+        model.terrain_style = next_terrain_style(model.terrain_style);
         fx.redraw = true;
         return fx;
     case Command::Quit:

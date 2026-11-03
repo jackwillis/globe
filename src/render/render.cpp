@@ -255,9 +255,20 @@ std::size_t Scene::bytes() const {
            static_cast<std::size_t>(atlas_.polyline_count()) * sizeof(PolylineCap);
 }
 
+Palette palette_for_style(Palette palette, TerrainStyle style) {
+    if (style == TerrainStyle::Map) {
+        palette.ocean = rgb565(164, 202, 224);
+        palette.coastline = rgb565(139, 163, 151);
+        palette.border = rgb565(185, 180, 168);
+        palette.graticule = rgb565(133, 173, 190);
+    }
+    return palette;
+}
+
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
-                         const Palette& palette, const Layers& layers, bool cull_polylines,
-                         RenderQuality quality, const TerrainScene* base) {
+                         const Palette& requested_palette, const Layers& layers,
+                         bool cull_polylines, RenderQuality quality, const TerrainScene* base) {
+    const auto palette = palette_for_style(requested_palette, quality.terrain_style);
     const double chord_px = std::isfinite(quality.max_chord_px)
                                 ? std::clamp(quality.max_chord_px, 0.25, 16.0)
                                 : kMaxChordPx;
@@ -322,11 +333,13 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
                              TerrainScene* terrain)
     : camera_(camera), scene_(&scene), palette_(palette), layers_(layers), quality_(quality),
       generation_(generation) {
+    palette_ = palette_for_style(palette_, quality_.terrain_style);
     if (quality_.terrain && terrain != nullptr) {
         terrain_ = terrain;
         terrain_token_ = terrain_->claim();
         phase_ = -2;
-        palette_.border = rgb565(0, 0, 0);
+        if (quality_.terrain_style != TerrainStyle::Map)
+            palette_.border = rgb565(0, 0, 0);
     }
     if (terrain_ != nullptr)
         plan_ = make_pass_plan(camera_, quality_.order, quality_.focus);

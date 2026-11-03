@@ -1,0 +1,64 @@
+{
+  "repeat": 9,
+  "pack_bytes": 3607,
+  "class_bytes": 64800,
+  "terrain_bytes": 3596653,
+  "results": [
+    {
+      "look": "Map",
+      "radius": 220,
+      "median_ms": 15.883,
+      "worst_step_ms": 0.053,
+      "checksum": "9936552b421163fc"
+    },
+    {
+      "look": "Map",
+      "radius": 440,
+      "median_ms": 13.482,
+      "worst_step_ms": 0.193,
+      "checksum": "6d657513eb156e51"
+    },
+    {
+      "look": "Natural",
+      "radius": 220,
+      "median_ms": 13.711,
+      "worst_step_ms": 0.044,
+      "checksum": "517be0a8267141f7"
+    },
+    {
+      "look": "Natural",
+      "radius": 440,
+      "median_ms": 13.507,
+      "worst_step_ms": 0.176,
+      "checksum": "e58eda0ecf913733"
+    },
+    {
+      "look": "Hypsometric",
+      "radius": 220,
+      "median_ms": 13.475,
+      "worst_step_ms": 0.075,
+      "checksum": "19dd1b02e4cb2a8b"
+    },
+    {
+      "look": "Hypsometric",
+      "radius": 440,
+      "median_ms": 12.623,
+      "worst_step_ms": 0.22,
+      "checksum": "572eba5730155418"
+    },
+    {
+      "look": "Cel-shaded",
+      "radius": 220,
+      "median_ms": 13.003,
+      "worst_step_ms": 0.019,
+      "checksum": "69384bd89edf7144"
+    },
+    {
+      "look": "Cel-shaded",
+      "radius": 440,
+      "median_ms": 12.537,
+      "worst_step_ms": 0.026,
+      "checksum": "defb82860d6deac1"
+    }
+  ]
+}

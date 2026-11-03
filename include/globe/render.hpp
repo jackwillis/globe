@@ -58,6 +58,8 @@ struct RenderStats {
     std::uint32_t segments_skipped = 0;  // refinement only: arcs proven outside the band
 };
 
+Palette palette_for_style(Palette palette, TerrainStyle style);
+
 constexpr Palette kDefaultPalette = {
     rgb565(8, 12, 24),     // background
     rgb565(24, 64, 120),   // ocean

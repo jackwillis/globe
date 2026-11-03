@@ -50,7 +50,7 @@ struct ElevationLevel {
 };
 struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
-    TerrainStyle terrain_style = TerrainStyle::Hypsometric;
+    TerrainStyle terrain_style = TerrainStyle::Map;
     RefinementOrder refinement_order = RefinementOrder::Circle;
     Camera camera;
     Layers layers;
@@ -60,8 +60,8 @@ struct Model {
     std::uint64_t stage_since_ms; // settle clock; separate from last user input for resize
     bool stage_needs_time;        // initial state or resize awaits its first timestamped message
     bool dragging;
-    bool drag_active;           // the pointer has moved past kDragSlopPx since the button went down
-    bool drag_moved;            // the camera changed since the button went down
+    bool drag_active; // the pointer has moved past kDragSlopPx since the button went down
+    bool drag_moved;  // the camera changed since the button went down
     ScreenPoint drag_last;
     bool click_valid; // a recent press that could become the first half of a double click
     ScreenPoint click_pos;

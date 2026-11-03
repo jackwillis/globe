@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "elevation_packs.hpp"
+#include "globe/embedded_landclasses.hpp"
 #include <cstdio>
 namespace globe {
 bool read_pack_file(const char* path, std::vector<std::uint8_t>& out) {
@@ -35,11 +36,20 @@ bool ElevationPacks::initialize(const std::uint8_t* data, std::size_t size) {
     for (auto& scene : scenes_)
         scene.reset();
     count_ = 0;
-    bytes_ = 0;
+    classes_ = LandClasses::decode(kEmbeddedLandclassesData, kEmbeddedLandclassesSize);
+    if (!classes_) {
+        error_ = "Invalid embedded land-class pack";
+        return false;
+    }
+    bytes_ = LandClasses::bytes();
     error_ = "";
     return add(data, size);
 }
 bool ElevationPacks::add(const std::uint8_t* data, std::size_t size) {
+    if (!classes_) {
+        error_ = "Land classes are not initialized";
+        return false;
+    }
     if (count_ >= kElevationLevels) {
         error_ = "Too many elevation packs";
         return false;
@@ -58,7 +68,7 @@ bool ElevationPacks::add(const std::uint8_t* data, std::size_t size) {
         error_ = "Elevation packs exceed the terrain memory budget";
         return false;
     }
-    auto scene = TerrainScene::create(*grid);
+    auto scene = TerrainScene::create(*grid, &*classes_);
     if (!scene) {
         error_ = "Not enough memory for elevation";
         return false;

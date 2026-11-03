@@ -6,6 +6,7 @@
 #include "globe/app.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_elevation.hpp"
+#include "globe/embedded_landclasses.hpp"
 #include "globe/terrain.hpp"
 #include "pixel_format.hpp"
 #include <Dialogs.h>
@@ -21,6 +22,9 @@
 // AppearanceLib exports the function; OS 9 provides arrow=0, closed hand=8, open hand=9.
 extern "C" std::int32_t SetThemeCursor(std::uint32_t cursor);
 using namespace globe;
+static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Natural);
+static_assert(next_terrain_style(TerrainStyle::Natural) == TerrainStyle::Hypsometric);
+static_assert(next_terrain_style(TerrainStyle::Hypsometric) == TerrainStyle::Map);
 namespace {
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
@@ -45,7 +49,10 @@ class Application {
         auto elevation = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
         if (!elevation)
             return false;
-        terrain_ = TerrainScene::create(*elevation);
+        classes_ = LandClasses::decode(kEmbeddedLandclassesData, kEmbeddedLandclassesSize);
+        if (!classes_)
+            return false;
+        terrain_ = TerrainScene::create(*elevation, &*classes_);
         if (!terrain_)
             return false;
         Rect bounds{50, 30, 530, 670};
@@ -271,6 +278,7 @@ class Application {
     RgnHandle mouse_region_ = nullptr;
     Model model_ = initial_model(640, 480);
     std::optional<Scene> scene_;
+    std::optional<LandClasses> classes_;
     std::optional<TerrainScene> terrain_;
     std::optional<Framebuffer> fb_;
     std::optional<RefinementJob> job_;

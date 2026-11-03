@@ -14,6 +14,7 @@ trap '"$TC/humount" >/dev/null 2>&1 || true' EXIT HUP INT TERM
 "$TC/hcopy" -m "$build_dir/GlobeFloppy.bin" :GlobeFloppy
 "$TC/hcopy" -t os9/ReadMe.txt :ReadMe
 "$TC/hcopy" -t LICENSE :License
+"$TC/hcopy" -t data/LANDCLASS-NOTICE.txt :DataCredit
 "$TC/hcopy" -m :GlobeFloppy "$build_dir/roundtrip.bin"
 "$TC/hls" -la : > "$build_dir/hfs-files.txt"
 "$TC/hvol" > "$build_dir/hfs-volume.txt"
@@ -21,4 +22,4 @@ trap '"$TC/humount" >/dev/null 2>&1 || true' EXIT HUP INT TERM
 trap - EXIT HUP INT TERM
 python3 tools/floppy_report.py --app "$build_dir/GlobeFloppy.bin" \
     --roundtrip "$build_dir/roundtrip.bin" --disk "$image" \
-    --document os9/ReadMe.txt --document LICENSE --volume "$build_dir/hfs-volume.txt" --output "$build_dir/size-report.json"
+    --document os9/ReadMe.txt --document LICENSE --document data/LANDCLASS-NOTICE.txt --volume "$build_dir/hfs-volume.txt" --output "$build_dir/size-report.json"

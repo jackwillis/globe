@@ -20,6 +20,8 @@ add_library(globe_core
   src/core/countries.cpp
   src/core/places.cpp
   src/core/trace.cpp
+  src/data/grid_codec.cpp
+  src/data/landclasses.cpp
   src/data/elevation.cpp
   src/data/countries.cpp
   src/data/places.cpp
@@ -67,6 +69,14 @@ if(Python3_FOUND)
   add_library(globe_embedded_elevation ${CMAKE_BINARY_DIR}/embedded_elevation.cpp)
   target_link_libraries(globe_embedded_elevation PUBLIC globe_core)
 
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py
+      ${CMAKE_SOURCE_DIR}/data/landclasses-1deg.ggrd ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp Landclasses
+    DEPENDS data/landclasses-1deg.ggrd tools/embed_atlas.py)
+  add_library(globe_embedded_landclasses ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp)
+  target_link_libraries(globe_embedded_landclasses PUBLIC globe_core)
+  target_link_libraries(globe_platform_common PUBLIC globe_embedded_landclasses)
+
   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/embedded_countries.cpp
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py
       ${CMAKE_SOURCE_DIR}/data/countries.gpol ${CMAKE_BINARY_DIR}/embedded_countries.cpp Countries
@@ -85,6 +95,10 @@ if(Python3_FOUND)
   target_link_libraries(globe-bench PRIVATE globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                             globe_clock_posix)
   target_compile_options(globe-bench PRIVATE -Wall -Wextra -Wpedantic)
+
+  add_executable(globe-landclass-bench src/platform/bench/landclass_bench.cpp)
+  target_link_libraries(globe-landclass-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
+      globe_embedded_landclasses globe_platform_common globe_clock_posix)
 
   add_executable(globe-moving-base-bench src/platform/bench/moving_base_bench.cpp)
   target_include_directories(globe-moving-base-bench PRIVATE src/platform/common)
@@ -123,12 +137,17 @@ if(GLOBE_SANITIZE)
 endif()
 
 if(GLOBE_BUILD_TESTS)
+  add_executable(test_landclasses tests/test_landclasses.cpp)
+  target_link_libraries(test_landclasses PRIVATE globe_core)
+  add_test(NAME landclasses COMMAND test_landclasses)
+  set_tests_properties(landclasses PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   enable_testing()
   if(Python3_FOUND)
     add_test(NAME compression_bench COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_compression_bench.py)
     add_test(NAME floppy_report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_floppy_report.py)
     add_test(NAME place_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_place_builder.py)
     add_test(NAME country_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_country_builder.py)
+    add_test(NAME landclass_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_landclass_builder.py)
     add_test(NAME lakes_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_lakes_builder.py)
     add_test(NAME elevation_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_elevation_builder.py)
     add_test(NAME atlas_builder
@@ -207,7 +226,7 @@ if(GLOBE_BUILD_TESTS)
 endif()
 
 # GL-29 prototype: compressed grid and point decoders, a bench and a test. Not used by any front end.
-add_library(globe_codec src/data/grid_codec.cpp src/data/point_codec.cpp)
+add_library(globe_codec src/data/point_codec.cpp)
 target_link_libraries(globe_codec PUBLIC globe_core)
 target_compile_options(globe_codec PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
 add_executable(globe-codec-bench src/platform/bench/codec_bench.cpp)

@@ -235,3 +235,10 @@ or deriving semantic classes from shaded RGB imagery. Natural Earth raster terms
 (public domain) but those display images are not a categorical biome grid. Original WWF data was
 not substituted for the specifically licensed RESOLVE 2017 archive. Greenland ice remains outside
 this assignment (GL-40); N/A is unknown, not an ice flag.
+
+Builder adoption in this pass: two full 1-degree conversions reproduce **3,607 bytes**, SHA-256
+`52f39e0b1623ccde92462c591da8335649064ff3d6e892b671cf02f3519070cc`; 64,800 decoded class bytes.
+Center/even-odd sampling, simplified biome mapping, no nearest-neighbor gap filling; see
+[typed resource contract and limitations](../docs/landclasses-format.md). No GELV or glacier data
+changed. Archive roundoff repair is bounded to 1e-9 degrees; all other out-of-range coordinates
+are rejected. The shipped data credit is `LANDCLASS-NOTICE.txt`, not the software GPL notice.

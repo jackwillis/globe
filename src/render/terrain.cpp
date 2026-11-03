@@ -61,6 +61,8 @@ void fill_polygon(Framebuffer& fb, const Vec3* p, int count, Rgb565 color) {
 Rgb565 terrain_color(std::int16_t meters, double latitude, TerrainStyle style) {
     if (meters >= 0 && latitude < -60)
         return rgb565(255, 255, 255);
+    if (style == TerrainStyle::Map || style == TerrainStyle::Natural)
+        return landclass_color(meters, LandClass::Unknown, style);
     if (style == TerrainStyle::Hypsometric)
         return hypsometric_color(meters);
     if (meters < -2000)
@@ -76,6 +78,24 @@ Rgb565 terrain_color(std::int16_t meters, double latitude, TerrainStyle style) {
     if (meters < 5000)
         return rgb565(200, 176, 144);
     return rgb565(248, 248, 248);
+}
+Rgb565 landclass_color(std::int16_t meters, LandClass kind, TerrainStyle style) {
+    if (meters < 0)
+        return style == TerrainStyle::Map ? rgb565(164, 202, 224) : hypsometric_color(meters);
+    struct Color {
+        int r, g, b;
+    };
+    static constexpr Color map[kLandClassCount] = {
+        {223, 226, 213}, {238, 225, 193}, {201, 220, 186}, {223, 227, 200}, {220, 220, 207}};
+    static constexpr Color natural[kLandClassCount] = {
+        {156, 161, 133}, {213, 180, 112}, {54, 115, 64}, {151, 168, 87}, {166, 167, 139}};
+    const auto i = static_cast<unsigned>(kind);
+    const auto c = (style == TerrainStyle::Map ? map : natural)[i < kLandClassCount ? i : 0];
+    const int band = std::clamp(static_cast<int>(meters), 0, 6000) / 500;
+    const int lift = band * (style == TerrainStyle::Map ? 1 : 5);
+    return rgb565(static_cast<std::uint8_t>(std::min(255, c.r + lift)),
+                  static_cast<std::uint8_t>(std::min(255, c.g + lift)),
+                  static_cast<std::uint8_t>(std::min(255, c.b + lift)));
 }
 Rgb565 hypsometric_color(std::int16_t meters) {
     const int h = meters;
@@ -94,9 +114,10 @@ Rgb565 hypsometric_color(std::int16_t meters) {
 std::size_t TerrainScene::required_bytes(const Elevation& grid) {
     return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) *
                (2 * sizeof(Vec3) + 1) +
-           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 1) + 1024;
+           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 2) + 6144;
 }
-std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
+std::optional<TerrainScene> TerrainScene::create(const Elevation& grid,
+                                                 const LandClasses* classes) {
     const auto corners = static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1);
     const auto cells = static_cast<std::size_t>(grid.width()) * grid.height();
     if (required_bytes(grid) > kTerrainCacheBudget)
@@ -118,15 +139,31 @@ std::optional<TerrainScene> TerrainScene::create(const Elevation& grid) {
     TerrainScene scene(grid, std::move(world), std::move(projected), std::move(bands));
     scene.values_.reset(new (std::nothrow) std::uint8_t[corners]);
     scene.passes_.reset(new (std::nothrow) std::uint8_t[cells]);
-    if (!scene.values_ || !scene.passes_)
+    scene.class_cells_.reset(new (std::nothrow) std::uint8_t[cells]);
+    if (!scene.values_ || !scene.passes_ || !scene.class_cells_)
         return std::nullopt;
     for (unsigned i = 0; i < 256; ++i) {
         const auto height = grid.value(static_cast<std::uint8_t>(i));
         if (height >= 0 && scene.first_land_ == 256)
             scene.first_land_ = i;
+        for (unsigned kind = 0; kind < kLandClassCount; ++kind) {
+            scene.class_colors_[0][kind][i] =
+                landclass_color(height, static_cast<LandClass>(kind), TerrainStyle::Map);
+            scene.class_colors_[1][kind][i] =
+                landclass_color(height, static_cast<LandClass>(kind), TerrainStyle::Natural);
+        }
         scene.colors_[0][i] = terrain_color(height, 0, TerrainStyle::Hypsometric);
         scene.colors_[1][i] = terrain_color(height, 0, TerrainStyle::CelShaded);
     }
+    for (std::uint32_t y = 0; y < grid.height(); ++y)
+        for (std::uint32_t x = 0; x < grid.width(); ++x) {
+            const double lat = grid.south_deg() +
+                               (grid.north_deg() - grid.south_deg()) * (y + 0.5) / grid.height();
+            const double lon =
+                grid.west_deg() + (grid.east_deg() - grid.west_deg()) * (x + 0.5) / grid.width();
+            scene.class_cells_[static_cast<std::size_t>(y) * grid.width() + x] =
+                static_cast<std::uint8_t>(classes ? classes->at(lat, lon) : LandClass::Unknown);
+        }
     const bool wrap = grid.west_deg() == -180 && grid.east_deg() == 180;
     for (std::uint32_t y = 0; y <= grid.height(); ++y)
         for (std::uint32_t x = 0; x <= grid.width(); ++x) {
@@ -290,7 +327,10 @@ void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int b
         };
         const auto a = value(first), b = value(first + 1), c = value(first + grid_.width() + 2),
                    d = value(first + grid_.width() + 1);
-        const auto* palette = colors_[style == TerrainStyle::CelShaded ? 1 : 0].data();
+        const auto* palette =
+            (style == TerrainStyle::Map || style == TerrainStyle::Natural)
+                ? class_colors_[style == TerrainStyle::Natural ? 1 : 0][class_cells_[index]].data()
+                : colors_[style == TerrainStyle::CelShaded ? 1 : 0].data();
         fill_triangle_shaded(fb, input[0].x, input[0].y, a, input[1].x, input[1].y, b, input[2].x,
                              input[2].y, c, palette);
         fill_triangle_shaded(fb, input[0].x, input[0].y, a, input[2].x, input[2].y, c, input[3].x,
@@ -309,7 +349,11 @@ void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int b
             clipped[count++] = current;
         previous = current;
     }
-    fill_polygon(fb, clipped, count, terrain_color(meters, latitude, style));
+    const auto color =
+        meters >= 0 && latitude < -60
+            ? rgb565(255, 255, 255)
+            : this->color(index_value, style, static_cast<LandClass>(class_cells_[index]));
+    fill_polygon(fb, clipped, count, color);
 }
 void TerrainScene::draw_base(Framebuffer& fb, const Camera& camera) const {
     const auto sx = std::max<std::uint32_t>(1, grid_.width() / 36),

@@ -105,3 +105,80 @@ rings of equal great-circle angle; the rows, center-out and dissolve orders are 
 [Design, measurements and limits](refinement-order.md). The cell rasterizer/smoothing is unchanged,
 and all settled pins remain unchanged. The added workspace is one byte per cell, included in the
 existing 32 MiB allocation guard.
+
+
+## Map and Natural looks (GL-33 / GL-34, 2026-11-02)
+
+Map is the application default: pale class-tinted land, flat blue water, light borders/coastlines
+and subtle elevation relief from class-specific tables. Natural uses stronger biome hues and
+height bands: Sahara/Arabian/Gobi/Australian desert centers are tan, Amazon/Congo forest centers
+green. Antarctica's existing land rule stays white; Greenland ice is unchanged (GL-40 proposal).
+The moving view stays plain lines as the owner requested; Map uses its blue water/light line
+palette while moving, without enabling the old gray base. Existing city/label overlays remain
+available in the full frontend; no new places or layers were added here.
+
+`S` cycles Map -> Natural -> Hypsometric -> Cel-shaded -> Map in the full edition. The floppy
+has exactly three reachable looks: Map -> Natural -> Hypsometric -> Map, checked by compile-time
+assertions in the OS 9 target; the omitted Cel-shaded look remains reachable in the full edition.
+This resolves the assignment's request to retain the old styles while limiting the floppy to
+three looks. All included looks share a single application and fit the same measured disk budget.
+
+[Class source, binary contract and reproduction](landclasses-format.md): RESOLVE Ecoregions 2017,
+CC BY 4.0, 3,607 compressed bytes, two builds identical. Source archive is outside Git; its
+attribution/change notice is shipped on disk. Global decode costs 64,800 retained bytes at
+startup. Each elevation cache adds one class byte per cell plus 5,120 table bytes, counted by the
+existing memory guard. Bundled terrain cache: 3,596,653 bytes; aggregate also includes the decoded
+class grid. Higher-resolution elevation samples the same one-degree biome grid at its cell centers.
+No per-pixel class work, allocation or smoothing algorithm change.
+
+Matched headless G4 GCC 12.5 `-O2 -static`, 640x480, camera 30 N / 10 E, circle order, focus at
+viewport center, all line layers, quality chord 1.5, **median of nine** per look/radius. Timing
+includes projection, pass assignment, terrain and final lines/continuations; excludes source decode,
+cache/framebuffer allocation, packing, upload, scanout and input. Each step is the existing 64-work
+unit continuation. Worst observed wall time includes interruptions; no deadline is claimed.
+
+| Look | Radius | Median G4 refine ms | Worst observed step ms |
+| --- | ---: | ---: | ---: |
+| Map | 220 | 713.851 | 67.293 |
+| Map | 440 | 710.485 | 32.701 |
+| Natural | 220 | 712.485 | 30.327 |
+| Natural | 440 | 703.511 | 24.689 |
+| Hypsometric | 220 | 693.834 | 25.320 |
+| Hypsometric | 440 | 720.500 | 25.613 |
+| Cel-shaded | 220 | 693.797 | 24.435 |
+| Cel-shaded | 440 | 702.615 | 24.531 |
+
+Host/G4 hashes agree for every look at both radii; the retained Hypsometric hashes are
+`19dd1b02e4cb2a8b` / `572eba5730155418`, so the old terrain path did not silently change. Raw reports
+are `perf/landclass-looks-{host,g4}.json`. Actual performance is comparable in these views; do not
+compare these quality settings with older profiler runs using different chord tolerance/views.
+
+The intentional application-default change re-pins the standard sampled repeat-2 refined replay
+`efa030af1a10f887` -> **c7b4e245eca3f29f**, independently reproduced on host/G4. The legacy app
+replay hash **9b4a458633a32d9d** and outline goldens remain unchanged. That legacy test explicitly
+renders the reference palette; it is not a claim that the new default moving colors are identical.
+New default moving checksum **190a5b1f5461449b** (repeat 2) also matches host/G4;
+raw evidence is in `perf/landclass-moving-{host,g4}.json`. Gray-base optional code is
+unchanged and not enabled by Map. No pin change is attributed to land-mask/ice edits in GELV.
+
+New tests cover pinned geographic centers, typed-grid shape/class-range/CRC/truncation rejection,
+even-odd holes, antimeridian and south-first rows, tiny coordinate-boundary repair, class palettes,
+Antarctica/Greenland behavior and exact rendered center colors with uniform heights. Five mutants
+fail: decoded row reversal, skipped class-range validation, ignored per-cell class, omitted holes,
+and reversed builder rows; restored normal tests pass. Source conversion initially rejected 11
+roundoff-only longitudes just above 180; the documented 1e-9-degree bound repair fixed this without
+changing any selected coastal center. No contemporary forest-cover or glacier-coverage claim.
+
+Only style-default/cycle assertions were changed in the focus-owner's `app.cpp`/`test_app.cpp`;
+refinement focus/order logic was left intact. No rivers, thematic scheme, imagery, antialiasing,
+networking, smoothing tuning or surface/theme/pass refactor in GL-33/34.
+
+GL-33/34 validation checkpoint: GCC ASan/UBSan **38/38** (69.88 s), clang **38/38** (45.04 s).
+Focused sanitizer class/terrain/import tests pass after lint fixes; the explicit legacy-Hypsometric
+replay check also passes. Both Retro68 compiler probes pass; OS 9 links/packages, HFS fork roundtrip
+identical. Floppy data fork 245,348 bytes, payload 282,771, HFS free 1,164,800; all three included
+looks fit. Full executable 365,472 bytes. These are the GL-33/34 snapshots in
+`perf/landclass-{floppy,full}-size.json`, not OS 9 execution or CI/desktop acceptance. Lint found
+implicit-width multiplication, a bare strcmp result and unchecked startup optional; fixed with
+explicit size_t arithmetic/comparison and an initialization guard, then reran focused tests/lint.
+The subsequent GL-41 line-reveal work has its own measurements and validation.

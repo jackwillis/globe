@@ -378,9 +378,66 @@ void test_orders() {
         CHECK(skew.pass_at(159.9, 119.9) == kRefinePasses - 1);
     }
 }
+void test_landclass_looks() {
+    CHECK(landclass_color(100, LandClass::Desert, TerrainStyle::Natural) !=
+          landclass_color(100, LandClass::Forest, TerrainStyle::Natural));
+    CHECK(landclass_color(100, LandClass::Desert, TerrainStyle::Map) !=
+          landclass_color(100, LandClass::Forest, TerrainStyle::Map));
+    CHECK(landclass_color(-100, LandClass::Desert, TerrainStyle::Map) ==
+          landclass_color(-100, LandClass::Forest, TerrainStyle::Map));
+    CHECK(terrain_color(2000, -80, TerrainStyle::Natural) == rgb565(255, 255, 255));
+    CHECK(terrain_color(2000, 75, TerrainStyle::Natural) != rgb565(255, 255, 255));
+    auto bytes = land_grid();
+    auto grid = Elevation::parse(bytes.data(), bytes.size());
+    CHECK(grid);
+    std::FILE* file = std::fopen("data/landclasses-1deg.ggrd", "rb");
+    CHECK(file);
+    if (!grid || !file)
+        return;
+    std::vector<std::uint8_t> raw;
+    int c;
+    while ((c = std::fgetc(file)) != EOF)
+        raw.push_back(static_cast<std::uint8_t>(c));
+    std::fclose(file);
+    auto classes = LandClasses::decode(raw.data(), raw.size());
+    CHECK(classes);
+    if (!classes)
+        return;
+    auto terrain = TerrainScene::create(*grid, &*classes);
+    CHECK(terrain);
+    if (!terrain)
+        return;
+    auto ab = atlas_util::make_atlas({{1, {{0, 0}, {1, 1}}}}, "class looks");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    CHECK(atlas);
+    if (!atlas)
+        return;
+    auto scene = Scene::create(*atlas);
+    auto fb = Framebuffer::create(100, 80);
+    CHECK(scene && fb);
+    if (!scene || !fb)
+        return;
+    for (auto style : {TerrainStyle::Map, TerrainStyle::Natural}) {
+        for (auto point : {LatLon{23.5, 13.5}, LatLon{-3.5, -62.5}}) {
+            auto camera = make_camera({point, 0, 35, 100, 80});
+            CHECK(camera);
+            if (!camera)
+                return;
+            RefinementJob job(*camera, *scene, kDefaultPalette, {false, false, false},
+                              {1.5, true, 0, style}, 1, &*terrain);
+            while (job.active())
+                job.step(*fb, 1, 256);
+            // Uniform 1,000 m heights make the exact center-pixel palette value an independent
+            // oracle.
+            const auto kind = point.lat_deg > 0 ? LandClass::Desert : LandClass::Forest;
+            CHECK(fb->pixel(50, 40) == landclass_color(grid->value(192), kind, style));
+        }
+    }
+}
 } // namespace
 int main() {
     test_orders();
+    test_landclass_looks();
     test_terrain();
     test_appearance();
     return TEST_MAIN_RESULT();

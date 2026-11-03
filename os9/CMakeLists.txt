@@ -8,10 +8,13 @@ set(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 # OS 9 is the floppy release; the root build produces the full X11 release.
 set(APP GlobeFloppy)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
-foreach(kind atlas elevation)
+foreach(kind atlas elevation landclasses)
   if(kind STREQUAL atlas)
     set(DATA atlas.gatl)
     set(TYPE Atlas)
+  elseif(kind STREQUAL landclasses)
+    set(DATA landclasses-1deg.ggrd)
+    set(TYPE Landclasses)
   else()
     set(DATA elevation-1deg.gelv)
     set(TYPE Elevation)
@@ -27,11 +30,14 @@ add_application(${APP} CREATOR Glb2
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
   ${ROOT}/src/core/app.cpp
+  ${ROOT}/src/data/grid_codec.cpp ${ROOT}/src/data/landclasses.cpp
   ${ROOT}/src/data/atlas.cpp ${ROOT}/src/data/elevation.cpp ${ROOT}/src/data/crc32.cpp
   ${ROOT}/src/render/framebuffer.cpp ${ROOT}/src/render/raster.cpp
   ${ROOT}/src/render/render.cpp ${ROOT}/src/render/terrain.cpp
+  ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp
   ${CMAKE_BINARY_DIR}/embedded_atlas.cpp ${CMAKE_BINARY_DIR}/embedded_elevation.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/globe.r)
+target_compile_definitions(${APP} PRIVATE GLOBE_FLOPPY=1)
 target_include_directories(${APP} PRIVATE ${ROOT}/include ${ROOT}/src/platform/common)
 target_compile_options(${APP} PRIVATE -Os -Wall -Wextra -Wpedantic -fno-exceptions -fno-rtti)
 target_link_libraries(${APP} AppearanceLib)

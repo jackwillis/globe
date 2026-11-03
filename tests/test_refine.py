@@ -23,3 +23,9 @@ for order in ('rectangle', 'circle', 'globe'):
         replay=subprocess.run(sys.argv[1:-1]+[trace.name],capture_output=True,text=True,check=True)
         ordered=json.loads(replay.stdout)
         assert ordered['frame_checksum']==expected,(order,ordered)
+
+# Changing the default look must not alter the existing Hypsometric terrain path.
+with tempfile.NamedTemporaryFile(mode='w',suffix='.trace') as trace:
+    trace.write(Path(sys.argv[-1]).read_text()+'\nstyle 8000\nstyle 8001\n');trace.flush()
+    legacy=json.loads(subprocess.run(sys.argv[1:-1]+[trace.name],capture_output=True,text=True,check=True).stdout)
+    assert legacy['frame_checksum']=='efa030af1a10f887',legacy

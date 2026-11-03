@@ -22,6 +22,7 @@ class ElevationPacks {
     bool add(const std::uint8_t* bytes, std::size_t size);
     std::array<std::vector<std::uint8_t>, kElevationLevels> files_;
     std::array<std::optional<TerrainScene>, kElevationLevels> scenes_;
+    std::optional<LandClasses> classes_;
     unsigned count_ = 0;
     std::size_t bytes_ = 0;
     const char* error_ = "";

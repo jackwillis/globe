@@ -457,14 +457,19 @@ void test_resize_and_expose() {
 
 void test_styles() {
     auto m = fresh();
-    CHECK(m.terrain_style == TerrainStyle::Hypsometric);
+    CHECK(m.terrain_style == TerrainStyle::Map);
+    update(m, CommandIssued{1, Command::CycleStyle});
+    CHECK(m.terrain_style == TerrainStyle::Natural);
+    update(m, CommandIssued{2, Command::CycleStyle});
     const auto g = m.generation;
     CHECK(update(m, CommandIssued{10, Command::CycleStyle}).redraw);
     CHECK(m.terrain_style == TerrainStyle::CelShaded && m.generation > g);
     CHECK(quality_for(m).terrain_style == TerrainStyle::CelShaded);
     CHECK(toolbar_state(m)[static_cast<std::size_t>(Command::CycleStyle)].checked);
     update(m, CommandIssued{20, Command::CycleStyle});
-    CHECK(m.terrain_style == TerrainStyle::Hypsometric);
+    CHECK(m.terrain_style == TerrainStyle::Map);
+    update(m, CommandIssued{21, Command::CycleStyle});
+    update(m, CommandIssued{22, Command::CycleStyle});
     char style_text[100];
     const Msg style_command = CommandIssued{30, Command::CycleStyle};
     CHECK(format_message(style_command, style_text, sizeof(style_text)) > 0);

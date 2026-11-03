@@ -1,0 +1,20 @@
+{
+  "edition": "floppy: app + atlas + one-degree elevation",
+  "measured_utc": "2026-11-03T03:20:11.801367+00:00",
+  "application": "GlobeFloppy",
+  "data_fork_bytes": 245348,
+  "resource_fork_bytes": 432,
+  "macbinary_bytes": 246016,
+  "documents_bytes": 36991,
+  "payload_bytes": 282771,
+  "payload_budget_bytes": 1200000,
+  "payload_headroom_bytes": 917229,
+  "image_bytes": 1474560,
+  "image_budget_bytes": 1474560,
+  "app_macbinary_sha256": "415b65a53ff78fc96ebdc91584c242d9b6ca0a63f1c561d9cbc837a93f5b8bd2",
+  "image_sha256": "33624ea1db116f0b871cbfc2f87045f625717c07df322bc7b7c647089fb30877",
+  "fork_roundtrip": "identical",
+  "execution": "built and packaged; not run on OS 9",
+  "limits": "payload budget excludes HFS overhead; actual image creation and copy enforce disk fit; signature check is not a full HFS validator",
+  "image_free_bytes": 1164800
+}
