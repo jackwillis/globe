@@ -267,3 +267,36 @@ Trace verb `order TIME rectangle|circle|globe` (old names and `square` are rejec
 Final images, refined pin, replay hash and goldens are unchanged. Outline-only refine (no terrain) still
 uses top-down 16-row bands. Do not reintroduce the removed orders without an owner request. Not verified:
 real display, OS 9 execution, CI.
+
+### 2026-11-02 — Assignment for Codex: GL-34 land-class grid + GL-33 Map look (written by Claude)
+
+Authorized: GL-34 and GL-33 from [backlog](backlog.md); a build-time data pack feeds both looks.
+Not authorized: fetch/networking, rivers (GL-35), thematic scheme (GL-36), satellite, antialiasing,
+smoothing tuning, surface/theme/pass refactors, any push/tag/merge to remote. Claude is working
+separately on the refinement *focus* (src/core/app.cpp, tests/test_app.cpp); avoid those files, and
+if you must touch them, keep the edit minimal and say so.
+
+Owner feedback to satisfy: deserts are not deserty (Sahara, Arabian, Gobi, Australian interior);
+the Amazon and other forests should read as forest; Antarctica white; Greenland is not white
+(GL-40 is a proposal only, leave it). Map should be the default look (Google-Maps-like: muted
+land, blue water, light relief); Natural uses land classes; at most 3 looks on the floppy.
+
+Do:
+1. **Source check first** (license, size, SHA-256, record in `data/SOURCES.md`): a land-cover/
+   biome source usable at 1 degree, public domain or compatible with GPL-3.0 redistribution
+   (candidates: Natural Earth physical/raster themes, ESA WorldCover/CCI summaries only if
+   license is clear, WWF ecoregions only if license allows). If nothing is clearly licensed,
+   stop and report; do not guess. Never put the owner's email in any request or User-Agent;
+   use a generic `globe-builder/0.1 (offline data build tool)` and report the exact header.
+2. Builder: a class grid (desert, forest, grass/shrub, tundra, ice, crop/urban optional) at
+   1 degree, one byte per cell, compressed with the merged `grid_codec`. Deterministic, two
+   builds identical, source ZIPs not committed.
+3. Looks: add Map (default) and Natural using the class grid; keep the existing hypsometric/
+   cel styles reachable by `S`. Class colors in the palette tables, no per-pixel work.
+4. Report floppy size (`tools/floppy_report.py`) and G4 refine time (1x/2x, median of 9) for
+   each look; call out any look that does not fit.
+5. Pins: moving-base and replay pins change only if the default look changes; if so re-pin
+   with reasons and host/G4 evidence. Update `docs/terrain.md`, `data/SOURCES.md`, backlog.
+
+Verify as before (36/36 host, ASan/UBSan, policy, Retro68 probes), mutation-check new tests,
+append a dated note here. No compiling on maul; owner/Claude push test builds.
