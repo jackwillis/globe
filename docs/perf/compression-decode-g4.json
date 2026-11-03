@@ -1,0 +1,41 @@
+{
+  "what": "GL-29 prototype decoders: average predictor + adaptive binary range coder for one-byte grids (grid_codec), delta-varint for atlas points (point_codec)",
+  "date": "2026-11-02",
+  "tool": "src/platform/bench/codec_bench.cpp (globe-codec-bench), --repeat 15, median and min of the repeats; encoder tools/grid-codec/grid_codec.py",
+  "g4": "maul, PowerPC G4, NetBSD 11 macppc, cross-built (-O2, static, no exceptions/RTTI), two runs agreed",
+  "host": "x86-64 laptop, GCC Release",
+  "grid_1deg": {
+    "cells": 64800, "stored_bytes": 29693, "raw_bytes": 64800,
+    "g4_median_ms": 19.009, "g4_ns_per_cell": 293.3,
+    "host_median_ms": 1.732, "host_ns_per_cell": 26.7,
+    "crc32_of_cells": "86ea25c2", "crc_matches_host_and_g4": true
+  },
+  "grid_025deg": {
+    "cells": 1036800, "stored_bytes": 342073, "raw_bytes": 1036800,
+    "g4_median_ms": 301.181, "g4_ns_per_cell": 290.5,
+    "host_median_ms": 22.756, "host_ns_per_cell": 21.9,
+    "crc32_of_cells": "4716f1a5", "crc_matches_host_and_g4": true
+  },
+  "atlas_points": {
+    "points": 8120, "stored_bytes": 26736, "raw_bytes": 32480,
+    "g4_median_ms": 1.224, "g4_ns_per_point": 150.8,
+    "host_median_ms": 0.017, "host_ns_per_point": 2.1,
+    "tail_sum": "018e8972", "tail_sum_matches_host_and_g4": true
+  },
+  "code_size_powerpc_text_bytes": {
+    "grid_codec_O2": 2064, "grid_codec_Os": 1476,
+    "point_codec_O2": 696, "point_codec_Os": 476,
+    "note": "object text size from powerpc--netbsd-size on the NetBSD cross compiler; excludes crc32.o and the shared helpers"
+  },
+  "retro68_compile_only": {
+    "powerpc-apple-macos-g++": {"grid_codec": "ok", "point_codec": "ok"},
+    "m68k-apple-macos-g++": {"grid_codec": "ok", "point_codec": "ok"},
+    "flags": "-std=c++20 -fno-exceptions -fno-rtti -Wall -Wextra -Wpedantic, no warnings printed"
+  },
+  "not_measured": [
+    "run on Mac OS 9 or 68k (compile only)",
+    "decode of a tiled variant",
+    "memory use beyond the 3 KB of probabilities on the stack",
+    "decode from a real floppy or into the terrain scene"
+  ]
+}
