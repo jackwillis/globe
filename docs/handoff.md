@@ -2,8 +2,7 @@
 
 Current operating instructions, refreshed 2026-11-02. This file is committed. Older notes and
 superseded branch/remote/test-count statements are [archived](history/handoff-20261101.md).
-Latest continuation: GL-19/26 experiment and GL-40 proposal complete; see the final dated note and
-[experiment report](refinement-order.md). Rows remain default; ice format awaits review.
+Latest continuation: see the final dated notes (2026-11-03); the ADR addenda hold the owner decisions.
 Read [backlog](backlog.md), [project notes](project-notes.md) and the [ADR](adr/0001-m2-to-m5-decisions.md).
 Append a dated note at the bottom when a pass ends: changes, verification, failures and limits.
 
@@ -386,3 +385,14 @@ pixels; G4 +45-60 ms compute, 480 ms of pauses). Host 40/40 (x11_idle/x11_repain
 under parallel ctest load and pass alone), Retro68 probe clean, OS 9 floppy build packaged
 (not run). Not done: dithered country fill, OS 9 picking and palette, GL-38 antialiasing,
 GL-35 rivers, GL-36, GL-40 (needs format approval). Tip17 is the latest G4 build.
+
+### 2026-11-03 — Claude: OS 9 first run, speed and feel (end of the night)
+
+Done on `main`, all committed: OS 9 runs under Tiger Classic (window title shows settle ms and copy
+ms; see `docs/os9-proof.md`); work slices and a presentation throttle on OS 9 and X11; line reveal
+at 15 ms; refinement precomputes during a paused drag (300 ms, button down) and is shown only on
+release (`presentation_held`; the platform gating has no automated test). Host 40/40, Retro68
+probe clean, OS 9 floppy build packages. Not done: the settled-frame cache (GL-45), terrain-plus-lines
+split, OS 9 picking and palette, dithered country fill, GL-38/35/36/40, GL-5 CI (first push to
+GitHub may start it), GL-7 X11 display timing, real OS 9 hardware. maul was left booted into Tiger.
+`main` was pushed to origin on 2026-11-03 at the owner's explicit request (no tags).

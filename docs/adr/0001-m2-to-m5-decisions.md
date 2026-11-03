@@ -433,3 +433,20 @@ Owner decisions after hands-on tries of tips 11-16, in order:
 - **Open.** Dithered country fill, OS 9 picking and palette, antialiasing (GL-38), rivers and lakes
   layer (GL-35), thematic scheme (GL-36), Greenland ice (GL-40, needs format approval), the smoothing
   decision, and every real-hardware check (OS 9 run, X11 display timing, CI).
+
+## Addendum 2026-11-03 (after midnight): OS 9 first run and feel
+
+- **First OS 9 run.** The floppy build launched and rendered under Tiger Classic on maul (emulated
+  OS 9; `docs/os9-proof.md`). The owner then confirmed dragging, zoom and keys work. Real OS 9
+  hardware is still untested.
+- **Slow in Classic, fixed twice.** Measured from the window title: 4,267 ms settle with 2,101 ms
+  copying about 33 frames. Refine steps now run in 24 ms slices between event waits, and a
+  refinement frame is shown only when recent copies took under a quarter of the time since they
+  started (the final frame always shows): 2,163-2,314 ms with about 450 ms of copying. X11 has the
+  same throttle (`present_refine`).
+- **Feel.** The line reveal step is 15 ms (was 30). A drag that pauses 300 ms with the button down
+  starts refining but is not presented (`presentation_held`); release shows the result at once.
+  Work is cooperative, not threaded: `RefinementJob` is a hand-written state machine stepped in
+  bounded slices and cancelled by generation, no coroutines.
+- **Rejected or deferred.** A cached bitmap of the vectors (the lines move with the globe); a
+  cache of settled frames for instant look and layer toggles is an idea (GL-45), not started.
