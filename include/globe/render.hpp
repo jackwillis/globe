@@ -86,7 +86,7 @@ struct LineChunk {
 // Immutable metadata creation, callable into a caller-owned bounded buffer for profiling.
 std::size_t line_chunk_count(const Atlas& atlas);
 bool build_line_chunks(const Atlas& atlas, LineChunk* output, std::size_t capacity);
-constexpr std::uint32_t kLineRevealDelayMs = 30; // owner-tunable, one wake between reveal passes
+constexpr std::uint32_t kLineRevealDelayMs = 15; // owner-tunable, one wake between reveal passes
 
 // Geometry that does not depend on the camera, computed once: the unit vector of every atlas
 // vertex and of the graticule's sample points. A frame then needs one matrix-vector product per

@@ -47,7 +47,7 @@ scanout, X uploads at every pass and any OS 9 execution.
 
 After all terrain passes the lines no longer appear at once: they reveal circle-outward from the
 view center, in the same 16 rings as the terrain, one pass per timer wake (`kLineRevealDelayMs` =
-30 ms in `render.hpp`, about half a second in total; any input cancels it like any refinement).
+15 ms in `render.hpp` (30 ms at first, halved on 2026-11-02 for feel), about a quarter of a second in total; any input cancels it like any refinement).
 `RenderQuality::progressive_lines` (default true) switches it; the unpaced path is the old single
 line pass. Each polyline is cut once into chunks of 16 points (`LineChunk`, 8 bytes; 865 chunks and
 7,785 workspace bytes for the bundled atlas); a chunk's pass is the pass of its midpoint, assigned
@@ -59,7 +59,7 @@ image is **identical** to the unpaced render for every focus and zoom (checked e
 G4 (640x480, medians of nine, `globe-line-reveal-bench`, `docs/perf/line-reveal-g4.json`):
 compute 726 ms paced against 680 ms unpaced at radius 220, 795 against 734 at radius 440 (about
 +45-60 ms: preparing chunks 0.6 ms, revealed lines 88-105 ms against 44 ms, canonical repair
-43-44 ms); scheduled pauses 16 x 30 = 480 ms; wall 1,330 / 1,370 ms; worst step 29 / 25 ms; checksums
+43-44 ms); scheduled pauses 16 x 30 = 480 ms at the 30 ms step (now 15 ms: 240 ms); wall 1,330 / 1,370 ms at 30 ms; worst step 29 / 25 ms; checksums
 equal paced and unpaced. X upload cost per reveal step is not measured (GL-7 is the owner's).
 Retired Codex draft: its earlier orders were removed with the circle-only decision.
 
