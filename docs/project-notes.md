@@ -9,15 +9,19 @@ Main is the active branch; the owner renamed v2 and configured origin. All five 
 branches and GL-6 are merged. Agents do not push, tag, force or merge remote branches. The handoff
 and packaging work are committed; there is no pending merge of those original side branches.
 
-Implemented: strict pack formats/builders, bounded cancellable terrain, GL-6 band rejection, core
-click/present-only rules, local elevation imports, X11 toolbar/cursors/country and city windows,
-OS 9 proof and two edition reports. GL-27 adds the gray base, palettes, smoothing and Antarctic
-white; GL-28 adds the lake-aware one-degree pack. Fetch is [design only](fetch-design.md).
+Implemented: strict pack formats/builders, bounded cancellable terrain, core click/present-only
+rules, local elevation imports, X11 toolbar/cursors/country and city windows, OS 9 proof and two
+edition reports. Terrain: Map (default, biome-class land from the licensed RESOLVE class grid) and
+Relief looks, Antarctic white, lake-aware one-degree pack, circle-outward refinement from the view
+center (every other order was tried and removed), plain vectors while dragging, a paced progressive
+line reveal after the terrain (GL-41), a click that waits out the double-click window before picking
+(GL-43), an orange country outline (GL-44) and a looks palette window (GL-42, X11). Fetch is
+[design only](fetch-design.md). Owner decisions are in the ADR addendum of 2026-11-02 (night).
 
-Host GCC sanitizer and clang suites pass 36/36. G4 app tests include click rules and reproduce
-9b4a458633a32d9d; terrain tests pass and combined lake-aware replay agrees with the host at
-efa030af1a10f887. These are NetBSD headless checks, not OS 9 execution or current GUI acceptance.
-Owner builds tip3–tip8 remain theirs and must not be deleted, overwritten or killed.
+Host suite 40/40; refined pins Map `e86d02e2424d2a47`, Relief `1c3eac3bcc2d3b8f`, replay hash
+`9b4a458633a32d9d`, all equal on the G4 (headless). The Retro68 probe is clean and the OS 9 floppy
+build packages; **not run on OS 9**, CI never run, real-display timing (GL-7) unmeasured.
+Owner builds tip3-tip17 on maul remain theirs and must not be deleted, overwritten or killed.
 
 ## Measurements and limits
 

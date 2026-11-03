@@ -1,9 +1,20 @@
 # Globe
 
 An interactive, software-rendered Earth for PowerPC G4: NetBSD/X11 and classic Mac OS 9.
-The current v2 work includes a gray moving land/ocean base, cancellable settled terrain,
-hypsometric and cel-shaded styles, Antarctic ice and a one-degree lake mask. The X11 edition
-also has a utility toolbar, country picking, city markers and scrolling information windows.
+Plain vector lines while you drag; when you stop, the terrain refines outward from the center in
+circles, then the coastlines, borders and graticule sweep in. Two looks: **Map** (land tinted by
+biome class on a blue sea) and **Relief** (a plain hypsometric tint, white at altitude). The X11
+edition also has a toolbar, a looks palette (`P`), country picking with an orange outline, city
+markers and scrolling information windows.
+
+| Map (default) | Relief |
+| --- | --- |
+| ![Map look, Africa and Europe](docs/images/map.png) | ![Relief look, Africa and Europe](docs/images/relief.png) |
+| ![Map look, the Amazon](docs/images/amazon-map.png) | ![Relief look, the Himalaya](docs/images/himalaya-relief.png) |
+
+![Map look, Antarctica in white](docs/images/antarctica-map.png)
+
+Screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
 
 This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
 checks pass on host and G4. The OS 9 application is **built and packaged, not run**. CI is

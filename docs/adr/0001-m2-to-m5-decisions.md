@@ -412,3 +412,24 @@ Screen-space focus gives the requested round pattern in inspected snapshots. Row
 owner hands-on/presentation acceptance decides whether to switch. No smoothing tuning or general
 pass/surface refactor was done. GL-26's broader effect chooser remains open. GL-40 remains the
 proposal above, with no format or data change.
+
+## Addendum 2026-11-02 (night): looks, refinement and interaction decisions
+
+Owner decisions after hands-on tries of tips 11-16, in order:
+
+- **Refinement.** Dissolve, rows and center-out were dropped; rectangle and globe rings were tried
+  and dropped; **circle-outward from the view center** is the only order (fastest on the G4: 711 /
+  765 / 635 ms against globe 793 / 765 / 725). A touchpoint focus and a halfway focus were tried and
+  replaced by the center. Vectors are plain while dragging.
+- **Progressive lines (GL-41).** After the terrain, lines reveal in the same rings, 30 ms per ring
+  (`kLineRevealDelayMs`), then one canonical pass makes the settled image identical to the unpaced
+  render. Cost on the G4: +45-60 ms compute and 480 ms of pauses.
+- **Looks.** The hybrid relief, the cel-shaded look and a separate Natural look are gone. **Map**
+  (default; biome classes, punchier palette in one table) and **Relief** (plain hypsometric, white
+  from 6,000 m) remain; Antarctica is white in both (could not be reproduced as brown).
+- **Interaction.** A plain click picks only after the 400 ms double-click window; a second click
+  zooms and never opens a card (GL-43). The picked country is outlined in orange on the shown copy
+  of the frame, never in the rendered frame (GL-44). `P` opens a looks palette window (GL-42).
+- **Open.** Dithered country fill, OS 9 picking and palette, antialiasing (GL-38), rivers and lakes
+  layer (GL-35), thematic scheme (GL-36), Greenland ice (GL-40, needs format approval), the smoothing
+  decision, and every real-hardware check (OS 9 run, X11 display timing, CI).
