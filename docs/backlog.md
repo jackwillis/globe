@@ -1,106 +1,115 @@
-# Globe — backlog and priorities
+# Globe — groomed backlog
 
-Reconciled 2026-11-02; updated after GL-19/26 experiments and the GL-40 proposal on `main`. The original backlog (written from `386f4c6`, so it
-could not see the merged side branches) is kept in structure; statuses below are checked against the
-repo, not assumed. Decisions live in `docs/adr/0001-m2-to-m5-decisions.md`; rules and history in
-`docs/handoff.md` and `docs/project-notes.md`.
+**As of 2026-11-03; checked against `main` at `dae1ef3`.** This is the **current planning index**, not a substitute for [design decisions](adr/0001-m2-to-m5-decisions.md), [architecture as built](architecture.md), [performance evidence](perf/README.md), or [agent handoff/safety rules](handoff.md). Historical plans and rejected experiments remain in the ADR and experiment notes, **not** as live instructions here. GL IDs are internal backlog identifiers, not GitHub issue numbers.
 
-- **Priorities:** P0 prove it runs and protect existing work; P1 make v0.1 fast and shippable; P2
-  surfaces, passes and the Classic style; P3 features for v0.2 and later.
-- **Sizes** are relative guesses: S under a day, M a few days, L a week or more.
-- **Owners:** Jack = needs the G4, the GitHub remote or a decision. Agent = code or docs Claude or
-  Codex can do locally.
-- **Status:** done / partial / open. Nothing here claims a result on OS 9 hardware or in CI; neither
-  has run.
+## Product and engineering policy
 
-Phase A (P0) gates everything. v0.1 (P1) ships on today's architecture; the refactor (P2) starts
-after it, so a slip there cannot hold up the release.
+- **Keep the Elm-style Model / Msg / update / Effects architecture.** Mutate small Model state only through `update()`; make published geographic resources and per-job render inputs logically immutable; keep framebuffers and execution workspaces mutable. No functional-programming rewrite.
+- **Ship v0.1 on the existing engine.** No large coordinator, tiling, format, or rendering-pass refactor is a prerequisite unless a concrete release defect requires it.
+- **No maintained server infrastructure.** Embedded/offline baseline always works; optional later imports/fetching use third-party or user-selected sources with licensing, capacity, and rate-limit checks. No developer-operated relay.
+- **Two editions only:** small OS 9 floppy and full X11; no networking requirement on the v0.1 floppy. The existing HFS disk image fits; size is not evidence of runtime compatibility.
+- **Measurements before optimization.** Use matched camera/trace, view, style, edition, and platform. Preserve final-frame pins for behavior-preserving refactors; measure worst continuation, responsiveness, presentation cost and end-to-end completion.
+- **Constrained code:** portable C++20, no exceptions/RTTI or OS headers in the core, bounded allocations and operations, explicit big-endian verification, Retro68 PowerPC/68k compile probes.
+- **Approval boundaries:** follow `docs/handoff.md` for machine access, data provenance, owner binaries and agent push policy; no changes to maul or deployment implied by this backlog.
 
-## P0: prove it runs and protect the work
+**Definitions:** P0 = v0.1 blocker / verification; P1 = v0.1 release polish; P2 = focused post-v0.1 architecture and performance; P3 = later features; Parked = research only. **Status:** done, partial, open, proposed, parked. An implementation may be done on X11 and still open on OS 9.
 
-| ID | Ticket | Size | Owner | Status | Notes / done when |
-| --- | --- | --- | --- | --- | --- |
-| GL-1 | Run the existing OS 9 build on the G4 | S | Jack | open | The app is now `GlobeFloppy` (`GlobeFloppy.bin` MacBinary, both forks; `GlobeFloppy-1440.dsk` image), built with `tools/build-edition.sh floppy`. Launches; drag, double-click zoom, keys and cursors work; idle quiet; window moves and updates do not re-render; results into `docs/os9-proof.md` |
-| GL-2 | Get the work onto GitHub | S | Jack | changed | The five side branches are merged into `main` and deleted, so nothing to push but `main` itself (GitHub has an older commit). No Claude push: the owner pushes |
-| GL-3 | Merge `claude/click-rules` | M | Agent | done | Merged (`d6ccb7f`, from `987cd37`): press without a drag leaves stage, generation and effects unchanged; expose resends cached pixels (reconciled with `4cd730b`; only `CMakeLists.txt` conflicted). Host: 34/34 tests, replay hash and goldens unchanged. 2026-11-02: current cross-built G4 test_app including click rules and replay passes, hash 9b4a458633a32d9d |
-| GL-4 | Refresh stale docs | S | Agent | done | Codex updated README for the two editions and notes; project notes and handoff are in `docs/`. 2026-11-02: current README/open-work/handoff, architecture, project and toolchain notes refreshed; superseded handoff/toolchain text archived; current host count 36 |
-| GL-5 | Get CI running and green on GitHub | M | Jack + Agent | open | `checks.yml` now also builds the full and floppy size reports (configured, never run). Unverified: `pipx` pins, Retro68 job | **First CI results (2026-11-03, run 41576444739 on `main`):** Retro68 PowerPC and 68k probe passes, clang host build passes, GCC build with ASan/UBSan and all tests pass, policy and clang-format pass; the only failure is clang-tidy on three lines of `src/platform/bench/codec_bench.cpp` (two implicit widening conversions at lines 98 and 116, and an `atoi` at line 138). Fix those, then the full-edition size report step and artifact upload (skipped after the failure) get their first run.
+## P0 — prove release candidates, stabilize CI
 
-## P1: make v0.1 fast and shippable
+| ID | Status | Task | Next action / acceptance |
+| --- | --- | --- | --- |
+| GL-1 | **partial** | Native OS 9 hardware acceptance | **Tiger Classic successfully launched and rendered**, and settling was measured there; this is not native OS 9. On real OS 9 hardware verify launch, drag, zoom, cursors, resize/expose, idle and palette/colors; record results in `os9-proof.md`. |
+| GL-2 | **done** | Publish the repository | `main` is public at `jackwillis/globe`; current owner controls publishing. |
+| GL-5 | **partial / blocker** | Green GitHub Actions | First run `41576444739` passed cross-compile probes, tests, policy and formatting but failed **clang-tidy in `src/platform/bench/codec_bench.cpp`** (two conversions and `atoi`). Fix narrowly, rerun, then confirm previously skipped full-edition size reporting and artifacts. |
+| GL-7 | **open** | Real-display G4 X11 timing | Repeat a fixed interactive script in the actual X11 desktop. Separate compute, packing, XPutImage/XSync, frame/input latency; preserve trace and machine settings. |
+| GL-9 | **done, CI proof via GL-5** | Floppy sizing and HFS fork roundtrip | Local 1.44 MB HFS image and MacBinary fork roundtrip verified. Do not duplicate CI work here. |
+| GL-10 | **open** | Minimum supported RAM / partition | Measure peak OS 9 memory in real use, choose minimum and preferred SIZE partition, check failure behavior instead of inferring from floppy bytes. |
+| GL-54 | **proposed** | Cross-platform orchestration acceptance tests | Simulate refinement/presentation events, paused drag and release, resize, expose and cancellation. Explicitly verify that hidden precomputed frames are never presented before release; same logical results across adapters. |
 
-| ID | Ticket | Size | Owner | Status | Notes / done when |
-| --- | --- | --- | --- | --- | --- |
-| GL-6 | Draw the line layers once per refine | M | Agent | done | Merged (`12912d1`): lines stay per band (each band is presented complete) but each band skips arcs and polylines that cannot touch its rows. G4 640x480, median of 9: refine job 783-786 ms to 378-381 ms at 1x (1014-1020 to 388-394 at 2x); lines-only 456 to 82 ms; checksum `1228dcc860a92a77`, replay hash and goldens unchanged; 8 of 9 mutants caught (survivor practically equivalent). The 573 vs 786 ms mismatch was two different views. Original ticket text: biggest measured speed-up. Profile (G4, 640x480): refine 786 ms with terrain, 456 ms without; lines re-walked in all 30 bands, about 16 times their 28 ms single pass. Re-baseline first: `terrain.md` says about 573 ms, the later profile 786 ms. Refined checksum `1228dcc860a92a77` and moving-frame pins unchanged. Fold into GL-14 if that starts soon |
-| GL-7 | Measure real X11 display timing on the G4 | S | Jack | open | `globe-x11 --script ... --stats` from the desktop session; add to `docs/perf/` |
-| GL-8 | Mac-native polish for v0.1 | M | Agent | open | Menus with shortcuts, About box crediting Natural Earth, NOAA ETOPO 2022 and Wikidata, icon, Quit; window and view in Preferences |
-| GL-9 | Floppy size report | M | Agent | done (reports) | Codex, `48e810f`: `tools/build-edition.sh floppy|full`, `tools/floppy_report.py`, `docs/floppy-size.md`. 2026-11-02: local full/floppy builds, HFS fork roundtrip and size budget pass again; current reports include GL-27/28. CI remains unrun. **Open:** budget check actually running in CI |
-| GL-10 | Decide the minimum system and trim the partition | S | Jack | open | SIZE resource now 24 MiB preferred / 12 MiB minimum; reset from measured use |
-| GL-11 | Ship the v0.1 floppy edition | M | Jack + Agent | open | Disk image and archive, version stamp, attribution, README with screenshots |
+## P1 — v0.1 shipping scope (no architecture rewrite)
 
-## P2: surfaces, passes and the Classic style
+| ID | Status | Task | Next action / acceptance |
+| --- | --- | --- | --- |
+| GL-8 | open | Native Mac polish | Menu shortcuts, About and data credits, quit, icon; preferences only if small enough for release. |
+| GL-11 | open | Publish v0.1 floppy edition | Versioned disk image + MacBinary, screenshots, license/attribution, requirements, hardware-verified notes; depends on GL-1, GL-5, GL-10. |
+| GL-46 | **proposed** | Precise command invalidation | `CommandIssued` currently treats every command as view input: even drag-mode toggle or Quit restarts the stage/generation. Distinguish no-op/interaction/overlay/style/camera/geometry changes with small tests. **Do not** redesign all effect types at once; consider as v0.1 bugfix if tests demonstrate avoidable rerender. |
+| GL-50 | **proposed** | Quantify worst-case cooperative scheduling | Log per-`step()` worst wall time, max input-to-visible response, first refine, total refine and presentation. Distinguish outer 24-ms slice from inner step bounds; no promise of fixed 8–12 ms until measured on G4. |
 
-GL-12 to GL-14 are pure refactors: every pin (moving-frame checksum, replay hash, refine checksum)
-stays unchanged and the G4 benchmark stays within noise.
+## P2 — focused architecture and performance, generally after v0.1
 
-| ID | Ticket | Size | Owner | Status | Notes / done when |
-| --- | --- | --- | --- | --- | --- |
-| GL-12 | Surface ops table with an RGB565 wrapper | M | Agent | open | Small ops table (clear, line, span, clip rows); indirect-call cost measured on the G4 |
-| GL-13 | Semantic ink and a Theme | M | Agent | open | Default theme reproduces today's colors byte for byte |
-| GL-14 | Split the refinement job into passes and profiles | L | Agent | open | Fixed-size pass cursors, no frame allocation; pure profile function; dirty regions; lines once (absorbs GL-6); cancellation and generation tests kept. Follows the layered-refinement addendum in the ADR (base, terrain color, relief, lines, labels) |
-| GL-15 | Recording surface | S | Agent | open | Hashes the primitive stream; platform-independent goldens for Moving and Refine |
-| GL-16 | Native QuickDraw surface | L | Jack + Agent | open | OS 9 draws into an offscreen GWorld; double clipping before 16-bit coordinates; A/B benchmark on the G4 |
-| GL-17 | Classic outline style | M | Agent | open | A style is a theme plus a profile; 1-bit displays |
-| GL-18 | Display detection and the Auto profile | M | Agent | open | Pure profile choice; a governor never removes a layer the user turned on |
-| GL-19 | Refinement ordering | M | Agent | done | Experiment `880df12` (rows, center-out, Gaussian dissolve) concluded by owner decision: rows, center-out and dissolve removed; refinement now goes outward from the touchpoint as `rectangle` (viewport-shaped, edges reached together), `circle` (default) or `globe` (equal great-circle angle). Final images identical for every order and focus; refined pin, replay hash and goldens unchanged. G4 totals: circle within 3 percent of the old rows at 1x and the trace, 11 percent slower at 2x; rectangle and globe 11-14 percent slower than circle at 1x and the trace. See `refinement-order.md` |
+| ID | Status | Task | Next action / acceptance |
+| --- | --- | --- | --- |
+| GL-12 | proposed | Renderer surface abstraction | Prototype minimal RGB565 surface ops only if necessary for other scoped work. Measure call overhead on G4; don't introduce virtual abstraction by default. |
+| GL-13 | proposed | Semantic colors and theme | Move style values from raster operations into lightweight palettes/themes; retain pixel-identical current looks unless explicitly changing art. |
+| GL-14 | **open / consolidate** | Refactor refinement passes | Current `RefinementJob::step` uses numeric phases (`-3,-2,-1,0,7,8` etc.) and multiple cursors. Start with **GL-47**; later separate preparation/terrain/lines without changing order or final pixels. GL-6 is already complete, not a new task. |
+| GL-15 | proposed | Recording / primitive stream surface | Compare benefit against existing framebuffer golden tests before implementing. |
+| GL-16 | **re-scope** | QuickDraw surface experiment | OS 9 already uses GWorld + CopyBits. If profiling justifies it, A/B test direct QuickDraw primitives against current software framebuffer; **not** a prerequisite to the OS 9 edition. |
+| GL-18 | proposed | Auto quality and presentation profile | Respect user-selected layer visibility; tune only work/simplification/presentation. Requires reliable GL-7/GL-50 measurements. |
+| GL-45 | proposed / experiment | Cache 2–3 settled frames | At 640×480 RGB565 each frame is ~600 KiB, plus presentation buffers; measure benefit under style/layer toggles, memory ceiling, and invalidation complexity **before** adopting. |
+| GL-47 | **proposed** | Name refinement phases and extract phase helpers | Replace magic phase numbers with typed states; no algorithm or pacing change; final framebuffer hashes, cancellation tests and G4 timing within noise. First step toward GL-14. |
+| GL-48 | **proposed** | Portable application/render coordinator | Remove duplicated creation/cancel/wake/dirty/presentation lifecycle from X11 and OS 9 frontends. Keep platform-specific event loops, QuickDraw/X11 submission, native UI. Extract narrowly after GL-46/47; avoid a generalized framework. |
+| GL-49 | **proposed** | Immutable data vs mutable render workspace boundary | Document and test that atlas/elevation inputs and per-job camera/plan snapshots don't change, while `TerrainScene` per-view projection/pass arrays and job cursors remain mutable. Split ownership only where replacement/multiple views require it. |
+| GL-53 | **proposed / benchmark-only** | Dirty-region vs canonical final repair | Current circle refinement repaints visible cells and repairs line crossings for canonical pixels. Prototype clipped dirty-region redraw, compare total CPU, CopyBits/X11 uploads, extra memory and pixel equality. **Do not assume faster.** |
 
-## P3: features and later data work
+## P3 — product features and data roadmap
 
-| ID | Ticket | Size | Owner | Status | Notes / done when |
-| --- | --- | --- | --- | --- | --- |
-| GL-20 | Layers floating palette | M | Agent | open | Checkbox per layer, progress or cost while refining; saved in Preferences |
-| GL-21 | Find a place, with a bigger cities pack | M | Agent | open | Cmd-F search; Wikidata CC0 snapshot builder; 19 cities grows toward a few hundred (format caps 4,096) |
-| GL-22 | Day/night terminator | M | Agent | open | Sun position from the system clock |
-| GL-23 | Start at the Map control panel location | S | Agent | open | Confirm `ReadLocation` in the Retro68 headers |
-| GL-24 | Copy view as PICT | S | Agent | open | Bitmap first; vector after GL-15 |
-| GL-25 | Great-circle distance between two clicks | S | Agent | open | Tested against known city pairs |
-| GL-26 | Movable refinement focus and effect choice | S | Agent | done for focus; chooser open | Focus (release, click, double-click center; view center otherwise) is deterministic model state used by all three orders; `O` key and `order TIME rectangle|circle|globe` choose the shape. A user-facing chooser (toolbar or menu) and other effects remain open |
-| GL-27 | Terrain look | M | Agent | done, cost under review | Codex `df1789e`, reviewed by Claude on a clean checkout (35/35 host tests). Gray base, CycleStyle, two palettes, Antarctic white and shared-corner shading. G4 base about 4.3/5.3 ms; refine about 555/693 ms versus 380/386; longest continuation 120 ms. Owner/Claude decides further tuning; do not tune unasked. See terrain.md |
-| GL-28 | Great Lakes and a lakes layer | M | Agent | done (builder) | Codex `3af70e4`, reviewed by Claude: pinned 50m source, cell-center water mask (135 centers/132 changed; Great Lakes 30/29), twice-reproduced pack, unchanged GELV v1 proxy; host/G4 pin efa030af1a10f887. Runtime lake/rivers vectors belong to GL-35 |
-| GL-29 | Compression decision and a 0.25-degree terrain pack | L | Agent | partial | Measured (ADR): 1 degree 64,800 to 29,140; 0.25 degree 1,036,800 to 342,041 (average predictor + range coder); atlas delta-varint 32,480 to 26,736. **Open:** decoder timed on the G4, runtime container, import pack with size report |
-| GL-30 | Older systems and 68k feasibility spike | L | Jack + Agent | open | No Appearance Manager; 68k with FPU in an emulator; fixed-point projection costed |
-| GL-31 | Fetch inside the app, with TLS from `../weather` | L | Jack + Agent | design written (`bf40e25`) | fetch-design.md: independent library, weather licensing/reuse, seed lifecycle, bounded binary framing and safe pack swap; retained-symbol crypto/anchors size delta 104,206 bytes. Owner: full edition first, no v0.1 floppy fetch. Hosting/UI and design review remain; no networking code before review |
-| GL-32 | Colors for deserts | S | Agent | open | Owner feedback: deserts are not deserty. Latitude tint first, or a land-cover grid as a further small versioned file; undecided |
-| GL-40 | Ice flag for Greenland and glaciers | M | Agent | proposal written; format review required | `802841d`: ADR rechecks pinned 50m glaciated polygons, center/even-odd mask, v1 incompatibility, proposed v2 bit plane (+8,100 bytes at 1 degree), strict validation/test plan. No builder/decoder/data change; stop until format approval |
-| GL-41 | Progressive line reveal after terrain | M | Agent | done | Lines (graticule, coasts, borders) reveal outward from the refinement focus in the chosen order shape, paced by a wake; settled pixels and pins unchanged; handoff written 2026-11-02 | Done 2026-11-02 (Codex's draft finished by Claude): 16-point chunks bucketed by ring, 30 ms paced reveal, canonical repair pass; settled pixels identical; G4 +45-60 ms compute and 480 ms of pauses; see `refinement-order.md`.
-| GL-42 | Style palette window | S | Agent | X11 done | A small floating window (X11 first, OS 9 later) to choose the look (Map, Relief) instead of only the `S` key; remembers nothing yet. Owner request 2026-11-02 | Done 2026-11-02 (X11): `P` opens a small "Globe looks" window listing Map and Relief with swatches and a mark on the current one; clicking the other row switches (a `CycleStyle` command, so replays are unchanged); `S` and the toolbar button still work. OS 9 not done.
-| GL-43 | Wait for a double click before picking a country | S | Agent | done | A single click's country pick is deferred by a short constant (owner asked for about a second; I would start near the double-click time, 300-400 ms, and tune) through the Tick wake path in the core, never a clock in the core; a second click inside it cancels the pick and zooms; the plain-click rule (no redraw, no refine restart) still holds; replay tests | Done 2026-11-02: `kPickDelayMs` = 400 ms (the double-click window); the core holds a pending pick (`Model::pick_pending`) and emits `Effects::pick` from a Tick; a second press, drag, wheel, command or resize cancels it; X11 picks only on that effect.
-| GL-44 | Highlight the focused country | M | Agent | outline done | The picked country's border is highlighted or its area dither-filled (owner's words); outline-only is cheapest, a dithered fill must be an overlay that never changes settled terrain pixels or pins; measure G4 cost; cleared by the next pick or click on the sea | Done 2026-11-02 (X11): the picked country's rings are drawn as a bold orange outline (`draw_country_outline`, `include/globe/highlight.hpp`) on a copy of the frame that is shown, so the rendered frame, refinement and pins are untouched and clearing needs no re-render; a click on the sea or a place card clears it; the outline follows drags. The dithered fill is not done (needs polygon clipping at the limb). OS 9 has no picking yet.
-| GL-45 | Cache settled frames | M | Agent | idea | Keep the last 2-3 settled frames keyed by camera, look and layers (600 KB each at 640x480, counted in the size report) so look switches and layer toggles are instant; measure first. Owner wants the app to look and feel faster; the terrain-plus-lines split and fewer rings are related options |
-| GL-33 | Map look (Google-like flat style) | S | Agent | open | Default floppy look: flat pale land, blue water, light borders, labels and cities; reuses the flat moving base |
-| GL-34 | Land-class grid and the Natural look | L | Agent | open | Pick a classification (e.g. Koeppen-style), check license and size, build a small versioned grid, 2D palette (class x elevation band); answers Sahara vs Amazon |
-| GL-35 | Rivers and lakes layer | M | Agent | open | Natural Earth rivers/lakes as a vector layer (atlas-format layer); measure size and G4 cost; v0.1 candidate if small |
-| GL-36 | Thematic (ColorBrewer-style) terrain scheme | S | Agent | open | A named scheme for the terrain-color step; check ColorBrewer license/attribution |
-| GL-37 | Satellite-like color-grid experiment | M | Agent | open | Bake a palette-indexed color grid from imagery at 1 and 0.25 degrees; measure size, compression and look; check imagery license; no texture mapping |
-| GL-38 | Antialiasing in the Refine stage only | M | Agent | open | Lines and globe silhouette; off on 1-bit/8-bit; measure G4 cost first; new refined pins |
-| GL-39 | Climate layers and atlas popups | L | Agent | open | Full edition: climate/biome fact in the info window; optional temperature/rainfall grids; check data licenses |
+| ID | Status | Task | Next action / acceptance |
+| --- | --- | --- | --- |
+| GL-17 | proposed | Classic outline style | Optional style/profile, especially monochrome/low-depth; measure and define visual acceptance. |
+| GL-20 | open | Layers palette | X11 first, then OS 9; saved preferences when relevant; do not mix with style palette GL-42. |
+| GL-21 | open | Find place, larger city catalog | Search plus bounded offline Wikidata CC0 pack. |
+| GL-22 | open | Day/night terminator | Time comes through platform-message seam; static/offline behavior remains intact. |
+| GL-23 | open | Initial view from Mac Map control panel | Confirm Retro68 API availability and user fallback first. |
+| GL-24 | open | Copy view as PICT | Begin bitmap; vector export only if useful and tested. |
+| GL-25 | open | Great-circle distance tool | Pure geometry and tests against known city pairs; independent of online routing. |
+| GL-28 | **partial** | Great Lakes and runtime lake/rivers vectors | Lake water-mask builder done; vector layers belong to GL-35, not duplicate implementation. |
+| GL-29 | **partial** | Runtime compression and finer packs | G4 codec decode benchmarks now exist (1-degree ~19 ms; 0.25-degree ~301 ms). Remaining: versioned compression container, peak-memory bound, runtime import, packaging/target measurements. |
+| GL-30 | proposed | 68k / earlier Mac feasibility | Compile probes exist, but runtime feasibility and FPU cost remain unverified. No promise of 68k compatibility. |
+| GL-31 | **design complete; implementation gated** | Full-edition HTTPS pack acquisition | Existing `fetch-design.md` specifies BearSSL/seed/OT/validation/security. First decide legally usable provider/host and pack scope; implement only after resource lifecycle GL-55. No fetch in initial floppy edition. |
+| GL-32 | partial / visual review | Make deserts readable | Map look now uses RESOLVE land classes; confirm visually on actual examples before adding a new climate data format. |
+| GL-33 | **done** | Map look | Current default Map and Relief styles implemented. |
+| GL-34 | **partial / re-scope** | Land class data / Natural look | RESOLVE class grid and Map colors already exist. A distinct Natural style is **not** a release requirement; do not reimplement the grid. |
+| GL-35 | open | River and lake vector overlays | Confirm source/license/size, G4 costs, and whether v0.1 genuinely needs it. |
+| GL-36 | proposed | Thematic color schemes | Distinct optional palette feature; check ColorBrewer attribution and avoid duplicating GL-13. |
+| GL-37 | proposed | Satellite-like precomputed color grid | Offline texture/pack experiment, not live imagery; license, RAM and performance first. |
+| GL-38 | proposed | Refine-only antialiasing | Probe cost on G4 and low-depth compatibility; intentional pixel-golden change. |
+| GL-39 | proposed | Climate/biome information | User-facing facts and bounded optional data; investigate provenance, licenses and simple UI. |
+| GL-40 | **design only** | Glacier/ice bitplane | Requires explicit GELV format-v2 decision before changing builder or decoder. |
+| GL-42 | **partial** | Styles palette | X11 `P` palette done; native OS 9 palette later. |
+| GL-44 | **partial** | Focused country highlighting | X11 outline done; dithered fill experiment and OS 9 picking not done. |
+| GL-51 | **proposed / design** | Offline-first acquisition/conversion pipeline | No developer-hosted infrastructure: immutable embedded atlas, user imports, cache, provider adapters, bounded conversion to native packs, attribution and rate limits. Distinguish public source formats from ready-to-use Globe packs. Build on GL-31/55; avoid unsupported arbitrary URLs. |
+| GL-52 | **proposed / research** | Screen-space local LOD | Keep existing global elevation threshold for now. Once local detail packs exist, benchmark projected-error prioritization, central-view bias, horizon silhouette protection and coarse-parent fallback. Not a v0.1 requirement. |
+| GL-55 | **proposed / prerequisite to GL-31 implementation** | Resource ownership and install lifecycle | Stable typed handles; immutable published pack storage; explicit disk-cache versus resident-memory states; staged candidate validation and failure-safe replacement; cancel/quiesce jobs borrowing old scenes; platform crash/relaunch tests. Avoid shared_ptr everywhere. |
 
-## Parked and non-goals
+## Completed work retained as history (no further tickets implied)
 
-| Item | Why parked | Revisit when |
+- **GL-3/4/6/9:** click rules, documentation refresh, line culling optimization, and floppy reports done.
+- **GL-19:** alternative refinement orders measured and rejected; **circle-only from view center** is the current decision.
+- **GL-26:** focus/choice experiment concluded; view-center focus retained. No choice UI is needed for removed orders.
+- **GL-27:** terrain rendering and current Map/Relief appearance implemented, performance still worth measurement.
+- **GL-41:** paced circle-outward progressive lines, canonical repair, 15-ms scheduled pauses implemented.
+- **GL-43:** 400-ms delayed single-click picking implemented in core/X11; not OS 9 picking.
+- **GL-2/GL-33:** GitHub publication and Map look complete.
+
+## Parked ideas — not implementation authorization
+
+| Idea | Why not now | Revisit |
 | --- | --- | --- |
-| A separate maps app | Different product: own projection, tile cache, network code (ADR "data policy") | The globe's pack formats and libraries have settled |
-| A relay between the apps and a server | Rejected by the owner | Not planned |
-| Satellite imagery | Per-pixel inverse projection is slow on the G4; about 1 MB of texture; license check | Never on the floppy; only as an imported pack |
-| Perlin noise as terrain | Not a replacement for real elevation | Not planned |
+| Ruby scripting and fantasy cartography / separate map editor | Requires stable document model and user-facing commands; not a globe-release dependency | After native layers and file/document model |
+| Separate detailed flat map / routing app | Different scale, tile/provider constraints; don't force current globe into a street-level app | After data store and LOD are tested |
+| Perlin noise | Fine for restrained decoration, not a substitute for real Earth elevation | After accurate terrain and consistent performance |
+| Multithreading / C++ coroutines / universal scheduler | Cooperative jobs are proven; added complexity without a demonstrated bottleneck | Only after profiling a specific use case |
+| Fully immutable Model or Elm rewrite | Small in-place `update(Model&, Msg)` is deterministic and appropriate | Not planned |
+| Large-pass architecture or generalized UI framework before v0.1 | High churn, little release value | After shipped acceptance |
+| Server/relay owned by developer | Conflicts with product goal | Not planned |
 
-## Open decisions and risks
+## Next recommended development slices
 
-- **The OS 9 build has run once, under Tiger Classic (emulated), and rendered; interaction and real hardware are untested.** If GL-1 fails, P1 and P2 reorder around fixing it.
-- **Native QuickDraw speed is unknown.** GL-16 settles it; keep both surfaces until then.
-- **Refine timings depend on view and quality.** GL-6 was re-baselined and measured; GL-27 costs are separately recorded in terrain.md. Do not compare different views as a regression.
-- **Floppy contents are open.** Working rule: the floppy edition is the default build minus optional
-  data packs; the size report shows when it stops fitting. Two releases only, floppy and full.
-- **Fetch scope and size.** BearSSL plus anchors may not fit the floppy edition (GL-31).
-- **User or Auto?** Proposed: the user's layer choices always win; Auto adjusts detail and cadence only.
-- **Minimum supported system.** GL-10 decides it; GL-30 explores older systems and 68k.
-- **Acceptance still open:** current real-display X11 timing and native OS 9 execution. G4 headless click rules/replay now pass; that is not GUI acceptance.
+1. **GL-5:** fix the three clang-tidy findings and obtain a green complete CI run.
+2. **GL-1 + GL-7 + GL-10:** hardware acceptance, real X11 timing and OS 9 memory ceiling.
+3. **GL-46 + GL-54:** test and narrowly fix unnecessary invalidation; verify pause-drag/presentation lifecycle.
+4. **GL-8 + GL-11:** polish and publish the floppy release.
+5. **GL-47**, then optionally **GL-48/49/50:** incremental architecture improvements **after** release, preserving pixels and G4 performance.
+6. **GL-55 → GL-31/51 → GL-52:** resource-lifecycle contract first, then safe optional fetch/conversion, then localized LOD.
+
+**Status caution:** Local/CI documentation and historical addenda may lag later commits. Recheck current code and actual CI before claiming a ticket is finished; this backlog never authorizes destructive machine operations or an agent-initiated deployment.
