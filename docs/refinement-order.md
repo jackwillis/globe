@@ -1,6 +1,6 @@
 # Refinement order (GL-19 / GL-26, concluded 2026-11-02)
 
-The settled terrain refines **outward from the last touchpoint** in one of three shapes. The
+The settled terrain refines **outward from the view center** in one of three shapes. The
 experiment with rows, center-out bands and a Gaussian dissolve is over: the owner found the dissolve
 odd and asked for the top-down and row orders to go. They are removed; their raw measurements stay
 in `docs/perf/refine-order-*.json` for the record.
@@ -24,17 +24,12 @@ The parser is strict: `rows`, `center`, `dissolve` and `square` are unknown name
 
 ## Focus
 
-The refinement spreads from **halfway between the recorded touchpoint and the view center**
-(`quality_for` in `src/core/app.cpp`; the model still stores the raw touchpoint). The owner asked for
-this so refinement leans toward what was touched without leaving the middle of the picture for last.
-Final pixels are unaffected, so no pin moves. The paragraph below describes the recorded touchpoint.
-
-The focus is model state, never a clock read: a click or drag release records the last finite
-pointer coordinate (including motion inside the drag slop), a double click records the resulting
-view center, and the initial state, a resize and a non-finite value use the viewport center. A
-plain click still leaves the visible frame, render generation and wake requests unchanged; it only
-records the focus for future work. For `globe`, a focus outside the globe's disc falls back to the
-view center, because there is no point of the sphere under it.
+Refinement **always radiates from the view center** (`quality_for` in `src/core/app.cpp`). The
+owner tried the last touchpoint and the halfway point between it and the center, then chose the
+center: no touch state is kept in the model, so clicks and drags cannot affect it, and a click still
+leaves the frame, render generation and wake requests unchanged. For `globe`, a center is always
+on the sphere's disc unless the globe is smaller than the viewport and offset, in which case the
+existing fallback to the view center applies. Final pixels do not depend on the focus.
 
 ## How a refinement runs
 

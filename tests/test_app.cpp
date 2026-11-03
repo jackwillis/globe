@@ -720,24 +720,14 @@ void test_toolbar_state() {
 
 void test_refinement_focus() {
     auto m = initial_model(200, 150);
-    CHECK(!m.refinement_focus);
     CHECK(quality_for(m).focus.x == m.camera.center_x);
+    CHECK(quality_for(m).focus.y == m.camera.center_y);
+    // Touches never move the focus: refinement always radiates from the view center.
     update(m, PointerDown{100, 70, 60});
-    update(m, PointerMove{100, 71, 61});
+    update(m, PointerMove{100, 100, 80});
     update(m, PointerUp{101});
-    CHECK(m.refinement_focus && m.refinement_focus->x == 71 && m.refinement_focus->y == 61);
-    update(m, PointerDown{1000, 70, 60});
-    update(m, PointerMove{1010, 100, 80});
-    update(m, PointerUp{1020});
-    CHECK(m.refinement_focus->x == 100 && m.refinement_focus->y == 80);
-    update(m, PointerDown{2000, 80, 70});
-    update(m, PointerUp{2010});
-    update(m, PointerDown{2020, 80, 70});
-    // The model keeps the touchpoint; the render focus is halfway to the view center.
-    CHECK(quality_for(m).focus.x == (m.refinement_focus->x + m.camera.center_x) * 0.5);
-    CHECK(quality_for(m).focus.y == (m.refinement_focus->y + m.camera.center_y) * 0.5);
-    CHECK(m.refinement_focus->x == m.camera.center_x);
-    CHECK(m.refinement_focus->y == m.camera.center_y);
+    CHECK(quality_for(m).focus.x == m.camera.center_x);
+    CHECK(quality_for(m).focus.y == m.camera.center_y);
     for (const char* order : {"rectangle", "circle", "globe"}) {
         auto msg = parse_message(std::string("order 3000 ") + order);
         CHECK(msg && std::holds_alternative<SetRefinementOrder>(*msg));
@@ -755,7 +745,7 @@ void test_refinement_focus() {
     for (const char* old : {"rows", "center", "dissolve", "square"})
         CHECK(!parse_message(std::string("order 1 ") + old));
     update(m, Resize{300, 200});
-    CHECK(!m.refinement_focus);
+    CHECK(quality_for(m).focus.x == m.camera.center_x);
 }
 
 void test_trace_text_round_trip() {

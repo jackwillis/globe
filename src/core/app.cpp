@@ -201,11 +201,8 @@ RenderQuality quality_for(const Model& model) {
     }
     RenderQuality quality{fine ? 1.5 : 3.0, fine, selected, model.terrain_style};
     quality.order = model.refinement_order;
-    // Refinement spreads from halfway between the last touchpoint and the view center, so it
-    // leans toward what the user touched without leaving the middle of the picture behind.
-    const ScreenPoint center{model.camera.center_x, model.camera.center_y};
-    const ScreenPoint touch = model.refinement_focus.value_or(center);
-    quality.focus = {(touch.x + center.x) * 0.5, (touch.y + center.y) * 0.5};
+    // Refinement always radiates from the view center.
+    quality.focus = {model.camera.center_x, model.camera.center_y};
     return quality;
 }
 
@@ -279,7 +276,6 @@ Effects update(Model& model, const Msg& msg) {
     if (const auto* down = std::get_if<PointerDown>(&msg)) {
         if (finite(down->x, down->y)) {
             const ScreenPoint p{down->x, down->y};
-            model.pointer_last = p;
             const bool second_click =
                 model.click_valid && down->time_ms >= model.click_ms &&
                 down->time_ms - model.click_ms <= kDoubleClickMs &&
@@ -304,7 +300,6 @@ Effects update(Model& model, const Msg& msg) {
                 fx = set_camera(model, zoomed(centered, kDoubleClickZoom,
                                               min_radius_px(centered.width, centered.height),
                                               max_radius_px(centered.width, centered.height)));
-                model.refinement_focus = ScreenPoint{model.camera.center_x, model.camera.center_y};
                 input = fx.redraw; // a zoom that changed nothing is not input
                 input_ms = down->time_ms;
             } else {
@@ -321,7 +316,6 @@ Effects update(Model& model, const Msg& msg) {
     } else if (const auto* move = std::get_if<PointerMove>(&msg)) {
         if (model.dragging && finite(move->x, move->y)) {
             const ScreenPoint to{move->x, move->y};
-            model.pointer_last = to;
             // drag_last stays at the press position until the slop is passed.
             if (!model.drag_active &&
                 distance_squared(to, model.drag_last) > kDragSlopPx * kDragSlopPx) {
@@ -338,8 +332,6 @@ Effects update(Model& model, const Msg& msg) {
             }
         }
     } else if (const auto* up = std::get_if<PointerUp>(&msg)) {
-        if (model.dragging)
-            model.refinement_focus = model.pointer_last;
         // The graticule was hidden while dragging; bring it back, but only if the drag drew.
         fx.redraw = model.dragging && model.drag_moved && model.layers.graticule;
         // Only a drag that changed the view restarts the settle clock; a plain click does not.
@@ -386,7 +378,6 @@ Effects update(Model& model, const Msg& msg) {
             cam.center_x = resize->width / 2.0;
             cam.center_y = resize->height / 2.0;
             model.camera = cam;
-            model.refinement_focus.reset();
             model.stage = QualityStage::Moving;
             model.stage_needs_time = true;
             ++model.generation;

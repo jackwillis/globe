@@ -51,7 +51,6 @@ struct ElevationLevel {
 struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
     TerrainStyle terrain_style = TerrainStyle::Hypsometric;
-    std::optional<ScreenPoint> refinement_focus;
     RefinementOrder refinement_order = RefinementOrder::Circle;
     Camera camera;
     Layers layers;
@@ -63,7 +62,6 @@ struct Model {
     bool dragging;
     bool drag_active;           // the pointer has moved past kDragSlopPx since the button went down
     bool drag_moved;            // the camera changed since the button went down
-    ScreenPoint pointer_last{}; // last finite pointer coordinate, including motion inside drag slop
     ScreenPoint drag_last;
     bool click_valid; // a recent press that could become the first half of a double click
     ScreenPoint click_pos;
@@ -174,8 +172,7 @@ constexpr double kDoubleClickZoom = 2.0;
 // A press alone changes nothing: no stage change, no new generation, no redraw. A drag begins once
 // the pointer is more than kDragSlopPx from where the button went down; the globe then follows the
 // pointer from that press position, so nothing lags. A release without a drag leaves the model
-// visibly untouched, and platforms treat it as a click (country picking). The release records
-// the next refinement focus without invalidating the current frame.
+// visibly untouched, and platforms treat it as a click (country picking).
 constexpr double kDragSlopPx = 3.0;
 
 constexpr std::uint32_t kSettleDelayMs = 150;

@@ -304,8 +304,7 @@ append a dated note here. No compiling on maul; owner/Claude push test builds.
 ### 2026-11-02 — Assignment for Codex, after GL-34/33: progressive line reveal (GL-41, written by Claude)
 
 Owner request: after the terrain has finished refining, the vector layers (graticule, coastlines,
-borders) should reveal outward from the refinement focus (halfway between the last touchpoint and
-the view center, see `quality_for`) in the selected order shape (rectangle/circle/globe), instead of
+borders) should reveal outward from the view center (the owner chose the center over touchpoint and halfway; `quality_for`) in the selected order shape (rectangle/circle/globe), instead of
 all appearing at once. Plain lines while dragging stay as they are. Do GL-34/33 first; this touches
 `src/render/terrain.cpp` too.
 
@@ -328,3 +327,5 @@ Design to start from (change it if measurement says so):
 - Outline-only refine (no terrain) keeps its top-down bands unless trivial to include.
 Tests: every-pixel equality against the unpaced result for all three orders and several foci;
 oracle for chunk passes; cancellation mid-reveal; mutation checks. Append a dated note here.
+
+Owner update: the refinement focus is now always the view center (no touchpoint state in the Model).
