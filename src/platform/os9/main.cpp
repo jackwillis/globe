@@ -25,6 +25,7 @@ using namespace globe;
 static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Relief);
 static_assert(next_terrain_style(TerrainStyle::Relief) == TerrainStyle::Map);
 namespace {
+constexpr std::uint64_t kWorkSliceMs = 24;
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
 }
@@ -83,12 +84,26 @@ class Application {
             }
             const bool work = job_ && job_->active() && !job_waiting_;
             if (work) {
-                const auto band = job_->step(*fb_, model_.generation);
-                if (band.band_ready)
-                    copy(band.first_row, band.end_row);
-                if (band.wake_after_ms) {
-                    job_waiting_ = true;
-                    wake_ = now_ms() + band.wake_after_ms;
+                // Yielding to the system costs a tick or more on Classic, so run refine steps in a
+                // slice of kWorkSliceMs before each WaitNextEvent (each step is itself bounded).
+                const auto slice_end = now_ms() + kWorkSliceMs;
+                do {
+                    const auto band = job_->step(*fb_, model_.generation);
+                    if (band.band_ready)
+                        present(band.first_row, band.end_row);
+                    if (band.wake_after_ms) {
+                        job_waiting_ = true;
+                        wake_ = now_ms() + band.wake_after_ms;
+                        break;
+                    }
+                } while (job_->active() && now_ms() < slice_end);
+                if (!job_->active()) {
+                    if (dirty_) { // the last throttled frame is always shown
+                        copy(0, fb_->height());
+                        dirty_ = false;
+                    }
+                    if (!titled_)
+                        show_timing();
                 }
             }
             Point pointer;
@@ -185,9 +200,54 @@ class Application {
         fb_ = std::move(fb);
         return true;
     }
+    // Copying a frame costs tens of milliseconds on Classic, so a refinement frame is shown only
+    // when the last copies took less than a quarter of the time since they started; skipped frames
+    // are caught up by the next shown one, and the final frame is always shown.
+    void present(int first, int end) {
+        const auto start = now_ms();
+        if (start < next_copy_ms_) {
+            dirty_ = true;
+            return;
+        }
+        copy(first, end);
+        dirty_ = false;
+        next_copy_ms_ = start + 4 * (now_ms() - start);
+    }
+    // The window title reports the last settle: first refine step to last, and time spent copying.
+    void show_timing() {
+        titled_ = true;
+        unsigned char title[40];
+        unsigned n = 0;
+        const auto put = [&](const char* text) {
+            while (*text && n < 39)
+                title[++n] = static_cast<unsigned char>(*text++);
+        };
+        const auto number = [&](std::uint64_t v) {
+            char digits[12];
+            int d = 0;
+            do {
+                digits[d++] = static_cast<char>('0' + v % 10);
+                v /= 10;
+            } while (v && d < 11);
+            while (d)
+                title[++n] = static_cast<unsigned char>(digits[--d]);
+        };
+        put("Globe  ");
+        number(now_ms() - refine_t0_);
+        put(" ms, copy ");
+        number(copy_ms_);
+        title[0] = static_cast<unsigned char>(n);
+        SetWTitle(window_, title);
+    }
     void copy(int first, int end) {
         if (!world_ || !fb_)
             return;
+        const auto copy_t0 = now_ms();
+        struct Timer {
+            std::uint64_t& total;
+            std::uint64_t t0;
+            ~Timer() { total += now_ms() - t0; }
+        } timer{copy_ms_, copy_t0};
         const auto pix = GetGWorldPixMap(world_);
         if (!LockPixels(pix))
             return;
@@ -218,9 +278,15 @@ class Application {
             if (stage == QualityStage::Refine)
                 fx.redraw = true;
         }
-        if (model_.stage == QualityStage::Refine && stage != QualityStage::Refine)
+        if (model_.stage == QualityStage::Refine && stage != QualityStage::Refine) {
+            refine_t0_ = now_ms();
+            copy_ms_ = 0;
+            next_copy_ms_ = 0;
+            dirty_ = false;
+            titled_ = false;
             job_.emplace(model_.camera, *scene_, kDefaultPalette, effective_layers(model_),
                          quality_for(model_), model_.generation, &*terrain_);
+        }
         if (std::holds_alternative<Resize>(msg))
             fx.wake_after_ms = update(model_, Tick{now_ms()}).wake_after_ms;
         if (fx.wake_after_ms)
@@ -292,6 +358,9 @@ class Application {
     std::optional<RefinementJob> job_;
     bool job_waiting_ = false;
     std::uint64_t wake_ = 0;
+    std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
+    bool titled_ = true, dirty_ = false;
+    std::uint64_t next_copy_ms_ = 0;
     bool redraw_ = true;
     CursorIntent cursor_ = CursorIntent::Arrow;
 };

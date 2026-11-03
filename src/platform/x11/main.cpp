@@ -357,6 +357,8 @@ class App {
                 fx.redraw = true;
         }
         if (model_.stage == QualityStage::Refine && old_stage != QualityStage::Refine) {
+            next_upload_ms_ = 0;
+            upload_dirty_ = false;
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
                                 quality_for(model_), model_.generation, packs_.for_model(model_));
         }
@@ -553,12 +555,30 @@ class App {
                 fb_->clip_rows(0, fb_->height());
             }
             ++refine_bands_;
-            upload(step.first_row, step.end_row);
+            present_refine(step.first_row, step.end_row);
+        }
+        if (refinement_ && !refinement_->active() && upload_dirty_) {
+            upload(0, fb_->height()); // the last throttled frame is always shown
+            upload_dirty_ = false;
         }
         if (step.wake_after_ms) {
             refine_waiting_ = true;
             wake_at_ms_ = monotonic_ns() / 1000000ULL + step.wake_after_ms;
         }
+    }
+
+    // Showing a frame costs time (pack plus upload, a lot on a slow machine or a remote display),
+    // so a refinement frame is shown only when the last upload took under a quarter of the time
+    // since it started. Skipped frames are caught up by the next shown one.
+    void present_refine(int first, int end) {
+        const std::uint64_t start = monotonic_ns() / 1000000ULL;
+        if (start < next_upload_ms_) {
+            upload_dirty_ = true;
+            return;
+        }
+        upload(first, end);
+        upload_dirty_ = false;
+        next_upload_ms_ = start + 4 * (monotonic_ns() / 1000000ULL - start);
     }
 
     void finish_settling() {
@@ -848,6 +868,8 @@ class App {
     std::uint64_t wake_at_ms_ = 0;
     std::optional<RefinementJob> refinement_;
     std::size_t refine_bands_ = 0;
+    std::uint64_t next_upload_ms_ = 0;
+    bool upload_dirty_ = false;
     double refine_work_ms_ = 0;
     bool pixels_ok_ = true;
     std::size_t verified_frames_ = 0;

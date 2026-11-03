@@ -50,3 +50,20 @@ window open and the **Map look rendered correctly** (land classes, sea, graticul
 Not yet checked there: drag and cursors, double-click zoom, keys (`S`, `R`, ...), resize and expose,
 refinement timing and quiet idle. Tiger Classic is an emulated environment, so this is evidence the
 build launches and draws on OS 9 APIs, not real OS 9 hardware acceptance (GL-1 stays open).
+
+## Settle time in Tiger Classic, and presentation throttling (2026-11-02)
+
+The owner found refinement "super slow" in Classic. The window title now reports the last settle
+(`Globe N ms, copy M`: first refine step to last, and total time inside `copy`). First measurement,
+read from a screenshot of the Tiger desktop: **4,267 ms, copy 2,101 ms**. About half the time was
+copying about 33 full frames (16 terrain rings and 16 line-reveal steps, roughly 64 ms each: convert
+the whole framebuffer, then CopyBits). Two changes in `src/platform/os9/main.cpp`:
+
+- refine steps now run in 24 ms slices before each `WaitNextEvent` (a yield costs a tick or more);
+- a refinement frame is shown only when the last copies took under a quarter of the time since they
+  started (`present`); skipped frames are caught up by the next shown one and the final frame is
+  always shown.
+
+Result: **2,314 ms, copy 458 ms** (this includes the 480 ms of paced line-reveal pauses). Settled
+pixels are unchanged (pins and host tests unchanged). The X11 front end got the same throttle
+(`present_refine`), a no-op when uploads are fast. Still untested: interaction, real OS 9 hardware.
