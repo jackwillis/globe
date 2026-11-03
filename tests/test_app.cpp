@@ -651,7 +651,9 @@ void test_quality_wakes() {
     update(m, Tick{3411});
     CHECK(m.stage == QualityStage::Refine);
     const auto paused_generation = m.generation;
+    CHECK(presentation_held(m)); // computed, not shown, until release
     fx = update(m, PointerUp{3500});
+    CHECK(!presentation_held(m));
     CHECK(m.stage == QualityStage::Refine && m.generation == paused_generation && !fx.redraw &&
           fx.wake_after_ms == 0 && !m.dragging);
     // Moving again after a pause cancels the refinement, as any input does.

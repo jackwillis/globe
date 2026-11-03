@@ -180,8 +180,14 @@ constexpr double kDoubleClickZoom = 2.0;
 constexpr double kDragSlopPx = 3.0;
 
 constexpr std::uint32_t kSettleDelayMs = 150;
+// While a drag is active (button down, past the slop) platforms keep showing the plain moving
+// frame: a refinement started by a pause computes into the framebuffer but is not presented until
+// release.
+constexpr bool presentation_held(const Model& model) {
+    return model.dragging && model.drag_active;
+}
 // A drag that pauses this long (button still down) starts refining; moving again cancels it, and
-// releasing after it finished keeps the result.
+// releasing after it finished keeps the result, shown at once.
 constexpr std::uint32_t kDragPauseMs = 300;
 constexpr std::uint32_t kRefineDelayMs = 1; // separate event-loop turn for Settle work
 

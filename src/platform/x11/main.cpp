@@ -557,7 +557,7 @@ class App {
             ++refine_bands_;
             present_refine(step.first_row, step.end_row);
         }
-        if (refinement_ && !refinement_->active() && upload_dirty_) {
+        if (refinement_ && !refinement_->active() && upload_dirty_ && !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
         }
@@ -572,7 +572,7 @@ class App {
     // since it started. Skipped frames are caught up by the next shown one.
     void present_refine(int first, int end) {
         const std::uint64_t start = monotonic_ns() / 1000000ULL;
-        if (start < next_upload_ms_) {
+        if (presentation_held(model_) || start < next_upload_ms_) {
             upload_dirty_ = true;
             return;
         }
@@ -632,6 +632,7 @@ class App {
         if (!fb_ || image_ == nullptr)
             return;
         Framebuffer& fb = *fb_;
+        upload_dirty_ = false;
         std::uint64_t t = monotonic_ns();
         // The focused country is drawn on a copy, so the frame itself stays exactly as rendered
         // and clearing the focus needs no re-render.
@@ -767,7 +768,11 @@ class App {
             return false;
         case ButtonRelease:
             if (ev.xbutton.button == Button1) {
-                return apply(PointerUp{now});
+                const bool quit = apply(PointerUp{now});
+                // A refinement finished (or advanced) while the button was down: show it now.
+                if (upload_dirty_ && fb_ && !need_redraw_ && model_.stage != QualityStage::Moving)
+                    upload(0, fb_->height());
+                return quit;
             }
             return false;
         case MotionNotify: {

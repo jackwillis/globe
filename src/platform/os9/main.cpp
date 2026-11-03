@@ -98,7 +98,8 @@ class Application {
                     }
                 } while (job_->active() && now_ms() < slice_end);
                 if (!job_->active()) {
-                    if (dirty_) { // the last throttled frame is always shown
+                    if (dirty_ &&
+                        !presentation_held(model_)) { // the last throttled frame is always shown
                         copy(0, fb_->height());
                         dirty_ = false;
                     }
@@ -151,9 +152,12 @@ class Application {
                     }
                 } else if (part == inSysWindow)
                     SystemClick(&event, hit);
-            } else if (event.what == mouseUp)
+            } else if (event.what == mouseUp) {
                 quit = apply(PointerUp{time});
-            else if (event.what == keyDown || event.what == autoKey)
+                // A refinement finished (or advanced) while the button was down: show it now.
+                if (dirty_ && model_.stage != QualityStage::Moving && !redraw_)
+                    copy(0, fb_->height());
+            } else if (event.what == keyDown || event.what == autoKey)
                 quit = key(event.message, time);
             else if (event.what == updateEvt) {
                 if (reinterpret_cast<WindowPtr>(event.message) == window_) {
@@ -205,7 +209,7 @@ class Application {
     // are caught up by the next shown one, and the final frame is always shown.
     void present(int first, int end) {
         const auto start = now_ms();
-        if (start < next_copy_ms_) {
+        if (presentation_held(model_) || start < next_copy_ms_) {
             dirty_ = true;
             return;
         }
@@ -242,6 +246,7 @@ class Application {
     void copy(int first, int end) {
         if (!world_ || !fb_)
             return;
+        dirty_ = false;
         const auto copy_t0 = now_ms();
         struct Timer {
             std::uint64_t& total;

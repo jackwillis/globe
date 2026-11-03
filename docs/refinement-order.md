@@ -8,12 +8,15 @@ trace verb and the X11 `O` key are removed; their measurements stay in `docs/per
 The focus is always the view center (`quality_for` in `src/core/app.cpp`): no touch state is
 kept, so clicks and drags cannot affect it. Final pixels never depend on the focus.
 
-## Refining during a paused drag
+## Precomputing during a paused drag
 
 A drag that pauses for `kDragPauseMs` (300 ms, `app.hpp`) with the button still down starts refining
-(the graticule is shown for that frame); moving again cancels it like any input, and releasing
-after it finished keeps the result, so lifting the button costs nothing. A release before the pause
-restarts the settle clock as before. Final pixels and pins are unchanged.
+(with the graticule) but **nothing on screen changes**: `presentation_held` tells the platforms to
+keep showing the plain moving frame while the refinement computes into the framebuffer. Moving
+again cancels it like any input. On release the finished frame is shown at once (or, if the work is
+still running, what is done so far, then the rest as usual); a release before the pause restarts the
+settle clock as before. Final pixels and pins are unchanged. The platform gating (`present_refine`
+in X11, `present` in OS 9) has no automated test beyond the core rules.
 
 ## How a refinement runs
 
