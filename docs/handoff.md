@@ -361,3 +361,17 @@ Owner decisions:
 Verify as usual (host suites, ASan/UBSan, policy, Retro68 probes, G4 timings of the looks),
 mutation-check changed tests, update docs (`refinement-order.md` shrinks to circle only, `terrain.md`,
 `README`), update the backlog, append a dated note. No push, tag or remote merge.
+
+### 2026-11-02 — Claude: the queued pass is done; state for Codex's next session
+
+Codex died of OOM mid-GL-41. Its uncommitted line-reveal work is saved, unverified, on branch
+`wip/gl41-codex` (commit f784db0); `main` does not contain it. Claude then did the queued owner
+decisions on `main`: circle-only refinement (rectangle, globe, the `order` verb, the O key and
+`globe-refine-order` removed), Map and Relief looks only (Cel-shaded and Natural removed, Relief
+white from 6,000 m, Map palette punchier and in one table), re-pinned refined Map `e86d02e2424d2a47`
+and Relief `1c3eac3bcc2d3b8f` (host and G4 equal). Antarctica could not be reproduced as brown: it
+renders white from every angle in both looks, so the owner may have seen the thin tan coastline
+and ice-shelf lines; ask before changing it. New owner requests are GL-42 (style palette window),
+GL-43 (delay a country pick for double clicks) and GL-44 (highlight the focused country), see the
+backlog. Next for Codex: GL-41 on top of `main` (the WIP branch is a starting point, not trusted),
+then GL-43/44. Memory is tight on the laptop: build with `-j2`.
