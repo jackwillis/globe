@@ -8,7 +8,8 @@
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
 // G / B toggle graticule / borders, N aligns north up, T switches between
-// turntable and trackball dragging, S cycles the terrain style, Esc or Q quits.
+// turntable and trackball dragging, S switches the terrain style, P opens the looks palette, Esc or
+// Q quits.
 //
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
 // per redraw the way interactive use would. --idle-seconds waits that long afterwards and reports
@@ -47,6 +48,7 @@
 #include "globe/trackball.hpp"
 #include "info_window.hpp"
 #include "pixel_format.hpp"
+#include "style_window.hpp"
 
 using namespace globe;
 
@@ -94,7 +96,7 @@ class App {
   public:
     App(Display* dpy, const Scene& scene, ElevationPacks& packs, const Options& opt)
         : dpy_(dpy), scene_(scene), packs_(packs), opt_(opt),
-          model_(initial_model(opt.width, opt.height)), info_(dpy) {
+          model_(initial_model(opt.width, opt.height)), info_(dpy), styles_(dpy) {
         packs_.register_levels(model_);
         places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
         if (places_)
@@ -226,6 +228,7 @@ class App {
                     cursor_changes_);
         std::printf("  \"info_cards\": %zu,\n  \"info_scrolls\": %zu,\n", info_cards_,
                     info_.scrolls());
+        std::printf("  \"terrain_style\": %u,\n", static_cast<unsigned>(model_.terrain_style));
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -369,6 +372,7 @@ class App {
         if (fx.wake_after_ms != 0) {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
+        styles_.set_current(model_.terrain_style == TerrainStyle::Map ? 0 : 1);
         if (std::holds_alternative<Resize>(msg))
             info_.move(model_.camera.width + 20);
         if (toolbar_ && std::holds_alternative<Resize>(msg))
@@ -663,6 +667,13 @@ class App {
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
         if (info_.handle(ev))
             return false;
+        if (const auto r = styles_.handle(ev); r.handled) {
+            const int current = model_.terrain_style == TerrainStyle::Map ? 0 : 1;
+            // Two looks: clicking the other row is a switch.
+            if (r.picked >= 0 && r.picked != current)
+                return apply(CommandIssued{now, Command::CycleStyle});
+            return false;
+        }
         if (ev.xany.window == toolbar_) {
             if (ev.type == Expose && ev.xexpose.count == 0)
                 draw_toolbar();
@@ -782,6 +793,10 @@ class App {
             return apply(CommandIssued{now, Command::AlignNorth});
         case XK_s:
             return apply(CommandIssued{now, Command::CycleStyle});
+        case XK_p:
+            styles_.show(win_, model_.camera.width + 20,
+                         model_.terrain_style == TerrainStyle::Map ? 0 : 1);
+            return false;
         case XK_t:
             return apply(CommandIssued{now, Command::ToggleDragMode});
         case XK_Escape:
@@ -798,6 +813,7 @@ class App {
     Options opt_;
     Model model_;
     InfoWindow info_;
+    StyleWindow styles_;
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;

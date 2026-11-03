@@ -119,7 +119,7 @@ endif()
 
 find_package(X11)
 if(X11_FOUND AND TARGET globe_embedded_atlas)
-  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp)
+  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
   target_link_libraries(globe-x11 PRIVATE globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})

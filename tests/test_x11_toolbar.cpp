@@ -3,6 +3,7 @@
 #include "check.hpp"
 #include "globe/app.hpp"
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -128,6 +129,31 @@ int main(int argc, char** argv) {
             XFlush(d);
             usleep(20000);
         }
+        {
+            // P opens the looks palette; clicking the Relief row switches the look.
+            XEvent key{};
+            key.xkey.type = KeyPress;
+            key.xkey.display = d;
+            key.xkey.window = main;
+            key.xkey.keycode = XKeysymToKeycode(d, XK_p);
+            XSendEvent(d, main, False, KeyPressMask, &key);
+            XFlush(d);
+            usleep(300000);
+            const auto looks = find(d, "Globe looks");
+            CHECK(looks);
+            if (looks) {
+                XEvent press{};
+                press.xbutton.type = ButtonPress;
+                press.xbutton.display = d;
+                press.xbutton.window = looks;
+                press.xbutton.button = Button1;
+                press.xbutton.x = 20;
+                press.xbutton.y = 8 + 30 + 10; // second row
+                XSendEvent(d, looks, False, ButtonPressMask, &press);
+                XFlush(d);
+                usleep(100000);
+            }
+        }
         click(Command::AlignNorth); // disabled in initial north-up state
         click(Command::ToggleGraticule);
         click(Command::ToggleGraticule);
@@ -154,6 +180,7 @@ int main(int argc, char** argv) {
         CHECK(text.find("\"cursor_changes\": 5") != std::string::npos);
         CHECK(text.find("\"info_cards\": 1") != std::string::npos);
         CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
+        CHECK(text.find("\"terrain_style\": 1") != std::string::npos); // Relief, via the palette
     }
     if (test::failures())
         std::fprintf(stderr, "%s\n", text.c_str());
