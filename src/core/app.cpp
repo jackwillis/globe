@@ -174,8 +174,8 @@ double max_radius_px(int width, int height) {
 
 Layers effective_layers(const Model& model) {
     Layers layers = model.layers;
-    if (model.dragging && model.drag_active) {
-        layers.graticule = false;
+    if (model.dragging && model.drag_active && model.stage == QualityStage::Moving) {
+        layers.graticule = false; // a paused drag that has begun refining shows it
     }
     return layers;
 }
@@ -334,9 +334,12 @@ Effects update(Model& model, const Msg& msg) {
         }
     } else if (const auto* up = std::get_if<PointerUp>(&msg)) {
         // The graticule was hidden while dragging; bring it back, but only if the drag drew.
-        fx.redraw = model.dragging && model.drag_moved && model.layers.graticule;
+        // If the drag paused long enough to start refining, that work stands: release changes
+        // nothing.
+        const bool refining = model.stage != QualityStage::Moving;
+        fx.redraw = model.dragging && model.drag_moved && model.layers.graticule && !refining;
         // Only a drag that changed the view restarts the settle clock; a plain click does not.
-        input = model.dragging && model.drag_moved;
+        input = model.dragging && model.drag_moved && !refining;
         if (model.dragging && !model.drag_moved) {
             // A plain click: pick after the double-click window, unless a second click comes.
             // While settling, the settle wakes already serve the pending pick (see Tick).
@@ -391,10 +394,11 @@ Effects update(Model& model, const Msg& msg) {
             model.stage_since_ms = tick->time_ms;
             model.stage_needs_time = false;
         }
-        if (!(model.dragging && model.drag_active) &&
-            (model.stage == QualityStage::Moving || model.stage == QualityStage::Settle)) {
+        if (model.stage == QualityStage::Moving || model.stage == QualityStage::Settle) {
             const std::uint32_t delay =
-                model.stage == QualityStage::Moving ? kSettleDelayMs : kRefineDelayMs;
+                model.stage == QualityStage::Moving
+                    ? (model.dragging && model.drag_active ? kDragPauseMs : kSettleDelayMs)
+                    : kRefineDelayMs;
             const std::uint64_t elapsed =
                 tick->time_ms >= model.stage_since_ms ? tick->time_ms - model.stage_since_ms : 0;
             if (elapsed < delay) {

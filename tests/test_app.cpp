@@ -637,18 +637,34 @@ void test_quality_wakes() {
     fx = update(m, PointerUp{3001}); // a click: nothing changes; only the pick wake is requested
     CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == kPickDelayMs && !fx.redraw &&
           m.generation == generation);
-    // A real drag holds the settle clock until release, then restarts it.
+    // A drag that keeps moving holds the stage; paused for kDragPauseMs with the button still down
+    // it refines, and releasing after that keeps the work.
     update(m, PointerDown{3100, 80.0, 60.0});
     fx = update(m, PointerMove{3110, 90.0, 60.0});
     CHECK(m.stage == QualityStage::Moving && fx.redraw && m.generation != generation);
-    fx = update(m, Tick{3500});
-    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == 0); // held still
-    fx = update(m, PointerUp{3501});
-    CHECK(fx.wake_after_ms == kSettleDelayMs);
-    update(m, Tick{3651});
-    fx = update(m, Tick{3651});
+    CHECK(!effective_layers(m).graticule); // hidden while the drag is moving
+    fx = update(m, Tick{3260});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kDragPauseMs - 150);
+    update(m, Tick{3410});
+    CHECK(m.stage == QualityStage::Settle);
+    CHECK(effective_layers(m).graticule); // a paused drag refines with the graticule
+    update(m, Tick{3411});
+    CHECK(m.stage == QualityStage::Refine);
+    const auto paused_generation = m.generation;
+    fx = update(m, PointerUp{3500});
+    CHECK(m.stage == QualityStage::Refine && m.generation == paused_generation && !fx.redraw &&
+          fx.wake_after_ms == 0 && !m.dragging);
+    // Moving again after a pause cancels the refinement, as any input does.
+    update(m, PointerDown{3600, 80.0, 60.0});
+    fx = update(m, PointerMove{3610, 90.0, 60.0});
+    CHECK(m.stage == QualityStage::Moving && m.generation != paused_generation);
+    // A release before the pause restarts the settle clock as before.
+    fx = update(m, PointerUp{3620});
+    CHECK(m.stage == QualityStage::Moving && fx.wake_after_ms == kSettleDelayMs);
+    update(m, Tick{3770});
+    fx = update(m, Tick{3770});
     CHECK(m.stage == QualityStage::Settle && fx.wake_after_ms == kRefineDelayMs);
-    fx = update(m, Tick{3652});
+    fx = update(m, Tick{3771});
     CHECK(m.stage == QualityStage::Refine && fx.wake_after_ms == 0);
     update(m, PointerMove{4000, 10.0, 10.0}); // hovering is not camera input
     CHECK(m.stage == QualityStage::Refine);

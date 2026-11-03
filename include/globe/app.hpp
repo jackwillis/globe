@@ -180,6 +180,9 @@ constexpr double kDoubleClickZoom = 2.0;
 constexpr double kDragSlopPx = 3.0;
 
 constexpr std::uint32_t kSettleDelayMs = 150;
+// A drag that pauses this long (button still down) starts refining; moving again cancels it, and
+// releasing after it finished keeps the result.
+constexpr std::uint32_t kDragPauseMs = 300;
 constexpr std::uint32_t kRefineDelayMs = 1; // separate event-loop turn for Settle work
 
 Effects update(Model& model, const Msg& msg);
