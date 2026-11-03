@@ -257,3 +257,13 @@ omits outlines until final lines and uploads full frames per pass; presentation 
 so owner hands-on acceptance is still required before changing the default. No push, remote merge,
 tag, compilation on maul, display-access change or touch to owner tip3–tip8. No additional backlog
 work, networking, ice data, smoothing tuning or pass/surface/theme refactor in this continuation.
+
+### 2026-11-02 — Claude fork: refinement orders replaced by rectangle, circle and globe
+
+Owner decision: dissolve, rows and center-out are removed. Refinement of the settled terrain goes
+outward from the touchpoint as `rectangle` (normalized to the viewport so the edges are reached
+together), `circle` (default) or `globe` (equal great-circle angle); see `docs/refinement-order.md`.
+Trace verb `order TIME rectangle|circle|globe` (old names and `square` are rejected), X11 `O` cycles them.
+Final images, refined pin, replay hash and goldens are unchanged. Outline-only refine (no terrain) still
+uses top-down 16-row bands. Do not reintroduce the removed orders without an owner request. Not verified:
+real display, OS 9 execution, CI.

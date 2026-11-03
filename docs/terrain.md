@@ -98,11 +98,10 @@ plain vectors again. The mask code (`TerrainScene::draw_base`) and its tests sta
 later style. The reference (atlas) render path never draws the base. The "71e66eac3bde93c7" moving
 benchmark checksum above describes the mask-on build; the default moving frames are outline-only.
 
-## Refinement-order experiment (GL-19 / GL-26, 2026-11-02)
+## Refinement order (GL-19 / GL-26, concluded 2026-11-02)
 
-Focus-aware rows, center-out bands and a 16-pass Gaussian dissolve are now selectable by trace.
-Rows stay the default. [Implementation, measurements and limits](refinement-order.md) record the
-matched G4 comparison: dissolve is about 14–15% slower overall, with a worst observed step of
-26.207 ms in that run; this does not establish an improvement over the contemporaneous row baseline.
-The cell rasterizer/smoothing is unchanged, and all settled pins remain unchanged. The added
-workspace is one byte per cell, included in the existing 32 MiB allocation guard.
+The settled terrain refines outward from the last touchpoint as rectangles, circles (default) or
+rings of equal great-circle angle; the rows, center-out and dissolve orders are gone.
+[Design, measurements and limits](refinement-order.md). The cell rasterizer/smoothing is unchanged,
+and all settled pins remain unchanged. The added workspace is one byte per cell, included in the
+existing 32 MiB allocation guard.
