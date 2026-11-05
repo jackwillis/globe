@@ -58,7 +58,7 @@
 | GL-17 | proposed | Classic outline style | Optional style/profile, especially monochrome/low-depth; measure and define visual acceptance. |
 | GL-20 | open | Layers palette | X11 first, then OS 9; saved preferences when relevant; do not mix with style palette GL-42. |
 | GL-21 | open | Find place, larger city catalog | Search plus bounded offline Wikidata CC0 pack. |
-| GL-22 | open | Day/night terminator | Time comes through platform-message seam; static/offline behavior remains intact. |
+| GL-22 | **X11 done** | Day/night terminator | Time comes through platform-message seam; static/offline behavior remains intact. | Done 2026-11-04 (X11): `D` toggles night shading (`shade_night`, `subsolar_point` in `daynight.hpp`), drawn on the shown copy of the frame so the rendered frame and every pin are untouched; sun from the system clock, refreshed at most every 30 s when an image is shown (no timer). G4 cost of the per-pixel pass is not measured; OS 9 not wired.
 | GL-23 | open | Initial view from Mac Map control panel | Confirm Retro68 API availability and user fallback first. |
 | GL-24 | open | Copy view as PICT | Begin bitmap; vector export only if useful and tested. |
 | GL-25 | open | Great-circle distance tool | Pure geometry and tests against known city pairs; independent of online routing. |

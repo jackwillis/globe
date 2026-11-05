@@ -8,8 +8,8 @@
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
 // G / B toggle graticule / borders, N aligns north up, T switches between
-// turntable and trackball dragging, S switches the terrain style, P opens the looks palette, Esc or
-// Q quits.
+// turntable and trackball dragging, S switches the terrain style, P opens the looks palette, D
+// shades the night side, Esc or Q quits.
 //
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
 // per redraw the way interactive use would. --idle-seconds waits that long afterwards and reports
@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <string>
 #include <vector>
 
@@ -37,6 +38,7 @@
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
+#include "globe/daynight.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -629,6 +631,41 @@ class App {
         }
     }
 
+    // The sun moves a quarter of a degree a minute: recompute at most every 30 s, at the time an
+    // image is shown (no timer, so an idle window stays quiet and the shading catches up on use).
+    void refresh_sun() {
+        const std::time_t now = std::time(nullptr);
+        if (sun_time_ != 0 && now - sun_time_ < 30)
+            return;
+        sun_time_ = now;
+        sun_ = to_unit_vector(subsolar_point(static_cast<std::int64_t>(now)));
+    }
+
+    // A copy of the frame with the overlays (night shading, focused country) drawn on it, or null
+    // when none is wanted. The rendered frame itself is never changed.
+    Framebuffer* overlay_for(const Framebuffer& fb) {
+        const auto focus = focused_country_;
+        const bool outline = focus.has_value() && countries_.has_value();
+        if (!night_ && !outline)
+            return nullptr;
+        if (overlay_fb_.has_value() &&
+            (overlay_fb_->width() != fb.width() || overlay_fb_->height() != fb.height()))
+            overlay_fb_.reset();
+        if (!overlay_fb_.has_value())
+            overlay_fb_ = Framebuffer::create(fb.width(), fb.height());
+        if (!overlay_fb_.has_value())
+            return nullptr;
+        Framebuffer& copy = *overlay_fb_;
+        std::memcpy(copy.data(), fb.data(), fb.byte_size());
+        if (night_) {
+            refresh_sun();
+            shade_night(copy, model_.camera, sun_);
+        }
+        if (focus.has_value() && countries_.has_value())
+            draw_country_outline(copy, model_.camera, *countries_, *focus, kCountryHighlight);
+        return &copy;
+    }
+
     void upload(int first_row, int end_row) {
         if (!fb_ || image_ == nullptr)
             return;
@@ -637,17 +674,9 @@ class App {
         std::uint64_t t = monotonic_ns();
         // The focused country is drawn on a copy, so the frame itself stays exactly as rendered
         // and clearing the focus needs no re-render.
-        const Framebuffer* shown = &fb;
-        if (focused_country_ && countries_ &&
-            (!overlay_fb_ || overlay_fb_->width() != fb.width() ||
-             overlay_fb_->height() != fb.height()))
-            overlay_fb_ = Framebuffer::create(fb.width(), fb.height());
-        if (focused_country_ && countries_ && overlay_fb_) {
-            std::memcpy(overlay_fb_->data(), fb.data(), fb.byte_size());
-            draw_country_outline(*overlay_fb_, model_.camera, *countries_, *focused_country_,
-                                 kCountryHighlight);
-            shown = &*overlay_fb_;
-        }
+        const Framebuffer* shown = overlay_for(fb);
+        if (shown == nullptr)
+            shown = &fb;
         convert_pixels(*shown, format_, reinterpret_cast<std::uint8_t*>(image_->data),
                        static_cast<std::size_t>(image_->bytes_per_line));
         t_.pack_ms.push_back(ms_since(t));
@@ -828,6 +857,11 @@ class App {
             return apply(CommandIssued{now, Command::AlignNorth});
         case XK_s:
             return apply(CommandIssued{now, Command::CycleStyle});
+        case XK_d:
+            night_ = !night_;
+            if (frame_valid_ && !need_redraw_ && fb_)
+                upload(0, fb_->height());
+            return false;
         case XK_p:
             styles_.show(win_, model_.camera.width + 20,
                          model_.terrain_style == TerrainStyle::Map ? 0 : 1);
@@ -854,6 +888,9 @@ class App {
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
     std::optional<std::uint32_t> focused_country_;
+    bool night_ = false;
+    std::time_t sun_time_ = 0;
+    Vec3 sun_{1, 0, 0};
     std::optional<Framebuffer> overlay_fb_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;

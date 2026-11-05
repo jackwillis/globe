@@ -14,6 +14,10 @@ markers and scrolling information windows.
 
 ![Map look, Antarctica in white](docs/images/antarctica-map.png)
 
+`D` (X11) shades the night side from the system clock, with a soft twilight edge:
+
+![Map look with the day/night terminator](docs/images/daynight-map.png)
+
 The OS 9 floppy build in Classic under Mac OS X Tiger on the G4 (2026-11-02):
 
 ![OS 9 build in Tiger Classic, Map look](docs/images/os9-tiger-classic.png)
