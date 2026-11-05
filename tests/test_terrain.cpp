@@ -366,8 +366,74 @@ void test_landclass_looks() {
         }
     }
 }
+void test_resolution_replacement() {
+    const auto grid_bytes = [](unsigned width, unsigned height, bool coarse) {
+        auto bytes = land_grid();
+        bytes.resize(552 + width * height);
+        store_le32(bytes.data() + 8, width);
+        store_le32(bytes.data() + 12, height);
+        for (unsigned i = 0; i < width * height; ++i)
+            bytes[552 + i] = coarse ? (i % 3 ? 240 : 20) : (i % 4 ? 10 : 180);
+        store_le32(bytes.data() + 36,
+                   crc32_extend(crc32(bytes.data(), 36), bytes.data() + 40, bytes.size() - 40));
+        return bytes;
+    };
+    auto coarse_bytes = grid_bytes(12, 6, true), fine_bytes = grid_bytes(24, 12, false);
+    auto coarse_grid = Elevation::parse(coarse_bytes.data(), coarse_bytes.size());
+    auto fine_grid = Elevation::parse(fine_bytes.data(), fine_bytes.size());
+    CHECK(coarse_grid && fine_grid);
+    if (!coarse_grid || !fine_grid)
+        return;
+    auto coarse = TerrainScene::create(*coarse_grid), fine = TerrainScene::create(*fine_grid);
+    auto atlas_bytes = atlas_util::make_atlas({}, "resolution replacement");
+    auto atlas = Atlas::parse(atlas_bytes.data(), atlas_bytes.size());
+    auto scene = Scene::create(*atlas);
+    CHECK(coarse && fine && scene);
+    if (!coarse || !fine || !scene)
+        return;
+    for (const auto style : {TerrainStyle::Map, TerrainStyle::Relief}) {
+        for (const auto view : {LatLon{20, 13}, LatLon{80, 170}, LatLon{-35, -110}}) {
+            for (const auto radius : {31., 89.}) {
+                auto camera = make_camera({view, 0, radius, 97, 73});
+                auto progressive = Framebuffer::create(97, 73),
+                     reference = Framebuffer::create(97, 73);
+                RenderQuality quality{1.5, true, 0, style};
+                quality.focus = {camera->center_x, camera->center_y};
+                RefinementJob fresh(*camera, *scene, kDefaultPalette, {}, quality, 1, &*fine);
+                while (fresh.active())
+                    fresh.step(*reference, 1, 31);
+                quality.terrain_only = true;
+                RefinementJob first(*camera, *scene, kDefaultPalette, {}, quality, 1, &*coarse);
+                while (first.active())
+                    first.step(*progressive, 1, 17);
+                quality.terrain_only = false;
+                quality.preserve_bitmap = true;
+                RefinementJob second(*camera, *scene, kDefaultPalette, {}, quality, 1, &*fine);
+                // Projection/preparation must not erase the coarse bitmap.
+                const auto before = progressive->pixel(48, 36);
+                second.step(*progressive, 1, 1);
+                CHECK(progressive->pixel(48, 36) == before);
+                unsigned steps = 0;
+                while (second.active() && ++steps < 100000)
+                    second.step(*progressive, 1, 23);
+                CHECK(!second.active());
+                for (int y = 0; y < 73; ++y)
+                    for (int x = 0; x < 97; ++x)
+                        CHECK(progressive->pixel(x, y) == reference->pixel(x, y));
+                // An obsolete replacement may not touch pixels or framebuffer clip.
+                RefinementJob stale(*camera, *scene, kDefaultPalette, {}, quality, 1, &*fine);
+                const auto old = progressive->pixel(48, 36);
+                progressive->clip_rows(2, 7);
+                stale.step(*progressive, 2);
+                CHECK(!stale.active() && progressive->pixel(48, 36) == old);
+                CHECK(progressive->first_row() == 2 && progressive->end_row() == 7);
+            }
+        }
+    }
+}
 } // namespace
 int main() {
+    test_resolution_replacement();
     test_orders();
     test_landclass_looks();
     test_terrain();

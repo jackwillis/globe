@@ -31,6 +31,8 @@ struct RenderQuality {
     bool gray_base = false;
     ScreenPoint focus{};
     bool progressive_lines = true;
+    bool preserve_bitmap = false; // subsequent resolution replaces the existing terrain
+    bool terrain_only = false;    // lines belong to the final resolution only
 };
 
 struct Palette {

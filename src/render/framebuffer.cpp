@@ -16,7 +16,11 @@ std::optional<Framebuffer> Framebuffer::create(int width, int height) {
     if (!pixels) {
         return std::nullopt;
     }
-    return Framebuffer(width, height, std::move(pixels));
+    std::unique_ptr<std::uint8_t[]> coverage(
+        new (std::nothrow) std::uint8_t[static_cast<std::size_t>((width + 7) / 8) * height]());
+    if (!coverage)
+        return std::nullopt;
+    return Framebuffer(width, height, std::move(pixels), std::move(coverage));
 }
 
 void Framebuffer::clip_rows(int first, int end) {
@@ -24,6 +28,21 @@ void Framebuffer::clip_rows(int first, int end) {
     clip_end_ = std::clamp(end, clip_first_, height_);
 }
 
+void Framebuffer::reset_coverage_row(int y) {
+    if (y < 0 || y >= height_)
+        return;
+    const auto stride = static_cast<std::size_t>((width_ + 7) / 8);
+    std::fill(coverage_.get() + y * stride, coverage_.get() + (y + 1) * stride, 0);
+}
+void Framebuffer::mark_span(int y, int first, int last) {
+    if (coverage_mode_ != Coverage::Mark || y < clip_first_ || y >= clip_end_)
+        return;
+    first = std::max(0, first);
+    last = std::min(width_ - 1, last);
+    auto* row = coverage_.get() + static_cast<std::size_t>(y) * ((width_ + 7) / 8);
+    for (int x = first; x <= last; ++x)
+        row[x / 8] |= static_cast<std::uint8_t>(1U << (x % 8));
+}
 void Framebuffer::clear(Rgb565 color) {
     std::fill(
         pixels_.get() + static_cast<std::size_t>(clip_first_) * static_cast<std::size_t>(stride()),
@@ -34,6 +53,14 @@ void Framebuffer::clear(Rgb565 color) {
 void Framebuffer::set_pixel(int x, int y, Rgb565 color) {
     if (x < 0 || y < clip_first_ || x >= width_ || y >= clip_end_) {
         return;
+    }
+    if (coverage_mode_ != Coverage::Off) {
+        const auto mask = static_cast<std::uint8_t>(1U << (x % 8));
+        auto& coverage = coverage_[static_cast<std::size_t>(y) * ((width_ + 7) / 8) + x / 8];
+        if (coverage_mode_ == Coverage::Uncovered && (coverage & mask))
+            return;
+        if (coverage_mode_ == Coverage::Mark)
+            coverage |= mask;
     }
     pixels_[static_cast<std::size_t>(y) * static_cast<std::size_t>(stride()) +
             static_cast<std::size_t>(x)] = color;
@@ -59,6 +86,12 @@ void Framebuffer::fill_span(int y, int x0, int x1, Rgb565 color) {
     if (x0 > x1) {
         return;
     }
+    if (coverage_mode_ == Coverage::Uncovered) {
+        for (int x = x0; x <= x1; ++x)
+            set_pixel(x, y, color);
+        return;
+    }
+    mark_span(y, x0, x1);
     std::fill(pixels_.get() + static_cast<std::size_t>(y) * static_cast<std::size_t>(stride()) +
                   static_cast<std::size_t>(x0),
               pixels_.get() + static_cast<std::size_t>(y) * static_cast<std::size_t>(stride()) +

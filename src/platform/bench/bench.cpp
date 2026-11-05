@@ -280,17 +280,25 @@ int main(int argc, char** argv) {
                 break;
             }
         }
+        // Trace replay records model transitions but does not execute asynchronous effects.
+        // Start a fresh final sequence rather than reuse an unexecuted trace request.
+        model.refine_active = false;
         selected_level = quality_for(model).elevation_level;
         if (refine) {
-            model.stage = QualityStage::Refine;
-            RefinementJob job(model.camera, *scene, kDefaultPalette, effective_layers(model),
-                              quality_for(model), model.generation, packs.for_model(model));
+            auto effect = start_refinement(model);
             const auto started = monotonic_ns();
-            while (job.active()) {
-                const auto step_start = monotonic_ns();
-                job.step(*fb, model.generation);
-                max_refine_step_ms = std::max(max_refine_step_ms, ms(monotonic_ns() - step_start));
-                ++refine_steps;
+            while (effect.refine) {
+                const auto request = *effect.refine;
+                RefinementJob job(model.camera, *scene, kDefaultPalette, effective_layers(model),
+                                  quality_for(model), request.generation, packs.for_model(model));
+                while (job.active()) {
+                    const auto step_start = monotonic_ns();
+                    job.step(*fb, request.generation);
+                    max_refine_step_ms =
+                        std::max(max_refine_step_ms, ms(monotonic_ns() - step_start));
+                    ++refine_steps;
+                }
+                effect = update(model, RefinementFinished{request.generation, request.level});
             }
             refine_ms += ms(monotonic_ns() - started);
         }

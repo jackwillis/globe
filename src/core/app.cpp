@@ -197,10 +197,41 @@ RenderQuality quality_for(const Model& model) {
             meets_target = meets;
         }
     }
+    if (model.refine_active)
+        selected = model.refine_level;
     RenderQuality quality{fine ? 1.5 : 3.0, fine, selected, model.terrain_style};
+    quality.preserve_bitmap = model.refine_active && !model.refine_first;
+    quality.terrain_only = model.refine_active && model.refine_level != model.refine_target;
     // Refinement always radiates from the view center.
     quality.focus = {model.camera.center_x, model.camera.center_y};
     return quality;
+}
+
+// Choose the next distinct grid width, resolving equal widths in favor of later imports.
+static unsigned next_resolution(const Model& model, std::uint32_t after, std::uint32_t target) {
+    unsigned chosen = kElevationLevels;
+    std::uint32_t width = 0;
+    for (unsigned i = 0; i < kElevationLevels; ++i) {
+        const auto candidate = model.elevations[i].width;
+        if (candidate > after && candidate <= target && (width == 0 || candidate <= width)) {
+            width = candidate;
+            chosen = i;
+        }
+    }
+    return chosen;
+}
+Effects start_refinement(Model& model) {
+    Effects fx;
+    if (model.refine_active)
+        return fx;
+    model.stage = QualityStage::Refine;
+    model.refine_target = quality_for(model).elevation_level;
+    const auto first = next_resolution(model, 0, model.elevations[model.refine_target].width);
+    model.refine_level = first < kElevationLevels ? first : model.refine_target;
+    model.refine_active = true;
+    model.refine_first = true;
+    fx.refine = Refine{model.generation, model.refine_level};
+    return fx;
 }
 
 CursorIntent cursor_for(const Model& model, ScreenPoint pointer) {
@@ -271,6 +302,7 @@ Model initial_model(int width, int height) {
 
 Effects update(Model& model, const Msg& msg) {
     Effects fx;
+    const auto initial_generation = model.generation;
     bool input = false;
     std::uint64_t input_ms = 0;
     if (const auto* down = std::get_if<PointerDown>(&msg)) {
@@ -408,7 +440,7 @@ Effects update(Model& model, const Msg& msg) {
                 model.stage_since_ms = tick->time_ms;
                 fx.wake_after_ms = kRefineDelayMs;
             } else {
-                model.stage = QualityStage::Refine;
+                fx.refine = start_refinement(model).refine;
             }
         }
         if (model.pick_pending) {
@@ -419,6 +451,19 @@ Effects update(Model& model, const Msg& msg) {
             } else {
                 const auto left = static_cast<std::uint32_t>(model.pick_due_ms - tick->time_ms);
                 fx.wake_after_ms = fx.wake_after_ms != 0 ? std::min(fx.wake_after_ms, left) : left;
+            }
+        }
+    } else if (const auto* done = std::get_if<RefinementFinished>(&msg)) {
+        if (model.refine_active && done->generation == model.generation &&
+            done->level == model.refine_level) {
+            const auto next = next_resolution(model, model.elevations[model.refine_level].width,
+                                              model.elevations[model.refine_target].width);
+            if (next < kElevationLevels) {
+                model.refine_level = next;
+                model.refine_first = false;
+                fx.refine = Refine{model.generation, next};
+            } else {
+                model.refine_active = false;
             }
         }
     } else if (const auto* pack = std::get_if<RegisterElevation>(&msg)) {
@@ -446,6 +491,8 @@ Effects update(Model& model, const Msg& msg) {
         model.stage_needs_time = false;
         fx.wake_after_ms = kSettleDelayMs;
     }
+    if (model.generation != initial_generation)
+        model.refine_active = false;
     return fx;
 }
 

@@ -356,7 +356,7 @@ class App {
             if (old_stage == QualityStage::Refine)
                 fx.redraw = true;
         }
-        if (model_.stage == QualityStage::Refine && old_stage != QualityStage::Refine) {
+        if (fx.refine) {
             next_upload_ms_ = 0;
             upload_dirty_ = false;
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
@@ -560,6 +560,10 @@ class App {
         if (refinement_ && !refinement_->active() && upload_dirty_ && !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
+        }
+        if (refinement_ && !refinement_->active() && model_.refine_active) {
+            apply(RefinementFinished{model_.generation, model_.refine_level});
+            return; // a successor owns a fresh continuation and its own pacing
         }
         if (step.wake_after_ms) {
             refine_waiting_ = true;

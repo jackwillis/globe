@@ -11,6 +11,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <variant>
 
 #include "globe/projection.hpp"
@@ -50,6 +51,8 @@ struct ElevationLevel {
 };
 struct Model {
     std::array<ElevationLevel, kElevationLevels> elevations{};
+    unsigned refine_level = 0, refine_target = 0;
+    bool refine_active = false, refine_first = true;
     TerrainStyle terrain_style = TerrainStyle::Map;
     Camera camera;
     Layers layers;
@@ -108,10 +111,20 @@ struct RegisterElevation {
     std::uint32_t width, height;
 };
 
+struct Refine {
+    std::uint64_t generation;
+    unsigned level;
+};
+struct RefinementFinished {
+    std::uint64_t generation;
+    unsigned level;
+};
+
 using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint,
-                         Tick, RegisterElevation>;
+                         Tick, RegisterElevation, RefinementFinished>;
 
 struct Effects {
+    std::optional<Refine> refine;
     bool redraw = false;
     bool quit = false;
     // Request a wake (a Tick message) after this delay; 0 means no new request. A new request
@@ -142,6 +155,8 @@ double max_radius_px(int width, int height);
 // keep frames cheap; releasing the button redraws it.
 Layers effective_layers(const Model& model);
 RenderQuality quality_for(const Model& model);
+// Deterministic start effect, also used by explicit headless refinement benchmarks.
+Effects start_refinement(Model& model);
 
 // One entry per Command, indexed by its enum value. All current commands are visible;
 // checked describes stored layer preferences and whether Trackball mode is selected.

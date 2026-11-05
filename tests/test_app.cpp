@@ -1034,8 +1034,52 @@ void test_replay(const std::string& root) {
 
 } // namespace
 
+void test_resolution_protocol() {
+    char text[80];
+    const auto size = format_message(RefinementFinished{123, 2}, text, sizeof text);
+    CHECK(size > 0);
+    const auto parsed = parse_message(text);
+    CHECK(parsed && std::holds_alternative<RefinementFinished>(*parsed));
+    if (parsed && std::holds_alternative<RefinementFinished>(*parsed)) {
+        const auto done = std::get<RefinementFinished>(*parsed);
+        CHECK(done.generation == 123 && done.level == 2);
+    }
+    CHECK(!parse_message("refined 123 4"));
+    CHECK(!parse_message("refined -1 2"));
+    auto model = initial_model(640, 480);
+    update(model, RegisterElevation{0, 360, 180});
+    update(model, RegisterElevation{1, 720, 360});
+    update(model, RegisterElevation{2, 360, 180}); // later equal-width source wins
+    model.camera.radius_px = 800;
+    auto effect = start_refinement(model);
+    CHECK(effect.refine && effect.refine->level == 2);
+    const auto generation = model.generation;
+    CHECK(quality_for(model).terrain_only && !quality_for(model).preserve_bitmap);
+    CHECK(!update(model, RefinementFinished{generation - 1, 2}).refine);
+    CHECK(!update(model, RefinementFinished{generation, 1}).refine);
+    effect = update(model, RefinementFinished{generation, 2});
+    CHECK(effect.refine && effect.refine->level == 1);
+    CHECK(model.generation == generation);
+    CHECK(!quality_for(model).terrain_only && quality_for(model).preserve_bitmap);
+    CHECK(!update(model, RefinementFinished{generation, 2}).refine);
+    effect = update(model, RefinementFinished{generation, 1});
+    CHECK(!effect.refine && !model.refine_active);
+    CHECK(!update(model, RefinementFinished{generation, 1}).refine);
+    start_refinement(model);
+    update(model, CommandIssued{1000, Command::Right});
+    CHECK(!model.refine_active && model.generation != generation);
+    CHECK(!update(model, RefinementFinished{generation, 2}).refine);
+    model.camera.radius_px = 100;
+    effect = start_refinement(model);
+    CHECK(effect.refine && effect.refine->level == 2);
+    CHECK(!quality_for(model).terrain_only);
+    CHECK(!update(model, RefinementFinished{model.generation, 2}).refine);
+    CHECK(!model.refine_active);
+}
+
 int main(int argc, char** argv) {
     const std::string root = argc > 1 ? argv[1] : ".";
+    test_resolution_protocol();
     test_refinement_focus();
     test_initial_model();
     test_drag();

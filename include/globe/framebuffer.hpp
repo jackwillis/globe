@@ -48,6 +48,11 @@ class Framebuffer {
     void clip_rows(int first, int end);
     int first_row() const { return clip_first_; }
     int end_row() const { return clip_end_; }
+    enum class Coverage { Off, Mark, Uncovered };
+    void coverage(Coverage mode) { coverage_mode_ = mode; }
+    void reset_coverage_row(int y);
+    bool recording_coverage() const { return coverage_mode_ == Coverage::Mark; }
+    void mark_span(int y, int first, int last);
     void clear(Rgb565 color);
     // Out-of-range coordinates are ignored.
     void set_pixel(int x, int y, Rgb565 color);
@@ -57,14 +62,18 @@ class Framebuffer {
     void fill_span(int y, int x0, int x1, Rgb565 color);
 
   private:
-    Framebuffer(int width, int height, std::unique_ptr<Rgb565[]> pixels)
-        : width_(width), height_(height), clip_end_(height), pixels_(std::move(pixels)) {}
+    Framebuffer(int width, int height, std::unique_ptr<Rgb565[]> pixels,
+                std::unique_ptr<std::uint8_t[]> coverage)
+        : width_(width), height_(height), clip_end_(height), pixels_(std::move(pixels)),
+          coverage_(std::move(coverage)) {}
 
     int width_;
     int height_;
     int clip_first_ = 0;
     int clip_end_;
     std::unique_ptr<Rgb565[]> pixels_;
+    std::unique_ptr<std::uint8_t[]> coverage_;
+    Coverage coverage_mode_ = Coverage::Off;
 };
 
 } // namespace globe

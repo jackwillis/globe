@@ -226,6 +226,8 @@ void fill_triangle_shaded(Framebuffer& fb, double x0, double y0, double v0, doub
         std::int32_t value = static_cast<std::int32_t>(vs * 65536.0);
         const std::int32_t step =
             xe > xs ? static_cast<std::int32_t>((ve - vs) / (xe - xs) * 65536.0) : 0;
+        if (fb.recording_coverage())
+            fb.mark_span(y, xs, xe);
         Rgb565* out =
             fb.data() + static_cast<std::size_t>(y) * static_cast<std::size_t>(fb.stride());
         for (int x = xs; x <= xe; ++x) {

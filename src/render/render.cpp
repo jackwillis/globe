@@ -398,6 +398,8 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
                              TerrainScene* terrain)
     : camera_(camera), scene_(&scene), palette_(palette), layers_(layers), quality_(quality),
       generation_(generation) {
+    if (quality_.terrain_only)
+        quality_.progressive_lines = false;
     palette_ = palette_for_style(palette_, quality_.terrain_style);
     if (quality_.terrain && terrain != nullptr) {
         terrain_ = terrain;
@@ -497,8 +499,11 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                     cell_band_ = bands.first;
                 fb.clip_rows(cell_band_ * kRefineBandRows,
                              std::min(fb.height(), (cell_band_ + 1) * kRefineBandRows));
+                if (last && quality_.preserve_bitmap)
+                    fb.coverage(Framebuffer::Coverage::Mark);
                 terrain_->draw_cell(fb, terrain_cell_, cell_band_, kRefineBandRows,
                                     quality_.terrain_style, quality_.smooth_terrain);
+                fb.coverage(Framebuffer::Coverage::Off);
                 fb.clip_rows(0, fb.height());
                 if (++cell_band_ == bands.end) {
                     ++terrain_cell_;
@@ -513,17 +518,40 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 terrain_cell_ = 0;
                 ++pass_;
                 result.band_ready = true;
-                if (last)
-                    phase_ = quality_.progressive_lines ? 8 : 1; // Lines after all terrain passes.
+                if (last) {
+                    row_ = 0;
+                    phase_ = quality_.preserve_bitmap     ? 9
+                             : quality_.terrain_only      ? 5
+                             : quality_.progressive_lines ? 8
+                                                          : 1;
+                }
             }
             // Bound a fill continuation by four 16-row cell slices as well as work units. This
             // changes scheduling, not smoothing or rasterization.
             if (fills == 4)
                 break;
-        } else if (phase_ == 0) {
+        } else if (phase_ == 9) {
+            // Only pixels untouched by the finest canonical terrain pass are restored to
+            // background/ocean. This removes coarse limb chords and islands without erasing detail.
             fb.clip_rows(row_, row_ + 1);
+            fb.coverage(Framebuffer::Coverage::Uncovered);
             fb.fill_span(row_, 0, fb.width() - 1, palette_.background);
             fill_disc(fb, camera_.center_x, camera_.center_y, camera_.radius_px, palette_.ocean);
+            fb.coverage(Framebuffer::Coverage::Off);
+            fb.clip_rows(result.first_row, result.end_row);
+            if (++row_ == fb.height()) {
+                phase_ = quality_.terrain_only ? 5 : quality_.progressive_lines ? 8 : 1;
+                result.band_ready = true;
+            }
+        } else if (phase_ == 0) {
+            fb.clip_rows(row_, row_ + 1);
+            if (quality_.preserve_bitmap && terrain_ != nullptr) {
+                fb.reset_coverage_row(row_);
+            } else {
+                fb.fill_span(row_, 0, fb.width() - 1, palette_.background);
+                fill_disc(fb, camera_.center_x, camera_.center_y, camera_.radius_px,
+                          palette_.ocean);
+            }
             fb.clip_rows(result.first_row, result.end_row);
             if (++row_ == result.end_row) {
                 phase_ = terrain_ != nullptr ? 7 : 1;

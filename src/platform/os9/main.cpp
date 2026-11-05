@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 // Classic PowerPC proof of life: Toolbox window, RGB555 GWorld and wake-driven input loop.
+#include "classic_present.hpp"
 #include "classic_wait.hpp"
 #include "clock.hpp"
 #include "globe/app.hpp"
@@ -89,6 +90,9 @@ class Application {
                 copy(0, fb_->height());
                 redraw_ = false;
             }
+            // Give presentation a bounded share before geometry can consume the whole turn.
+            if (foreground_ && !presentation_held(model_) && now_ms() - turn_start < kWorkSliceMs)
+                present_step();
             const bool work = foreground_ && job_ && job_->active() && !job_waiting_;
             if (work && now_ms() - turn_start < kWorkSliceMs) {
                 // Check elapsed time after every bounded step AND presentation. A slow step or
@@ -109,22 +113,23 @@ class Application {
                         wake_ = step_end + band.wake_after_ms;
                         break;
                     }
+                    if (!job_->active() && model_.refine_active) {
+                        apply(RefinementFinished{model_.generation, model_.refine_level});
+                        break;
+                    }
                     step_start = step_end;
                     EventRecord pending{};
                     if (++steps % 16 == 0 && EventAvail(everyEvent, &pending))
                         break; // dispatch queued input before spending another geometry budget
                 } while (job_->active() && step_start < slice_end);
-                if (!job_->active()) {
-                    if (dirty_ &&
-                        !presentation_held(model_)) { // the last throttled frame is always shown
-                        copy(0, fb_->height());
-                    }
-                }
+                // Finish the last queued image through the same presentation continuation.
+                if (!job_->active() && dirty_ && !presentation_held(model_))
+                    presentation_.request(model_.generation);
             }
             if (foreground_)
                 max_turn_ms_ = std::max(max_turn_ms_, now_ms() - turn_start);
             if (foreground_ && model_.stage == QualityStage::Refine && job_ && !job_->active() &&
-                !titled_)
+                !titled_ && !presentation_.pending(model_.generation) && !dirty_)
                 show_timing();
             Point pointer;
             GetMouse(&pointer);
@@ -136,7 +141,10 @@ class Application {
             WaitNextEvent(
                 everyEvent, &event,
                 static_cast<long>(classic_wait_ticks(
-                    now_ms(), wake_, job_ && job_->active() && !job_waiting_, foreground_)),
+                    now_ms(), wake_,
+                    (job_ && job_->active() && !job_waiting_) ||
+                        (!presentation_held(model_) && presentation_.pending(model_.generation)),
+                    foreground_)),
                 foreground_ ? mouse_region_ : nullptr);
             const auto time = now_ms();
             turn_start = time;
@@ -153,7 +161,7 @@ class Application {
                     // The bitmap may have advanced before suspension. Re-present on resume.
                     dirty_ = true;
                     if (!redraw_ && !presentation_held(model_))
-                        copy(0, fb_->height());
+                        presentation_.request(model_.generation);
                 }
             } else if (event.what == mouseDown) {
                 WindowPtr hit = nullptr;
@@ -189,14 +197,15 @@ class Application {
                 quit = apply(PointerUp{time});
                 // A refinement finished (or advanced) while the button was down: show it now.
                 if (dirty_ && model_.stage != QualityStage::Moving && !redraw_)
-                    copy(0, fb_->height());
+                    presentation_.request(model_.generation);
             } else if (event.what == keyDown || event.what == autoKey)
                 quit = key(event.message, time);
             else if (event.what == updateEvt) {
                 if (reinterpret_cast<WindowPtr>(event.message) == window_) {
                     BeginUpdate(window_);
                     // Background update events repaint the cached GWorld, never convert terrain.
-                    copy(0, fb_->height(), foreground_);
+                    copy(0, fb_->height(),
+                         foreground_ && !presentation_.pending(model_.generation));
                     EndUpdate(window_);
                 }
             } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
@@ -232,24 +241,45 @@ class Application {
             return false;
         if (job_)
             job_->cancel();
+        presentation_.cancel();
         if (world_)
             DisposeGWorld(world_);
         world_ = next;
         fb_ = std::move(fb);
         return true;
     }
-    // Copying a frame costs tens of milliseconds on Classic, so a refinement frame is shown only
-    // when the last copies took less than a quarter of the time since they started; skipped frames
-    // are caught up by the next shown one, and the final frame is always shown.
-    void present(int first, int end) {
-        const auto start = now_ms();
-        if (!foreground_ || presentation_held(model_) || start < next_copy_ms_) {
-            dirty_ = true;
-            return;
-        }
+    // Coalesce updates while a stable GWorld snapshot is submitted in bounded row ranges.
+    void present(int, int) {
         dirty_ = true;
-        copy(first, end);
-        next_copy_ms_ = start + 4 * (now_ms() - start);
+        if (foreground_ && !presentation_held(model_))
+            presentation_.request(model_.generation);
+    }
+    void present_step() {
+        if (presentation_.needs_capture(model_.generation)) {
+            if (!capture())
+                return;
+            presentation_.begin(model_.generation, fb_->height());
+            dirty_ = false;
+            return; // conversion and submission never share the same turn
+        }
+        if (presentation_.active(model_.generation)) {
+            const int first = presentation_.first(), end = presentation_.end();
+            if (copy(first, end, false))
+                presentation_.submitted(model_.generation);
+        }
+    }
+    bool capture() {
+        const auto start = now_ms();
+        const auto pix = GetGWorldPixMap(world_);
+        if (!LockPixels(pix))
+            return false;
+        const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
+        const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
+        const bool ok = convert_pixels(
+            *fb_, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
+        UnlockPixels(pix); // no locked handles survive a yield
+        copy_ms_ += now_ms() - start;
+        return ok;
     }
     // The window title reports the last settle: first refine step to last, and time spent copying.
     void show_timing() {
@@ -282,9 +312,11 @@ class Application {
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
     }
-    void copy(int first, int end, bool convert = true) {
+    bool copy(int first, int end, bool convert = true) {
         if (!world_ || !fb_)
-            return;
+            return false;
+        if (convert)
+            presentation_.cancel(); // synchronous moving frame replaces any queued old snapshot
         const auto copy_t0 = now_ms();
         struct Timer {
             std::uint64_t& total;
@@ -293,7 +325,7 @@ class Application {
         } timer{copy_ms_, copy_t0};
         const auto pix = GetGWorldPixMap(world_);
         if (!LockPixels(pix))
-            return;
+            return false;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
         const bool converted =
@@ -310,6 +342,7 @@ class Application {
                 dirty_ = false;
         }
         UnlockPixels(pix);
+        return converted;
     }
     bool apply(const Msg& msg) {
         if (std::holds_alternative<Tick>(msg) && job_waiting_) {
@@ -319,19 +352,22 @@ class Application {
         const auto generation = model_.generation;
         const auto stage = model_.stage;
         auto fx = update(model_, msg);
-        if (generation != model_.generation && job_) {
+        if (generation != model_.generation) {
+            presentation_.cancel();
             job_waiting_ = false;
-            job_->cancel();
+            if (job_)
+                job_->cancel();
             if (stage == QualityStage::Refine)
                 fx.redraw = true;
         }
-        if (model_.stage == QualityStage::Refine && stage != QualityStage::Refine) {
+        if (fx.refine && stage != QualityStage::Refine) {
             refine_t0_ = now_ms();
             copy_ms_ = 0;
             max_turn_ms_ = max_step_ms_ = 0;
-            next_copy_ms_ = 0;
             dirty_ = false;
             titled_ = false;
+        }
+        if (fx.refine) {
             job_.emplace(model_.camera, *scene_, kDefaultPalette, effective_layers(model_),
                          quality_for(model_), model_.generation, &*terrain_);
         }
@@ -408,7 +444,7 @@ class Application {
     std::uint64_t wake_ = 0;
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
     bool titled_ = true, dirty_ = false;
-    std::uint64_t next_copy_ms_ = 0;
+    ClassicPresentation presentation_;
     bool foreground_ = true;
     std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;
     bool redraw_ = true;

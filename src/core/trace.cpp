@@ -218,6 +218,10 @@ std::optional<Msg> parse_message(std::string_view line) {
                 }
             }
         }
+    } else if (verb == "refined" && n == 3) {
+        int level = 0;
+        if (parse_u64(tok[1], t) && parse_int(tok[2], 0, kElevationLevels - 1, level))
+            return Msg{RefinementFinished{t, static_cast<unsigned>(level)}};
     } else if (verb == "elevation" && n == 4) {
         int level = 0, width = 0, height = 0;
         if (parse_int(tok[1], 0, static_cast<int>(kElevationLevels) - 1, level) &&
@@ -276,6 +280,11 @@ std::size_t format_message(const Msg& msg, char* buf, std::size_t capacity) {
     } else if (const auto* tick = std::get_if<Tick>(&msg)) {
         w.text("tick ");
         w.u64(tick->time_ms);
+    } else if (const auto* done = std::get_if<RefinementFinished>(&msg)) {
+        w.text("refined ");
+        w.u64(done->generation);
+        w.text(" ");
+        w.u64(done->level);
     } else if (const auto* pack = std::get_if<RegisterElevation>(&msg)) {
         w.text("elevation ");
         w.u64(pack->level);
