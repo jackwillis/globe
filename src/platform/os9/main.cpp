@@ -25,7 +25,13 @@ using namespace globe;
 static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Relief);
 static_assert(next_terrain_style(TerrainStyle::Relief) == TerrainStyle::Map);
 namespace {
-constexpr std::uint64_t kWorkSliceMs = 24;
+// Prefer short foreground turns to maximum settle throughput. Copy time counts in the slice.
+constexpr std::uint64_t kWorkSliceMs = 16;
+constexpr unsigned kWorkUnitsPerStep = 64;
+// Inside Macintosh, Event Manager: high byte 1 is suspend/resume; low bit 1 is resume.
+// The installed Multiversal Events.h omits these two constants.
+constexpr unsigned kSuspendResumeMessage = 1;
+constexpr unsigned kResumeFlag = 1;
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
 }
@@ -70,43 +76,56 @@ class Application {
     }
     void run() {
         bool quit = false;
+        auto turn_start = now_ms();
         while (!quit) {
             const auto before = now_ms();
-            if (wake_ && before >= wake_) {
+            if (foreground_ && wake_ && before >= wake_) {
                 wake_ = 0;
                 apply(Tick{before});
             }
-            if (redraw_) {
+            if (foreground_ && redraw_) {
                 render_globe(*fb_, model_.camera, *scene_, kDefaultPalette,
                              effective_layers(model_), true, quality_for(model_), &*terrain_);
                 copy(0, fb_->height());
                 redraw_ = false;
             }
-            const bool work = job_ && job_->active() && !job_waiting_;
-            if (work) {
-                // Yielding to the system costs a tick or more on Classic, so run refine steps in a
-                // slice of kWorkSliceMs before each WaitNextEvent (each step is itself bounded).
-                const auto slice_end = now_ms() + kWorkSliceMs;
+            const bool work = foreground_ && job_ && job_->active() && !job_waiting_;
+            if (work && now_ms() - turn_start < kWorkSliceMs) {
+                // Check elapsed time after every bounded step AND presentation. A slow step or
+                // Toolbox copy can still overrun: measure the full turn, not just geometry.
+                const auto slice_end = turn_start + kWorkSliceMs;
+                auto step_start = now_ms();
+                unsigned steps = 0;
                 do {
-                    const auto band = job_->step(*fb_, model_.generation);
-                    if (band.band_ready)
+                    const auto band = job_->step(*fb_, model_.generation, kWorkUnitsPerStep);
+                    auto step_end = now_ms();
+                    max_step_ms_ = std::max(max_step_ms_, step_end - step_start);
+                    if (band.band_ready) {
                         present(band.first_row, band.end_row);
+                        step_end = now_ms();
+                    }
                     if (band.wake_after_ms) {
                         job_waiting_ = true;
-                        wake_ = now_ms() + band.wake_after_ms;
+                        wake_ = step_end + band.wake_after_ms;
                         break;
                     }
-                } while (job_->active() && now_ms() < slice_end);
+                    step_start = step_end;
+                    EventRecord pending{};
+                    if (++steps % 16 == 0 && EventAvail(everyEvent, &pending))
+                        break; // dispatch queued input before spending another geometry budget
+                } while (job_->active() && step_start < slice_end);
                 if (!job_->active()) {
                     if (dirty_ &&
                         !presentation_held(model_)) { // the last throttled frame is always shown
                         copy(0, fb_->height());
-                        dirty_ = false;
                     }
-                    if (!titled_)
-                        show_timing();
                 }
             }
+            if (foreground_)
+                max_turn_ms_ = std::max(max_turn_ms_, now_ms() - turn_start);
+            if (foreground_ && model_.stage == QualityStage::Refine && job_ && !job_->active() &&
+                !titled_)
+                show_timing();
             Point pointer;
             GetMouse(&pointer);
             LocalToGlobal(&pointer);
@@ -114,15 +133,29 @@ class Application {
                        static_cast<short>(pointer.h + 1)};
             RectRgn(mouse_region_, &mouse);
             EventRecord event{};
-            WaitNextEvent(everyEvent, &event,
-                          static_cast<long>(classic_wait_ticks(
-                              now_ms(), wake_, job_ && job_->active() && !job_waiting_)),
-                          mouse_region_);
+            WaitNextEvent(
+                everyEvent, &event,
+                static_cast<long>(classic_wait_ticks(
+                    now_ms(), wake_, job_ && job_->active() && !job_waiting_, foreground_)),
+                foreground_ ? mouse_region_ : nullptr);
             const auto time = now_ms();
+            turn_start = time;
             SetPortWindowPort(window_);
             Point local = event.where;
             GlobalToLocal(&local);
-            if (event.what == mouseDown) {
+            if (event.what == osEvt && ((event.message >> 24) & 0xff) == kSuspendResumeMessage) {
+                foreground_ = (event.message & kResumeFlag) != 0;
+                if (!foreground_) {
+                    // End an interrupted drag through update(), but retain terrain progress.
+                    apply(PointerUp{time});
+                    cursor_ = CursorIntent::Arrow;
+                } else {
+                    // The bitmap may have advanced before suspension. Re-present on resume.
+                    dirty_ = true;
+                    if (!redraw_ && !presentation_held(model_))
+                        copy(0, fb_->height());
+                }
+            } else if (event.what == mouseDown) {
                 WindowPtr hit = nullptr;
                 const auto part = FindWindow(event.where, &hit);
                 if (hit == window_) {
@@ -162,7 +195,8 @@ class Application {
             else if (event.what == updateEvt) {
                 if (reinterpret_cast<WindowPtr>(event.message) == window_) {
                     BeginUpdate(window_);
-                    copy(0, fb_->height());
+                    // Background update events repaint the cached GWorld, never convert terrain.
+                    copy(0, fb_->height(), foreground_);
                     EndUpdate(window_);
                 }
             } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
@@ -171,12 +205,12 @@ class Application {
             Point current;
             GetMouse(&current);
             const ScreenPoint position{double(current.h), double(current.v)};
-            if (model_.dragging &&
+            if (foreground_ && model_.dragging &&
                 (position.x != model_.drag_last.x || position.y != model_.drag_last.y))
                 apply(PointerMove{time, position.x, position.y});
             const auto intent =
                 FrontWindow() == window_ ? cursor_for(model_, position) : CursorIntent::Arrow;
-            if (intent != cursor_) {
+            if (foreground_ && intent != cursor_) {
                 cursor_ = intent;
                 const auto native = intent == CursorIntent::OpenHand     ? 9U
                                     : intent == CursorIntent::ClosedHand ? 8U
@@ -209,21 +243,21 @@ class Application {
     // are caught up by the next shown one, and the final frame is always shown.
     void present(int first, int end) {
         const auto start = now_ms();
-        if (presentation_held(model_) || start < next_copy_ms_) {
+        if (!foreground_ || presentation_held(model_) || start < next_copy_ms_) {
             dirty_ = true;
             return;
         }
+        dirty_ = true;
         copy(first, end);
-        dirty_ = false;
         next_copy_ms_ = start + 4 * (now_ms() - start);
     }
     // The window title reports the last settle: first refine step to last, and time spent copying.
     void show_timing() {
         titled_ = true;
-        unsigned char title[40];
+        unsigned char title[96];
         unsigned n = 0;
         const auto put = [&](const char* text) {
-            while (*text && n < 39)
+            while (*text && n < 95)
                 title[++n] = static_cast<unsigned char>(*text++);
         };
         const auto number = [&](std::uint64_t v) {
@@ -240,13 +274,17 @@ class Application {
         number(now_ms() - refine_t0_);
         put(" ms, copy ");
         number(copy_ms_);
+        put(" ms, turn ");
+        number(max_turn_ms_);
+        put(" ms, step ");
+        number(max_step_ms_);
+        put(" ms");
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
     }
-    void copy(int first, int end) {
+    void copy(int first, int end, bool convert = true) {
         if (!world_ || !fb_)
             return;
-        dirty_ = false;
         const auto copy_t0 = now_ms();
         struct Timer {
             std::uint64_t& total;
@@ -258,14 +296,18 @@ class Application {
             return;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
-        const bool converted = convert_pixels(
-            *fb_, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
+        const bool converted =
+            !convert ||
+            convert_pixel_rows(*fb_, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)),
+                               stride, first, end);
         if (converted) {
             SetPortWindowPort(window_);
             Rect rect{static_cast<short>(first), 0, static_cast<short>(end),
                       static_cast<short>(fb_->width())};
             CopyBits(reinterpret_cast<BitMap*>(*pix), &window_->portBits, &rect, &rect, srcCopy,
                      nullptr);
+            if (convert)
+                dirty_ = false;
         }
         UnlockPixels(pix);
     }
@@ -286,6 +328,7 @@ class Application {
         if (model_.stage == QualityStage::Refine && stage != QualityStage::Refine) {
             refine_t0_ = now_ms();
             copy_ms_ = 0;
+            max_turn_ms_ = max_step_ms_ = 0;
             next_copy_ms_ = 0;
             dirty_ = false;
             titled_ = false;
@@ -366,6 +409,8 @@ class Application {
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
     bool titled_ = true, dirty_ = false;
     std::uint64_t next_copy_ms_ = 0;
+    bool foreground_ = true;
+    std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;
     bool redraw_ = true;
     CursorIntent cursor_ = CursorIntent::Arrow;
 };

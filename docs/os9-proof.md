@@ -10,8 +10,7 @@ Retro68's installed Multiversal interfaces and import libraries.
 
 The classic, non-Carbon front end supports dragging in both modes, double-click zoom, arrows,
 +/- zoom, R reset, G graticule, B borders, T drag mode, S terrain style, N north up, Q/Escape quit. Close, grow and
-window dragging use Toolbox tracking. It embeds the atlas and one-degree elevation, renders a moving
-gray land/ocean base and outlines then the same bounded settled terrain bands. Optional toolbar, country/city windows and
+window dragging use Toolbox tracking. It embeds the atlas and one-degree elevation, renders plain moving vectors, then the same bounded settled terrain refinement. Optional toolbar, country/city windows and
 acquisition are outside this D7 proof-of-life application.
 
 An offscreen 16-bit GWorld receives big-endian RGB555 via `pixel_format`; locked PixMap rowBytes
@@ -34,8 +33,9 @@ no final compiler warnings. Designated data fork 237,116 bytes, resource fork 43
 bytes. Initial compile failures exposed an absent QDOffscreen.h and Carbon-only port accessors;
 the final code uses the available classic QuickDraw interfaces instead.
 
-Not executed in an emulator or on OS 9. The owner must verify launch, drag/cursor behavior, input,
-resize/expose, colors and quiet idle on hardware. The G4 headless NetBSD tests are not OS 9 tests.
+The initial packaging pass did not execute the app. Subsequent Tiger Classic runs are recorded
+below and in the scheduling audit. Native OS 9 hardware acceptance, drag/cursor behavior,
+resize/expose and quiet idle remain open. G4 headless NetBSD tests are not OS 9 tests.
 
 ## First run, 2026-11-02 (Tiger Classic on maul)
 
@@ -67,3 +67,7 @@ the whole framebuffer, then CopyBits). Two changes in `src/platform/os9/main.cpp
 Result: **2,314 ms, copy 458 ms** (this includes the 480 ms of paced line-reveal pauses). Settled
 pixels are unchanged (pins and host tests unchanged). The X11 front end got the same throttle
 (`present_refine`), a no-op when uploads are fast. Still untested: interaction, real OS 9 hardware.
+
+## Cooperative scheduling audit
+
+See [the scheduling audit and measurement procedure](os9-scheduling.md) for the foreground/background policy, bounded-work targets, conversion changes and Tiger trials.

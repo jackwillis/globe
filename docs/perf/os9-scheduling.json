@@ -1,0 +1,128 @@
+{
+  "dates_local": [
+    "2026-11-04",
+    "2026-11-05"
+  ],
+  "timezone": "America/Chicago",
+  "baseline_commit": "1363c43",
+  "machine": "maul, Mac OS X 10.4.11, Tiger Classic",
+  "viewport": [
+    640,
+    480
+  ],
+  "style": "Map, default home view",
+  "units": "milliseconds, wall time",
+  "trials": [
+    {
+      "variant": "baseline",
+      "slice": 24,
+      "work_units": 64,
+      "total": 2303,
+      "copy": 501
+    },
+    {
+      "variant": "rejected-aggressive",
+      "slice": 8,
+      "work_units": 16,
+      "total": 7066,
+      "copy": 1012,
+      "turn_max": 117,
+      "step_max": 109
+    },
+    {
+      "variant": "rejected-aggressive-reset",
+      "slice": 8,
+      "work_units": 16,
+      "total": 6822,
+      "copy": 1014,
+      "turn_max": 61,
+      "step_max": 8
+    },
+    {
+      "variant": "intermediate",
+      "slice": 16,
+      "work_units": 64,
+      "total": 3562,
+      "copy": 546,
+      "turn_max": 78,
+      "step_max": 14
+    },
+    {
+      "variant": "tuned",
+      "slice": 16,
+      "work_units": 64,
+      "total": 2783,
+      "copy": 480,
+      "turn_max": 64,
+      "step_max": 8
+    },
+    {
+      "variant": "tuned-reset",
+      "slice": 16,
+      "work_units": 64,
+      "total": 2690,
+      "copy": 480,
+      "turn_max": 67,
+      "step_max": 14
+    },
+    {
+      "variant": "tuned-switch-SimpleText-return",
+      "slice": 16,
+      "work_units": 64,
+      "total": 9172,
+      "copy": 791,
+      "turn_max": 227,
+      "step_max": 225
+    },
+    {
+      "variant": "reviewed-package-launch",
+      "slice": 16,
+      "work_units": 64,
+      "total": 2849,
+      "copy": 494,
+      "turn_max": 79,
+      "step_max": 3
+    },
+    {
+      "variant": "reviewed-package-switch-SimpleText-return",
+      "slice": 16,
+      "work_units": 64,
+      "total": 8808,
+      "copy": 800,
+      "turn_max": 217,
+      "step_max": 8
+    }
+  ],
+  "caveats": [
+    "Screenshots and baseline image retained in ignored build-scheduling-evidence directory.",
+    "Tuned trial precedes cached-only background repaint and canceled-title guards; final package is rebuilt separately.",
+    "No baseline turn/step maxima; different instrumentation and variants do not isolate causal costs.",
+    "Switching trial includes time in another app and launch/preemption overhead. It verifies switching and resumed completion, not a CPU/latency bound.",
+    "Not a native OS 9 hardware test.",
+    "No measurement yet of first useful image, automated input-to-pixel latency, quiet/background CPU or worst-case resizing."
+  ],
+  "final_package": {
+    "edition": "floppy: app + atlas + one-degree elevation",
+    "measured_utc": "2026-11-05T06:03:08.232388+00:00",
+    "application": "GlobeFloppy",
+    "data_fork_bytes": 249625,
+    "resource_fork_bytes": 432,
+    "macbinary_bytes": 250368,
+    "documents_bytes": 36964,
+    "payload_bytes": 287021,
+    "payload_budget_bytes": 1200000,
+    "payload_headroom_bytes": 912979,
+    "image_bytes": 1474560,
+    "image_budget_bytes": 1474560,
+    "app_macbinary_sha256": "25d08e34beb4b4fdfb4d6d22b94dd3cc9132780e7f2dab44ca8278b3e8d4cb6f",
+    "image_sha256": "f0a6888c7d726d22b8b3406dadc56ecc9f48b6451eb2dea03216de5299296b20",
+    "fork_roundtrip": "identical",
+    "execution": "built and packaged; not run on OS 9",
+    "limits": "payload budget excludes HFS overhead; actual image creation and copy enforce disk fit; signature check is not a full HFS validator",
+    "image_free_bytes": 1160704
+  },
+  "tuned_vs_baseline_client_pixels": "640x480 client region identical, compared from Tiger screenshots",
+  "final_package_execution": "Launched and rendered under Tiger Classic; switched to SimpleText and resumed successfully; not native OS 9 acceptance.",
+  "launched_application_data_fork_sha1": "acdcda28c1490182782c9666134bf361db5be8e2",
+  "transfer_check": "Launched data-fork SHA-1 matches local APPL. HFS image changes when mounted read-write; SHA-256 identifies the original packaged image."
+}

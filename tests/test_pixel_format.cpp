@@ -145,7 +145,9 @@ void test_fast_matches_generic() {
     if (!fb) {
         return;
     }
-    const PixelFormat formats[] = {k32Le,
+    const PixelFormat formats[] = {k16_555,
+                                   {16, 0x7C00U, 0x03E0U, 0x001FU, true},
+                                   k32Le,
                                    k32Be,
                                    kRgbx,
                                    k16_565,
@@ -178,6 +180,33 @@ void test_fast_matches_generic() {
     }
 }
 
+void test_row_ranges() {
+    auto fb = Framebuffer::create(7, 5);
+    CHECK(fb.has_value());
+    for (int y = 0; y < 5; ++y)
+        for (int x = 0; x < 7; ++x)
+            fb->set_pixel(x, y, static_cast<Rgb565>(y * 9381 + x * 177));
+    for (const auto f : {k16_555, PixelFormat{16, 0x7C00U, 0x03E0U, 0x001FU, true}, k16_565, k32Le,
+                         k32Be, k24Le}) {
+        const auto row = pixel_row_bytes(f, 7);
+        const auto stride = row + 3;
+        std::vector<std::uint8_t> reference(stride * 5 + 2, 0xA5);
+        CHECK(convert_pixels_generic(*fb, f, reference.data() + 1, stride));
+        auto out = std::vector<std::uint8_t>(reference.size(), 0xA5);
+        CHECK(convert_pixel_rows(*fb, f, out.data() + 1, stride, 1, 4));
+        for (std::size_t i = 0; i < out.size(); ++i) {
+            const bool touched = i >= 1 + stride && i < 1 + 4 * stride && (i - 1) % stride < row;
+            CHECK(out[i] == (touched ? reference[i] : 0xA5));
+        }
+        const auto saved = out;
+        CHECK(convert_pixel_rows(*fb, f, out.data() + 1, stride, 5, 5));
+        CHECK(!convert_pixel_rows(*fb, f, out.data() + 1, stride, -1, 4));
+        CHECK(!convert_pixel_rows(*fb, f, out.data() + 1, stride, 3, 2));
+        CHECK(!convert_pixel_rows(*fb, f, out.data() + 1, stride, 0, 6));
+        CHECK(out == saved);
+    }
+}
+
 void test_unsupported_formats() {
     CHECK(pixel_format_supported(k32Le) && pixel_format_supported(k16_555));
     CHECK(!pixel_format_supported({8, 0xE0, 0x1C, 0x03, false}));              // 8 bpp (palette)
@@ -205,6 +234,7 @@ void test_unsupported_formats() {
 } // namespace
 
 int main() {
+    test_row_ranges();
     test_fast_matches_generic();
     test_known_values();
     test_exhaustive_8bit_channels();

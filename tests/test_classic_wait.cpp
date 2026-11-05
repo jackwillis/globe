@@ -13,5 +13,9 @@ int main() {
     CHECK(classic_wait_ticks(100, 250, false) == 9);
     CHECK(classic_wait_ticks(100, 251, false) == 10);
     CHECK(classic_wait_ticks(0, std::numeric_limits<std::uint64_t>::max(), false) == 0x7fffffffU);
+    CHECK(classic_wait_ticks(100, 0, true, false) == 0x7fffffffU);
+    CHECK(classic_wait_ticks(100, 1, false, false) == 0x7fffffffU);
+    CHECK(classic_wait_ticks(100, 200, true, false) == 0x7fffffffU);
+    CHECK(classic_wait_ticks(200, 100, true, true) == 0);
     return TEST_MAIN_RESULT();
 }
