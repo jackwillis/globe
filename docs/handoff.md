@@ -400,3 +400,22 @@ GitHub may start it), GL-7 X11 display timing, real OS 9 hardware. maul was left
 CI ran on GitHub for the first time (run 41576444739): everything passes except clang-tidy on
 three lines of `src/platform/bench/codec_bench.cpp` (lines 98 and 116 implicit widening, line 138
 `atoi`). Fix those first next session; the size-report step after lint has not run yet. See GL-5.
+
+### 2026-11-05 — Claude: OS 9 parity, merge of Codex's scheduling branch, overnight queue
+
+On `main` (local, **not pushed**, 6 commits ahead of origin at the time of writing): the shared
+`Overlays` module (night, measure, country focus, picking) used by X11 and OS 9; OS 9 now has `D`
+night shading (clock from `GetDateTime` + `ReadLocation`, checked in Tiger Classic: the terminator
+matched the Mac clock and time zone), `M` measure, country/city picking with a Toolbox information
+window, and city markers; the floppy payload is 566,642 of 1,200,000 bytes. Codex's committed
+`codex/os9-cooperative-scheduling` (00d0760, a71dbd7) is merged (026629d); its newer UNCOMMITTED
+work (`classic_present.hpp`, `tests/test_classic_present.cpp`, edits to `os9/main.cpp` and
+`CMakeLists.txt`) is still only in its worktree `~/.codex/worktrees/progressive-resolution/globe`
+and will conflict with the merged `os9/main.cpp`: rebase it on `main` before continuing.
+
+Owner requests queued for the overnight session (in this order): (1) night shading slows dragging:
+draw only the terminator line while moving or refining and full shading once settled (also skip the
+country dither fill while moving); (2) the mouse scroll wheel does nothing on OS 9: diagnose which
+events Classic delivers and handle them; (3) keep notes here. Untested on Tiger: `M`, clicks and the
+information window (remote key `d` worked via System Events; mouse clicks via System Events did not
+produce a visible result in the one try).

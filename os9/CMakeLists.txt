@@ -8,8 +8,14 @@ set(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 # OS 9 is the floppy release; the root build produces the full X11 release.
 set(APP GlobeFloppy)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
-foreach(kind atlas elevation landclasses)
-  if(kind STREQUAL atlas)
+foreach(kind atlas elevation landclasses countries places)
+  if(kind STREQUAL countries)
+    set(DATA countries.gpol)
+    set(TYPE Countries)
+  elseif(kind STREQUAL places)
+    set(DATA cities.gplc)
+    set(TYPE Places)
+  elseif(kind STREQUAL atlas)
     set(DATA atlas.gatl)
     set(TYPE Atlas)
   elseif(kind STREQUAL landclasses)
@@ -24,17 +30,22 @@ foreach(kind atlas elevation landclasses)
       ${CMAKE_BINARY_DIR}/embedded_${kind}.cpp ${TYPE}
     DEPENDS ${ROOT}/tools/embed_atlas.py ${ROOT}/data/${DATA})
 endforeach()
-# Explicitly minimal proof-of-life payload: optional polygons and places are excluded.
+# Floppy payload: atlas, one-degree elevation, land classes, country polygons and 304 cities.
 add_application(${APP} CREATOR Glb2
   ${ROOT}/src/platform/os9/main.cpp ${ROOT}/src/platform/os9/clock_os9.cpp
+  ${ROOT}/src/platform/os9/info_card.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
-  ${ROOT}/src/core/app.cpp
+  ${ROOT}/src/core/app.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp
   ${ROOT}/src/data/grid_codec.cpp ${ROOT}/src/data/landclasses.cpp
   ${ROOT}/src/data/atlas.cpp ${ROOT}/src/data/elevation.cpp ${ROOT}/src/data/crc32.cpp
+  ${ROOT}/src/data/countries.cpp ${ROOT}/src/data/places.cpp
   ${ROOT}/src/render/framebuffer.cpp ${ROOT}/src/render/raster.cpp
-  ${ROOT}/src/render/render.cpp ${ROOT}/src/render/terrain.cpp
-  ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp
+  ${ROOT}/src/render/render.cpp ${ROOT}/src/render/terrain.cpp ${ROOT}/src/render/places.cpp
+  ${ROOT}/src/render/highlight.cpp ${ROOT}/src/render/daynight.cpp ${ROOT}/src/render/measure.cpp
+  ${ROOT}/src/render/overlays.cpp
+  ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp ${CMAKE_BINARY_DIR}/embedded_countries.cpp
+  ${CMAKE_BINARY_DIR}/embedded_places.cpp
   ${CMAKE_BINARY_DIR}/embedded_atlas.cpp ${CMAKE_BINARY_DIR}/embedded_elevation.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/globe.r)
 target_compile_definitions(${APP} PRIVATE GLOBE_FLOPPY=1)

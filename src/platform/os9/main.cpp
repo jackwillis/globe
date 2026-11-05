@@ -6,10 +6,15 @@
 #include "clock.hpp"
 #include "globe/app.hpp"
 #include "globe/embedded_atlas.hpp"
+#include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_landclasses.hpp"
+#include "globe/embedded_places.hpp"
+#include "globe/overlays.hpp"
 #include "globe/terrain.hpp"
+#include "info_card.hpp"
 #include "pixel_format.hpp"
+#include "wall_clock.hpp"
 #include <Dialogs.h>
 #include <Events.h>
 #include <Menus.h>
@@ -62,6 +67,16 @@ class Application {
         terrain_ = TerrainScene::create(*elevation, &*classes_);
         if (!terrain_)
             return false;
+        // Picking data are optional: without them clicks do nothing and the overlays still work.
+        countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
+        if (countries_)
+            country_scene_ = CountryScene::create(*countries_);
+        places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
+        if (places_)
+            place_scene_ = PlaceScene::create(*places_);
+        overlays_.attach(countries_ ? &*countries_ : nullptr,
+                         country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
+                         place_scene_ ? &*place_scene_ : nullptr);
         Rect bounds{50, 30, 530, 670};
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
@@ -105,6 +120,11 @@ class Application {
                     auto step_end = now_ms();
                     max_step_ms_ = std::max(max_step_ms_, step_end - step_start);
                     if (band.band_ready) {
+                        if (place_scene_) { // city markers, like the X11 front end
+                            fb_->clip_rows(band.first_row, band.end_row);
+                            place_scene_->draw(*fb_, model_.camera);
+                            fb_->clip_rows(0, fb_->height());
+                        }
                         present(band.first_row, band.end_row);
                         step_end = now_ms();
                     }
@@ -122,8 +142,8 @@ class Application {
                     if (++steps % 16 == 0 && EventAvail(everyEvent, &pending))
                         break; // dispatch queued input before spending another geometry budget
                 } while (job_->active() && step_start < slice_end);
-                // Finish the last queued image through the same presentation continuation.
-                if (!job_->active() && dirty_ && !presentation_held(model_))
+                // The final snapshot includes the full settled overlays.
+                if (!job_->active() && (dirty_ || shown_quick_) && !presentation_held(model_))
                     presentation_.request(model_.generation);
             }
             if (foreground_)
@@ -191,7 +211,9 @@ class Application {
                                 quit = true;
                         }
                     }
-                } else if (part == inSysWindow)
+                } else if (hit == info_.window())
+                    info_.mouse_down(event);
+                else if (part == inSysWindow)
                     SystemClick(&event, hit);
             } else if (event.what == mouseUp) {
                 quit = apply(PointerUp{time});
@@ -207,9 +229,22 @@ class Application {
                     copy(0, fb_->height(),
                          foreground_ && !presentation_.pending(model_.generation));
                     EndUpdate(window_);
+                } else if (reinterpret_cast<WindowPtr>(event.message) == info_.window()) {
+                    BeginUpdate(info_.window());
+                    info_.draw();
+                    EndUpdate(info_.window());
+                    SetPortWindowPort(window_);
                 }
             } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
                 apply(PointerUp{time});
+            else if (event.what != nullEvent && event.what != activateEvt &&
+                     event.what != diskEvt && event.what != osEvt) {
+                // Not an event this program knows (a scroll wheel, if the system sends one to a
+                // non-Carbon program, would show up here): remember the code for the title.
+                last_unknown_ = static_cast<unsigned>(event.what);
+                ++unknown_count_;
+                show_timing(); // refresh the title so the code is visible
+            }
             // A one-pixel mouse region wakes on motion, even with no button held. No periodic poll.
             Point current;
             GetMouse(&current);
@@ -275,14 +310,21 @@ class Application {
             return false;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
-        const bool ok = convert_pixels(
-            *fb_, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
+        const bool settled = model_.stage == QualityStage::Refine && !model_.refine_active &&
+                             !(job_ && job_->active());
+        const auto* shown = overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled);
+        shown_quick_ = shown != nullptr && !settled;
+        const bool ok =
+            convert_pixels(shown ? *shown : *fb_, format,
+                           reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
         UnlockPixels(pix); // no locked handles survive a yield
         copy_ms_ += now_ms() - start;
         return ok;
     }
     // The window title reports the last settle: first refine step to last, and time spent copying.
     void show_timing() {
+        if (!titled_)
+            settled_ms_ = now_ms() - refine_t0_;
         titled_ = true;
         unsigned char title[96];
         unsigned n = 0;
@@ -301,7 +343,7 @@ class Application {
                 title[++n] = static_cast<unsigned char>(digits[--d]);
         };
         put("Globe  ");
-        number(now_ms() - refine_t0_);
+        number(settled_ms_);
         put(" ms, copy ");
         number(copy_ms_);
         put(" ms, turn ");
@@ -309,6 +351,12 @@ class Application {
         put(" ms, step ");
         number(max_step_ms_);
         put(" ms");
+        if (unknown_count_ != 0) {
+            put(", ev ");
+            number(last_unknown_);
+            put("x");
+            number(unknown_count_);
+        }
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
     }
@@ -328,10 +376,17 @@ class Application {
             return false;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
+        // Overlays (night, measure, focused country) go on a copy; the frame itself is untouched.
+        // Frames that move or are still refining get the cheap overlays; the settled one the full.
+        const bool settled = model_.stage == QualityStage::Refine && !(job_ && job_->active());
+        const Framebuffer* shown =
+            convert ? overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled) : nullptr;
+        if (convert)
+            shown_quick_ = shown != nullptr && !settled;
         const bool converted =
-            !convert ||
-            convert_pixel_rows(*fb_, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)),
-                               stride, first, end);
+            !convert || convert_pixel_rows(shown != nullptr ? *shown : *fb_, format,
+                                           reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)),
+                                           stride, first, end);
         if (converted) {
             SetPortWindowPort(window_);
             Rect rect{static_cast<short>(first), 0, static_cast<short>(end),
@@ -376,11 +431,41 @@ class Application {
         if (fx.wake_after_ms)
             wake_ = now_ms() + fx.wake_after_ms;
         redraw_ |= fx.redraw;
+        if (fx.pick)
+            pick(fx.pick_at);
         return fx.quit;
+    }
+    // A click that waited out the double-click window: pick, show a card, and draw the overlay.
+    void pick(ScreenPoint at) {
+        const bool changed = overlays_.click(model_.camera, at);
+        if (const auto card = overlays_.take_card()) {
+            SetPortWindowPort(window_);
+            Point corner{window_->portRect.top, window_->portRect.right};
+            LocalToGlobal(&corner);
+            info_.show(*card, corner.h);
+            SetPortWindowPort(window_);
+        }
+        if (changed)
+            reshow();
+    }
+    // Shows the current frame again (an overlay changed); no render, no refine.
+    void reshow() {
+        if (!redraw_ && fb_)
+            copy(0, fb_->height());
     }
     bool key(unsigned long message, std::uint64_t time) {
         const auto code = (message >> 8) & 0xff;
         const auto ch = message & 0xff;
+        if (ch == 'd' || ch == 'D') {
+            overlays_.toggle_night();
+            reshow();
+            return false;
+        }
+        if (ch == 'm' || ch == 'M') {
+            overlays_.toggle_measure();
+            reshow();
+            return false;
+        }
         std::optional<Command> command;
         if (code == 0x7b)
             command = Command::Left;
@@ -390,6 +475,10 @@ class Application {
             command = Command::Down;
         else if (code == 0x7e)
             command = Command::Up;
+        else if (code == 0x74) // Page Up: wheel drivers (USB Overdrive and the like) send it
+            command = Command::ZoomIn;
+        else if (code == 0x79) // Page Down
+            command = Command::ZoomOut;
         else
             switch (ch) {
             case '+':
@@ -438,12 +527,20 @@ class Application {
     std::optional<Scene> scene_;
     std::optional<LandClasses> classes_;
     std::optional<TerrainScene> terrain_;
+    std::optional<Countries> countries_;
+    std::optional<CountryScene> country_scene_;
+    std::optional<Places> places_;
+    std::optional<PlaceScene> place_scene_;
+    Overlays overlays_;
+    InfoCardWindow info_;
     std::optional<Framebuffer> fb_;
     std::optional<RefinementJob> job_;
     bool job_waiting_ = false;
     std::uint64_t wake_ = 0;
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
-    bool titled_ = true, dirty_ = false;
+    bool titled_ = true, dirty_ = false, shown_quick_ = false;
+    unsigned last_unknown_ = 0, unknown_count_ = 0;
+    std::uint64_t settled_ms_ = 0;
     ClassicPresentation presentation_;
     bool foreground_ = true;
     std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;

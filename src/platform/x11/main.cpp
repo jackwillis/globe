@@ -8,8 +8,8 @@
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
 // G / B toggle graticule / borders, N aligns north up, T switches between
-// turntable and trackball dragging, S switches the terrain style, P opens the looks palette, Esc or
-// Q quits.
+// turntable and trackball dragging, S switches the terrain style, P opens the looks palette, D
+// shades the night side, Esc or Q quits.
 //
 // --script feeds a recorded trace (see globe/trace.hpp) after the first exposure, rendering once
 // per redraw the way interactive use would. --idle-seconds waits that long afterwards and reports
@@ -24,10 +24,12 @@
 
 #include <array>
 #include <cerrno>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <string>
 #include <vector>
 
@@ -41,7 +43,7 @@
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_places.hpp"
-#include "globe/highlight.hpp"
+#include "globe/overlays.hpp"
 #include "globe/places.hpp"
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
@@ -104,6 +106,9 @@ class App {
         countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
         if (countries_)
             country_scene_ = CountryScene::create(*countries_);
+        overlays_.attach(countries_ ? &*countries_ : nullptr,
+                         country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
+                         place_scene_ ? &*place_scene_ : nullptr);
     }
 
     ~App() {
@@ -312,27 +317,17 @@ class App {
 
     // The core decides when (a plain click that was not the first half of a double click).
     void pick_at(ScreenPoint at) {
-        if (!country_scene_ || !countries_)
-            return;
-        const double x = (at.x - model_.camera.center_x) / model_.camera.radius_px;
-        const double y = (at.y - model_.camera.center_y) / model_.camera.radius_px;
-        if (x * x + y * y > 1)
-            return;
-        const auto v = unproject_to_sphere(model_.camera, at);
-        const auto world =
-            model_.camera.right * v.x + model_.camera.up * v.y + model_.camera.forward * v.z;
-        const auto city = place_scene_ ? place_scene_->pick(model_.camera, at) : std::nullopt;
-        const auto id = country_scene_->pick(from_unit_vector(world));
-        const auto before = focused_country_;
-        focused_country_ = city ? std::nullopt : id; // a place card, or the sea, clears the focus
-        if (city && places_) {
-            info_.show(win_, place_card(*places_, *city), model_.camera.width + 20);
-            ++info_cards_;
-        } else if (id) {
-            info_.show(win_, country_card(*countries_, *id), model_.camera.width + 20);
+        const bool changed = overlays_.click(model_.camera, at);
+        if (const auto card = overlays_.take_card()) {
+            info_.show(win_, *card, model_.camera.width + 20);
             ++info_cards_;
         }
-        if (focused_country_ != before && frame_valid_ && !need_redraw_ && fb_)
+        if (changed)
+            reshow();
+    }
+    // Shows the current frame again (an overlay changed); no render, no refine.
+    void reshow() {
+        if (frame_valid_ && !need_redraw_ && fb_)
             upload(0, fb_->height());
     }
     bool apply(const Msg& msg) {
@@ -557,7 +552,8 @@ class App {
             ++refine_bands_;
             present_refine(step.first_row, step.end_row);
         }
-        if (refinement_ && !refinement_->active() && upload_dirty_ && !presentation_held(model_)) {
+        if (refinement_ && !refinement_->active() && (upload_dirty_ || shown_quick_) && fb_ &&
+            !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
         }
@@ -640,17 +636,14 @@ class App {
         std::uint64_t t = monotonic_ns();
         // The focused country is drawn on a copy, so the frame itself stays exactly as rendered
         // and clearing the focus needs no re-render.
-        const Framebuffer* shown = &fb;
-        if (focused_country_ && countries_ &&
-            (!overlay_fb_ || overlay_fb_->width() != fb.width() ||
-             overlay_fb_->height() != fb.height()))
-            overlay_fb_ = Framebuffer::create(fb.width(), fb.height());
-        if (focused_country_ && countries_ && overlay_fb_) {
-            std::memcpy(overlay_fb_->data(), fb.data(), fb.byte_size());
-            draw_country_outline(*overlay_fb_, model_.camera, *countries_, *focused_country_,
-                                 kCountryHighlight);
-            shown = &*overlay_fb_;
-        }
+        // Frames that move or are still refining get the cheap overlays; the settled one the full.
+        const bool settled =
+            model_.stage == QualityStage::Refine && !(refinement_ && refinement_->active());
+        const Framebuffer* shown = overlays_.compose(
+            fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled);
+        shown_quick_ = shown != nullptr && !settled;
+        if (shown == nullptr)
+            shown = &fb;
         convert_pixels(*shown, format_, reinterpret_cast<std::uint8_t*>(image_->data),
                        static_cast<std::size_t>(image_->bytes_per_line));
         t_.pack_ms.push_back(ms_since(t));
@@ -831,6 +824,14 @@ class App {
             return apply(CommandIssued{now, Command::AlignNorth});
         case XK_s:
             return apply(CommandIssued{now, Command::CycleStyle});
+        case XK_m:
+            overlays_.toggle_measure();
+            reshow();
+            return false;
+        case XK_d:
+            overlays_.toggle_night();
+            reshow();
+            return false;
         case XK_p:
             styles_.show(win_, model_.camera.width + 20,
                          model_.terrain_style == TerrainStyle::Map ? 0 : 1);
@@ -856,8 +857,7 @@ class App {
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
-    std::optional<std::uint32_t> focused_country_;
-    std::optional<Framebuffer> overlay_fb_;
+    Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
     std::array<Cursor, 3> cursors_{};
@@ -879,6 +879,7 @@ class App {
     std::size_t refine_bands_ = 0;
     std::uint64_t next_upload_ms_ = 0;
     bool upload_dirty_ = false;
+    bool shown_quick_ = false; // the frame on screen has the cheap overlays; show the full ones
     double refine_work_ms_ = 0;
     bool pixels_ok_ = true;
     std::size_t verified_frames_ = 0;

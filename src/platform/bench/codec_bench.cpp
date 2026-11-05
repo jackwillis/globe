@@ -95,7 +95,7 @@ int bench_points(const char* atlas_path, const char* stream_path, int repeat) {
         std::fprintf(stderr, "codec-bench: bad atlas\n");
         return 1;
     }
-    std::vector<std::uint16_t> out(2U * 65536U);
+    std::vector<std::uint16_t> out(std::size_t{2} * 65536);
     std::vector<std::uint64_t> ns;
     std::uint32_t crc = 0;
     for (int i = 0; i < repeat; ++i) {
@@ -113,7 +113,8 @@ int bench_points(const char* atlas_path, const char* stream_path, int repeat) {
             }
             pos += used;
             // Fold the output in so the work cannot be optimized away; checked after timing.
-            running += out[2U * (line.point_count - 1U)] + out[2U * (line.point_count - 1U) + 1U];
+            const std::size_t last = std::size_t{2} * (line.point_count - 1U);
+            running += out[last] + out[last + 1U];
         }
         const std::uint64_t t1 = monotonic_ns();
         ns.push_back(t1 - t0);
@@ -135,7 +136,7 @@ int main(int argc, char** argv) {
     int repeat = 9;
     int i = 1;
     if (i + 1 < argc && std::strcmp(argv[i], "--repeat") == 0) {
-        repeat = std::atoi(argv[i + 1]);
+        repeat = static_cast<int>(std::strtol(argv[i + 1], nullptr, 10));
         i += 2;
     }
     if (repeat < 1 || i >= argc) {

@@ -71,3 +71,27 @@ pixels are unchanged (pins and host tests unchanged). The X11 front end got the 
 ## Cooperative scheduling audit
 
 See [the scheduling audit and measurement procedure](os9-scheduling.md) for the foreground/background policy, bounded-work targets, conversion changes and Tiger trials.
+
+## Parity, merged scheduling and the scroll wheel (2026-11-05)
+
+OS 9 now has the X11 overlays through the shared `Overlays` module: `D` night shading, `M`
+measuring, country and city picking with a Toolbox information window (`info_card.cpp`), city markers,
+and a country outline with dither fill. The sun comes from `GetDateTime` plus `ReadLocation`
+(Map control panel offset and daylight bit, `unix_from_mac` in `wall_clock.hpp`, tested off the Mac);
+in Tiger Classic the terminator matched the Mac clock and time zone. Floppy payload 566,642 of
+1,200,000 bytes. `codex/os9-cooperative-scheduling` (suspend/resume, turn budget, row-banded
+conversion) is merged.
+
+**Drag speed.** Full night shading costs a per-pixel pass on every shown frame. Frames that move or
+are still refining now get a cheap overlay (`compose(..., quick)`): the night side is only the
+terminator line (`draw_terminator`) and the focused country is outlined without the dither fill; the
+settled frame gets the full shading and fill (the platforms show the full overlays once the job has
+finished).
+
+**Scroll wheel.** Not delivered to a classic (non-Carbon) program by `WaitNextEvent`: wheel events
+exist only as Carbon events (`kEventMouseWheelMoved`, via `ReceiveNextEvent` and CarbonLib), and the
+Retro68 headers have no wheel symbols. Two things were done: Page Up and Page Down now zoom in and
+out (wheel drivers such as USB Overdrive can send those keys), and any event code the program does
+not recognise is shown at the end of the window title (`ev CODExCOUNT`) so a real wheel under
+Tiger Classic can be observed. Making the wheel work natively needs a Carbon build (a separate,
+larger change).
