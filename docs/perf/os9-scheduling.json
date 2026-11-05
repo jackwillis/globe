@@ -91,6 +91,15 @@
       "copy": 800,
       "turn_max": 217,
       "step_max": 8
+    },
+    {
+      "variant": "reviewed-package-reset",
+      "slice": 16,
+      "work_units": 64,
+      "total": 2622,
+      "copy": 481,
+      "turn_max": 67,
+      "step_max": 8
     }
   ],
   "caveats": [
