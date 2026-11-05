@@ -55,6 +55,15 @@ int main(int argc, char** argv) {
     CHECK(changed > 100);
     for (int i = 0; i < 160 * 120; ++i)
         CHECK(fb->data()[i] == 0x1234); // the rendered frame is untouched
+    // Quick frames (dragging, refining) outline the country but skip the dither fill.
+    {
+        auto* quick_frame = o.compose(*fb, camera, 0, true);
+        CHECK(quick_frame != nullptr);
+        std::size_t quick_changed = 0;
+        for (int i = 0; i < 160 * 120; ++i)
+            quick_changed += quick_frame->data()[i] != 0x1234;
+        CHECK(quick_changed > 20 && quick_changed < changed); // the outline only
+    }
     // Clicking the sea, or off the globe, clears the focus (or does nothing).
     CHECK(!o.click(camera, {1, 1})); // off the globe: no change
     CHECK(o.focused() == 2u);

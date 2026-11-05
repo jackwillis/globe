@@ -419,3 +419,31 @@ country dither fill while moving); (2) the mouse scroll wheel does nothing on OS
 events Classic delivers and handle them; (3) keep notes here. Untested on Tiger: `M`, clicks and the
 information window (remote key `d` worked via System Events; mouse clicks via System Events did not
 produce a visible result in the one try).
+
+### 2026-11-05 (night) — Claude: merge done, quick overlays, wheel findings, Tiger is shared
+
+Merged `codex/os9-cooperative-scheduling` (committed state only) into `main` (026629d) and then did
+the owner's three requests on `main`: (1) night shading no longer slows dragging: frames that move or
+are still refining draw only the terminator line and outline the focused country without the dither
+fill (`Overlays::compose(..., quick)`, `draw_terminator`); the settled frame gets the full shading;
+X11 and OS 9 both show the full overlays once the job finishes. (2) OS 9 scroll wheel: a classic
+(non-Carbon) program never gets wheel events from `WaitNextEvent` (only Carbon events carry them),
+so Page Up/Page Down now zoom (wheel drivers can send them) and unknown event codes appear at the
+end of the title (`ev CODExCOUNT`); a native wheel needs a Carbon build (separate change). (3) notes.
+
+State: `main` is ahead of origin by about 9 commits, not pushed. Host 44/44, clang-tidy and
+clang-format clean on the changed files, Retro68 probe and the OS 9 floppy build pass (payload
+about 567 KB of 1.2 MB). Verified on Tiger Classic before Codex's session overlapped: city markers,
+`D` night shading (clock and time zone correct), the merged scheduling build runs (title shows
+turn and step times). NOT verified on Tiger: the quick (line-only) mode while dragging, `M`
+measuring, clicks and the information window, Page Up/Down, and any real wheel.
+
+**Tiger is one shared machine.** Codex and Claude both launch builds there; a late screenshot
+showed Codex's build (no markers or overlays), and Classic was quit between runs. Before testing on
+Tiger, check `ps -ax | grep TruBlue` and the Globe volumes, and say in the handoff which build is
+running; do not quit another session's Classic. Remote injection works for letter keys through
+`osascript ... keystroke` but not for non-character keys (`key code`) or mouse clicks.
+
+Codex's uncommitted work (`classic_present.hpp`, `test_classic_present.cpp`, edits to
+`os9/main.cpp`/`CMakeLists.txt` in its worktree) must be rebased onto `main` before it continues:
+`os9/main.cpp` changed in the merge (overlays, picking, info window, markers, quick overlays).
