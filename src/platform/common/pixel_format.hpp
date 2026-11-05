@@ -37,6 +37,11 @@ std::size_t pixel_row_bytes(const PixelFormat& format, int width);
 bool convert_pixels(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
                     std::size_t stride);
 
+// Convert only [first_row, end_row), with dst still pointing at row zero. Rows outside
+// that interval and row padding remain untouched. Invalid ranges fail without writing.
+bool convert_pixel_rows(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
+                        std::size_t stride, int first_row, int end_row);
+
 // Reference converter without layout fast paths, for byte-for-byte checks and measurements.
 // Same validation and destination contract as convert_pixels.
 bool convert_pixels_generic(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,

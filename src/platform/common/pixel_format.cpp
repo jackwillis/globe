@@ -73,8 +73,8 @@ void pack32_row(const Rgb565* src, std::uint8_t* out, int width, const std::uint
 
 template <bool MsbFirst>
 void pack32(const Framebuffer& fb, std::uint8_t* dst, std::size_t stride, const std::uint32_t* red,
-            const std::uint32_t* green, const std::uint32_t* blue) {
-    for (int y = 0; y < fb.height(); ++y) {
+            const std::uint32_t* green, const std::uint32_t* blue, int first, int end) {
+    for (int y = first; y < end; ++y) {
         const Rgb565* src = fb.data() + static_cast<std::size_t>(y) * fb.stride();
         std::uint8_t* out = dst + static_cast<std::size_t>(y) * stride;
         if (reinterpret_cast<std::uintptr_t>(out) % alignof(std::uint32_t) == 0) {
@@ -113,16 +113,16 @@ std::size_t pixel_row_bytes(const PixelFormat& format, int width) {
 }
 
 static bool convert_pixels_impl(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
-                                std::size_t stride, bool fast) {
-    if (dst == nullptr || !pixel_format_supported(format) ||
-        stride < pixel_row_bytes(format, fb.width())) {
+                                std::size_t stride, bool fast, int first, int end) {
+    if (first < 0 || end < first || end > fb.height() || dst == nullptr ||
+        !pixel_format_supported(format) || stride < pixel_row_bytes(format, fb.width())) {
         return false;
     }
     if (fast && format.bits_per_pixel == 16 && format.red_mask == 0xF800U &&
         format.green_mask == 0x07E0U && format.blue_mask == 0x001FU) {
         const std::uint16_t endian_probe = 1;
         const bool native_msb = *reinterpret_cast<const std::uint8_t*>(&endian_probe) == 0;
-        for (int y = 0; y < fb.height(); ++y) {
+        for (int y = first; y < end; ++y) {
             const Rgb565* src = fb.data() + static_cast<std::size_t>(y) * fb.stride();
             std::uint8_t* out = dst + static_cast<std::size_t>(y) * stride;
             if (format.msb_first == native_msb) {
@@ -133,6 +133,23 @@ static bool convert_pixels_impl(const Framebuffer& fb, const PixelFormat& format
                     out[1] = static_cast<std::uint8_t>(src[x] >> (format.msb_first ? 0 : 8));
                     out += 2;
                 }
+            }
+        }
+        return true;
+    }
+    // RGB565 -> RGB555: red/blue retain their bits; rounded 6-to-5-bit green is g >> 1.
+    // This exact integer mapping avoids the generic three-table packer on classic Macs.
+    if (fast && format.bits_per_pixel == 16 && format.red_mask == 0x7C00U &&
+        format.green_mask == 0x03E0U && format.blue_mask == 0x001FU) {
+        for (int y = first; y < end; ++y) {
+            const auto* src = fb.data() + static_cast<std::size_t>(y) * fb.stride();
+            auto* out = dst + static_cast<std::size_t>(y) * stride;
+            for (int x = 0; x < fb.width(); ++x) {
+                const auto p =
+                    static_cast<std::uint16_t>(((src[x] & 0xFFC0U) >> 1) | (src[x] & 0x001FU));
+                out[0] = static_cast<std::uint8_t>(p >> (format.msb_first ? 8 : 0));
+                out[1] = static_cast<std::uint8_t>(p >> (format.msb_first ? 0 : 8));
+                out += 2;
             }
         }
         return true;
@@ -153,14 +170,14 @@ static bool convert_pixels_impl(const Framebuffer& fb, const PixelFormat& format
     }
     if (fast && format.bits_per_pixel == 32) {
         if (format.msb_first) {
-            pack32<true>(fb, dst, stride, red, green, blue);
+            pack32<true>(fb, dst, stride, red, green, blue, first, end);
         } else {
-            pack32<false>(fb, dst, stride, red, green, blue);
+            pack32<false>(fb, dst, stride, red, green, blue, first, end);
         }
         return true;
     }
     const int bytes = format.bits_per_pixel / 8;
-    for (int y = 0; y < fb.height(); ++y) {
+    for (int y = first; y < end; ++y) {
         const Rgb565* src =
             fb.data() + static_cast<std::size_t>(y) * static_cast<std::size_t>(fb.stride());
         std::uint8_t* out = dst + static_cast<std::size_t>(y) * stride;
@@ -184,12 +201,17 @@ static bool convert_pixels_impl(const Framebuffer& fb, const PixelFormat& format
 
 bool convert_pixels(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
                     std::size_t stride) {
-    return convert_pixels_impl(fb, format, dst, stride, true);
+    return convert_pixels_impl(fb, format, dst, stride, true, 0, fb.height());
+}
+
+bool convert_pixel_rows(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
+                        std::size_t stride, int first_row, int end_row) {
+    return convert_pixels_impl(fb, format, dst, stride, true, first_row, end_row);
 }
 
 bool convert_pixels_generic(const Framebuffer& fb, const PixelFormat& format, std::uint8_t* dst,
                             std::size_t stride) {
-    return convert_pixels_impl(fb, format, dst, stride, false);
+    return convert_pixels_impl(fb, format, dst, stride, false, 0, fb.height());
 }
 
 } // namespace globe

@@ -5,8 +5,10 @@
 namespace globe {
 // WaitNextEvent uses 60-Hz ticks. Round future deadlines up; no recurring idle timer.
 constexpr std::uint32_t classic_wait_ticks(std::uint64_t now_ms, std::uint64_t wake_at_ms,
-                                           bool work) {
+                                           bool work, bool foreground = true) {
     constexpr std::uint32_t forever = 0x7fffffffU;
+    if (!foreground)
+        return forever; // suspend all application work and deadlines until a resume event
     if (work)
         return 0;
     if (!wake_at_ms)
