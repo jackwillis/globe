@@ -135,8 +135,8 @@ class Application {
                         break; // dispatch queued input before spending another geometry budget
                 } while (job_->active() && step_start < slice_end);
                 if (!job_->active()) {
-                    if (dirty_ &&
-                        !presentation_held(model_)) { // the last throttled frame is always shown
+                    if ((dirty_ || shown_quick_) &&
+                        !presentation_held(model_)) { // the last frame is always shown in full
                         copy(0, fb_->height());
                     }
                 }
@@ -228,6 +228,14 @@ class Application {
                 }
             } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
                 apply(PointerUp{time});
+            else if (event.what != nullEvent && event.what != activateEvt &&
+                     event.what != diskEvt && event.what != osEvt) {
+                // Not an event this program knows (a scroll wheel, if the system sends one to a
+                // non-Carbon program, would show up here): remember the code for the title.
+                last_unknown_ = static_cast<unsigned>(event.what);
+                ++unknown_count_;
+                show_timing(); // refresh the title so the code is visible
+            }
             // A one-pixel mouse region wakes on motion, even with no button held. No periodic poll.
             Point current;
             GetMouse(&current);
@@ -280,6 +288,8 @@ class Application {
     }
     // The window title reports the last settle: first refine step to last, and time spent copying.
     void show_timing() {
+        if (!titled_)
+            settled_ms_ = now_ms() - refine_t0_;
         titled_ = true;
         unsigned char title[96];
         unsigned n = 0;
@@ -298,7 +308,7 @@ class Application {
                 title[++n] = static_cast<unsigned char>(digits[--d]);
         };
         put("Globe  ");
-        number(now_ms() - refine_t0_);
+        number(settled_ms_);
         put(" ms, copy ");
         number(copy_ms_);
         put(" ms, turn ");
@@ -306,6 +316,12 @@ class Application {
         put(" ms, step ");
         number(max_step_ms_);
         put(" ms");
+        if (unknown_count_ != 0) {
+            put(", ev ");
+            number(last_unknown_);
+            put("x");
+            number(unknown_count_);
+        }
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
     }
@@ -324,8 +340,12 @@ class Application {
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
         // Overlays (night, measure, focused country) go on a copy; the frame itself is untouched.
+        // Frames that move or are still refining get the cheap overlays; the settled one the full.
+        const bool settled = model_.stage == QualityStage::Refine && !(job_ && job_->active());
         const Framebuffer* shown =
-            convert ? overlays_.compose(*fb_, model_.camera, unix_seconds()) : nullptr;
+            convert ? overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled) : nullptr;
+        if (convert)
+            shown_quick_ = shown != nullptr && !settled;
         const bool converted =
             !convert || convert_pixel_rows(shown != nullptr ? *shown : *fb_, format,
                                            reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)),
@@ -414,6 +434,10 @@ class Application {
             command = Command::Down;
         else if (code == 0x7e)
             command = Command::Up;
+        else if (code == 0x74) // Page Up: wheel drivers (USB Overdrive and the like) send it
+            command = Command::ZoomIn;
+        else if (code == 0x79) // Page Down
+            command = Command::ZoomOut;
         else
             switch (ch) {
             case '+':
@@ -473,7 +497,9 @@ class Application {
     bool job_waiting_ = false;
     std::uint64_t wake_ = 0;
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
-    bool titled_ = true, dirty_ = false;
+    bool titled_ = true, dirty_ = false, shown_quick_ = false;
+    unsigned last_unknown_ = 0, unknown_count_ = 0;
+    std::uint64_t settled_ms_ = 0;
     std::uint64_t next_copy_ms_ = 0;
     bool foreground_ = true;
     std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;

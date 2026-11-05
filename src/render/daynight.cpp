@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/daynight.hpp"
+#include "globe/raster.hpp"
 #include <algorithm>
 #include <cmath>
 namespace globe {
@@ -54,6 +55,35 @@ LatLon subsolar_point(std::int64_t unix_seconds) {
     if (lon > 180.0)
         lon -= 360.0;
     return {declination / kDeg, lon};
+}
+std::size_t draw_terminator(Framebuffer& fb, const Camera& camera, Vec3 sun_world, Rgb565 color) {
+    const double length = std::sqrt(dot(sun_world, sun_world));
+    if (!(length > 0))
+        return 0;
+    const Vec3 sun = sun_world * (1.0 / length);
+    // Two unit vectors perpendicular to the sun span the plane of the terminator great circle.
+    const Vec3 helper = std::fabs(sun.z) < 0.9 ? Vec3{0, 0, 1} : Vec3{1, 0, 0};
+    const Vec3 u = normalized(cross(sun, helper));
+    const Vec3 v = cross(sun, u);
+    constexpr int kSegments = 128;
+    const auto project = [&](double angle) {
+        const Vec3 world = u * std::cos(angle) + v * std::sin(angle);
+        const Vec3 c = to_camera_space(camera, world);
+        const ScreenPoint p = to_screen(camera, c);
+        return Vec3{p.x, p.y, c.z};
+    };
+    std::size_t drawn = 0;
+    Vec3 previous = project(0.0);
+    for (int i = 1; i <= kSegments; ++i) {
+        const Vec3 current = project(360.0 * kDeg * i / kSegments);
+        if (previous.z >= 0 && current.z >= 0) {
+            for (const double d : {0.0, 1.0})
+                draw_line(fb, previous.x + d, previous.y, current.x + d, current.y, color);
+            ++drawn;
+        }
+        previous = current;
+    }
+    return drawn;
 }
 void shade_night(Framebuffer& fb, const Camera& camera, Vec3 sun_world) {
     static const SqrtTable table;

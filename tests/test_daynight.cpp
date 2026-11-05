@@ -45,6 +45,18 @@ int main() {
     CHECK(fb->pixel(30, 50) != white);
     const auto west = fb->pixel(30, 50), mid = fb->pixel(58, 50);
     CHECK(mid != white && ((mid >> 11) & 31) >= ((west >> 11) & 31)); // twilight is lighter
+    // The terminator line alone: with the sun over the east limb it is the central meridian.
+    fb->clear(white);
+    CHECK(draw_terminator(*fb, camera, to_unit_vector({0, 90}), kTerminatorColor) > 40);
+    CHECK(fb->pixel(60, 50) == kTerminatorColor || fb->pixel(61, 50) == kTerminatorColor);
+    CHECK(fb->pixel(60, 30) == kTerminatorColor || fb->pixel(61, 30) == kTerminatorColor);
+    CHECK(fb->pixel(40, 50) == white && fb->pixel(80, 50) == white); // no shading either side
+    // Sun straight at the viewer: the terminator is the limb, nothing near the center.
+    fb->clear(white);
+    draw_terminator(*fb, camera, to_unit_vector({0, 0}), kTerminatorColor);
+    CHECK(fb->pixel(60, 50) == white);
+    // Sun behind the globe: the same great circle, so the limb again; a zero vector draws nothing.
+    CHECK(draw_terminator(*fb, camera, {0, 0, 0}, kTerminatorColor) == 0);
     // Rows outside the framebuffer or a huge radius never write out of bounds.
     auto big = *make_camera({{0, 0}, 0, 4000, 120, 100});
     fb->clear(white);

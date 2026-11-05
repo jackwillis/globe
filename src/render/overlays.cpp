@@ -130,7 +130,7 @@ std::optional<InfoCard> Overlays::take_card() {
     return card_;
 }
 Framebuffer* Overlays::compose(const Framebuffer& frame, const Camera& camera,
-                               std::int64_t unix_seconds) {
+                               std::int64_t unix_seconds, bool quick) {
     const auto focus = focused_;
     const auto a = measure_a_;
     const auto b = measure_b_;
@@ -150,14 +150,18 @@ Framebuffer* Overlays::compose(const Framebuffer& frame, const Camera& camera,
             sun_time_ = unix_seconds;
             sun_ = to_unit_vector(subsolar_point(unix_seconds));
         }
-        shade_night(out, camera, sun_);
+        if (quick)
+            draw_terminator(out, camera, sun_, kTerminatorColor);
+        else
+            shade_night(out, camera, sun_);
     }
     if (a.has_value() && b.has_value())
         draw_measure(out, camera, *a, *b, kMeasureColor);
     else if (a.has_value())
         draw_measure_point(out, camera, *a, kMeasureColor);
     if (focus.has_value() && countries_ != nullptr) {
-        fill_country_dither(out, camera, *countries_, *focus, kCountryHighlight);
+        if (!quick)
+            fill_country_dither(out, camera, *countries_, *focus, kCountryHighlight);
         draw_country_outline(out, camera, *countries_, *focus, kCountryHighlight);
     }
     return &out;

@@ -552,7 +552,7 @@ class App {
             ++refine_bands_;
             present_refine(step.first_row, step.end_row);
         }
-        if (refinement_ && !refinement_->active() && upload_dirty_ && fb_ &&
+        if (refinement_ && !refinement_->active() && (upload_dirty_ || shown_quick_) && fb_ &&
             !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
@@ -632,8 +632,12 @@ class App {
         std::uint64_t t = monotonic_ns();
         // The focused country is drawn on a copy, so the frame itself stays exactly as rendered
         // and clearing the focus needs no re-render.
-        const Framebuffer* shown =
-            overlays_.compose(fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)));
+        // Frames that move or are still refining get the cheap overlays; the settled one the full.
+        const bool settled =
+            model_.stage == QualityStage::Refine && !(refinement_ && refinement_->active());
+        const Framebuffer* shown = overlays_.compose(
+            fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled);
+        shown_quick_ = shown != nullptr && !settled;
         if (shown == nullptr)
             shown = &fb;
         convert_pixels(*shown, format_, reinterpret_cast<std::uint8_t*>(image_->data),
@@ -871,6 +875,7 @@ class App {
     std::size_t refine_bands_ = 0;
     std::uint64_t next_upload_ms_ = 0;
     bool upload_dirty_ = false;
+    bool shown_quick_ = false; // the frame on screen has the cheap overlays; show the full ones
     double refine_work_ms_ = 0;
     bool pixels_ok_ = true;
     std::size_t verified_frames_ = 0;

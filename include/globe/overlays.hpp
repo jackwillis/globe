@@ -35,8 +35,12 @@ class Overlays {
     bool click(const Camera& camera, ScreenPoint at);
     std::optional<InfoCard> take_card();
     // The frame with the active overlays drawn on a copy kept here, or null when none is active.
-    // `unix_seconds` is UTC; the sun position is refreshed at most every 30 s.
-    Framebuffer* compose(const Framebuffer& frame, const Camera& camera, std::int64_t unix_seconds);
+    // `unix_seconds` is UTC; the sun position is refreshed at most every 30 s. With `quick` (frames
+    // that move, or are still refining) the night side is only a terminator line and the country
+    // is outlined without the dither fill, so dragging stays fast; the full overlays come with the
+    // settled frame.
+    Framebuffer* compose(const Framebuffer& frame, const Camera& camera, std::int64_t unix_seconds,
+                         bool quick = false);
 
   private:
     void measure_click(LatLon point);

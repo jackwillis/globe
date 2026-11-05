@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "check.hpp"
+#include "globe/daynight.hpp"
 #include "globe/overlays.hpp"
 #include <cstdio>
 #include <string>
@@ -83,6 +84,16 @@ int main(int argc, char** argv) {
     CHECK(day != nullptr);
     const auto noon = day->pixel(80, 60);
     CHECK(noon == 0xFFFF); // the middle of this view is in daylight
+    // Quick frames (moving, refining) draw only the terminator line, not the shading.
+    fb->clear(0xFFFF);
+    auto* quick = o.compose(*fb, camera, 1793793600, true);
+    CHECK(quick != nullptr);
+    std::size_t line = 0, shaded = 0;
+    for (int i = 0; i < 160 * 120; ++i) {
+        line += quick->data()[i] == kTerminatorColor;
+        shaded += quick->data()[i] != 0xFFFF && quick->data()[i] != kTerminatorColor;
+    }
+    CHECK(line > 40 && shaded == 0);
     o.toggle_night();
     CHECK(o.compose(*fb, camera, 1793793600) == nullptr);
     return TEST_MAIN_RESULT();
