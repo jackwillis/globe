@@ -706,8 +706,10 @@ class App {
             draw_measure(copy, model_.camera, *measure_a, *measure_b, kMeasureColor);
         else if (measure_a.has_value())
             draw_measure_point(copy, model_.camera, *measure_a, kMeasureColor);
-        if (focus.has_value() && countries_.has_value())
+        if (focus.has_value() && countries_.has_value()) {
+            fill_country_dither(copy, model_.camera, *countries_, *focus, kCountryHighlight);
             draw_country_outline(copy, model_.camera, *countries_, *focus, kCountryHighlight);
+        }
         return &copy;
     }
 

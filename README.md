@@ -14,6 +14,8 @@ markers and scrolling information windows.
 
 ![Map look, Antarctica in white](docs/images/antarctica-map.png)
 
+![A picked country, dither-filled and outlined](docs/images/country-highlight.png)
+
 `M` (X11) measures: click two points for the great-circle distance and bearing, with the arc drawn between them. `D` (X11) shades the night side from the system clock, with a soft twilight edge:
 
 ![Map look with the day/night terminator](docs/images/daynight-map.png)
@@ -49,7 +51,7 @@ configure a separate build with `-DGLOBE_SANITIZE=ON`. The current host suite ha
 Drag to rotate north-up; T switches to trackball mode. Wheel or +/- zooms, double-click centers
 and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits.
 S switches the look (Map or Relief) and P (X11) opens a looks palette window; A click without dragging preserves the view; on X11 it identifies a
-country (outlined in orange) or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
+country (outlined and dither-filled in orange) or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
 toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.
 
 ## Two editions
