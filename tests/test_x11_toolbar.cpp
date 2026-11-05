@@ -198,8 +198,8 @@ int main(int argc, char** argv) {
     CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0);
     if (repaint_test) {
         CHECK(text.find("\"frames\": 1,") != std::string::npos);
-        // 16 terrain passes, 16 paced line passes and the canonical final lines frame.
-        const auto bands = 2 * kRefinePasses + 1;
+        // The line layer alone, one composited frame per terrain pass, and the final frame.
+        const auto bands = kRefinePasses + 2;
         CHECK(text.find("\"refine_bands\": " + std::to_string(bands) + ",") != std::string::npos);
     } else {
         CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);

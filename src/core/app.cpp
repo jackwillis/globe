@@ -202,6 +202,7 @@ RenderQuality quality_for(const Model& model) {
     RenderQuality quality{fine ? 1.5 : 3.0, fine, selected, model.terrain_style};
     quality.preserve_bitmap = model.refine_active && !model.refine_first;
     quality.terrain_only = model.refine_active && model.refine_level != model.refine_target;
+    quality.lines_first = true;
     // Refinement always radiates from the view center.
     quality.focus = {model.camera.center_x, model.camera.center_y};
     return quality;

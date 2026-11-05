@@ -393,12 +393,15 @@ RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Atlas& atl
     return stats;
 }
 
+// Marks "no line here" in the line layer; no palette color equals it.
+constexpr Rgb565 kLineLayerKey = 0x0001;
+
 RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Palette& palette,
                              Layers layers, RenderQuality quality, std::uint64_t generation,
                              TerrainScene* terrain)
     : camera_(camera), scene_(&scene), palette_(palette), layers_(layers), quality_(quality),
       generation_(generation) {
-    if (quality_.terrain_only)
+    if (quality_.terrain_only || quality_.lines_first)
         quality_.progressive_lines = false;
     palette_ = palette_for_style(palette_, quality_.terrain_style);
     if (quality_.terrain && terrain != nullptr) {
@@ -407,6 +410,11 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
         phase_ = -2;
         if (quality_.terrain_style != TerrainStyle::Map)
             palette_.border = rgb565(0, 0, 0);
+    }
+    if (terrain_ != nullptr && quality_.lines_first) {
+        line_layer_ = Framebuffer::create(camera_.width, camera_.height);
+        if (!line_layer_.has_value())
+            quality_.progressive_lines = !quality_.terrain_only; // no memory: the old reveal
     }
     if (terrain_ != nullptr && quality_.progressive_lines)
         line_token_ = scene_->claim_lines();
@@ -517,8 +525,12 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             if (terrain_cell_ == terrain_->cell_count()) {
                 terrain_cell_ = 0;
                 ++pass_;
-                result.band_ready = true;
-                if (last) {
+                result.band_ready = !line_layer_.has_value(); // else shown after the stamp
+                if (line_layer_.has_value()) {
+                    row_ = 0;
+                    after_stamp_ = last ? 5 : 7;
+                    phase_ = last && quality_.preserve_bitmap ? 9 : 10;
+                } else if (last) {
                     row_ = 0;
                     phase_ = quality_.preserve_bitmap     ? 9
                              : quality_.terrain_only      ? 5
@@ -540,8 +552,31 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             fb.coverage(Framebuffer::Coverage::Off);
             fb.clip_rows(result.first_row, result.end_row);
             if (++row_ == fb.height()) {
-                phase_ = quality_.terrain_only ? 5 : quality_.progressive_lines ? 8 : 1;
+                row_ = 0;
+                phase_ = line_layer_.has_value()      ? 10
+                         : quality_.terrain_only      ? 5
+                         : quality_.progressive_lines ? 8
+                                                      : 1;
                 result.band_ready = true;
+            }
+        } else if (phase_ == 10) {
+            // Composite the line layer over this row (a pass may have painted over the lines).
+            const auto* lines = line_layer_->data() + static_cast<std::size_t>(row_) * fb.width();
+            auto* pixels = fb.data() + static_cast<std::size_t>(row_) * fb.stride();
+            for (int x = 0; x < fb.width(); ++x)
+                if (lines[x] != kLineLayerKey)
+                    pixels[x] = lines[x];
+            if (++row_ == fb.height()) {
+                row_ = 0;
+                phase_ = after_stamp_;
+                result.band_ready = true;
+            }
+        } else if (phase_ == 11) {
+            line_layer_->fill_span(row_, 0, fb.width() - 1, kLineLayerKey);
+            if (++row_ == fb.height()) {
+                row_ = 0;
+                phase_ = 1;
+                lines_drawing_ = true;
             }
         } else if (phase_ == 0) {
             fb.clip_rows(row_, row_ + 1);
@@ -554,8 +589,9 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             }
             fb.clip_rows(result.first_row, result.end_row);
             if (++row_ == result.end_row) {
-                phase_ = terrain_ != nullptr ? 7 : 1;
+                phase_ = terrain_ != nullptr ? (line_layer_.has_value() ? 11 : 7) : 1;
                 terrain_cell_ = 0;
+                row_ = 0;
             }
         } else if (phase_ == 1 || phase_ == 2) {
             const bool parallels = phase_ == 1;
@@ -576,7 +612,8 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             if (arc_misses_band(camera_, a, b, result.first_row, result.end_row)) {
                 ++stats_.segments_skipped;
             } else {
-                draw_arc(fb, camera_, a, b, palette_.graticule, stats_, quality_.max_chord_px);
+                draw_arc(lines_drawing_ ? *line_layer_ : fb, camera_, a, b, palette_.graticule,
+                         stats_, quality_.max_chord_px);
             }
             ++grid_segment_;
         } else if (phase_ == 3 || phase_ == 4) {
@@ -614,12 +651,18 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 if (arc_misses_band(camera_, a, b, result.first_row, result.end_row)) {
                     ++stats_.segments_skipped;
                 } else {
-                    draw_arc(fb, camera_, a, b, coast ? palette_.coastline : palette_.border,
-                             stats_, quality_.max_chord_px);
+                    draw_arc(lines_drawing_ ? *line_layer_ : fb, camera_, a, b,
+                             coast ? palette_.coastline : palette_.border, stats_,
+                             quality_.max_chord_px);
                 }
                 if (++segment_ == line_.point_count)
                     segment_ = 0;
             }
+        } else if (lines_drawing_) {
+            lines_drawing_ = false; // the layer is complete: show it, then start the terrain
+            row_ = 0;
+            after_stamp_ = 7;
+            phase_ = 10;
         } else {
             result.band_ready = true;
             if (terrain_ != nullptr) {

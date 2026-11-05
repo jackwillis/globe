@@ -9,7 +9,7 @@ result = subprocess.run(sys.argv[1:], capture_output=True, text=True, check=True
 print(result.stdout, end="")
 stats = json.loads(result.stdout)
 assert stats["quality_stage"] == 2, stats  # Refine
-assert stats["wake_ticks"] == 2 + 16, stats  # Settle/Refine, 16 reveal wakes; no polling afterwards
+assert stats["wake_ticks"] == 2, stats  # Settle and Refine; the lines are a layer now, no reveal wakes
 assert stats["refine_bands"] > 0, stats
 assert stats["verified_frames"] == stats["presentations"], stats
 assert stats["idle_frames"] == 0, stats
