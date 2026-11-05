@@ -39,13 +39,11 @@
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
-#include "globe/daynight.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_places.hpp"
-#include "globe/highlight.hpp"
-#include "globe/measure.hpp"
+#include "globe/overlays.hpp"
 #include "globe/places.hpp"
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
@@ -108,6 +106,9 @@ class App {
         countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
         if (countries_)
             country_scene_ = CountryScene::create(*countries_);
+        overlays_.attach(countries_ ? &*countries_ : nullptr,
+                         country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
+                         place_scene_ ? &*place_scene_ : nullptr);
     }
 
     ~App() {
@@ -316,31 +317,17 @@ class App {
 
     // The core decides when (a plain click that was not the first half of a double click).
     void pick_at(ScreenPoint at) {
-        const double x = (at.x - model_.camera.center_x) / model_.camera.radius_px;
-        const double y = (at.y - model_.camera.center_y) / model_.camera.radius_px;
-        if (x * x + y * y > 1)
-            return;
-        const auto v = unproject_to_sphere(model_.camera, at);
-        const auto world =
-            model_.camera.right * v.x + model_.camera.up * v.y + model_.camera.forward * v.z;
-        if (measuring_) {
-            measure_click(from_unit_vector(world));
-            return;
-        }
-        if (!country_scene_ || !countries_)
-            return;
-        const auto city = place_scene_ ? place_scene_->pick(model_.camera, at) : std::nullopt;
-        const auto id = country_scene_->pick(from_unit_vector(world));
-        const auto before = focused_country_;
-        focused_country_ = city ? std::nullopt : id; // a place card, or the sea, clears the focus
-        if (city && places_) {
-            info_.show(win_, place_card(*places_, *city), model_.camera.width + 20);
-            ++info_cards_;
-        } else if (id) {
-            info_.show(win_, country_card(*countries_, *id), model_.camera.width + 20);
+        const bool changed = overlays_.click(model_.camera, at);
+        if (const auto card = overlays_.take_card()) {
+            info_.show(win_, *card, model_.camera.width + 20);
             ++info_cards_;
         }
-        if (focused_country_ != before && frame_valid_ && !need_redraw_ && fb_)
+        if (changed)
+            reshow();
+    }
+    // Shows the current frame again (an overlay changed); no render, no refine.
+    void reshow() {
+        if (frame_valid_ && !need_redraw_ && fb_)
             upload(0, fb_->height());
     }
     bool apply(const Msg& msg) {
@@ -637,82 +624,6 @@ class App {
         }
     }
 
-    // The sun moves a quarter of a degree a minute: recompute at most every 30 s, at the time an
-    // image is shown (no timer, so an idle window stays quiet and the shading catches up on use).
-    void refresh_sun() {
-        const std::time_t now = std::time(nullptr);
-        if (sun_time_ != 0 && now - sun_time_ < 30)
-            return;
-        sun_time_ = now;
-        sun_ = to_unit_vector(subsolar_point(static_cast<std::int64_t>(now)));
-    }
-
-    // Measure mode (M): the first click marks a point, the second shows the great-circle distance
-    // and draws the arc, the third starts over.
-    void measure_click(LatLon p) {
-        if (!measure_a_.has_value() || measure_b_.has_value()) {
-            measure_a_ = p;
-            measure_b_.reset();
-        } else {
-            measure_b_ = p;
-            const LatLon a = *measure_a_;
-            const double km = great_circle_km(a, p);
-            const auto place = [](char* out, std::size_t n, const char* label, LatLon q) {
-                std::snprintf(out, n, "%s %.2f %c, %.2f %c", label, std::fabs(q.lat_deg),
-                              q.lat_deg >= 0 ? 'N' : 'S', std::fabs(q.lon_deg),
-                              q.lon_deg >= 0 ? 'E' : 'W');
-            };
-            place(measure_text_[0], sizeof measure_text_[0], "From", a);
-            place(measure_text_[1], sizeof measure_text_[1], "To", p);
-            std::snprintf(measure_text_[2], sizeof measure_text_[2],
-                          "Great circle: %.0f km (%.0f mi)", km, km * 0.621371);
-            std::snprintf(measure_text_[3], sizeof measure_text_[3],
-                          "Initial bearing: %.0f degrees", initial_bearing_deg(a, p));
-            InfoCard card;
-            card.title = "Distance";
-            for (unsigned i = 0; i < 4; ++i)
-                card.lines[i] = measure_text_[i];
-            card.line_count = 4;
-            info_.show(win_, card, model_.camera.width + 20);
-            ++info_cards_;
-        }
-        if (frame_valid_ && !need_redraw_ && fb_)
-            upload(0, fb_->height());
-    }
-
-    // A copy of the frame with the overlays (night shading, focused country) drawn on it, or null
-    // when none is wanted. The rendered frame itself is never changed.
-    Framebuffer* overlay_for(const Framebuffer& fb) {
-        const auto focus = focused_country_;
-        const bool outline = focus.has_value() && countries_.has_value();
-        const auto measure_a = measure_a_;
-        const auto measure_b = measure_b_;
-        if (!night_ && !outline && !measure_a.has_value())
-            return nullptr;
-        if (overlay_fb_.has_value() &&
-            (overlay_fb_->width() != fb.width() || overlay_fb_->height() != fb.height()))
-            overlay_fb_.reset();
-        if (!overlay_fb_.has_value())
-            overlay_fb_ = Framebuffer::create(fb.width(), fb.height());
-        if (!overlay_fb_.has_value())
-            return nullptr;
-        Framebuffer& copy = *overlay_fb_;
-        std::memcpy(copy.data(), fb.data(), fb.byte_size());
-        if (night_) {
-            refresh_sun();
-            shade_night(copy, model_.camera, sun_);
-        }
-        if (measure_a.has_value() && measure_b.has_value())
-            draw_measure(copy, model_.camera, *measure_a, *measure_b, kMeasureColor);
-        else if (measure_a.has_value())
-            draw_measure_point(copy, model_.camera, *measure_a, kMeasureColor);
-        if (focus.has_value() && countries_.has_value()) {
-            fill_country_dither(copy, model_.camera, *countries_, *focus, kCountryHighlight);
-            draw_country_outline(copy, model_.camera, *countries_, *focus, kCountryHighlight);
-        }
-        return &copy;
-    }
-
     void upload(int first_row, int end_row) {
         if (!fb_ || image_ == nullptr)
             return;
@@ -721,7 +632,8 @@ class App {
         std::uint64_t t = monotonic_ns();
         // The focused country is drawn on a copy, so the frame itself stays exactly as rendered
         // and clearing the focus needs no re-render.
-        const Framebuffer* shown = overlay_for(fb);
+        const Framebuffer* shown =
+            overlays_.compose(fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)));
         if (shown == nullptr)
             shown = &fb;
         convert_pixels(*shown, format_, reinterpret_cast<std::uint8_t*>(image_->data),
@@ -905,18 +817,12 @@ class App {
         case XK_s:
             return apply(CommandIssued{now, Command::CycleStyle});
         case XK_m:
-            measuring_ = !measuring_;
-            if (!measuring_) {
-                measure_a_.reset();
-                measure_b_.reset();
-                if (frame_valid_ && !need_redraw_ && fb_)
-                    upload(0, fb_->height());
-            }
+            overlays_.toggle_measure();
+            reshow();
             return false;
         case XK_d:
-            night_ = !night_;
-            if (frame_valid_ && !need_redraw_ && fb_)
-                upload(0, fb_->height());
+            overlays_.toggle_night();
+            reshow();
             return false;
         case XK_p:
             styles_.show(win_, model_.camera.width + 20,
@@ -943,14 +849,7 @@ class App {
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
-    std::optional<std::uint32_t> focused_country_;
-    bool night_ = false;
-    bool measuring_ = false;
-    std::optional<LatLon> measure_a_, measure_b_;
-    char measure_text_[4][64] = {};
-    std::time_t sun_time_ = 0;
-    Vec3 sun_{1, 0, 0};
-    std::optional<Framebuffer> overlay_fb_;
+    Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
     std::array<Cursor, 3> cursors_{};
