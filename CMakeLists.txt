@@ -167,7 +167,7 @@ if(GLOBE_BUILD_TESTS)
     set_tests_properties(${name} PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   endforeach()
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
-  foreach(name pixel_format frame_stats cli elevation_packs classic_wait)
+  foreach(name pixel_format frame_stats cli elevation_packs classic_wait wall_clock)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_platform_common globe_clock_posix)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

@@ -5,10 +5,15 @@
 #include "clock.hpp"
 #include "globe/app.hpp"
 #include "globe/embedded_atlas.hpp"
+#include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_landclasses.hpp"
+#include "globe/embedded_places.hpp"
+#include "globe/overlays.hpp"
 #include "globe/terrain.hpp"
+#include "info_card.hpp"
 #include "pixel_format.hpp"
+#include "wall_clock.hpp"
 #include <Dialogs.h>
 #include <Events.h>
 #include <Menus.h>
@@ -55,6 +60,16 @@ class Application {
         terrain_ = TerrainScene::create(*elevation, &*classes_);
         if (!terrain_)
             return false;
+        // Picking data are optional: without them clicks do nothing and the overlays still work.
+        countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
+        if (countries_)
+            country_scene_ = CountryScene::create(*countries_);
+        places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
+        if (places_)
+            place_scene_ = PlaceScene::create(*places_);
+        overlays_.attach(countries_ ? &*countries_ : nullptr,
+                         country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
+                         place_scene_ ? &*place_scene_ : nullptr);
         Rect bounds{50, 30, 530, 670};
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
@@ -89,8 +104,14 @@ class Application {
                 const auto slice_end = now_ms() + kWorkSliceMs;
                 do {
                     const auto band = job_->step(*fb_, model_.generation);
-                    if (band.band_ready)
+                    if (band.band_ready) {
+                        if (place_scene_) { // city markers, like the X11 front end
+                            fb_->clip_rows(band.first_row, band.end_row);
+                            place_scene_->draw(*fb_, model_.camera);
+                            fb_->clip_rows(0, fb_->height());
+                        }
                         present(band.first_row, band.end_row);
+                    }
                     if (band.wake_after_ms) {
                         job_waiting_ = true;
                         wake_ = now_ms() + band.wake_after_ms;
@@ -150,7 +171,9 @@ class Application {
                                 quit = true;
                         }
                     }
-                } else if (part == inSysWindow)
+                } else if (hit == info_.window())
+                    info_.mouse_down(event);
+                else if (part == inSysWindow)
                     SystemClick(&event, hit);
             } else if (event.what == mouseUp) {
                 quit = apply(PointerUp{time});
@@ -164,6 +187,11 @@ class Application {
                     BeginUpdate(window_);
                     copy(0, fb_->height());
                     EndUpdate(window_);
+                } else if (reinterpret_cast<WindowPtr>(event.message) == info_.window()) {
+                    BeginUpdate(info_.window());
+                    info_.draw();
+                    EndUpdate(info_.window());
+                    SetPortWindowPort(window_);
                 }
             } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
                 apply(PointerUp{time});
@@ -258,8 +286,11 @@ class Application {
             return;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
-        const bool converted = convert_pixels(
-            *fb_, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
+        // Overlays (night, measure, focused country) go on a copy; the frame itself is untouched.
+        const Framebuffer* shown = overlays_.compose(*fb_, model_.camera, unix_seconds());
+        const bool converted =
+            convert_pixels(shown != nullptr ? *shown : *fb_, format,
+                           reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
         if (converted) {
             SetPortWindowPort(window_);
             Rect rect{static_cast<short>(first), 0, static_cast<short>(end),
@@ -297,11 +328,41 @@ class Application {
         if (fx.wake_after_ms)
             wake_ = now_ms() + fx.wake_after_ms;
         redraw_ |= fx.redraw;
+        if (fx.pick)
+            pick(fx.pick_at);
         return fx.quit;
+    }
+    // A click that waited out the double-click window: pick, show a card, and draw the overlay.
+    void pick(ScreenPoint at) {
+        const bool changed = overlays_.click(model_.camera, at);
+        if (const auto card = overlays_.take_card()) {
+            SetPortWindowPort(window_);
+            Point corner{window_->portRect.top, window_->portRect.right};
+            LocalToGlobal(&corner);
+            info_.show(*card, corner.h);
+            SetPortWindowPort(window_);
+        }
+        if (changed)
+            reshow();
+    }
+    // Shows the current frame again (an overlay changed); no render, no refine.
+    void reshow() {
+        if (!redraw_ && fb_)
+            copy(0, fb_->height());
     }
     bool key(unsigned long message, std::uint64_t time) {
         const auto code = (message >> 8) & 0xff;
         const auto ch = message & 0xff;
+        if (ch == 'd' || ch == 'D') {
+            overlays_.toggle_night();
+            reshow();
+            return false;
+        }
+        if (ch == 'm' || ch == 'M') {
+            overlays_.toggle_measure();
+            reshow();
+            return false;
+        }
         std::optional<Command> command;
         if (code == 0x7b)
             command = Command::Left;
@@ -359,6 +420,12 @@ class Application {
     std::optional<Scene> scene_;
     std::optional<LandClasses> classes_;
     std::optional<TerrainScene> terrain_;
+    std::optional<Countries> countries_;
+    std::optional<CountryScene> country_scene_;
+    std::optional<Places> places_;
+    std::optional<PlaceScene> place_scene_;
+    Overlays overlays_;
+    InfoCardWindow info_;
     std::optional<Framebuffer> fb_;
     std::optional<RefinementJob> job_;
     bool job_waiting_ = false;
