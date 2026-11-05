@@ -56,3 +56,13 @@ Moving frames, expose repaint, snapshot conversion and overlay composition remai
 shared with X11, but the OS 9 floppy still uses one embedded grid. Final combined package includes
 the newer main-branch overlays, info cards and Page Up/Down controls. Earlier numeric trials above
 remain historical and must not be compared as equivalent combined-build benchmarks.
+
+The identified `GlobeVerify` build (same committed runtime sources; creator GlP3 instead of Glb2)
+ran alongside the other session's Classic apps from `/tmp/globe-verify-volume`. Its title reported
+180 submitted 32-row bands, 2,750 ms total, 734 ms copying, maximum measured turn 20 ms and
+maximum continuation 7 ms. This confirms bounded presentation actually executed; the older
+Glb2 instance remained active in earlier ambiguous launch attempts, so their screenshots are
+excluded from the new result. See [identified Tiger evidence](perf/progressive-resolution-tiger.json).
+The final production package additionally guards failed PixMap locks against busy retries; the
+normal presentation path is unchanged and the rebuilt package passes compile/fork/size checks.
+Do not quit shared Classic to switch builds; use a unique test application name/creator.

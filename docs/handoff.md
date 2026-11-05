@@ -447,3 +447,24 @@ running; do not quit another session's Classic. Remote injection works for lette
 Codex's uncommitted work (`classic_present.hpp`, `test_classic_present.cpp`, edits to
 `os9/main.cpp`/`CMakeLists.txt` in its worktree) must be rebased onto `main` before it continues:
 `os9/main.cpp` changed in the merge (overlays, picking, info window, markers, quick overlays).
+
+## Codex progressive-resolution completion — 2026-11-05
+
+The earlier note about Codex's uncommitted scheduling work is superseded. The continuation has
+integrated the newer main-branch overlays, info windows, keys and quick-overlay test. It adds
+explicit refinement effects/completions, coarse-to-target terrain replacement with exact final
+coverage repair, bundled half-degree data in X11, and 32-row immutable GWorld presentation.
+47 host tests, eight focused sanitizer tests, PowerPC/68k probes, OS 9 packaging/fork/size and
+policy/format checks pass. Native OS 9 hardware and G4 half-degree runtime acceptance remain open.
+
+Tiger: `GlobeVerify` (creator GlP3) is mounted at `/tmp/globe-verify-volume` and was launched
+alongside the other session's existing Globe. Its band-count title identifies the new code.
+Observed launch: 180 bands, 2,750 ms settle, 734 ms copy, 20 ms max turn, 7 ms max continuation.
+The current production package keeps name GlobeFloppy/creator Glb2, so launching it can route to
+an older running app. Do not terminate shared Classic. Application-name/creator verification
+changes are confined to an archived source copy under `/tmp/globe-verify-source`, not production.
+
+See docs/progressive-resolution-plan.md, docs/os9-scheduling.md,
+docs/perf/progressive-resolution-host.json and docs/perf/progressive-resolution-tiger.json.
+Installable current image and MacBinary are retained in the Codex worktree's ignored
+`build-scheduling-evidence/GlobeProgressive-1440.dsk` and `GlobeProgressive.bin`.

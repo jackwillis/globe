@@ -1,0 +1,50 @@
+{
+  "date_local": "2026-11-05",
+  "timezone": "America/Chicago",
+  "environment": "maul, Mac OS X 10.4.11, Tiger Classic, shared with another development session",
+  "verification_source_commit": "36608c4",
+  "verification_app": "GlobeVerify",
+  "creator": "GlP3",
+  "mountpoint": "/tmp/globe-verify-volume",
+  "data_fork_sha1": "b7b14d4f00712f7389af4f6e23d337b546222748",
+  "changes_for_verification": "Application name and creator only; runtime source from the committed worktree.",
+  "production_followup": "A later pixel-lock failure guard stops busy retries; its normal success path is unchanged. Final production package rebuilt after this guard.",
+  "trials": [
+    {
+      "kind": "launch",
+      "terrain_degrees": 1,
+      "submitted_32_row_bands": 180,
+      "settle_ms": 2750,
+      "copy_ms": 734,
+      "max_foreground_turn_ms": 20,
+      "max_continuation_ms": 7
+    }
+  ],
+  "limits": [
+    "Unique title band count confirms this code ran; earlier ordinary launches routed to older Glb2 instances and are excluded.",
+    "One shared-machine smoke run, not a controlled latency benchmark.",
+    "Other Classic apps remained running; no Classic environment was terminated.",
+    "Snapshot conversion, moving-frame rendering and full settled overlay composition are still synchronous.",
+    "No native OS 9 or G4 half-degree runtime claim."
+  ],
+  "final_package": {
+    "edition": "floppy: app + atlas + one-degree elevation",
+    "measured_utc": "2026-11-05T06:51:46.262863+00:00",
+    "application": "GlobeFloppy",
+    "data_fork_bytes": 533371,
+    "resource_fork_bytes": 432,
+    "macbinary_bytes": 534016,
+    "documents_bytes": 36964,
+    "payload_bytes": 570767,
+    "payload_budget_bytes": 1200000,
+    "payload_headroom_bytes": 629233,
+    "image_bytes": 1474560,
+    "image_budget_bytes": 1474560,
+    "app_macbinary_sha256": "4b0acae526218ecfd84f7305441ef7e6d9b8cb4f0fa316c1c1921ac585fcc3c0",
+    "image_sha256": "1fcf73c3c9acfe78f71dc5161dfe563dfcc9b894fadee3d82c598b0b311f4fa6",
+    "fork_roundtrip": "identical",
+    "execution": "built and packaged; not run on OS 9",
+    "limits": "payload budget excludes HFS overhead; actual image creation and copy enforce disk fit; signature check is not a full HFS validator",
+    "image_free_bytes": 877056
+  }
+}

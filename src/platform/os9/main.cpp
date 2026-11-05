@@ -291,8 +291,11 @@ class Application {
     }
     void present_step() {
         if (presentation_.needs_capture(model_.generation)) {
-            if (!capture())
+            if (!capture()) {
+                presentation_.cancel();
+                dirty_ = true; // retry on a later event/update, never busy-spin on a failed lock
                 return;
+            }
             presentation_.begin(model_.generation, fb_->height());
             dirty_ = false;
             return; // conversion and submission never share the same turn
@@ -302,6 +305,9 @@ class Application {
             if (copy(first, end, false)) {
                 presentation_.submitted(model_.generation);
                 ++present_bands_;
+            } else {
+                presentation_.cancel();
+                dirty_ = true;
             }
         }
     }
