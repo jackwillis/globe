@@ -127,6 +127,35 @@ int main() {
             CHECK(checked && pauses == kRefinePasses);
             CHECK(reveal.stats().line_chunks_prepared == scene->line_chunk_count());
             CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
+            // Line layer: the lines are on screen before any terrain, every later frame keeps them,
+            // and the settled image is identical.
+            q.progressive_lines = false;
+            q.lines_first = true;
+            RefinementJob layered(*camera, *scene, kDefaultPalette, Layers{}, q, 5, &*terrain);
+            const auto palette = palette_for_style(kDefaultPalette, q.terrain_style);
+            unsigned frames = 0;
+            while (layered.active()) {
+                const auto step = layered.step(*fb, 5, 64);
+                CHECK(step.work_units <= 64);
+                CHECK(step.wake_after_ms == 0);
+                if (!step.band_ready)
+                    continue;
+                if (++frames == 1) {
+                    unsigned lines = 0;
+                    for (int i = 0; i < 100 * 81; ++i) {
+                        const auto v = fb->data()[i];
+                        if (v != palette.background && v != palette.ocean) {
+                            ++lines;
+                            CHECK(v == expected[static_cast<std::size_t>(i)]);
+                        }
+                    }
+                    CHECK(lines > 50);
+                }
+            }
+            CHECK(frames == kRefinePasses + 2);
+            CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
+            q.lines_first = false;
+            q.progressive_lines = true;
             RefinementJob cancelled(*camera, *scene, kDefaultPalette, Layers{}, q, 3, &*terrain);
             while (cancelled.active() && !cancelled.step(*fb, 3).wake_after_ms) {
             }

@@ -84,7 +84,8 @@ int main(int argc, char** argv) {
         if (!camera)
             return 1;
         std::uint64_t reference = 0;
-        for (bool paced : {false, true}) {
+        for (int mode : {0, 1, 2}) { // unpaced, paced reveal, line layer
+            const bool paced = mode == 1;
             std::vector<double> wall, compute, prepare, lines, repair, first;
             double worst = 0;
             std::uint64_t hash = 0;
@@ -93,6 +94,7 @@ int main(int argc, char** argv) {
                 RenderQuality q{1.5, true, 0, TerrainStyle::Map};
                 q.focus = radius == 220 ? ScreenPoint{320, 240} : ScreenPoint{200, 160};
                 q.progressive_lines = paced;
+                q.lines_first = mode == 2;
                 const auto start = monotonic_ns();
                 RefinementJob job(*camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
                 std::uint64_t slept = 0, prepare_ns = 0, terrain_end = 0, repair_start = 0,
@@ -107,6 +109,8 @@ int main(int argc, char** argv) {
                     worst = std::max(worst, ms(b - a));
                     if (step.line_prepare)
                         prepare_ns += b - a;
+                    if (step.band_ready && mode == 2 && !first_at)
+                        first_at = b;
                     if (step.band_ready && ++ready == kRefinePasses)
                         terrain_end = b;
                     if (step.wake_after_ms) {
@@ -140,14 +144,17 @@ int main(int argc, char** argv) {
                 reference = hash;
             if (reference != hash)
                 return 1;
-            std::printf("%s{\"radius\":%.0f,\"paced\":%s,\"wall_median_ms\":%."
+            std::printf("%s{\"radius\":%.0f,\"mode\":\"%s\",\"wall_median_ms\":%."
                         "3f,\"compute_median_ms\":%.3f,\"prepare_median_ms\":%.3f,\"lines_"
                         "compute_median_ms\":%.3f,\"canonical_median_ms\":%.3f,\"first_reveal_"
                         "median_ms\":%.3f,\"worst_step_ms\":%.3f,\"scheduled_delay_ms\":%u,"
                         "\"pauses\":%u,\"checksum\":\"%016llx\"}",
-                        comma ? ",\n" : "", radius, paced ? "true" : "false", median(wall),
-                        median(compute), median(prepare), median(lines), median(repair),
-                        median(first), worst, scheduled, pauses,
+                        comma ? ",\n" : "", radius,
+                        mode == 0   ? "unpaced"
+                        : mode == 1 ? "paced"
+                                    : "layer",
+                        median(wall), median(compute), median(prepare), median(lines),
+                        median(repair), median(first), worst, scheduled, pauses,
                         static_cast<unsigned long long>(hash));
             comma = true;
             std::fflush(stdout);

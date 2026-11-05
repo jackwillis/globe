@@ -73,6 +73,24 @@ compute 726 ms paced against 680 ms unpaced at radius 220, 795 against 734 at ra
 equal paced and unpaced. X upload cost per reveal step is not measured (GL-7 is the owner's).
 Retired Codex draft: its earlier orders were removed with the circle-only decision.
 
+## Line layer (prototype, 2026-11-05)
+
+`RenderQuality::lines_first` (set by `quality_for`) draws the lines **first**, into a private
+RGB565 layer in the job (`line_layer_`, key color `0x0001` = no line), then composites the layer
+over the frame after the background clear and after every terrain pass (phase 10, one row per work
+unit). The lines are on screen from the first presented frame and are never hidden by a pass. It
+replaces the paced reveal (no reveal wakes, no canonical repair pass); the rasterizer and the terrain
+passes are unchanged, and the settled image is pixel-identical (`tests/test_line_reveal.cpp`, the
+refined pins, `globe-line-reveal-bench` mode `layer` has the same checksums as `unpaced`).
+Presented frames per job: 1 (lines) + 16 (passes) + 1 (final).
+
+Laptop (release, 640x480, medians): compute 26.7 ms against 12.9 ms unpaced (the extra is the 17
+composite scans, about 8 ms of it) and against 23.8 ms paced, but wall 26.7 ms against 267 ms paced
+(the 240 ms of reveal pauses are gone); the first frame with lines comes at 3.5 ms. **Not yet
+measured on the G4 or OS 9** (maul was on Tiger/off). If the scans cost too much there, keep a
+list of line pixels instead of scanning the layer. Costs 307 KB (+ coverage plane) per job at
+640x480; the OS 9 heap budget is unchecked. The OS 9 port uses the same core, so it gets this too.
+
 ## Verification
 
 `tests/test_terrain.cpp`, `test_app.cpp` and `test_refine.py` compare every pixel for several foci

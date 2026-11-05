@@ -33,6 +33,10 @@ struct RenderQuality {
     bool progressive_lines = true;
     bool preserve_bitmap = false; // subsequent resolution replaces the existing terrain
     bool terrain_only = false;    // lines belong to the final resolution only
+    // Terrain jobs only: draw the lines first into a private layer and composite them over the
+    // frame after every terrain pass, so they are visible from the first presented frame. The
+    // settled pixels are identical. Replaces the paced line reveal.
+    bool lines_first = false;
 };
 
 struct Palette {
@@ -194,6 +198,9 @@ class RefinementJob {
     int row_ = 0;
     int phase_ = 0;
     int grid_segment_ = 0;
+    std::optional<Framebuffer> line_layer_; // lines_first: key-colored except where a line is
+    bool lines_drawing_ = false;            // phases 1-4 currently draw into line_layer_
+    int after_stamp_ = 7;
     AtlasCursor cursor_{};
     AtlasPolyline line_{AtlasLayer::Coastline, 0, nullptr};
     std::uint16_t segment_ = 0;
