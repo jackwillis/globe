@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
     int height = 480;
     int repeat = 3;
     bool convert = false;
-    bool refine = false;
+    bool refine = false, refine_finest = false;
     bool reference_path = false;
     bool force_layers = false;
     Layers forced{};
@@ -110,6 +110,8 @@ int main(int argc, char** argv) {
             reference_path = true; // compute vertex vectors per frame instead of using the Scene
         } else if (std::strcmp(argv[i], "--dump-ppm") == 0 && i + 1 < argc) {
             dump_path = argv[++i];
+        } else if (std::strcmp(argv[i], "--refine-finest") == 0) {
+            refine = refine_finest = true;
         } else if (std::strcmp(argv[i], "--refine") == 0) {
             refine = true;
         } else if (std::strcmp(argv[i], "--convert") == 0) {
@@ -229,7 +231,8 @@ int main(int argc, char** argv) {
     unsigned selected_level = 0;
     double refine_ms = 0.0;
     double max_refine_step_ms = 0.0;
-    unsigned refine_steps = 0;
+    unsigned refine_steps = 0, refine_levels = 0;
+    double first_band_ms = 0.0, first_level_ms = 0.0;
     double first_frame_ms = 0.0;
     std::uint64_t checksum = 1469598103934665603ULL; // FNV-1a over final frames, as a sanity tag
 
@@ -286,17 +289,31 @@ int main(int argc, char** argv) {
         selected_level = quality_for(model).elevation_level;
         if (refine) {
             auto effect = start_refinement(model);
+            if (refine_finest) { // measurement oracle: render only the zoom-selected final grid
+                model.refine_level = model.refine_target;
+                effect.refine = Refine{model.generation, model.refine_level};
+            }
             const auto started = monotonic_ns();
+            bool saw_band = false, saw_level = false;
             while (effect.refine) {
                 const auto request = *effect.refine;
                 RefinementJob job(model.camera, *scene, kDefaultPalette, effective_layers(model),
                                   quality_for(model), request.generation, packs.for_model(model));
                 while (job.active()) {
                     const auto step_start = monotonic_ns();
-                    job.step(*fb, request.generation);
+                    const auto result = job.step(*fb, request.generation);
+                    if (result.band_ready && !saw_band) {
+                        first_band_ms += ms(monotonic_ns() - started);
+                        saw_band = true;
+                    }
                     max_refine_step_ms =
                         std::max(max_refine_step_ms, ms(monotonic_ns() - step_start));
                     ++refine_steps;
+                }
+                ++refine_levels;
+                if (!saw_level) {
+                    first_level_ms += ms(monotonic_ns() - started);
+                    saw_level = true;
                 }
                 effect = update(model, RefinementFinished{request.generation, request.level});
             }
@@ -362,6 +379,10 @@ int main(int argc, char** argv) {
     std::printf("  \"elevation_pack_count\": %u,\n  \"selected_elevation_level\": %u,\n",
                 packs.count(), selected_level);
     std::printf("  \"terrain_cache_bytes\": %zu,\n", packs.bytes());
+    std::printf("  \"refine_levels\": %u, \"first_refine_band_ms\": %.4f, "
+                "\"first_refine_level_ms\": %.4f,\n",
+                refine_levels, first_band_ms / repeat, first_level_ms / repeat);
+    std::printf("  \"frame_buffer_coverage_bytes\": %zu,\n", fb->coverage_byte_size());
     std::printf("  \"refine_ms\": %.4f,\n  \"max_refine_step_ms\": %.4f,\n"
                 "  \"refine_steps\": %u,\n",
                 refine_ms / repeat, max_refine_step_ms, refine_steps);

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
-// Tiny RGB565 framebuffer: one allocation made up front, bounds-checked drawing, no hidden
+// Tiny RGB565 framebuffer: pixels and a coverage bitplane allocated up front, no hidden
 // growth. How the pixels reach a window (byte order, depth conversion, QuickDraw layout) is the
 // platform adapter's job; this type only owns native-endian 16-bit pixel values.
 #pragma once
@@ -39,6 +39,10 @@ class Framebuffer {
     std::size_t byte_size() const {
         return static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_) *
                sizeof(Rgb565);
+    }
+
+    std::size_t coverage_byte_size() const {
+        return static_cast<std::size_t>((width_ + 7) / 8) * height_;
     }
 
     Rgb565* data() { return pixels_.get(); }

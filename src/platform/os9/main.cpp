@@ -299,8 +299,10 @@ class Application {
         }
         if (presentation_.active(model_.generation)) {
             const int first = presentation_.first(), end = presentation_.end();
-            if (copy(first, end, false))
+            if (copy(first, end, false)) {
                 presentation_.submitted(model_.generation);
+                ++present_bands_;
+            }
         }
     }
     bool capture() {
@@ -326,10 +328,10 @@ class Application {
         if (!titled_)
             settled_ms_ = now_ms() - refine_t0_;
         titled_ = true;
-        unsigned char title[96];
+        unsigned char title[128];
         unsigned n = 0;
         const auto put = [&](const char* text) {
-            while (*text && n < 95)
+            while (*text && n < 127)
                 title[++n] = static_cast<unsigned char>(*text++);
         };
         const auto number = [&](std::uint64_t v) {
@@ -342,7 +344,9 @@ class Application {
             while (d)
                 title[++n] = static_cast<unsigned char>(digits[--d]);
         };
-        put("Globe  ");
+        put("Globe ");
+        number(present_bands_);
+        put(" bands, ");
         number(settled_ms_);
         put(" ms, copy ");
         number(copy_ms_);
@@ -418,6 +422,7 @@ class Application {
         if (fx.refine && stage != QualityStage::Refine) {
             refine_t0_ = now_ms();
             copy_ms_ = 0;
+            present_bands_ = 0;
             max_turn_ms_ = max_step_ms_ = 0;
             dirty_ = false;
             titled_ = false;
@@ -542,6 +547,7 @@ class Application {
     unsigned last_unknown_ = 0, unknown_count_ = 0;
     std::uint64_t settled_ms_ = 0;
     ClassicPresentation presentation_;
+    unsigned present_bands_ = 0;
     bool foreground_ = true;
     std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;
     bool redraw_ = true;

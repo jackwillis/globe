@@ -38,3 +38,21 @@ Validation: 40/40 host tests pass (display tests run sequentially because their 
 Progressive resolution remains a separate implementation described in progressive-resolution-plan.md. Do not add more work to the OS 9 floppy edition merely because a finer source exists. First account for the still-synchronous screen copy and validate cooperation. A future presentation continuation should copy bounded row ranges, unlock PixMaps before yielding, and track snapshot ownership so a new camera generation cannot finish presenting an old one. Startup grid/cache construction and synchronous moving-frame rendering are other unbounded regions to profile if they cause observed delays.
 
 Event decoding follows Apple's [Inside Macintosh: Handling Operating-System Events](https://leopard-adc.pepas.com/documentation/mac/Toolbox/Toolbox-41.html): suspend/resume message high byte 1 and resume flag bit 0. The installed Multiversal headers omit those two symbolic constants, so the platform adapter supplies named local constants.
+
+## Follow-up: bounded snapshot submission
+
+Refinement presentation now coalesces requests into an immutable GWorld snapshot and submits at most
+32 rows per continuation, before geometry consumes the foreground budget. Renderer writes continue
+into the native framebuffer without changing an in-flight snapshot. New camera generations, resize
+and synchronous moving frames cancel old submission. PixMaps are unlocked before every yield.
+Pending presentation keeps the loop runnable; completion drains the final settled-overlay snapshot
+and returns to the existing long idle wait. Suspension pauses both geometry and presentation.
+The existing GWorld is reused: no additional bitmap is retained per resolution. A pure queue helper
+tests row bounds, coalescing, stale generations and completion. The window title reports submitted
+band count to identify this build in Tiger trials.
+
+Moving frames, expose repaint, snapshot conversion and overlay composition remain synchronous;
+32-row CopyBits is a work bound, not a hard wall-time guarantee. The new resolution sequence is
+shared with X11, but the OS 9 floppy still uses one embedded grid. Final combined package includes
+the newer main-branch overlays, info cards and Page Up/Down controls. Earlier numeric trials above
+remain historical and must not be compared as equivalent combined-build benchmarks.

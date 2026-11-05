@@ -5,7 +5,9 @@ Plain vector lines while you drag; when you stop, the terrain refines outward fr
 circles, then the coastlines, borders and graticule sweep in. Two looks: **Map** (land tinted by
 biome class on a blue sea) and **Relief** (a plain hypsometric tint, white at altitude). The X11
 edition also has a toolbar, a looks palette (`P`), country picking with an orange outline, city
-markers and scrolling information windows.
+markers and scrolling information windows. At higher zoom the full edition now refines from
+one-degree to half-degree terrain before revealing lines; the floppy edition keeps one degree.
+[Resolution behavior and measured tradeoffs](docs/progressive-resolution-plan.md).
 
 | Map (default) | Relief |
 | --- | --- |

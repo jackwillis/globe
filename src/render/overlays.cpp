@@ -47,8 +47,8 @@ struct Text {
         unsigned long scale = 1;
         for (int i = 0; i < decimals; ++i)
             scale *= 10;
-        const auto scaled =
-            static_cast<unsigned long>(std::lround(std::fabs(value) * static_cast<double>(scale)));
+        const auto scaled = static_cast<unsigned long>(
+            std::floor(std::fabs(value) * static_cast<double>(scale) + 0.5));
         add(scaled / scale);
         if (decimals > 0) {
             add(".");

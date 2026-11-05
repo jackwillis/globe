@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #include "globe/measure.hpp"
 #include "globe/raster.hpp"
+#include <algorithm>
 #include <cmath>
 namespace globe {
 namespace {
@@ -39,7 +40,7 @@ void draw_measure_point(Framebuffer& fb, const Camera& camera, LatLon a, Rgb565 
 }
 std::size_t draw_measure(Framebuffer& fb, const Camera& camera, LatLon a, LatLon b, Rgb565 color) {
     const Vec3 ua = to_unit_vector(a), ub = to_unit_vector(b);
-    const double omega = std::acos(std::fmax(-1.0, std::fmin(1.0, dot(ua, ub))));
+    const double omega = std::acos(std::max(-1.0, std::min(1.0, dot(ua, ub))));
     std::size_t drawn = 0;
     // Coincident or antipodal points have no unique arc.
     if (omega > 1e-9 && std::sin(omega) > 1e-9) {

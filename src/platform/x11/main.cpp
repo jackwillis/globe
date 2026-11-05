@@ -42,6 +42,7 @@
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
+#include "globe/embedded_fineelevation.hpp"
 #include "globe/embedded_places.hpp"
 #include "globe/overlays.hpp"
 #include "globe/places.hpp"
@@ -226,6 +227,7 @@ class App {
         std::printf("  \"verified_frames\": %zu,\n", verified_frames_);
         std::printf("  \"refine_bands\": %zu,\n  \"refine_work_ms\": %.4f,\n", refine_bands_,
                     refine_work_ms_);
+        std::printf("  \"refinement_jobs\": %u,\n", refinement_jobs_);
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
         std::printf("  \"elevation_pack_count\": %u,\n  \"terrain_cache_bytes\": %zu,\n",
                     packs_.count(), packs_.bytes());
@@ -352,6 +354,7 @@ class App {
                 fx.redraw = true;
         }
         if (fx.refine) {
+            ++refinement_jobs_;
             next_upload_ms_ = 0;
             upload_dirty_ = false;
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
@@ -638,7 +641,9 @@ class App {
         // and clearing the focus needs no re-render.
         // Frames that move or are still refining get the cheap overlays; the settled one the full.
         const bool settled =
-            model_.stage == QualityStage::Refine && !(refinement_ && refinement_->active());
+            model_.stage == QualityStage::Refine &&
+            (!model_.refine_active || model_.refine_level == model_.refine_target) &&
+            !(refinement_ && refinement_->active());
         const Framebuffer* shown = overlays_.compose(
             fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled);
         shown_quick_ = shown != nullptr && !settled;
@@ -876,6 +881,7 @@ class App {
     bool refine_waiting_ = false;
     std::uint64_t wake_at_ms_ = 0;
     std::optional<RefinementJob> refinement_;
+    unsigned refinement_jobs_ = 0;
     std::size_t refine_bands_ = 0;
     std::uint64_t next_upload_ms_ = 0;
     bool upload_dirty_ = false;
@@ -967,6 +973,12 @@ int main(int argc, char** argv) {
     ElevationPacks packs;
     if (!packs.initialize(kEmbeddedElevationData, kEmbeddedElevationSize))
         std::fprintf(stderr, "globe-x11: %s; showing outlines\n", packs.error());
+    // Explicit imports retain their original capacity/precedence. With none, ship a finer
+    // built-in level; an allocation failure retains the validated coarse fallback.
+    if (opt.elevation_count == 0 &&
+        !packs.add_embedded(kEmbeddedFineElevationData, kEmbeddedFineElevationSize))
+        std::fprintf(stderr, "globe-x11: optional half-degree terrain unavailable: %s\n",
+                     packs.error());
     for (unsigned i = 0; i < opt.elevation_count; ++i)
         if (!packs.import_file(opt.elevation_paths[i])) {
             std::fprintf(stderr, "globe-x11: %s\n", packs.error());

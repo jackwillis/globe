@@ -27,7 +27,7 @@ void clip_ring(const Camera& camera, const std::vector<Vec3>& v,
     const auto limb = [](Vec3 a, Vec3 b) {
         const double t = a.z / (a.z - b.z);
         Vec3 c = a + (b - a) * t;
-        const double len = std::hypot(c.x, c.y);
+        const double len = std::sqrt(c.x * c.x + c.y * c.y);
         return len > 0 ? Vec3{c.x / len, c.y / len, 0.0} : Vec3{1, 0, 0};
     };
     if (!any_hidden) {

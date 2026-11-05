@@ -126,9 +126,15 @@ endif()
 
 find_package(X11)
 if(X11_FOUND AND TARGET globe_embedded_atlas)
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py
+      ${CMAKE_SOURCE_DIR}/data/elevation-0.5deg.gelv ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp FineElevation
+    DEPENDS data/elevation-0.5deg.gelv tools/embed_atlas.py)
+  add_library(globe_embedded_fineelevation ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp)
+  target_link_libraries(globe_embedded_fineelevation PUBLIC globe_core)
   add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
-  target_link_libraries(globe-x11 PRIVATE globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
+  target_link_libraries(globe-x11 PRIVATE globe_embedded_fineelevation globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
 endif()
@@ -173,6 +179,10 @@ if(GLOBE_BUILD_TESTS)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
     add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
   endforeach()
+  if(TARGET globe-bench AND Python3_FOUND)
+    add_test(NAME progressive COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_progressive.py
+      $<TARGET_FILE:globe-bench> ${CMAKE_SOURCE_DIR}/data/elevation-0.5deg.gelv)
+  endif()
   if(TARGET globe-x11)
     find_program(XVFB_RUN xvfb-run)
     if(XVFB_RUN)
@@ -213,6 +223,9 @@ if(GLOBE_BUILD_TESTS)
                        --size 160x120 --script ${CMAKE_SOURCE_DIR}/tests/data/click_expose.txt
                        --exit-when-done --verify-pixels --stats)
       set_tests_properties(x11_click PROPERTIES TIMEOUT 60)
+      add_test(NAME x11_progressive COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
+        ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_x11_progressive.py $<TARGET_FILE:globe-x11>)
+      set_tests_properties(x11_progressive PROPERTIES TIMEOUT 120)
       # Nothing may be drawn while the window sits idle.
       add_test(NAME x11_idle
                COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"

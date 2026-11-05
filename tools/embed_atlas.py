@@ -14,7 +14,7 @@ def main(argv):
     if len(argv) not in (2, 3):
         sys.exit(__doc__)
     kind = argv[2] if len(argv) == 3 else "Atlas"
-    if kind not in ("Atlas", "Elevation", "Countries", "Places", "Landclasses"):
+    if kind not in ("Atlas", "Elevation", "Countries", "Places", "Landclasses", "FineElevation"):
         sys.exit("resource kind must be Atlas or Elevation")
     with open(argv[0], "rb") as f:
         data = f.read()

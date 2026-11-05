@@ -26,3 +26,9 @@ one-shot stage wakes, then no more work. Real-display behavior remains owner acc
 
 Tests compare banded and full rendering, enforce work/row limits, check clip restoration and stale
 job nonmutation. Generation, work-limit, clip restoration and out-of-band-write mutants all fail.
+
+## Multiple resolutions
+
+The full edition now sequences explicit generation/level requests and completions. Intermediate
+terrain omits line decoration; later levels preserve the bitmap and repair uncovered coarse remnants
+using bounded coverage rows. See [the implemented resolution contract](progressive-resolution-plan.md).

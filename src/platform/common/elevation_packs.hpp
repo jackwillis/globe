@@ -11,6 +11,8 @@ bool read_pack_file(const char* path, std::vector<std::uint8_t>& out);
 class ElevationPacks {
   public:
     bool initialize(const std::uint8_t* bytes, std::size_t size);
+    // Immutable embedded bytes must outlive this store, just like initialize's base pack.
+    bool add_embedded(const std::uint8_t* bytes, std::size_t size) { return add(bytes, size); }
     bool import_file(const char* path);
     void register_levels(Model& model) const;
     TerrainScene* for_model(const Model& model);

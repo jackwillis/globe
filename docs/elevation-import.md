@@ -1,8 +1,10 @@
 # Local elevation packs
 
-Both front ends accept `--elevation FILE`, repeated up to three times in addition to the embedded
-one-degree pack. Files are read only at startup. The GELV decoder validates them; import currently
-requires a global 2:1 grid with equal angular cell sizes. There is no network access.
+The X11 full edition normally embeds one-degree and half-degree grids. It accepts
+`--elevation FILE`, repeated up to three times; explicit imports use the one-degree base plus
+those user packs instead of the optional built-in half-degree pack. Files are read only at
+startup, validated as global 2:1 equal-angle GELV grids. There is no network access. The current
+OS 9 floppy edition uses its embedded one-degree grid and has no command-line import path.
 
 The combined logical terrain cache payload is limited to 32 MiB. This excludes source bytes,
 framebuffers, allocator overhead and other process memory. Input file size is checked before
@@ -14,13 +16,14 @@ packs override earlier ones. Dimensions enter the pure model through `RegisterEl
 verb `elevation LEVEL WIDTH HEIGHT`); actual file paths and reads stay in the platform.
 
 Build another resolution on a modern machine with the elevation builder's `--cell-degrees` option.
-For the verified ETOPO source, a half-degree build produced 720 x 360 cells, 259,752 bytes, SHA-256
-`bd10f2807416bed11e92d9fe2ef89481f1e207bb826b66d9fabb6005f6674ee8`.
-The builder uses a bounded 64 MiB HDF5 chunk cache; this is builder memory, not target runtime memory.
-A real half-degree import selected level 1 at high zoom on the host. Its data is optional and is
-not embedded or committed.
+The committed half-degree pack was rebuilt twice from the verified ETOPO source with the pinned
+50m lakes input: 720 x 360, 259,752 bytes, SHA-256
+`b51499b5c0a4dc09dd5ac62d27b6a520033b2411c858b71728e5e5df0f5e7906`.
+The builder uses a bounded 64 MiB HDF5 chunk cache on the modern build host.
+The earlier `bd10f280...` half-degree pack described a historical conversion, not this current
+lakes-aware build. [Progressive scheduling and final-pixel guarantees](progressive-resolution-plan.md).
 
-Validation: GCC sanitizer suite 22/22 before the final additional malformed-trace/corruption cases;
+Historical validation: GCC sanitizer suite 22/22 before the final additional malformed-trace/corruption cases;
 Retro68 PowerPC and 68k compile probes pass. Selection-threshold, aspect-validation and aggregate
 budget mutants are rejected. Source bytes, CRC failures, missing files and oversized files are
 covered by the import test. Legacy moving/refined checksum pins are unchanged.

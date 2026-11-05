@@ -242,3 +242,7 @@ Center/even-odd sampling, simplified biome mapping, no nearest-neighbor gap fill
 [typed resource contract and limitations](../docs/landclasses-format.md). No GELV or glacier data
 changed. Archive roundoff repair is bounded to 1e-9 degrees; all other out-of-range coordinates
 are rejected. The shipped data credit is `LANDCLASS-NOTICE.txt`, not the software GPL notice.
+
+## Half-degree elevation — 2026-11-05
+
+`elevation-0.5deg.gelv` uses the same pinned ETOPO 2022 60s ice-surface source and pinned Natural Earth 50m lakes input as the current one-degree pack. Two complete conversions reproduced 720 x 360 cells, 259,752 bytes, SHA-256 `b51499b5c0a4dc09dd5ac62d27b6a520033b2411c858b71728e5e5df0f5e7906`. No new source download. Same CC0 ETOPO and public-domain Natural Earth provenance above. Build with the existing elevation builder, `--cell-degrees 0.5 --lakes ne_50m_lakes.zip`. The full X11 edition embeds both levels by default; the OS 9 floppy keeps one degree. Explicit X11 imports retain the original coarse base plus user-supplied packs instead of the optional built-in half-degree pack.
