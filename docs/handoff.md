@@ -468,3 +468,5 @@ See docs/progressive-resolution-plan.md, docs/os9-scheduling.md,
 docs/perf/progressive-resolution-host.json and docs/perf/progressive-resolution-tiger.json.
 Installable current image and MacBinary are retained in the Codex worktree's ignored
 `build-scheduling-evidence/GlobeProgressive-1440.dsk` and `GlobeProgressive.bin`.
+
+Final integration: progressive-resolution work fast-forwarded into local `main` at `afa7946`, preserving main through `7c245e9`. Identified Tiger Reset repeat: 180 bands, 2,757 ms settle, 732 ms copy, 17 ms max turn, 16 ms max continuation. The overnight progress file now records completed status. No GitHub push was performed.

@@ -1,19 +1,38 @@
-# Overnight progress — 2026-11-05
+# Overnight work complete — 2026-11-05
 
-User authorized unattended work and merge to main after validation. Implementation is complete in
-codex/os9-cooperative-scheduling, including integration of main's overlays, info cards and OS 9 keys.
+Merged into local main at afa7946 after integrating main through 7c245e9. No GitHub push.
+The following documentation-only completion record follows that source merge.
 
-Completed: explicit resolution effects/completions; coarse-to-target sequence; finest-only line
-decoration; coverage repair guaranteeing exact final pixels; bundled half-degree data in X11;
-32-row immutable GWorld presentation continuations with camera-generation cancellation.
-47/47 combined host tests pass, including live two-job X11 quiet idle and real-data full-pixel
-comparisons. Eight focused sanitizer tests and both Retro68 compile probes pass; OS 9 package,
-fork roundtrip and floppy size checks pass. Policy/format checks pass. Host timing/provenance is
-saved in docs/perf/progressive-resolution-host.json and docs/progressive-resolution-plan.md.
+Implemented: generation/level refinement effects and validated completions; coarse-to-target
+terrain sequence; final-only line decoration; coverage repair giving exact finest-only final
+pixels; bundled half-degree terrain in X11; 32-row immutable GWorld presentation with cancellation,
+coalescing, background suspension, and quiet lock-failure handling. Newer main-branch overlays,
+info windows, picking, markers, controls and overlay tests are preserved. OS 9 keeps one degree.
 
-Final steps in progress: record the final verified Tiger launch/reset evidence, commit the final
-data/docs/integration tests, and fast-forward main if its checkout remains clean. Never compile
-on maul; use explicit private mountpoints and verify the application data fork.
+Validation: 47/47 host tests pass, including actual two-job X11 quiet idle and real-data full-pixel
+comparisons in both styles at two zooms. Eight focused sanitizer tests pass. PowerPC/68k probes,
+OS 9 build/packaging/fork roundtrip/size, formatting and policy checks pass. The final production
+package was rebuilt after the low-memory retry guard.
 
-Remaining limits: native OS 9 acceptance, G4 higher-resolution performance, measured input-to-pixel
-latency, bounded moving-frame/overlay/snapshot-conversion work. The one-degree OS 9 payload is kept.
+Host high-zoom compute, nine repeats: complete coarse terrain 9.55 ms, final progressive image
+42.22 ms; finest-only final 31.64 ms. Final checksums match. No observed ordinary one-degree
+compute regression in the recorded sample. These are host compute timings, not G4 scanout.
+
+Tiger is shared. GlobeVerify (creator GlP3) at /tmp/globe-verify-volume was verified with its new
+band-count title, alongside the other session's Classic apps. Identified launch: 180 bands,
+2,750 ms settle, 734 ms copy, 20 ms maximum turn, 7 ms maximum continuation. Identified Reset:
+180 bands, 2,757 ms settle, 732 ms copy, 17 ms maximum turn, 16 ms maximum continuation.
+The verification source is 36608c4 with application name/creator changed only; a later production
+lock-failure guard changes the failure path only. The final production package is compile/size
+checked. Earlier ambiguous ordinary-app launches are excluded from the new Tiger evidence.
+Do not quit shared Classic or assume numbered volume names identify a build.
+
+Review: docs/progressive-resolution-plan.md, docs/os9-scheduling.md, data/SOURCES.md,
+docs/perf/progressive-resolution-host.json, docs/perf/progressive-resolution-tiger.json.
+Installable production image/MacBinary and screenshots are retained in the Codex worktree's
+ignored build-scheduling-evidence directory, named GlobeProgressive-1440.dsk and GlobeProgressive.bin.
+The worktree is /home/jack/.codex/worktrees/progressive-resolution/globe.
+
+Remaining limits, not claimed complete: native OS 9 hardware acceptance, G4 half-degree runtime
+performance, measured input-to-pixel latency, and bounded moving-frame/snapshot-conversion/full
+settled-overlay work. These do not block the completed coarse-to-fine and row-submission changes.

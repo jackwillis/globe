@@ -66,3 +66,5 @@ excluded from the new result. See [identified Tiger evidence](perf/progressive-r
 The final production package additionally guards failed PixMap locks against busy retries; the
 normal presentation path is unchanged and the rebuilt package passes compile/fork/size checks.
 Do not quit shared Classic to switch builds; use a unique test application name/creator.
+
+The identified Reset repeat reported 180 bands, 2,757 ms total, 732 ms copying, maximum turn 17 ms and maximum continuation 16 ms. Both identified trials retain the existing one-degree OS 9 data and the new main-branch markers/overlays.

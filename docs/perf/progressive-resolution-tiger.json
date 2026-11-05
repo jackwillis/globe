@@ -18,6 +18,15 @@
       "copy_ms": 734,
       "max_foreground_turn_ms": 20,
       "max_continuation_ms": 7
+    },
+    {
+      "kind": "reset",
+      "terrain_degrees": 1,
+      "submitted_32_row_bands": 180,
+      "settle_ms": 2757,
+      "copy_ms": 732,
+      "max_foreground_turn_ms": 17,
+      "max_continuation_ms": 16
     }
   ],
   "limits": [

@@ -10,9 +10,10 @@ The combined logical terrain cache payload is limited to 32 MiB. This excludes s
 framebuffers, allocator overhead and other process memory. Input file size is checked before
 allocation; invalid packs fail startup with an error. Imported bytes outlive their cached views.
 
-`quality_for(Model)` chooses the coarsest registered grid whose equatorial cell spans at most four
+The zoom target is the coarsest registered grid whose equatorial cell spans at most four
 screen pixels. If none meets that target it uses the finest available. Later equal-resolution
-packs override earlier ones. Dimensions enter the pure model through `RegisterElevation` (trace
+packs override earlier ones. During an active sequence, `quality_for(Model)` returns the current
+requested level; completion advances it toward the target. Dimensions enter the pure model through `RegisterElevation` (trace
 verb `elevation LEVEL WIDTH HEIGHT`); actual file paths and reads stay in the platform.
 
 Build another resolution on a modern machine with the elevation builder's `--cell-degrees` option.
