@@ -33,7 +33,8 @@ add_library(globe_core
   src/render/terrain.cpp
   src/render/places.cpp
   src/render/highlight.cpp
-  src/render/daynight.cpp)
+  src/render/daynight.cpp
+  src/render/measure.cpp)
 target_include_directories(globe_core PUBLIC include)
 target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
 target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
@@ -157,7 +158,7 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight)
+  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

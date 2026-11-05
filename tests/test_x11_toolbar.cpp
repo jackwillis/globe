@@ -154,6 +154,31 @@ int main(int argc, char** argv) {
                 usleep(100000);
             }
         }
+        {
+            // M starts measuring; two clicks give the distance card (the first only marks a point).
+            XEvent key{};
+            key.xkey.type = KeyPress;
+            key.xkey.display = d;
+            key.xkey.window = main;
+            key.xkey.keycode = XKeysymToKeycode(d, XK_m);
+            XSendEvent(d, main, False, KeyPressMask, &key);
+            XFlush(d);
+            usleep(100000);
+            for (const int x : {60, 100}) {
+                XEvent press{};
+                press.xbutton.display = d;
+                press.xbutton.window = main;
+                press.xbutton.button = Button1;
+                press.xbutton.x = x;
+                press.xbutton.y = 60;
+                press.xbutton.type = ButtonPress;
+                XSendEvent(d, main, False, ButtonPressMask, &press);
+                press.xbutton.type = ButtonRelease;
+                XSendEvent(d, main, False, ButtonReleaseMask, &press);
+                XFlush(d);
+                usleep(700000); // each click waits out the double-click window
+            }
+        }
         click(Command::AlignNorth); // disabled in initial north-up state
         click(Command::ToggleGraticule);
         click(Command::ToggleGraticule);
@@ -178,8 +203,8 @@ int main(int argc, char** argv) {
         CHECK(text.find("\"refine_bands\": " + std::to_string(bands) + ",") != std::string::npos);
     } else {
         CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);
-        CHECK(text.find("\"cursor_changes\": 5") != std::string::npos);
-        CHECK(text.find("\"info_cards\": 1") != std::string::npos);
+        CHECK(text.find("\"cursor_changes\": 9") != std::string::npos);
+        CHECK(text.find("\"info_cards\": 2") != std::string::npos); // country card, then distance
         CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
         CHECK(text.find("\"terrain_style\": 1") != std::string::npos); // Relief, via the palette
     }

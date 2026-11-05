@@ -14,7 +14,7 @@ markers and scrolling information windows.
 
 ![Map look, Antarctica in white](docs/images/antarctica-map.png)
 
-`D` (X11) shades the night side from the system clock, with a soft twilight edge:
+`M` (X11) measures: click two points for the great-circle distance and bearing, with the arc drawn between them. `D` (X11) shades the night side from the system clock, with a soft twilight edge:
 
 ![Map look with the day/night terminator](docs/images/daynight-map.png)
 
