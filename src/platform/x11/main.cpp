@@ -557,7 +557,8 @@ class App {
             ++refine_bands_;
             present_refine(step.first_row, step.end_row);
         }
-        if (refinement_ && !refinement_->active() && upload_dirty_ && !presentation_held(model_)) {
+        if (refinement_ && !refinement_->active() && upload_dirty_ && fb_ &&
+            !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
         }
