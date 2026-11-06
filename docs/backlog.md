@@ -13,7 +13,7 @@
 
 ## Release themes
 
-These are **planned milestone definitions, not native GitHub milestone objects yet**. The connected GitHub actions currently support assigning milestones but not creating them.
+These are the three GitHub milestones (v0.1, v0.2, v0.3), created without due dates. The epics (#1–#6) span releases and carry no milestone.
 
 | Planned milestone | Outcome | Practical gate |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ No due dates or fixed feature commitments have been set.
 | Offline data and acquisition | Validated packs, safe cache and optional provider ingestion | [#5](https://github.com/jackwillis/globe/issues/5) |
 | Release engineering and verification | Reproducible CI and builds, target evidence | [#6](https://github.com/jackwillis/globe/issues/6) |
 
-Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships and repository milestones have not been configured**.
+Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.3 exist.
 
 ## First release: recommended order
 
@@ -63,9 +63,9 @@ Ruby scripting, fantasy cartography and a separate flat-map editor; native 68k s
 
 ## Final repository setup (GitHub UI or a connector with milestone/label creation)
 
-1. In **Issues → Milestones**, create the three milestone names above; do not invent dates.
+1. Done: the milestones v0.1, v0.2 and v0.3 exist, with no dates.
 2. Create optional orthogonal labels: `type:bug`, `type:feature`, `type:refactor`, `type:research`, `type:docs`; `priority:p0`, `priority:p1`, `priority:p2`; `platform:os9`, `platform:x11`, `platform:portable`; `blocked`, `needs-decision`.
-3. Assign issues according to the **Release theme** field in their bodies after milestones exist. Cross-cutting items may sit with their first required release or remain unmilestoned. Avoid an evergreen catch-all Future milestone.
+3. Done: issues are assigned according to the **Release theme** field in their bodies; the epics stay unmilestoned. Avoid an evergreen catch-all Future milestone.
 4. Optionally convert epic checklists into native GitHub sub-issue relationships. The issue cross-references already provide usable navigation and will remain stable.
 
 **Source of truth:** GitHub issue state, not copied status tables or old GL notes. Verify current code and Actions before closing a ticket. No release tags, server infrastructure or automated machine actions are authorized by this roadmap.
