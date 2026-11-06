@@ -52,7 +52,7 @@ class Framebuffer {
     void clip_rows(int first, int end);
     int first_row() const { return clip_first_; }
     int end_row() const { return clip_end_; }
-    enum class Coverage { Off, Mark, Uncovered };
+    enum class Coverage : std::uint8_t { Off, Mark, Uncovered };
     void coverage(Coverage mode) { coverage_mode_ = mode; }
     void reset_coverage_row(int y);
     bool recording_coverage() const { return coverage_mode_ == Coverage::Mark; }
