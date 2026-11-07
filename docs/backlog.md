@@ -36,6 +36,17 @@ No due dates or fixed feature commitments have been set.
 
 Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.3 exist.
 
+## Direction since 2026-11-07: usability
+
+The owner's call after the rendering and responsiveness work: **make Globe an atlas worth looking at
+for more than a minute.** Umbrella issue [#35](https://github.com/jackwillis/globe/issues/35)
+(milestone v0.2, under epic #4, touching #1). Order: the Classic Mac OS gaps first (cursors #44, looks
+palette #45, menu bar #46), then render tiers with a first-run speed test (#34, moved to v0.2), the
+help overlay (#40), and the atlas features: text foundation (#36), pointer readout (#37), labels
+(#38), scale bar and degree labels (#39), animated zoom (#41), remembered view (#42), image export
+(#43); existing #24 (find places), #23 and #25 stay linked. Decisions and evidence:
+[ADR 0002](adr/0002-rendering-shared-code-and-usability.md).
+
 ## First release: recommended order
 
 1. [#7 — Verify complete green CI](https://github.com/jackwillis/globe/issues/7): prior clang-tidy fixes are committed, but a full recent successful workflow run must be checked.

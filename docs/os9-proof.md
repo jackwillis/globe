@@ -95,3 +95,14 @@ out (wheel drivers such as USB Overdrive can send those keys), and any event cod
 not recognise is shown at the end of the window title (`ev CODExCOUNT`) so a real wheel under
 Tiger Classic can be observed. Making the wheel work natively needs a Carbon build (a separate,
 larger change).
+
+## Bare Mac OS 9 on the G4 (2026-11-07)
+
+First run on real OS 9 (not Classic under Tiger), floppy edition built from `a3a3aea`, window title
+read by the owner: Relief `88 bands, 992 ms, copy 150 ms, turn 19 ms, step 8 ms`; Map `88 / 991 /
+150 / 20 / 9`. Against Classic on Tiger (2,750 ms settle, 734 ms copy) the OS X layer was most of the
+cost. The owner reports the zoom preview, progress bar and shortcuts work. Bands are row-slice
+copies, not frames. Delivery: the floppy image was attached on Tiger with `hdiutil attach -imagekey
+diskimage-class=CRawDiskImage` and the app copied with `ditto -rsrc` to
+`/Volumes/MacOS9Lives/globe-tip9/` (file type and creator were not checked from the shell; the app
+opened). Next on OS 9: cursors (#44), a looks palette (#45), a menu bar (#46).

@@ -508,3 +508,27 @@ ms, `docs/perf/g4-2026-11-06.txt`). Details and measurements: `docs/refinement-o
 Builds on maul: `/tmp/globe-x11-tip8` (everything above except the pixel list); newer tips as pushed.
 Issue #34 holds the owner's idea of low/medium/high render tiers with first-run calibration.
 Not verified on OS 9 (built and probed only): zoom preview, progress bar, shared runner and keys.
+
+## 2026-11-07, end of session
+
+State: local `main` is 19+ commits ahead of `origin/main` and **not pushed** (the owner pushes). Latest
+code commit `a838974`, docs `a3a3aea`, then this note. Scratch builds: NetBSD `/tmp/globe-x11-tip9`
+on maul (lost on reboot); the OS 9 app at `MacOS9Lives/globe-tip9` on maul's OS 9 volume. Tiger and
+OS 9 are shared with Codex, which had nothing in flight.
+
+Decided this session: see [ADR 0002](adr/0002-rendering-shared-code-and-usability.md). Direction is now
+usability (umbrella #35). GitHub: created #34 (render tiers, moved to v0.2/P1), #35 (usability epic)
+and #36 to #46 (text foundation, pointer readout, labels, scale and degree labels, help overlay,
+animated zoom, remembered view, image export, Mac OS cursors with the owner's rule, looks palette,
+menu bar); commented on #16 twice (plan, then status); retitled #40 to the help overlay.
+
+Owner's cursor rule (#44): the drag hand by default; a pointing hand over something clickable; the
+ocean counts as clickable only while a country is selected.
+
+Not done and why: the 8 ms OS 9 step (suspected zoom-cache copy, unverified; maul was on OS 9 then),
+render tiers (an evaluation ticket, no code), OS 9 full edition (no ticket yet), splitting the
+`apply()` skeletons (not worth it, #16). The `x11_toolbar` test fails under sanitizers when the
+machine is busy (a fixed 700 ms wait for the info window); wait for the window instead of sleeping.
+
+Next suggested: #44, #45, #46 with the owner on bare OS 9 (they can only be judged there), then #34's
+calibration experiment on host, G4 and Tiger, then #36 as the base for labels and the readout.
