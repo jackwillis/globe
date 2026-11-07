@@ -37,7 +37,8 @@ add_library(globe_core
   src/render/measure.cpp
   src/render/overlays.cpp
   src/render/zoom.cpp
-  src/render/shown_frame.cpp)
+  src/render/shown_frame.cpp
+  src/render/refine_runner.cpp)
 target_include_directories(globe_core PUBLIC include)
 target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
 target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)

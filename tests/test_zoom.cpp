@@ -2,6 +2,8 @@
 // Copyright (c) 2026 Jack Willis
 #include "atlas_util.hpp"
 #include "check.hpp"
+#include "globe/app.hpp"
+#include "globe/refine_runner.hpp"
 #include "globe/render.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
@@ -193,10 +195,89 @@ void test_zoom_preview_cache() {
     const auto far = *make_camera({{20, 30}, 10, 40 * 4.5, 120, 90});
     CHECK(!zoom.preview(*fb, far, TerrainStyle::Map, palette.background, palette.ocean));
 }
+// The refinement lifecycle both front ends share: start, step, cancel, preview, refine over it.
+void test_refine_runner() {
+    auto ab =
+        atlas_util::make_atlas({{1, {{20000, 20000}, {26000, 24000}, {32000, 20000}}}}, "zoom");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    std::FILE* file = std::fopen("data/elevation-1deg.gelv", "rb");
+    CHECK(atlas && file);
+    if (!atlas || !file)
+        return;
+    std::vector<std::uint8_t> raw;
+    int c;
+    while ((c = std::fgetc(file)) != EOF)
+        raw.push_back(static_cast<std::uint8_t>(c));
+    std::fclose(file);
+    auto elevation = Elevation::parse(raw.data(), raw.size());
+    auto scene = Scene::create(*atlas);
+    CHECK(elevation && scene);
+    if (!elevation || !scene)
+        return;
+    auto terrain = TerrainScene::create(*elevation);
+    auto fb = Framebuffer::create(120, 90);
+    auto reference = Framebuffer::create(120, 90);
+    CHECK(terrain && fb && reference);
+    if (!terrain || !fb || !reference)
+        return;
+    Model m = initial_model(120, 90);
+    update(m, RegisterElevation{0, 360, 180});
+    RefineRunner runner(*scene);
+    CHECK(!runner.active() && runner.job() == nullptr);
+    const auto settle = [&](std::uint64_t at) {
+        update(m, Tick{at + 250});
+        return update(m, Tick{at + 251});
+    };
+    const auto finish = [&] {
+        while (runner.active())
+            runner.step(*fb, m);
+        while (m.refine_active)
+            update(m, RefinementFinished{m.generation, m.refine_level});
+    };
+    // A first refinement from nothing: no preview yet, and the job hands over its snapshot.
+    update(m, Wheel{100, 0});
+    CHECK(!runner.render_moving(*fb, m, &*terrain));
+    auto fx = settle(100);
+    CHECK(fx.refine.has_value());
+    runner.start(m, &*fb, &*terrain);
+    CHECK(runner.active() && runner.job() != nullptr);
+    finish();
+    CHECK(!runner.active() && runner.zoom().valid() && !runner.zoom().baked());
+    // Zoom: the cache stands in for a render, and the refinement over it ends on the same pixels
+    // as one from scratch.
+    update(m, Wheel{1000, 2});
+    CHECK(runner.render_moving(*fb, m, &*terrain));
+    fx = settle(1000);
+    CHECK(fx.refine.has_value() &&
+          m.refine_level == m.refine_target); // no coarse level to skip here
+    runner.start(m, &*fb, &*terrain);
+    finish();
+    RefinementJob direct(m.camera, *scene, kDefaultPalette, effective_layers(m), quality_for(m), 99,
+                         &*terrain);
+    while (direct.active())
+        direct.step(*reference, 99, 256);
+    CHECK(pixels(*fb) == pixels(*reference));
+    // Input part-way through a job stops it.
+    update(m, Wheel{2000, 1});
+    fx = settle(2000);
+    CHECK(fx.refine.has_value());
+    runner.start(m, &*fb, &*terrain);
+    for (int i = 0; i < 5; ++i)
+        runner.step(*fb, m);
+    CHECK(runner.active());
+    update(m, Wheel{3000, 1});
+    runner.cancel(&*fb, m.camera);
+    CHECK(!runner.active());
+    // Turned off, the runner never previews.
+    runner.enable_preview(false);
+    update(m, Wheel{4000, 1});
+    CHECK(!runner.render_moving(*fb, m, &*terrain));
+}
 } // namespace
 int main() {
     test_scaler();
     test_refine_over_preview();
     test_zoom_preview_cache();
+    test_refine_runner();
     return TEST_MAIN_RESULT();
 }

@@ -11,6 +11,7 @@
 #include "globe/embedded_landclasses.hpp"
 #include "globe/embedded_places.hpp"
 #include "globe/overlays.hpp"
+#include "globe/refine_runner.hpp"
 #include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
@@ -81,6 +82,8 @@ class Application {
         overlays_.attach(countries_ ? &*countries_ : nullptr,
                          country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
                          place_scene_ ? &*place_scene_ : nullptr);
+        runner_.set_scene(*scene_);
+        runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
         Rect bounds{50, 30, 530, 670};
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
@@ -104,18 +107,14 @@ class Application {
                 apply(Tick{before});
             }
             if (foreground_ && redraw_) {
-                if (!zoom_preview()) {
-                    preview_shown_ = false;
-                    render_globe(*fb_, model_.camera, *scene_, kDefaultPalette,
-                                 effective_layers(model_), true, quality_for(model_), &*terrain_);
-                }
+                runner_.render_moving(*fb_, model_, &*terrain_);
                 copy(0, fb_->height());
                 redraw_ = false;
             }
             // Give presentation a bounded share before geometry can consume the whole turn.
             if (foreground_ && !presentation_held(model_) && now_ms() - turn_start < kWorkSliceMs)
                 present_step();
-            const bool work = foreground_ && job_ && job_->active() && !job_waiting_;
+            const bool work = foreground_ && runner_.active() && !job_waiting_;
             if (work && now_ms() - turn_start < kWorkSliceMs) {
                 // Check elapsed time after every bounded step AND presentation. A slow step or
                 // Toolbox copy can still overrun: measure the full turn, not just geometry.
@@ -123,16 +122,10 @@ class Application {
                 auto step_start = now_ms();
                 unsigned steps = 0;
                 do {
-                    const auto band = job_->step(*fb_, model_.generation, kWorkUnitsPerStep);
-                    zoom_.after_step(*job_);
+                    const auto band = runner_.step(*fb_, model_, kWorkUnitsPerStep);
                     auto step_end = now_ms();
                     max_step_ms_ = std::max(max_step_ms_, step_end - step_start);
                     if (band.band_ready) {
-                        if (place_scene_) { // city markers, like the X11 front end
-                            fb_->clip_rows(band.first_row, band.end_row);
-                            place_scene_->draw(*fb_, model_.camera);
-                            fb_->clip_rows(0, fb_->height());
-                        }
                         present(band.first_row, band.end_row);
                         step_end = now_ms();
                     }
@@ -141,7 +134,7 @@ class Application {
                         wake_ = step_end + band.wake_after_ms;
                         break;
                     }
-                    if (!job_->active() && model_.refine_active) {
+                    if (!runner_.active() && model_.refine_active) {
                         apply(RefinementFinished{model_.generation, model_.refine_level});
                         break;
                     }
@@ -149,16 +142,17 @@ class Application {
                     EventRecord pending{};
                     if (++steps % 16 == 0 && EventAvail(everyEvent, &pending))
                         break; // dispatch queued input before spending another geometry budget
-                } while (job_->active() && step_start < slice_end);
+                } while (runner_.active() && step_start < slice_end);
                 // The final snapshot includes the full settled overlays.
-                if (!job_->active() && (dirty_ || shown_quick_ || bar_shown_) &&
+                if (!runner_.active() && (dirty_ || shown_quick_ || bar_shown_) &&
                     !presentation_held(model_))
                     presentation_.request(model_.generation);
             }
             if (foreground_)
                 max_turn_ms_ = std::max(max_turn_ms_, now_ms() - turn_start);
-            if (foreground_ && model_.stage == QualityStage::Refine && job_ && !job_->active() &&
-                !titled_ && !presentation_.pending(model_.generation) && !dirty_)
+            if (foreground_ && model_.stage == QualityStage::Refine && runner_.job() != nullptr &&
+                !runner_.active() && !titled_ && !presentation_.pending(model_.generation) &&
+                !dirty_)
                 show_timing();
             Point pointer;
             GetMouse(&pointer);
@@ -171,7 +165,7 @@ class Application {
                 everyEvent, &event,
                 static_cast<long>(classic_wait_ticks(
                     now_ms(), wake_,
-                    (job_ && job_->active() && !job_waiting_) ||
+                    (runner_.active() && !job_waiting_) ||
                         (!presentation_held(model_) && presentation_.pending(model_.generation)),
                     foreground_)),
                 foreground_ ? mouse_region_ : nullptr);
@@ -283,8 +277,7 @@ class Application {
         GWorldPtr next = nullptr;
         if (NewGWorld(&next, 16, &rect, nullptr, nullptr, 0) != 0 || !next)
             return false;
-        if (job_)
-            job_->cancel();
+        runner_.cancel(nullptr, model_.camera);
         presentation_.cancel();
         if (world_)
             DisposeGWorld(world_);
@@ -320,24 +313,6 @@ class Application {
             }
         }
     }
-    // While the view only zooms about its center, the last finished terrain frame scaled to the new
-    // radius, with fresh lines on top, stands in for a render (see ZoomPreview).
-    bool zoom_preview() {
-        if (model_.stage != QualityStage::Moving || !fb_)
-            return false;
-        const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
-        if (!zoom_.preview(*fb_, model_.camera, model_.terrain_style, palette.background,
-                           palette.ocean))
-            return false;
-        if (!zoom_.baked()) {
-            auto quality = quality_for(model_);
-            quality.lines_only = true;
-            render_globe(*fb_, model_.camera, *scene_, kDefaultPalette, effective_layers(model_),
-                         true, quality, &*terrain_);
-        }
-        preview_shown_ = true;
-        return true;
-    }
     bool capture() {
         const auto start = now_ms();
         const auto pix = GetGWorldPixMap(world_);
@@ -345,9 +320,9 @@ class Application {
             return false;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
-        const bool settled = frame_settled(model_, job_ && job_->active());
+        const bool settled = frame_settled(model_, runner_.active());
         const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(), settled,
-                                         bar_progress(model_, job_ ? &*job_ : nullptr));
+                                         bar_progress(model_, runner_.job()));
         shown_quick_ = shown_.quick();
         bar_shown_ = shown_.bar();
         const bool ok = convert_pixels(
@@ -420,10 +395,9 @@ class Application {
         // one the full.
         bool converted = true;
         if (convert) { // else the rows were converted by capture(); only submit them
-            const bool settled = frame_settled(model_, job_ && job_->active());
-            const auto& shown =
-                shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(), settled,
-                             bar_progress(model_, job_ ? &*job_ : nullptr));
+            const bool settled = frame_settled(model_, runner_.active());
+            const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(),
+                                             settled, bar_progress(model_, runner_.job()));
             shown_quick_ = shown_.quick();
             bar_shown_ = shown_.bar();
             converted = convert_pixel_rows(shown, format,
@@ -454,10 +428,7 @@ class Application {
         if (generation != model_.generation) {
             presentation_.cancel();
             job_waiting_ = false;
-            if (fb_)
-                zoom_.keep_partial(*fb_, job_ && job_->active(), model_.camera);
-            if (job_)
-                job_->cancel();
+            runner_.cancel(fb_ ? &*fb_ : nullptr, model_.camera);
             if (stage == QualityStage::Refine)
                 fx.redraw = true;
         }
@@ -470,17 +441,7 @@ class Application {
             titled_ = false;
         }
         if (fx.refine) {
-            auto quality = quality_for(model_);
-            // A zoom preview is on screen: refine over it instead of clearing to the ocean.
-            quality.preserve_bitmap = quality.preserve_bitmap || preview_shown_;
-            preview_shown_ = false;
-            job_.emplace(model_.camera, *scene_, kDefaultPalette, effective_layers(model_), quality,
-                         model_.generation, &*terrain_);
-            if (quality.terrain && fb_) {
-                if (auto* snapshot = zoom_.begin_job(model_.camera, model_.terrain_style,
-                                                     fb_->width(), fb_->height()))
-                    job_->set_snapshot(snapshot);
-            }
+            runner_.start(model_, fb_ ? &*fb_ : nullptr, &*terrain_);
         }
         if (std::holds_alternative<Resize>(msg))
             fx.wake_after_ms = update(model_, Tick{now_ms()}).wake_after_ms;
@@ -590,14 +551,13 @@ class Application {
     Overlays overlays_;
     InfoCardWindow info_;
     std::optional<Framebuffer> fb_;
-    std::optional<RefinementJob> job_;
+    RefineRunner runner_; // the refinement job, the zoom preview and the markers
     bool job_waiting_ = false;
     std::uint64_t wake_ = 0;
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
     bool titled_ = true, dirty_ = false, shown_quick_ = false;
-    ZoomPreview zoom_; // the last finished terrain frame, scaled while the view only zooms
     ShownFrame shown_; // overlays and the bar, built on a copy of the frame for each conversion
-    bool bar_shown_ = false, preview_shown_ = false;
+    bool bar_shown_ = false;
     unsigned last_unknown_ = 0, unknown_count_ = 0;
     std::uint64_t settled_ms_ = 0;
     ClassicPresentation presentation_;

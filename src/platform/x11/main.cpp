@@ -47,6 +47,7 @@
 #include "globe/embedded_places.hpp"
 #include "globe/overlays.hpp"
 #include "globe/places.hpp"
+#include "globe/refine_runner.hpp"
 #include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
@@ -116,6 +117,8 @@ class App {
         overlays_.attach(countries_ ? &*countries_ : nullptr,
                          country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
                          place_scene_ ? &*place_scene_ : nullptr);
+        runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
+        runner_.enable_preview(!opt.no_zoom_preview);
     }
 
     ~App() {
@@ -188,7 +191,7 @@ class App {
             // How long this turn keeps the loop from looking at input: the worst one bounds the
             // latency of any click or wheel step, refining or not.
             const std::uint64_t turn_start = monotonic_ns();
-            const bool refining = refinement_ && refinement_->active();
+            const bool refining = runner_.active();
             XEvent ev;
             while (!quit && XPending(dpy_) > 0) {
                 XNextEvent(dpy_, &ev);
@@ -243,7 +246,7 @@ class App {
                     refine_work_ms_);
         std::printf(
             "  \"refinement_jobs\": %u,\n  \"zoom_cache_valid\": %d,\n  \"zoom_previews\": %u,\n",
-            refinement_jobs_, zoom_.valid() ? 1 : 0, zoom_previews_);
+            refinement_jobs_, runner_.zoom().valid() ? 1 : 0, zoom_previews_);
         std::printf("  \"max_turn_ms\": %.3f,\n  \"max_refine_turn_ms\": %.3f,\n", max_turn_ms_,
                     max_refine_turn_ms_);
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
@@ -367,10 +370,7 @@ class App {
         Effects fx = update(model_, msg);
         if (model_.generation != old_generation) {
             refine_waiting_ = false;
-            if (fb_ && !opt_.no_zoom_preview)
-                zoom_.keep_partial(*fb_, refinement_ && refinement_->active(), model_.camera);
-            if (refinement_)
-                refinement_->cancel();
+            runner_.cancel(fb_ ? &*fb_ : nullptr, model_.camera);
             if (old_stage == QualityStage::Refine)
                 fx.redraw = true;
         }
@@ -378,17 +378,7 @@ class App {
             ++refinement_jobs_;
             next_upload_ms_ = 0;
             upload_dirty_ = false;
-            auto quality = quality_for(model_);
-            // A zoom preview is on screen: refine over it instead of clearing to the ocean.
-            quality.preserve_bitmap = quality.preserve_bitmap || preview_shown_;
-            preview_shown_ = false;
-            refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
-                                quality, model_.generation, packs_.for_model(model_));
-            if (quality.terrain && fb_) { // every level: a coarse one is a fine preview too
-                if (auto* snapshot = zoom_.begin_job(model_.camera, model_.terrain_style,
-                                                     fb_->width(), fb_->height()))
-                    refinement_->set_snapshot(snapshot);
-            }
+            runner_.start(model_, fb_ ? &*fb_ : nullptr, packs_.for_model(model_));
         }
         if (fx.redraw && (std::holds_alternative<Resize>(msg) ||
                           std::holds_alternative<RegisterElevation>(msg))) {
@@ -436,8 +426,7 @@ class App {
                 present();
                 need_redraw_ = false;
             }
-            while (opt_.finish_refinement && refinement_ && refinement_->active() &&
-                   !refine_waiting_)
+            while (opt_.finish_refinement && runner_.active() && !refine_waiting_)
                 refine_step();
         }
         return false;
@@ -445,7 +434,7 @@ class App {
 
     // Sleep until input, one requested wake, or a measurement deadline. No periodic polling.
     bool wait_events(std::uint64_t end_ms = 0) {
-        if (XPending(dpy_) > 0 || (refinement_ && refinement_->active() && !refine_waiting_)) {
+        if (XPending(dpy_) > 0 || (runner_.active() && !refine_waiting_)) {
             return true;
         }
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
@@ -575,27 +564,21 @@ class App {
     }
 
     void refine_step() {
-        if (!fb_ || !refinement_ || !refinement_->active() || refine_waiting_)
+        if (!fb_ || !runner_.active() || refine_waiting_)
             return;
         const std::uint64_t t = monotonic_ns();
-        const auto step = refinement_->step(*fb_, model_.generation);
+        const auto step = runner_.step(*fb_, model_);
         refine_work_ms_ += ms_since(t);
-        zoom_.after_step(*refinement_);
         if (step.band_ready) {
-            if (place_scene_) {
-                fb_->clip_rows(step.first_row, step.end_row);
-                place_scene_->draw(*fb_, model_.camera);
-                fb_->clip_rows(0, fb_->height());
-            }
             ++refine_bands_;
             present_refine(step.first_row, step.end_row);
         }
-        if (refinement_ && !refinement_->active() &&
+        if (runner_.job() != nullptr && !runner_.active() &&
             (upload_dirty_ || shown_quick_ || bar_shown_) && fb_ && !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
         }
-        if (refinement_ && !refinement_->active() && model_.refine_active) {
+        if (runner_.job() != nullptr && !runner_.active() && model_.refine_active) {
             apply(RefinementFinished{model_.generation, model_.refine_level});
             return; // a successor owns a fresh continuation and its own pacing
         }
@@ -622,11 +605,11 @@ class App {
     void finish_settling() {
         // Measurement begins only after requested settling/refinement completes. While drawing,
         // return to X event handling after every bounded work step, just like the main loop.
-        while (wake_at_ms_ != 0 || (refinement_ && refinement_->active())) {
+        while (wake_at_ms_ != 0 || runner_.active()) {
             if (!wait_events())
                 return;
             const std::uint64_t turn_start = monotonic_ns();
-            const bool refining = refinement_ && refinement_->active();
+            const bool refining = runner_.active();
             while (XPending(dpy_) > 0) {
                 XEvent ev;
                 XNextEvent(dpy_, &ev);
@@ -645,38 +628,14 @@ class App {
         }
     }
 
-    // While the view only zooms about its center, the last finished terrain frame scaled to the new
-    // radius, with fresh lines on top, stands in for a render. False when it cannot.
-    bool zoom_preview(Framebuffer& fb) {
-        if (opt_.no_zoom_preview || model_.stage != QualityStage::Moving)
-            return false;
-        const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
-        if (!zoom_.preview(fb, model_.camera, model_.terrain_style, palette.background,
-                           palette.ocean))
-            return false;
-        if (!zoom_.baked()) {
-            auto quality = quality_for(model_);
-            quality.lines_only = true;
-            render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
-                         quality, packs_.for_model(model_));
-        }
-        preview_shown_ = true;
-        return true;
-    }
-
     void present() {
         if (!fb_ || image_ == nullptr) {
             return;
         }
         Framebuffer& fb = *fb_;
         std::uint64_t t = monotonic_ns();
-        if (zoom_preview(fb)) {
+        if (runner_.render_moving(fb, model_, packs_.for_model(model_)))
             ++zoom_previews_;
-        } else {
-            preview_shown_ = false;
-            render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
-                         quality_for(model_), packs_.for_model(model_));
-        }
         t_.render_ms.push_back(ms_since(t));
         frame_valid_ = true;
         upload(0, fb.height());
@@ -704,8 +663,8 @@ class App {
         std::uint64_t t = monotonic_ns();
         // Overlays and the progress bar go on a copy (or the bar on the frame for this upload), so
         // the rendered frame stays exactly as it was and clearing an overlay needs no re-render.
-        const bool settled = frame_settled(model_, refinement_ && refinement_->active());
-        const double progress = bar_progress(model_, refinement_ ? &*refinement_ : nullptr);
+        const bool settled = frame_settled(model_, runner_.active());
+        const double progress = bar_progress(model_, runner_.job());
         if (progress >= 0.0 || bar_shown_) { // a bar to draw, or one to wipe: cover its rows
             first_row = std::min(first_row, fb.height() - kProgressBarRows);
             end_row = fb.height();
@@ -948,9 +907,7 @@ class App {
     std::size_t wake_ticks_ = 0;
     bool refine_waiting_ = false;
     std::uint64_t wake_at_ms_ = 0;
-    std::optional<RefinementJob> refinement_;
-    ZoomPreview zoom_; // the last finished terrain frame, scaled while the view only zooms
-    bool preview_shown_ = false; // fb holds a zoom preview, not a cleared frame
+    RefineRunner runner_{scene_}; // the refinement job, the zoom preview and the markers
     ShownFrame shown_; // overlays and the bar, built on a copy of the frame for each upload
     const Framebuffer* shown_frame_ = nullptr; // what the window last got (fb_ or an overlay copy)
     bool bar_shown_ = false;                   // the last upload drew the progress bar
