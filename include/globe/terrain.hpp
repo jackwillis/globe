@@ -50,6 +50,8 @@ class TerrainScene {
     void bound_cell(std::size_t index, int height, int band_rows);
     void assign_pass(std::size_t index, const PassPlan& plan);
     std::uint8_t cell_pass(std::size_t index) const { return passes_[index]; }
+    // True if any corner of the cell is behind the horizon (its draw is clipped at the limb).
+    bool limb_cell(std::size_t index) const;
     CellBands cell_bands(std::size_t index) const { return bands_[index]; }
     void draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
                    TerrainStyle style = TerrainStyle::Relief, bool smooth = true) const;

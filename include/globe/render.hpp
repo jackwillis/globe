@@ -37,6 +37,9 @@ struct RenderQuality {
     // frame after every terrain pass, so they are visible from the first presented frame. The
     // settled pixels are identical. Replaces the paced line reveal.
     bool lines_first = false;
+    // Experiment (repair-diff bench only): the last pass draws only its own ring instead of
+    // repainting every cell, so the result is not canonical. Remove with the experiment.
+    unsigned repaint_mode = 0; // 0 canonical, 1 no repaint, 2 repaint only limb-clipped cells
 };
 
 struct Palette {

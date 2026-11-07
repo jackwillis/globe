@@ -501,13 +501,16 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             // order: clipped limb polygons can overlap and must keep today's ownership.
             const bool last = pass_ + 1 == kRefinePasses;
             const auto pass = terrain_->cell_pass(terrain_cell_);
-            if (pass != 255 && (last || pass == pass_)) {
+            if (pass != 255 &&
+                ((last && (quality_.repaint_mode == 0 ||
+                           (quality_.repaint_mode == 2 && terrain_->limb_cell(terrain_cell_)))) ||
+                 pass == pass_)) {
                 const auto bands = terrain_->cell_bands(terrain_cell_);
                 if (cell_band_ < 0)
                     cell_band_ = bands.first;
                 fb.clip_rows(cell_band_ * kRefineBandRows,
                              std::min(fb.height(), (cell_band_ + 1) * kRefineBandRows));
-                if (last && quality_.preserve_bitmap)
+                if (quality_.preserve_bitmap && (last || quality_.repaint_mode != 0))
                     fb.coverage(Framebuffer::Coverage::Mark);
                 terrain_->draw_cell(fb, terrain_cell_, cell_band_, kRefineBandRows,
                                     quality_.terrain_style, quality_.smooth_terrain);

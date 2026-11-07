@@ -91,6 +91,27 @@ measured on the G4 or OS 9** (maul was on Tiger/off). If the scans cost too much
 list of line pixels instead of scanning the layer. Costs 307 KB (+ coverage plane) per job at
 640x480; the OS 9 heap budget is unchecked. The OS 9 port uses the same core, so it gets this too.
 
+## Is the canonical repaint needed? (measured 2026-11-06, host only)
+
+`globe-repair-diff` (`src/platform/bench/repair_diff.cpp`, output `docs/perf/repair-diff-host.txt`)
+renders 400 random views (radius 50-1500, random center and heading, focus anywhere from 200 px
+outside the viewport, Map and Relief) with `RenderQuality::repaint_mode` 0 (canonical: the last pass
+repaints every cell), 1 (the last pass draws only its own ring) and 2 (the last pass repaints only
+cells clipped at the limb), and compares each with the canonical frame.
+
+- **No repaint:** 0 of 400 single-job views differ; in the production coarse + preserve-bitmap
+  sequence 1 view differs by 1 pixel (a limb pixel, 096c against 098d).
+- **Limb cells only:** worse (16 of 400 differ, 19 px): index-order repainting of just the limb
+  cells overwrites neighbors the canonical order would have left alone.
+- **Cost:** terrain slices over the 400 views, 26.1 M canonical against 13.8 M with no repaint:
+  the repaint is about 47% of all terrain fill slices.
+
+So the repaint almost never changes a pixel, and removing it would nearly halve terrain fill work,
+but "no repaint" is not strictly canonical: a rare limb pixel differs, which would break the
+every-pixel-identical guarantee. Open: find what decides that pixel (coverage marking in the
+preserve path, or limb overlap) and whether a cheap exact rule exists. Not measured on the G4.
+`repaint_mode` and `TerrainScene::limb_cell` exist only for this experiment; production uses mode 0.
+
 ## Verification
 
 `tests/test_terrain.cpp`, `test_app.cpp` and `test_refine.py` compare every pixel for several foci

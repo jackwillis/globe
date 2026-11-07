@@ -1,0 +1,5 @@
+no repaint       single job: 0 of 400 views differ (0 px); coarse+fine: 1 views differ (1 px)
+limb cells only  single job: 16 of 400 views differ (19 px); coarse+fine: 4 views differ (4 px)
+canonical        terrain slices over all views (single job): 26133775
+no repaint       terrain slices over all views (single job): 13793524
+limb cells only  terrain slices over all views (single job): 13944511

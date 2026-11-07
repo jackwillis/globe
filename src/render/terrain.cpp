@@ -225,6 +225,13 @@ void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan) {
         (projected_[a].y + projected_[b].y + projected_[c].y + projected_[d].y) * 0.25);
     passes_[index] = static_cast<std::uint8_t>(pass);
 }
+bool TerrainScene::limb_cell(std::size_t index) const {
+    const auto x = index % grid_.width(), y = index / grid_.width(),
+               first = y * (grid_.width() + 1) + x;
+    return projected_[first].z < 0 || projected_[first + 1].z < 0 ||
+           projected_[first + grid_.width() + 2].z < 0 ||
+           projected_[first + grid_.width() + 1].z < 0;
+}
 void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int band_rows,
                              TerrainStyle style, bool smooth) const {
     (void)band_rows;
