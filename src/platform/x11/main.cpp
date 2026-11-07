@@ -59,11 +59,6 @@ using namespace globe;
 
 namespace {
 
-// The cached frame stands in for a render across this range of scale factors; beyond it the plain
-// vector frame is drawn (a 4x blow-up is a few big pixels, but it is still the right picture).
-constexpr double kZoomPreviewMin = 0.25;
-constexpr double kZoomPreviewMax = 4.0;
-
 struct Options {
     const char* atlas_path = nullptr;
     std::array<const char*, 3> elevation_paths{};
@@ -247,7 +242,7 @@ class App {
                     refine_work_ms_);
         std::printf(
             "  \"refinement_jobs\": %u,\n  \"zoom_cache_valid\": %d,\n  \"zoom_previews\": %u,\n",
-            refinement_jobs_, zoom_cache_valid_ ? 1 : 0, zoom_previews_);
+            refinement_jobs_, zoom_.valid() ? 1 : 0, zoom_previews_);
         std::printf("  \"max_turn_ms\": %.3f,\n  \"max_refine_turn_ms\": %.3f,\n", max_turn_ms_,
                     max_refine_turn_ms_);
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
@@ -371,7 +366,8 @@ class App {
         Effects fx = update(model_, msg);
         if (model_.generation != old_generation) {
             refine_waiting_ = false;
-            keep_partial_frame_as_preview();
+            if (fb_ && !opt_.no_zoom_preview)
+                zoom_.keep_partial(*fb_, refinement_ && refinement_->active(), model_.camera);
             if (refinement_)
                 refinement_->cancel();
             if (old_stage == QualityStage::Refine)
@@ -388,17 +384,9 @@ class App {
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
                                 quality, model_.generation, packs_.for_model(model_));
             if (quality.terrain && fb_) { // every level: a coarse one is a fine preview too
-                const bool fits = zoom_cache_.has_value() && zoom_cache_->width() == fb_->width() &&
-                                  zoom_cache_->height() == fb_->height();
-                if (!fits)
-                    zoom_cache_ = Framebuffer::create(fb_->width(), fb_->height());
-                if (!fits)
-                    zoom_cache_valid_ = false;
-                if (zoom_cache_.has_value()) {
-                    refinement_->set_snapshot(&*zoom_cache_);
-                    zoom_pending_camera_ = model_.camera;
-                    zoom_pending_style_ = model_.terrain_style;
-                }
+                if (auto* snapshot = zoom_.begin_job(model_.camera, model_.terrain_style,
+                                                     fb_->width(), fb_->height()))
+                    refinement_->set_snapshot(snapshot);
             }
         }
         if (fx.redraw && (std::holds_alternative<Resize>(msg) ||
@@ -591,14 +579,7 @@ class App {
         const std::uint64_t t = monotonic_ns();
         const auto step = refinement_->step(*fb_, model_.generation);
         refine_work_ms_ += ms_since(t);
-        if (refinement_->snapshot_taken() && zoom_cache_.has_value() &&
-            (!zoom_cache_valid_ || zoom_cache_camera_.radius_px != zoom_pending_camera_.radius_px ||
-             !same_orientation(zoom_cache_camera_, zoom_pending_camera_))) {
-            zoom_cache_valid_ = true;
-            zoom_cache_camera_ = zoom_pending_camera_;
-            zoom_cache_style_ = zoom_pending_style_;
-            zoom_cache_baked_ = false;
-        }
+        zoom_.after_step(*refinement_);
         if (step.band_ready) {
             if (place_scene_) {
                 fb_->clip_rows(step.first_row, step.end_row);
@@ -663,58 +644,16 @@ class App {
         }
     }
 
-    // Input cancelled a refinement part-way and the cached frame is for another view (or there is
-    // none, as right after a drag): the half-refined frame on screen is the best picture of this
-    // view to zoom from. Its lines are baked in, so the preview skips the fresh ones.
-    void keep_partial_frame_as_preview() {
-        if (!refinement_ || !refinement_->active() || !fb_ || opt_.no_zoom_preview)
-            return;
-        const bool useful = zoom_cache_valid_ && zoom_cache_.has_value() &&
-                            same_orientation(zoom_cache_camera_, zoom_pending_camera_) &&
-                            zoom_cache_style_ == zoom_pending_style_;
-        if (useful || !same_orientation(zoom_pending_camera_, model_.camera))
-            return; // keep the older cache, or this is not a view we could zoom from
-        if (!zoom_cache_.has_value() || zoom_cache_->width() != fb_->width() ||
-            zoom_cache_->height() != fb_->height())
-            zoom_cache_ = Framebuffer::create(fb_->width(), fb_->height());
-        if (!zoom_cache_.has_value())
-            return;
-        std::memcpy(zoom_cache_->data(), fb_->data(), fb_->byte_size());
-        zoom_cache_valid_ = true;
-        zoom_cache_baked_ = true;
-        zoom_cache_camera_ = zoom_pending_camera_;
-        zoom_cache_style_ = zoom_pending_style_;
-    }
-
-    static bool same_orientation(const Camera& a, const Camera& b) {
-        const auto close = [](const Vec3& u, const Vec3& v) {
-            return std::fabs(u.x - v.x) < 1e-9 && std::fabs(u.y - v.y) < 1e-9 &&
-                   std::fabs(u.z - v.z) < 1e-9;
-        };
-        return a.width == b.width && a.height == b.height && a.center_x == b.center_x &&
-               a.center_y == b.center_y && close(a.right, b.right) && close(a.up, b.up) &&
-               close(a.forward, b.forward);
-    }
-
     // While the view only zooms about its center, the last finished terrain frame scaled to the new
     // radius, with fresh lines on top, stands in for a render. False when it cannot.
     bool zoom_preview(Framebuffer& fb) {
-        if (!zoom_cache_valid_ || !zoom_cache_.has_value() || opt_.no_zoom_preview ||
-            model_.stage != QualityStage::Moving || model_.terrain_style != zoom_cache_style_ ||
-            !same_orientation(model_.camera, zoom_cache_camera_) ||
-            zoom_cache_->width() != fb.width() || zoom_cache_->height() != fb.height())
-            return false;
-        const double factor = model_.camera.radius_px / zoom_cache_camera_.radius_px;
-        if (!(factor >= kZoomPreviewMin && factor <= kZoomPreviewMax))
+        if (opt_.no_zoom_preview || model_.stage != QualityStage::Moving)
             return false;
         const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
-        // Zooming out of a frame whose disc overflowed the window leaves holes at the rim: plain
-        // ocean, gone once the refinement runs. The picture stays up until then.
-        const double radius = model_.camera.radius_px;
-        if (scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
-                        palette.background, palette.ocean, radius, zoom_columns_) == kInvalidZoom)
+        if (!zoom_.preview(fb, model_.camera, model_.terrain_style, palette.background,
+                           palette.ocean))
             return false;
-        if (!zoom_cache_baked_) {
+        if (!zoom_.baked()) {
             auto quality = quality_for(model_);
             quality.lines_only = true;
             render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
@@ -1036,14 +975,7 @@ class App {
     bool refine_waiting_ = false;
     std::uint64_t wake_at_ms_ = 0;
     std::optional<RefinementJob> refinement_;
-    std::optional<Framebuffer> zoom_cache_; // the last finished terrain frame, without lines
-    bool zoom_cache_valid_ = false;
-    bool zoom_cache_baked_ = false; // the cached frame already has its lines (a partial one)
-    Camera zoom_cache_camera_{};
-    Camera zoom_pending_camera_{};
-    TerrainStyle zoom_cache_style_ = TerrainStyle::Map;
-    TerrainStyle zoom_pending_style_ = TerrainStyle::Map;
-    std::vector<int> zoom_columns_;
+    ZoomPreview zoom_; // the last finished terrain frame, scaled while the view only zooms
     bool preview_shown_ = false;    // fb holds a zoom preview, not a cleared frame
     std::vector<Rgb565> bar_stash_; // the frame's bottom rows while the bar is drawn into it
     const Framebuffer* shown_frame_ = nullptr; // what the window last got (fb_ or an overlay copy)

@@ -130,9 +130,73 @@ void test_refine_over_preview() {
         CHECK(got == pixels(*fb));
     }
 }
+// The cache bookkeeping both front ends share.
+void test_zoom_preview_cache() {
+    auto ab =
+        atlas_util::make_atlas({{1, {{20000, 20000}, {26000, 24000}, {32000, 20000}}}}, "zoom");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    std::FILE* file = std::fopen("data/elevation-1deg.gelv", "rb");
+    CHECK(atlas && file);
+    if (!atlas || !file)
+        return;
+    std::vector<std::uint8_t> raw;
+    int c;
+    while ((c = std::fgetc(file)) != EOF)
+        raw.push_back(static_cast<std::uint8_t>(c));
+    std::fclose(file);
+    auto elevation = Elevation::parse(raw.data(), raw.size());
+    auto scene = Scene::create(*atlas);
+    CHECK(elevation && scene);
+    if (!elevation || !scene)
+        return;
+    auto terrain = TerrainScene::create(*elevation);
+    auto fb = Framebuffer::create(120, 90);
+    CHECK(terrain && fb);
+    if (!terrain || !fb)
+        return;
+    const auto view = *make_camera({{20, 30}, 10, 40, 120, 90});
+    const auto zoomed = *make_camera({{20, 30}, 10, 50, 120, 90});
+    const auto turned = *make_camera({{20, 40}, 10, 40, 120, 90});
+    const auto palette = palette_for_style(kDefaultPalette, TerrainStyle::Map);
+    RenderQuality q{1.5, true, 0, TerrainStyle::Map};
+    q.lines_first = true;
+    q.progressive_lines = false;
+    ZoomPreview zoom;
+    CHECK(!zoom.preview(*fb, zoomed, TerrainStyle::Map, palette.background, palette.ocean));
+    // A job started and cancelled part-way, with no cache: the half-refined frame becomes the
+    // cache.
+    RefinementJob partial(view, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
+    auto* snapshot = zoom.begin_job(view, TerrainStyle::Map, 120, 90);
+    CHECK(snapshot != nullptr);
+    partial.set_snapshot(snapshot);
+    for (int i = 0; i < 40; ++i)
+        partial.step(*fb, 1, 64);
+    CHECK(partial.active() && !partial.snapshot_taken());
+    zoom.after_step(partial);
+    CHECK(!zoom.valid());
+    zoom.keep_partial(*fb, true, turned); // the view turned: not a view to zoom from
+    CHECK(!zoom.valid());
+    zoom.keep_partial(*fb, true, zoomed);
+    CHECK(zoom.valid() && zoom.baked());
+    CHECK(zoom.preview(*fb, zoomed, TerrainStyle::Map, palette.background, palette.ocean));
+    CHECK(!zoom.preview(*fb, turned, TerrainStyle::Map, palette.background, palette.ocean));
+    CHECK(!zoom.preview(*fb, zoomed, TerrainStyle::Relief, palette.background, palette.ocean));
+    // A finished job at the same view replaces it with real terrain: no longer baked.
+    RefinementJob full(view, *scene, kDefaultPalette, Layers{}, q, 2, &*terrain);
+    full.set_snapshot(zoom.begin_job(view, TerrainStyle::Map, 120, 90));
+    while (full.active()) {
+        full.step(*fb, 2, 256);
+        zoom.after_step(full);
+    }
+    CHECK(zoom.valid() && !zoom.baked());
+    // Outside the factor range there is no preview.
+    const auto far = *make_camera({{20, 30}, 10, 40 * 4.5, 120, 90});
+    CHECK(!zoom.preview(*fb, far, TerrainStyle::Map, palette.background, palette.ocean));
+}
 } // namespace
 int main() {
     test_scaler();
     test_refine_over_preview();
+    test_zoom_preview_cache();
     return TEST_MAIN_RESULT();
 }
