@@ -192,6 +192,15 @@ constexpr std::uint64_t kDoubleClickMs = 400;
 // A plain click picks only after this long without a second click, so a double click zooms and
 // does not also open a card. It must not be shorter than kDoubleClickMs.
 constexpr std::uint64_t kPickDelayMs = kDoubleClickMs;
+// Shortcut keys both front ends honor, by the character typed (any case). Arrow, Page and function
+// keys are decoded by each front end; this is the part that must not drift between them. Escape
+// is character 27.
+struct KeyBinding {
+    enum class Overlay : std::uint8_t { Nothing, Night, Measure, Palette };
+    std::optional<Command> command;  // sent through update()
+    Overlay overlay = Overlay::Nothing; // an overlay or window the front end handles itself
+};
+KeyBinding binding_for_char(int ch);
 // Overall refinement progress 0..1 given the running job's own fraction: the elevation levels run
 // one job each, coarse to fine, so each level is an equal share. 1 when nothing is refining.
 double refine_progress(const Model& model, double job_fraction);

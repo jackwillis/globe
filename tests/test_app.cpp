@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <initializer_list>
 #include <string>
 #include <vector>
 
@@ -580,6 +581,30 @@ void test_elevation_selection() {
     CHECK(back && std::holds_alternative<RegisterElevation>(*back));
 }
 
+void test_key_bindings() {
+    CHECK(binding_for_char('+').command == Command::ZoomIn &&
+          binding_for_char('=').command == Command::ZoomIn);
+    CHECK(binding_for_char('-').command == Command::ZoomOut);
+    // Letters are case-insensitive.
+    CHECK(binding_for_char('r').command == Command::Reset &&
+          binding_for_char('R').command == Command::Reset);
+    CHECK(binding_for_char('G').command == Command::ToggleGraticule);
+    CHECK(binding_for_char('b').command == Command::ToggleBorders);
+    CHECK(binding_for_char('S').command == Command::CycleStyle);
+    CHECK(binding_for_char('t').command == Command::ToggleDragMode);
+    CHECK(binding_for_char('N').command == Command::AlignNorth);
+    CHECK(binding_for_char('q').command == Command::Quit &&
+          binding_for_char(27).command == Command::Quit);
+    CHECK(!binding_for_char('d').command &&
+          binding_for_char('D').overlay == KeyBinding::Overlay::Night);
+    CHECK(binding_for_char('m').overlay == KeyBinding::Overlay::Measure);
+    CHECK(binding_for_char('P').overlay == KeyBinding::Overlay::Palette);
+    for (const int other : std::initializer_list<int>{0, 32, 'x', 'Z', '1', 200}) {
+        const auto b = binding_for_char(other);
+        CHECK(!b.command && b.overlay == KeyBinding::Overlay::Nothing);
+    }
+}
+
 void test_refine_progress() {
     Model m = fresh();
     CHECK(refine_progress(m, 0.3) == 1.0); // nothing refining
@@ -1146,6 +1171,7 @@ int main(int argc, char** argv) {
     test_styles();
     test_elevation_selection();
     test_refine_progress();
+    test_key_bindings();
     test_quality_profile_and_generation();
     test_quality_wakes();
     test_stage_trace_replay();

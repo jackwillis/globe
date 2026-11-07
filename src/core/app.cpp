@@ -222,6 +222,54 @@ static unsigned next_resolution(const Model& model, std::uint32_t after, std::ui
     }
     return chosen;
 }
+KeyBinding binding_for_char(int ch) {
+    if (ch >= 'A' && ch <= 'Z')
+        ch += 'a' - 'A';
+    KeyBinding b;
+    switch (ch) {
+    case '+':
+    case '=':
+        b.command = Command::ZoomIn;
+        break;
+    case '-':
+        b.command = Command::ZoomOut;
+        break;
+    case 'r':
+        b.command = Command::Reset;
+        break;
+    case 'g':
+        b.command = Command::ToggleGraticule;
+        break;
+    case 'b':
+        b.command = Command::ToggleBorders;
+        break;
+    case 's':
+        b.command = Command::CycleStyle;
+        break;
+    case 't':
+        b.command = Command::ToggleDragMode;
+        break;
+    case 'n':
+        b.command = Command::AlignNorth;
+        break;
+    case 'q':
+    case 27:
+        b.command = Command::Quit;
+        break;
+    case 'd':
+        b.overlay = KeyBinding::Overlay::Night;
+        break;
+    case 'm':
+        b.overlay = KeyBinding::Overlay::Measure;
+        break;
+    case 'p':
+        b.overlay = KeyBinding::Overlay::Palette;
+        break;
+    default:
+        break;
+    }
+    return b;
+}
 double refine_progress(const Model& model, double job_fraction) {
     if (!model.refine_active)
         return 1.0;

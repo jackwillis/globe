@@ -472,17 +472,9 @@ class Application {
     }
     bool key(unsigned long message, std::uint64_t time) {
         const auto code = (message >> 8) & 0xff;
-        const auto ch = message & 0xff;
-        if (ch == 'd' || ch == 'D') {
-            overlays_.toggle_night();
-            reshow();
-            return false;
-        }
-        if (ch == 'm' || ch == 'M') {
-            overlays_.toggle_measure();
-            reshow();
-            return false;
-        }
+        const auto ch = static_cast<int>(message & 0xff);
+        // Arrow and Page keys are decoded here (ADB codes); typed characters go through the shared
+        // table so both front ends bind the same shortcuts.
         std::optional<Command> command;
         if (code == 0x7b)
             command = Command::Left;
@@ -496,46 +488,19 @@ class Application {
             command = Command::ZoomIn;
         else if (code == 0x79) // Page Down
             command = Command::ZoomOut;
-        else
-            switch (ch) {
-            case '+':
-            case '=':
-                command = Command::ZoomIn;
-                break;
-            case '-':
-                command = Command::ZoomOut;
-                break;
-            case 'r':
-            case 'R':
-                command = Command::Reset;
-                break;
-            case 'g':
-            case 'G':
-                command = Command::ToggleGraticule;
-                break;
-            case 'b':
-            case 'B':
-                command = Command::ToggleBorders;
-                break;
-            case 's':
-            case 'S':
-                command = Command::CycleStyle;
-                break;
-            case 't':
-            case 'T':
-                command = Command::ToggleDragMode;
-                break;
-            case 'n':
-            case 'N':
-                command = Command::AlignNorth;
-                break;
-            case 'q':
-            case 'Q':
-            case 27:
-                command = Command::Quit;
-                break;
-            }
-        return command ? apply(CommandIssued{time, *command}) : false;
+        const auto binding = binding_for_char(ch);
+        if (!command)
+            command = binding.command;
+        if (command)
+            return apply(CommandIssued{time, *command});
+        if (binding.overlay == KeyBinding::Overlay::Night) {
+            overlays_.toggle_night();
+            reshow();
+        } else if (binding.overlay == KeyBinding::Overlay::Measure) {
+            overlays_.toggle_measure();
+            reshow();
+        }
+        return false;
     }
     WindowPtr window_ = nullptr;
     GWorldPtr world_ = nullptr;

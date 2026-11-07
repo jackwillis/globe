@@ -827,55 +827,67 @@ class App {
     }
 
     bool on_key(KeySym sym, std::uint64_t now) {
+        // Arrow, Page and function keys are decoded here; typed characters go through the shared
+        // table so both front ends bind the same shortcuts.
+        std::optional<Command> command;
+        int ch = 0;
         switch (sym) {
         case XK_F2:
             XMapRaised(dpy_, toolbar_);
             return false;
         case XK_Left:
-            return apply(CommandIssued{now, Command::Left});
+            command = Command::Left;
+            break;
         case XK_Right:
-            return apply(CommandIssued{now, Command::Right});
+            command = Command::Right;
+            break;
         case XK_Up:
-            return apply(CommandIssued{now, Command::Up});
+            command = Command::Up;
+            break;
         case XK_Down:
-            return apply(CommandIssued{now, Command::Down});
-        case XK_plus:
-        case XK_equal:
+            command = Command::Down;
+            break;
+        case XK_Prior: // Page Up: wheel drivers send it
+            command = Command::ZoomIn;
+            break;
+        case XK_Next:
+            command = Command::ZoomOut;
+            break;
         case XK_KP_Add:
-            return apply(CommandIssued{now, Command::ZoomIn});
-        case XK_minus:
+            ch = '+';
+            break;
         case XK_KP_Subtract:
-            return apply(CommandIssued{now, Command::ZoomOut});
-        case XK_r:
-            return apply(CommandIssued{now, Command::Reset});
-        case XK_g:
-            return apply(CommandIssued{now, Command::ToggleGraticule});
-        case XK_b:
-            return apply(CommandIssued{now, Command::ToggleBorders});
-        case XK_n:
-            return apply(CommandIssued{now, Command::AlignNorth});
-        case XK_s:
-            return apply(CommandIssued{now, Command::CycleStyle});
-        case XK_m:
-            overlays_.toggle_measure();
-            reshow();
-            return false;
-        case XK_d:
+            ch = '-';
+            break;
+        case XK_Escape:
+            ch = 27;
+            break;
+        default:
+            ch = sym < 0x80 ? static_cast<int>(sym) : 0;
+            break;
+        }
+        const auto binding = binding_for_char(ch);
+        if (!command)
+            command = binding.command;
+        if (command)
+            return apply(CommandIssued{now, *command});
+        switch (binding.overlay) {
+        case KeyBinding::Overlay::Night:
             overlays_.toggle_night();
             reshow();
-            return false;
-        case XK_p:
+            break;
+        case KeyBinding::Overlay::Measure:
+            overlays_.toggle_measure();
+            reshow();
+            break;
+        case KeyBinding::Overlay::Palette:
             styles_.show(win_, model_.camera.width + 20,
                          model_.terrain_style == TerrainStyle::Map ? 0 : 1);
-            return false;
-        case XK_t:
-            return apply(CommandIssued{now, Command::ToggleDragMode});
-        case XK_Escape:
-        case XK_q:
-            return apply(CommandIssued{now, Command::Quit});
-        default:
-            return false;
+            break;
+        case KeyBinding::Overlay::Nothing:
+            break;
         }
+        return false;
     }
 
     Display* dpy_;
