@@ -59,6 +59,11 @@ using namespace globe;
 
 namespace {
 
+// The cached frame stands in for a render across this range of scale factors; beyond it the plain
+// vector frame is drawn (a 4x blow-up is a few big pixels, but it is still the right picture).
+constexpr double kZoomPreviewMin = 0.25;
+constexpr double kZoomPreviewMax = 4.0;
+
 struct Options {
     const char* atlas_path = nullptr;
     std::array<const char*, 3> elevation_paths{};
@@ -657,16 +662,14 @@ class App {
             zoom_cache_->width() != fb.width() || zoom_cache_->height() != fb.height())
             return false;
         const double factor = model_.camera.radius_px / zoom_cache_camera_.radius_px;
-        if (!(factor >= 0.5 && factor <= 2.5))
+        if (!(factor >= kZoomPreviewMin && factor <= kZoomPreviewMax))
             return false;
         const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
-        // Zooming out of a frame whose disc overflowed the window leaves holes at the rim. They are
-        // filled with plain ocean and refine away; too many and the plain render looks better.
+        // Zooming out of a frame whose disc overflowed the window leaves holes at the rim: plain
+        // ocean, gone once the refinement runs. The picture stays up until then.
         const double radius = model_.camera.radius_px;
-        const auto holes =
-            scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
-                        palette.background, palette.ocean, radius, zoom_columns_);
-        if (holes == kInvalidZoom || static_cast<double>(holes) > 0.35 * kPi * radius * radius)
+        if (scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
+                        palette.background, palette.ocean, radius, zoom_columns_) == kInvalidZoom)
             return false;
         auto quality = quality_for(model_);
         quality.lines_only = true;
