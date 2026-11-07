@@ -754,9 +754,24 @@ class App {
             end_row = fb.height();
         }
         bar_shown_ = bar;
-        const Framebuffer* shown = overlays_.compose(
-            fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled, progress);
+        Framebuffer* shown = overlays_.compose(
+            fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled);
         shown_quick_ = shown != nullptr && !settled;
+        // The bar is opaque and goes on the copy if there is one; otherwise it goes straight into
+        // the frame for the duration of this upload and the ten rows are put back afterwards.
+        const std::size_t bar_bytes =
+            static_cast<std::size_t>(fb.width()) * kProgressBarRows * sizeof(Rgb565);
+        Rgb565* bar_rows = nullptr;
+        if (bar && fb.height() >= kProgressBarRows) {
+            if (shown == nullptr) {
+                bar_rows = fb.data() + static_cast<std::size_t>(fb.height() - kProgressBarRows) *
+                                           static_cast<std::size_t>(fb.stride());
+                bar_stash_.resize(static_cast<std::size_t>(fb.width()) * kProgressBarRows);
+                std::memcpy(bar_stash_.data(), bar_rows, bar_bytes);
+                shown = &fb;
+            }
+            draw_progress_bar(*shown, progress);
+        }
         if (shown == nullptr)
             shown = &fb;
         shown_frame_ = shown;
@@ -771,6 +786,8 @@ class App {
         if (opt_.verify_pixels) {
             pixels_ok_ &= verify_window();
         }
+        if (bar_rows != nullptr)
+            std::memcpy(bar_rows, bar_stash_.data(), bar_bytes); // the frame is as it was
     }
 
     // Returns true when the application should quit.
@@ -999,7 +1016,8 @@ class App {
     TerrainStyle zoom_cache_style_ = TerrainStyle::Map;
     TerrainStyle zoom_pending_style_ = TerrainStyle::Map;
     std::vector<int> zoom_columns_;
-    bool preview_shown_ = false;               // fb holds a zoom preview, not a cleared frame
+    bool preview_shown_ = false;    // fb holds a zoom preview, not a cleared frame
+    std::vector<Rgb565> bar_stash_; // the frame's bottom rows while the bar is drawn into it
     const Framebuffer* shown_frame_ = nullptr; // what the window last got (fb_ or an overlay copy)
     bool bar_shown_ = false;                   // the last upload drew the progress bar
     unsigned zoom_previews_ = 0;

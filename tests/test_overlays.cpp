@@ -105,32 +105,28 @@ int main(int argc, char** argv) {
     CHECK(line > 40 && shaded == 0);
     o.toggle_night();
     CHECK(o.compose(*fb, camera, 1793793600) == nullptr);
-    // The progress bar: the bottom ten rows, a dark rule, fill up to the fraction, the rest
-    // darkened.
+    // The progress bar is opaque and minimal: only the filled part of the bottom ten rows changes,
+    // a black edge on top and white below; nothing above it, nothing right of it.
     {
-        Overlays bar;
-        bar.attach(&*countries, &*scene, nullptr, nullptr);
-        fb->clear(0xFFFF);
-        CHECK(bar.compose(*fb, camera, 0, true, -1.0) == nullptr);
         for (const double fraction : {0.0, 0.5, 1.0}) {
-            auto* with = bar.compose(*fb, camera, 0, true, fraction);
-            CHECK(with && with != &*fb);
-            if (!with)
-                continue;
+            fb->clear(0x1234);
+            draw_progress_bar(*fb, fraction);
             const int filled = static_cast<int>(fraction * 160);
+            std::size_t changed = 0;
             for (int y = 0; y < 120; ++y)
                 for (int x = 0; x < 160; ++x) {
-                    const auto v = with->pixel(x, y);
-                    if (y < 110)
-                        CHECK(v == 0xFFFF);
-                    else if (y == 110)
-                        CHECK(v == static_cast<Rgb565>((0xFFFF >> 2) & 0x39E7));
+                    const auto v = fb->pixel(x, y);
+                    changed += v != 0x1234;
+                    if (y < 110 || x >= filled)
+                        CHECK(v == 0x1234);
                     else
-                        CHECK(v == (x < filled ? kProgressFill : static_cast<Rgb565>(0x7BEF)));
+                        CHECK(v == (y == 110 ? kProgressEdge : kProgressFill));
                 }
+            CHECK(changed == static_cast<std::size_t>(filled) * 10);
         }
-        for (int i = 0; i < 160 * 120; ++i)
-            CHECK(fb->data()[i] == 0xFFFF); // never in the rendered frame
+        Overlays bar;
+        bar.attach(&*countries, &*scene, nullptr, nullptr);
+        CHECK(bar.compose(*fb, camera, 0, true) == nullptr); // the bar alone never copies the frame
     }
     return TEST_MAIN_RESULT();
 }

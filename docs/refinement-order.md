@@ -152,10 +152,12 @@ extra framebuffer for the cache.
 
 ## Progress bar and input latency (2026-11-06)
 
-While a refinement runs, a 10-pixel bar fills across the bottom of the map (white on a darkened
-track, a dark rule above it), and it is gone when the last pass is shown, so it also says when the
-globe is done. It is an overlay on the shown copy (`draw_progress_bar`, `Overlays::compose(..,
-progress)`), never in the rendered frame, so pixels and pins are untouched. `RefinementJob::progress()`
+While a refinement runs, a 10-pixel bar fills across the bottom of the map and it is gone when the
+last pass is shown, so it also says when the globe is done. It is opaque and minimal: a black edge
+row and white rows over the filled columns only, nothing blended, the rest of the map untouched. X11
+draws it straight into the frame for the length of one upload (the ten rows are stashed and put back
+afterwards, so no frame copy), or on the overlay copy when day/night or a country already made one
+(`draw_progress_bar`). It is never left in the rendered frame, so pixels and pins are untouched. `RefinementJob::progress()`
 is a rough monotonic 0..1 (set-up 0-0.1, the 16 ring passes and the limb pass 0.1-0.98); the core's
 `refine_progress(model, job)` splits it equally over the elevation levels, which run one job each,
 and the bar stays up between levels. The bar moves when a frame is shown (once per pass, subject to
