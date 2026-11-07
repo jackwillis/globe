@@ -20,7 +20,7 @@
 namespace globe {
 
 // Rendering quality plan (design doc section 4). Ticks advance Moving -> Settle -> Refine.
-enum class QualityStage : std::uint8_t { Moving, Settle, Refine, Decorate, Fetch };
+enum class QualityStage : std::uint8_t { Moving, Settle, Refine };
 
 // How dragging turns the globe.
 //  Turntable: the center's latitude and longitude change at a constant angle per pixel (scaled

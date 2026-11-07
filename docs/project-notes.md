@@ -1,4 +1,6 @@
-# Project notes — 2026-11-02
+# Project notes — 2026-11-02 (historical)
+
+> Dated 2026-11-02. For the current state read [handoff.md](handoff.md) and [ADR 0002](adr/0002-rendering-shared-code-and-usability.md). Corrections since: refinement is circle-out only (rows, center-out and dissolve orders and the `order` trace verb were removed); lines now appear first through a line layer; the final terrain pass redraws only limb cells.
 
 Start with [handoff.md](handoff.md), [backlog.md](backlog.md) and the [ADR](adr/0001-m2-to-m5-decisions.md).
 The historical v2/unmerged-branch state is preserved in [the archive](history/handoff-20261101.md).
@@ -45,7 +47,7 @@ meaningful tests, deliberately reject mutants, run both portability probes after
 and distinguish bounded work counts from wall-clock guarantees.
 
 Surface/pass/theme refactors, desert color and runtime compression are later scopes. Dissolve
-ordering is now an opt-in experiment (GL-19); rows remain default. The maps app is separate; there
+ordering was an opt-in experiment (GL-19) and has since been removed; refinement is circle-out only. The maps app is separate; there
 is no relay. In-app fetching is now wanted, but its design needs review, hosting decisions and seed/OT acceptance before implementation. Keep that future
 library independent of Globe's renderer and never damage immutable baked data on a failed import.
 

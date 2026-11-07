@@ -182,7 +182,7 @@ Layers effective_layers(const Model& model) {
 }
 
 RenderQuality quality_for(const Model& model) {
-    const bool fine = model.stage == QualityStage::Refine || model.stage == QualityStage::Decorate;
+    const bool fine = model.stage == QualityStage::Refine;
     unsigned selected = 0;
     std::uint32_t best_width = 0;
     bool meets_target = false;
