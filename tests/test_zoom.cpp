@@ -98,8 +98,7 @@ void test_refine_over_preview() {
             return;
         RenderQuality q{1.5, true, 0, TerrainStyle::Map};
         q.lines_first = true;
-        q.progressive_lines = false;
-        // 1. A settled frame, snapshotted before its lines go on.
+            // 1. A settled frame, snapshotted before its lines go on.
         RefinementJob first(*before, *scene, kDefaultPalette, layers, q, 1, &*terrain);
         first.set_snapshot(&*cache);
         while (first.active())
@@ -168,7 +167,6 @@ void test_zoom_preview_cache() {
     const auto palette = palette_for_style(kDefaultPalette, TerrainStyle::Map);
     RenderQuality q{1.5, true, 0, TerrainStyle::Map};
     q.lines_first = true;
-    q.progressive_lines = false;
     ZoomPreview zoom;
     CHECK(!zoom.preview(*fb, zoomed, TerrainStyle::Map, palette.background, palette.ocean));
     // A job started and cancelled part-way, with no cache: the half-refined frame becomes the

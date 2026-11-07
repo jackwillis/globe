@@ -548,8 +548,7 @@ void test_scene_matches_reference(const std::string& root) {
     }
     // Atlas vertices plus 605 parallel and 732 meridian samples, 24 bytes each.
     CHECK(scene->bytes() == (8120U + 605U + 732U) * sizeof(Vec3) +
-                                atlas.polyline_count() * sizeof(PolylineCap) +
-                                scene->line_workspace_bytes());
+                                atlas.polyline_count() * sizeof(PolylineCap));
     Framebuffer a = make_fb(80, 60);
     Framebuffer b = make_fb(80, 60);
     Framebuffer unculled = make_fb(80, 60);

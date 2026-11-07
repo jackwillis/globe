@@ -117,7 +117,7 @@ class Application {
             // Give presentation a bounded share before geometry can consume the whole turn.
             if (foreground_ && !presentation_held(model_) && now_ms() - turn_start < kWorkSliceMs)
                 present_step();
-            const bool work = foreground_ && runner_.active() && !job_waiting_;
+            const bool work = foreground_ && runner_.active();
             if (work && now_ms() - turn_start < kWorkSliceMs) {
                 // Check elapsed time after every bounded step AND presentation. A slow step or
                 // Toolbox copy can still overrun: measure the full turn, not just geometry.
@@ -131,11 +131,6 @@ class Application {
                     if (band.band_ready) {
                         present(band.first_row, band.end_row);
                         step_end = now_ms();
-                    }
-                    if (band.wake_after_ms) {
-                        job_waiting_ = true;
-                        wake_ = step_end + band.wake_after_ms;
-                        break;
                     }
                     if (!runner_.active() && model_.refine_active) {
                         apply(RefinementFinished{model_.generation, model_.refine_level});
@@ -164,14 +159,13 @@ class Application {
                        static_cast<short>(pointer.h + 1)};
             RectRgn(mouse_region_, &mouse);
             EventRecord event{};
-            WaitNextEvent(
-                everyEvent, &event,
-                static_cast<long>(classic_wait_ticks(
-                    now_ms(), wake_,
-                    (runner_.active() && !job_waiting_) ||
-                        (!presentation_held(model_) && presentation_.pending(model_.generation)),
-                    foreground_)),
-                foreground_ ? mouse_region_ : nullptr);
+            WaitNextEvent(everyEvent, &event,
+                          static_cast<long>(classic_wait_ticks(
+                              now_ms(), wake_,
+                              runner_.active() || (!presentation_held(model_) &&
+                                                   presentation_.pending(model_.generation)),
+                              foreground_)),
+                          foreground_ ? mouse_region_ : nullptr);
             const auto time = now_ms();
             turn_start = time;
             SetPortWindowPort(window_);
@@ -423,16 +417,11 @@ class Application {
         return converted;
     }
     bool apply(const Msg& msg) {
-        if (std::holds_alternative<Tick>(msg) && job_waiting_) {
-            job_waiting_ = false;
-            wake_ = 0;
-        }
         const auto generation = model_.generation;
         const auto stage = model_.stage;
         auto fx = update(model_, msg);
         if (generation != model_.generation) {
             presentation_.cancel();
-            job_waiting_ = false;
             runner_.cancel(fb_ ? &*fb_ : nullptr, model_.camera);
             if (stage == QualityStage::Refine)
                 fx.redraw = true;
@@ -522,7 +511,6 @@ class Application {
     InfoCardWindow info_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
-    bool job_waiting_ = false;
     std::uint64_t wake_ = 0;
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
     bool titled_ = true, dirty_ = false, shown_quick_ = false;

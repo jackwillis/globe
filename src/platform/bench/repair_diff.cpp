@@ -59,7 +59,6 @@ int main() {
         for (unsigned mode = 0; mode < 4; ++mode) {
             RenderQuality q{1.5, true, 0, style};
             q.focus = focus;
-            q.progressive_lines = false;
             q.repaint = static_cast<TerrainRepaint>(mode);
             RefinementJob job(*camera, *scene, kDefaultPalette, none, q, 1,
                               n % 4 < 2 ? &*terrain : &*fine);
