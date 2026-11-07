@@ -135,7 +135,7 @@ size and look; it is used for factors 0.25 to 4, with ocean-filled holes at the 
 never from the previous preview. When the wheel stops the refinement starts over the preview
 (`preserve_bitmap`, no clear), so it sharpens the picture instead of rebuilding it; the final pixels
 are the same as from scratch (`tests/test_zoom.cpp` for factors 1.1, 1.5 and 0.8). Not done: drag,
-double-click zoom (it recenters), OS 9.
+double-click zoom (it recenters).
 
 Zooming out of a frame whose disc overflowed the window (any zoomed-in settled frame) has nothing to
 show at the rim. `scale_frame` returns the number of such hole pixels inside the new disc and fills them
@@ -149,6 +149,14 @@ the gain here is that the terrain stays, not speed. G4 (`docs/perf/g4-2026-11-06
 5-11 ms, the lines on top 24-30 ms, against 25-32 ms for the plain vector frame, so a preview frame is
 about 10 ms dearer than the frame it replaces (more when zooming out: the rim-hole check). Costs one
 extra framebuffer for the cache.
+
+Skipping the coarse level after a zoom (2026-11-06): the elevation levels run one job each, coarse to
+fine, and the coarse job would paint a rougher picture over the scaled preview before the fine one
+sharpens it again. The core remembers the view of the last completed refinement (`settled_camera`,
+look and `has_settled` in `Model`); a refinement that starts on the same view at another radius
+(`same_orientation`, factor inside `kZoomPreviewMin..Max`, same look) starts at the target level
+directly. A turn, a resize, a look change or a zoom beyond the preview range still start coarse, and
+the progress bar counts only the levels that run (`refine_start_width`). Tested in `test_app.cpp`.
 
 ## Progress bar and input latency (2026-11-06)
 

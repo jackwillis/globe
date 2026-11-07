@@ -13,6 +13,7 @@
 #include "globe/app.hpp"
 #include "globe/trace.hpp"
 #include "globe/trackball.hpp"
+#include "globe/zoom.hpp"
 
 using namespace globe;
 
@@ -599,6 +600,33 @@ void test_refine_progress() {
     CHECK(refine_progress(m, 1.0) == 1.0);
     update(m, RefinementFinished{m.generation, m.refine_level});
     CHECK(!m.refine_active && refine_progress(m, 0.5) == 1.0);
+    // Only the zoom changed since that finished frame: it is scaled on screen as a preview, so the
+    // next refinement skips the coarse level, and the bar counts one level.
+    update(m, Wheel{1000, 1});
+    update(m, Tick{1250});
+    update(m, Tick{1251});
+    CHECK(m.refine_active && m.refine_level == m.refine_target);
+    CHECK(refine_progress(m, 0.5) == 0.5);
+    update(m, RefinementFinished{m.generation, m.refine_level});
+    CHECK(!m.refine_active && m.has_settled);
+    // A turn is not a zoom: the coarse level comes first again.
+    update(m, CommandIssued{2000, Command::Right});
+    update(m, Tick{2250});
+    update(m, Tick{2251});
+    CHECK(m.refine_active && m.refine_level != m.refine_target);
+    const double coarse = refine_progress(m, 0.5);
+    CHECK(coarse > 0.2 && coarse < 0.3);
+    // A zoom past the preview range is not previewed either, so no skip.
+    update(m, RefinementFinished{m.generation, m.refine_level});
+    update(m, RefinementFinished{m.generation, m.refine_level});
+    CHECK(!m.refine_active);
+    m.camera.radius_px =
+        std::min(m.camera.radius_px * 6, max_radius_px(m.camera.width, m.camera.height));
+    update(m, Wheel{3000, 0});
+    update(m, Tick{3250});
+    update(m, Tick{3251});
+    if (m.camera.radius_px / m.settled_camera.radius_px > kZoomPreviewMax)
+        CHECK(m.refine_level != m.refine_target);
 }
 
 void test_quality_profile_and_generation() {

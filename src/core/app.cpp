@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "globe/trackball.hpp"
+#include "globe/zoom.hpp"
 
 namespace globe {
 
@@ -225,7 +226,7 @@ double refine_progress(const Model& model, double job_fraction) {
     if (!model.refine_active)
         return 1.0;
     unsigned count = 0, index = 0;
-    std::uint32_t after = 0;
+    std::uint32_t after = model.refine_start_width > 0 ? model.refine_start_width - 1 : 0;
     const auto target = model.elevations[model.refine_target].width;
     for (unsigned guard = 0; guard < kElevationLevels; ++guard) {
         const auto level = next_resolution(model, after, target);
@@ -249,8 +250,18 @@ Effects start_refinement(Model& model) {
         return fx;
     model.stage = QualityStage::Refine;
     model.refine_target = quality_for(model).elevation_level;
-    const auto first = next_resolution(model, 0, model.elevations[model.refine_target].width);
+    auto first = next_resolution(model, 0, model.elevations[model.refine_target].width);
+    if (model.has_settled && model.settled_style == model.terrain_style &&
+        same_orientation(model.camera, model.settled_camera)) {
+        // Only the zoom changed since a finished frame: that frame, scaled, is on screen as a
+        // preview, so go straight to the target level instead of painting a coarser picture over
+        // it.
+        const double factor = model.camera.radius_px / model.settled_camera.radius_px;
+        if (factor >= kZoomPreviewMin && factor <= kZoomPreviewMax)
+            first = model.refine_target;
+    }
     model.refine_level = first < kElevationLevels ? first : model.refine_target;
+    model.refine_start_width = model.elevations[model.refine_level].width;
     model.refine_active = true;
     model.refine_first = true;
     fx.refine = Refine{model.generation, model.refine_level};
@@ -487,6 +498,9 @@ Effects update(Model& model, const Msg& msg) {
                 fx.refine = Refine{model.generation, next};
             } else {
                 model.refine_active = false;
+                model.has_settled = true;
+                model.settled_camera = model.camera;
+                model.settled_style = model.terrain_style;
             }
         }
     } else if (const auto* pack = std::get_if<RegisterElevation>(&msg)) {

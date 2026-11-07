@@ -25,8 +25,6 @@ std::size_t scale_frame(const Framebuffer& src, Framebuffer& dst, double cx, dou
 constexpr double kZoomPreviewMin = 0.25;
 constexpr double kZoomPreviewMax = 4.0;
 
-bool same_orientation(const Camera& a, const Camera& b);
-
 // The platform-neutral half of the zoom preview: which frame to scale from, and when it is usable.
 // A platform asks begin_job() for the buffer a refinement job snapshots its finished terrain into
 // (set_snapshot), tells the cache after every step, keeps the half-refined frame when input cancels

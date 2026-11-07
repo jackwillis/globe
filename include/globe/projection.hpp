@@ -42,6 +42,10 @@ struct ScreenPoint {
     double y;
 };
 
+// True if both cameras show the same view of the globe at the same viewport and center, at any
+// radius: only the zoom differs.
+bool same_orientation(const Camera& a, const Camera& b);
+
 // Fails (nullopt) on non-finite values, non-positive radius or out-of-range viewport size.
 std::optional<Camera> make_camera(const CameraParams& params);
 

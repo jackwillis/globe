@@ -72,6 +72,13 @@ struct Model {
     bool pick_pending; // a plain click waits kPickDelayMs for a second click before it picks
     ScreenPoint pick_pos;
     std::uint64_t pick_due_ms;
+    // The view of the last completed refinement. A refinement that starts on the same view at
+    // another zoom (so the cached frame can be scaled as a preview) skips the coarse levels: they
+    // would only paint a rougher picture over it.
+    Camera settled_camera{};
+    TerrainStyle settled_style = TerrainStyle::Map;
+    bool has_settled = false;
+    std::uint32_t refine_start_width = 0; // grid width of the first level this refinement runs
 };
 
 // Messages. Coordinates are viewport pixels; time_ms is a monotonic clock supplied by the

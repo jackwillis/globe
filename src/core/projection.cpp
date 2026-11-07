@@ -109,4 +109,13 @@ std::size_t subdivide_arc(Vec3 a, Vec3 b, double max_step_rad, Vec3* out, std::s
     return steps + 1;
 }
 
+bool same_orientation(const Camera& a, const Camera& b) {
+    const auto close = [](const Vec3& u, const Vec3& v) {
+        return std::fabs(u.x - v.x) < 1e-9 && std::fabs(u.y - v.y) < 1e-9 &&
+               std::fabs(u.z - v.z) < 1e-9;
+    };
+    return a.width == b.width && a.height == b.height && a.center_x == b.center_x &&
+           a.center_y == b.center_y && close(a.right, b.right) && close(a.up, b.up) &&
+           close(a.forward, b.forward);
+}
 } // namespace globe
