@@ -46,6 +46,9 @@ struct RenderQuality {
     // frame after every terrain pass, so they are visible from the first presented frame. The
     // settled pixels are identical. Replaces the paced line reveal.
     bool lines_first = false;
+    // Entries in the line-pixel list the composites use (0: a sixteenth of the frame). A view with
+    // more line pixels falls back to scanning the layer; tests set it small to exercise that.
+    std::size_t line_list_limit = 0;
     TerrainRepaint repaint = TerrainRepaint::LimbPass;
     // render_globe only: draw the layers over what the frame already holds (no clear, no ocean),
     // the way a refinement job does, so lines can go on top of a scaled zoom preview.
@@ -219,6 +222,14 @@ class RefinementJob {
     int phase_ = 0;
     int grid_segment_ = 0;
     std::optional<Framebuffer> line_layer_; // lines_first: key-colored except where a line is
+    // Where the line layer has a line: (row << 16 | column), so each composite touches only those
+    // pixels (a few percent of the frame) instead of scanning the whole layer. If a view has more
+    // than the list holds, the composite falls back to the scan.
+    std::unique_ptr<std::uint32_t[]> line_list_;
+    std::size_t line_list_count_ = 0;
+    std::size_t line_list_capacity_ = 0;
+    bool line_list_ok_ = false;
+    std::size_t stamp_pos_ = 0; // entries (or rows, in the fallback) already composited this stamp
     Framebuffer* snapshot_ = nullptr;
     bool snapshot_taken_ = false;
     bool lines_drawing_ = false; // phases 1-4 currently draw into line_layer_

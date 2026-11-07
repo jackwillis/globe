@@ -418,6 +418,17 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
     }
     if (terrain_ != nullptr && quality_.lines_first) {
         line_layer_ = Framebuffer::create(camera_.width, camera_.height);
+        if (line_layer_.has_value()) {
+            line_list_capacity_ =
+                quality_.line_list_limit != 0
+                    ? quality_.line_list_limit
+                    : std::max<std::size_t>(256, static_cast<std::size_t>(camera_.width) *
+                                                     camera_.height / 16);
+            line_list_.reset(new (std::nothrow) std::uint32_t[line_list_capacity_]);
+            if (line_list_ == nullptr)
+                line_list_capacity_ = 0; // the composite scans the whole layer instead
+            phase_ = 0; // lines first: clear, draw the layer and show it before any terrain set-up
+        }
         if (!line_layer_.has_value())
             quality_.progressive_lines = !quality_.terrain_only; // no memory: the old reveal
     }
@@ -438,11 +449,17 @@ double RefinementJob::progress() const {
     const auto fraction = [](std::size_t done, std::size_t total) {
         return total == 0 ? 0.0 : static_cast<double>(done) / static_cast<double>(total);
     };
+    // With the line layer the lines come first, then the terrain set-up, then the passes.
+    const bool lines_first = line_layer_.has_value();
+    if (lines_first && (phase_ == 12 || (phase_ == 10 && after_stamp_ == -2)))
+        return 0.05; // listing and showing the line layer
     switch (phase_) {
     case -2:
-        return 0.03 * fraction(prepare_index_, terrain_->corner_count());
+        return lines_first ? 0.06 + 0.02 * fraction(prepare_index_, terrain_->corner_count())
+                           : 0.03 * fraction(prepare_index_, terrain_->corner_count());
     case -1:
-        return 0.03 + 0.03 * fraction(prepare_index_, terrain_->cell_count());
+        return lines_first ? 0.08 + 0.02 * fraction(prepare_index_, terrain_->cell_count())
+                           : 0.03 + 0.03 * fraction(prepare_index_, terrain_->cell_count());
     case -3:
     case 0:
     case 11:
@@ -450,7 +467,7 @@ double RefinementJob::progress() const {
     case 2:
     case 3:
     case 4:
-        return 0.08; // clearing and the line layer: short
+        return lines_first ? 0.03 : 0.08; // clearing and the line layer: short
     case 9:
         return 0.98;
     default: {
@@ -500,7 +517,7 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             terrain_->assign_pass(prepare_index_, plan_);
             ++prepare_index_;
             if (prepare_index_ == terrain_->cell_count()) {
-                phase_ = quality_.progressive_lines ? -3 : 0;
+                phase_ = line_layer_.has_value() ? 7 : quality_.progressive_lines ? -3 : 0;
                 prepare_index_ = 0;
                 if (quality_.progressive_lines)
                     break; // isolate line preparation for measurement
@@ -615,20 +632,59 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                                                       : 1;
                 result.band_ready = true;
             }
+        } else if (phase_ == 12) {
+            // One row of the finished line layer: note where its lines are.
+            if (line_list_ok_) {
+                const auto* lines =
+                    line_layer_->data() + static_cast<std::size_t>(row_) * fb.width();
+                for (int x = 0; x < fb.width(); ++x) {
+                    if (lines[x] == kLineLayerKey)
+                        continue;
+                    if (line_list_count_ == line_list_capacity_) {
+                        line_list_ok_ = false; // more than the list holds: scan instead
+                        break;
+                    }
+                    line_list_[line_list_count_++] =
+                        (static_cast<std::uint32_t>(row_) << 16) | static_cast<std::uint32_t>(x);
+                }
+            }
+            if (!line_list_ok_ || ++row_ == fb.height()) {
+                row_ = 0;
+                stamp_pos_ = 0;
+                phase_ = 10;
+            }
         } else if (phase_ == 10) {
-            if (row_ == 0 && after_stamp_ == 5 && snapshot_ != nullptr && !snapshot_taken_ &&
+            if (stamp_pos_ == 0 && after_stamp_ == 5 && snapshot_ != nullptr && !snapshot_taken_ &&
                 snapshot_->width() == fb.width() && snapshot_->height() == fb.height()) {
                 std::memcpy(snapshot_->data(), fb.data(), fb.byte_size());
                 snapshot_taken_ = true; // the terrain alone: the lines are stamped next
             }
-            // Composite the line layer over this row (a pass may have painted over the lines).
-            const auto* lines = line_layer_->data() + static_cast<std::size_t>(row_) * fb.width();
-            auto* pixels = fb.data() + static_cast<std::size_t>(row_) * fb.stride();
-            for (int x = 0; x < fb.width(); ++x)
-                if (lines[x] != kLineLayerKey)
-                    pixels[x] = lines[x];
-            if (++row_ == fb.height()) {
-                row_ = 0;
+            // Composite the line layer over the frame (a pass may have painted over the lines).
+            bool done = false;
+            if (line_list_ok_) {
+                // A bounded run of the listed line pixels.
+                const std::size_t end = std::min(stamp_pos_ + 256, line_list_count_);
+                const auto* lines = line_layer_->data();
+                for (std::size_t i = stamp_pos_; i < end; ++i) {
+                    const auto y = static_cast<std::size_t>(line_list_[i] >> 16);
+                    const auto x = static_cast<std::size_t>(line_list_[i] & 0xffffU);
+                    fb.data()[y * static_cast<std::size_t>(fb.stride()) + x] =
+                        lines[y * static_cast<std::size_t>(fb.width()) + x];
+                }
+                stamp_pos_ = end;
+                done = stamp_pos_ >= line_list_count_;
+            } else {
+                // Too many line pixels for the list: scan one row of the layer.
+                const auto* lines =
+                    line_layer_->data() + stamp_pos_ * static_cast<std::size_t>(fb.width());
+                auto* pixels = fb.data() + stamp_pos_ * static_cast<std::size_t>(fb.stride());
+                for (int x = 0; x < fb.width(); ++x)
+                    if (lines[x] != kLineLayerKey)
+                        pixels[x] = lines[x];
+                done = ++stamp_pos_ == static_cast<std::size_t>(fb.height());
+            }
+            if (done) {
+                stamp_pos_ = 0;
                 phase_ = after_stamp_;
                 result.band_ready = true;
             }
@@ -720,10 +776,12 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                     segment_ = 0;
             }
         } else if (lines_drawing_) {
-            lines_drawing_ = false; // the layer is complete: show it, then start the terrain
+            lines_drawing_ = false; // the layer is complete: list its pixels, show it, then terrain
             row_ = 0;
-            after_stamp_ = 7;
-            phase_ = 10;
+            line_list_count_ = 0;
+            line_list_ok_ = line_list_ != nullptr;
+            after_stamp_ = -2; // then project the terrain corners
+            phase_ = 12;
         } else {
             result.band_ready = true;
             if (terrain_ != nullptr) {

@@ -86,10 +86,12 @@ Presented frames per job: 1 (lines) + 16 (rings) + 1 (limb pass) + 1 (end).
 
 Laptop (release, 640x480, medians): compute 26.7 ms against 12.9 ms unpaced (the extra is the 17
 composite scans, about 8 ms of it) and against 23.8 ms paced, but wall 26.7 ms against 267 ms paced
-(the 240 ms of reveal pauses are gone); the first frame with lines comes at 3.5 ms. **G4 (2026-11-06):** layer
-compute 599 / 593 ms against 519 / 513 unpaced (the 17 composite scans cost about 80 ms), first lines
-at about 120 ms (the terrain corners are projected first), wall time 599 against 1,000 paced. A list of
-line pixels instead of scanning would recover most of the 80 ms. Costs 307 KB (+ coverage plane) per job at
+(the 240 ms of reveal pauses are gone); the first frame with lines comes at 3.5 ms. **G4 (2026-11-07):** layer wall time 539 / 537 ms against 517 / 511 unpaced and about 1,000 paced,
+first lines at 53 ms, worst step 1.1-1.9 ms. Two changes got there from 599 / 593 ms and 120 ms: the
+composites walk a list of the layer's line pixels (a few percent of the frame; `line_list_`, packed
+row << 16 | column, one pass over the finished layer builds it, a view with more than a sixteenth of
+the frame falls back to scanning rows, tested with `line_list_limit`), and the lines are drawn before
+the terrain corners are projected. Costs 307 KB (+ coverage plane) per job at
 640x480; the OS 9 heap budget is unchecked. The OS 9 port uses the same core, so it gets this too.
 
 ## The final pass: limb cells only (2026-11-06)

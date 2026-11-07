@@ -159,6 +159,19 @@ int main() {
             CHECK(frames == kRefinePasses + 3); // lines, 16 rings, the limb pass, the end
             CHECK(last_progress > 0.9 && layered.progress() == 1.0);
             CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
+            // The same with a line-pixel list too small for the view (the composite scans the layer
+            // instead) and with an exactly sufficient one: identical pixels either way.
+            for (const std::size_t limit : {std::size_t{1}, std::size_t{100000}}) {
+                q.line_list_limit = limit;
+                RefinementJob listed(*camera, *scene, kDefaultPalette, Layers{}, q, 7, &*terrain);
+                unsigned shown = 0;
+                while (listed.active()) {
+                    shown += listed.step(*fb, 7, 64).band_ready;
+                }
+                CHECK(shown == kRefinePasses + 3);
+                CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
+            }
+            q.line_list_limit = 0;
             q.lines_first = false;
             q.progressive_lines = true;
             RefinementJob cancelled(*camera, *scene, kDefaultPalette, Layers{}, q, 3, &*terrain);
