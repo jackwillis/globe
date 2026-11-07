@@ -221,6 +221,28 @@ static unsigned next_resolution(const Model& model, std::uint32_t after, std::ui
     }
     return chosen;
 }
+double refine_progress(const Model& model, double job_fraction) {
+    if (!model.refine_active)
+        return 1.0;
+    unsigned count = 0, index = 0;
+    std::uint32_t after = 0;
+    const auto target = model.elevations[model.refine_target].width;
+    for (unsigned guard = 0; guard < kElevationLevels; ++guard) {
+        const auto level = next_resolution(model, after, target);
+        if (level >= kElevationLevels)
+            break;
+        ++count;
+        if (level == model.refine_level)
+            index = count;
+        after = model.elevations[level].width;
+        if (after >= target)
+            break;
+    }
+    if (count == 0 || index == 0)
+        return std::clamp(job_fraction, 0.0, 1.0);
+    return std::clamp((static_cast<double>(index - 1) + std::clamp(job_fraction, 0.0, 1.0)) / count,
+                      0.0, 1.0);
+}
 Effects start_refinement(Model& model) {
     Effects fx;
     if (model.refine_active)

@@ -579,6 +579,28 @@ void test_elevation_selection() {
     CHECK(back && std::holds_alternative<RegisterElevation>(*back));
 }
 
+void test_refine_progress() {
+    Model m = fresh();
+    CHECK(refine_progress(m, 0.3) == 1.0); // nothing refining
+    update(m, RegisterElevation{0, 360, 180});
+    update(m, RegisterElevation{1, 720, 360});
+    m.camera.radius_px = 400; // finest level wanted: two jobs, coarse then fine
+    update(m, Wheel{100, 0});
+    update(m, Tick{250});
+    update(m, Tick{251});
+    CHECK(m.refine_active);
+    const double first = refine_progress(m, 0.5);
+    CHECK(first > 0.2 && first < 0.3); // half of the first of two equal shares
+    CHECK(refine_progress(m, 0.0) < first && refine_progress(m, 1.0) > first);
+    update(m, RefinementFinished{m.generation, m.refine_level});
+    CHECK(m.refine_active);
+    const double second = refine_progress(m, 0.5);
+    CHECK(second > 0.7 && second < 0.8);
+    CHECK(refine_progress(m, 1.0) == 1.0);
+    update(m, RefinementFinished{m.generation, m.refine_level});
+    CHECK(!m.refine_active && refine_progress(m, 0.5) == 1.0);
+}
+
 void test_quality_profile_and_generation() {
     Model m = fresh();
     const auto moving = quality_for(m);
@@ -1095,6 +1117,7 @@ int main(int argc, char** argv) {
     test_pick_delay();
     test_styles();
     test_elevation_selection();
+    test_refine_progress();
     test_quality_profile_and_generation();
     test_quality_wakes();
     test_stage_trace_replay();

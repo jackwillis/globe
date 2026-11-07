@@ -5,9 +5,27 @@
 #include "globe/highlight.hpp"
 #include "globe/measure.hpp"
 #include "globe/trackball.hpp"
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 namespace globe {
+void draw_progress_bar(Framebuffer& fb, double progress) {
+    const int rows = std::min(kProgressBarRows, fb.height());
+    const int filled = static_cast<int>(std::clamp(progress, 0.0, 1.0) * fb.width());
+    for (int r = 0; r < rows; ++r) {
+        const int y = fb.height() - rows + r;
+        Rgb565* row =
+            fb.data() + static_cast<std::size_t>(y) * static_cast<std::size_t>(fb.stride());
+        for (int x = 0; x < fb.width(); ++x) {
+            if (r == 0) // a dark rule above the bar
+                row[x] = static_cast<Rgb565>((row[x] >> 2) & 0x39E7);
+            else if (x < filled)
+                row[x] = kProgressFill;
+            else // the track: the map darkened by half
+                row[x] = static_cast<Rgb565>((row[x] >> 1) & 0x7BEF);
+        }
+    }
+}
 void Overlays::toggle_measure() {
     measuring_ = !measuring_;
     if (!measuring_) {
@@ -130,11 +148,12 @@ std::optional<InfoCard> Overlays::take_card() {
     return card_;
 }
 Framebuffer* Overlays::compose(const Framebuffer& frame, const Camera& camera,
-                               std::int64_t unix_seconds, bool quick) {
+                               std::int64_t unix_seconds, bool quick, double progress) {
     const auto focus = focused_;
     const auto a = measure_a_;
     const auto b = measure_b_;
-    if (!night_ && !focus.has_value() && !a.has_value())
+    const bool bar = progress >= 0.0;
+    if (!night_ && !focus.has_value() && !a.has_value() && !bar)
         return nullptr;
     if (copy_.has_value() && (copy_->width() != frame.width() || copy_->height() != frame.height()))
         copy_.reset();
@@ -164,6 +183,8 @@ Framebuffer* Overlays::compose(const Framebuffer& frame, const Camera& camera,
             fill_country_dither(out, camera, *countries_, *focus, kCountryHighlight);
         draw_country_outline(out, camera, *countries_, *focus, kCountryHighlight);
     }
+    if (bar)
+        draw_progress_bar(out, progress);
     return &out;
 }
 } // namespace globe

@@ -11,6 +11,12 @@
 #include <cstdint>
 #include <optional>
 namespace globe {
+constexpr int kProgressBarRows = 10;
+
+constexpr Rgb565 kProgressFill = rgb565(255, 255, 255);
+// Paints the bar into the bottom rows of `fb` (exposed for tests).
+void draw_progress_bar(Framebuffer& fb, double progress);
+
 class Overlays {
   public:
     // The pick data are optional (a build may omit them); the pointers must outlive this object.
@@ -39,8 +45,10 @@ class Overlays {
     // that move, or are still refining) the night side is only a terminator line and the country
     // is outlined without the dither fill, so dragging stays fast; the full overlays come with the
     // settled frame.
+    // `progress` in 0..1 draws a bar across the bottom kProgressBarRows rows (a refinement is
+    // running); a negative value draws none.
     Framebuffer* compose(const Framebuffer& frame, const Camera& camera, std::int64_t unix_seconds,
-                         bool quick = false);
+                         bool quick = false, double progress = -1.0);
 
   private:
     void measure_click(LatLon point);

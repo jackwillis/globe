@@ -430,6 +430,43 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
                                 : kMaxChordPx;
 }
 
+double RefinementJob::progress() const {
+    if (!active_)
+        return 1.0;
+    if (terrain_ == nullptr)
+        return std::clamp(static_cast<double>(band_first_) / camera_.height, 0.0, 1.0);
+    const auto fraction = [](std::size_t done, std::size_t total) {
+        return total == 0 ? 0.0 : static_cast<double>(done) / static_cast<double>(total);
+    };
+    switch (phase_) {
+    case -2:
+        return 0.03 * fraction(prepare_index_, terrain_->corner_count());
+    case -1:
+        return 0.03 + 0.03 * fraction(prepare_index_, terrain_->cell_count());
+    case -3:
+    case 0:
+    case 11:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        return 0.08; // clearing and the line layer: short
+    case 9:
+        return 0.98;
+    default: {
+        // The ring passes and the limb pass: pass_ completed plus the sweep through the cells.
+        const unsigned passes =
+            kRefinePasses + (quality_.repaint == TerrainRepaint::LimbPass ||
+                                     quality_.repaint == TerrainRepaint::Reference
+                                 ? 1U
+                                 : 0U);
+        const double done =
+            (static_cast<double>(pass_) + fraction(terrain_cell_, terrain_->cell_count())) / passes;
+        return std::clamp(0.1 + 0.88 * done, 0.0, 0.98);
+    }
+    }
+}
+
 RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units) {
     RenderStep result;
     if (!active_ || generation != generation_ ||

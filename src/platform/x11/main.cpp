@@ -189,6 +189,10 @@ class App {
             if (!wait_events()) {
                 return 2;
             }
+            // How long this turn keeps the loop from looking at input: the worst one bounds the
+            // latency of any click or wheel step, refining or not.
+            const std::uint64_t turn_start = monotonic_ns();
+            const bool refining = refinement_ && refinement_->active();
             XEvent ev;
             while (!quit && XPending(dpy_) > 0) {
                 XNextEvent(dpy_, &ev);
@@ -213,6 +217,10 @@ class App {
             }
             if (!quit)
                 refine_step();
+            const double turn = ms_since(turn_start);
+            max_turn_ms_ = std::max(max_turn_ms_, turn);
+            if (refining)
+                max_refine_turn_ms_ = std::max(max_refine_turn_ms_, turn);
         }
         return pixels_ok_ ? 0 : 3;
     }
@@ -240,6 +248,8 @@ class App {
         std::printf(
             "  \"refinement_jobs\": %u,\n  \"zoom_cache_valid\": %d,\n  \"zoom_previews\": %u,\n",
             refinement_jobs_, zoom_cache_valid_ ? 1 : 0, zoom_previews_);
+        std::printf("  \"max_turn_ms\": %.3f,\n  \"max_refine_turn_ms\": %.3f,\n", max_turn_ms_,
+                    max_refine_turn_ms_);
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
         std::printf("  \"elevation_pack_count\": %u,\n  \"terrain_cache_bytes\": %zu,\n",
                     packs_.count(), packs_.bytes());
@@ -304,6 +314,7 @@ class App {
         image_ = img;
         fb_.emplace(std::move(*fb));
         format_ = format;
+        shown_frame_ = nullptr;
         frame_valid_ = false; // the new buffers are blank until the next render
         return true;
     }
@@ -530,7 +541,8 @@ class App {
         if (!fb_) {
             return false;
         }
-        const Framebuffer& fb = *fb_;
+        // What the window should hold: the frame as last shown, overlays and progress bar included.
+        const Framebuffer& fb = shown_frame_ != nullptr ? *shown_frame_ : *fb_;
         XImage* actual = XGetImage(dpy_, win_, 0, 0, static_cast<unsigned>(fb.width()),
                                    static_cast<unsigned>(fb.height()), AllPlanes, ZPixmap);
         if (actual == nullptr) {
@@ -594,8 +606,8 @@ class App {
             ++refine_bands_;
             present_refine(step.first_row, step.end_row);
         }
-        if (refinement_ && !refinement_->active() && (upload_dirty_ || shown_quick_) && fb_ &&
-            !presentation_held(model_)) {
+        if (refinement_ && !refinement_->active() &&
+            (upload_dirty_ || shown_quick_ || bar_shown_) && fb_ && !presentation_held(model_)) {
             upload(0, fb_->height()); // the last throttled frame is always shown
             upload_dirty_ = false;
         }
@@ -629,6 +641,8 @@ class App {
         while (wake_at_ms_ != 0 || (refinement_ && refinement_->active())) {
             if (!wait_events())
                 return;
+            const std::uint64_t turn_start = monotonic_ns();
+            const bool refining = refinement_ && refinement_->active();
             while (XPending(dpy_) > 0) {
                 XEvent ev;
                 XNextEvent(dpy_, &ev);
@@ -640,6 +654,10 @@ class App {
                 need_redraw_ = false;
             }
             refine_step();
+            const double turn = ms_since(turn_start);
+            max_turn_ms_ = std::max(max_turn_ms_, turn);
+            if (refining)
+                max_refine_turn_ms_ = std::max(max_refine_turn_ms_, turn);
         }
     }
 
@@ -724,11 +742,24 @@ class App {
             model_.stage == QualityStage::Refine &&
             (!model_.refine_active || model_.refine_level == model_.refine_target) &&
             !(refinement_ && refinement_->active());
+        // A bar along the bottom while a refinement runs (also between two elevation levels).
+        double progress = -1.0;
+        if (model_.refine_active) {
+            const double now = refine_progress(model_, refinement_ ? refinement_->progress() : 0.0);
+            progress = now < 1.0 ? now : -1.0;
+        }
+        const bool bar = progress >= 0.0;
+        if (bar || bar_shown_) {
+            first_row = std::min(first_row, fb.height() - kProgressBarRows);
+            end_row = fb.height();
+        }
+        bar_shown_ = bar;
         const Framebuffer* shown = overlays_.compose(
-            fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled);
+            fb, model_.camera, static_cast<std::int64_t>(std::time(nullptr)), !settled, progress);
         shown_quick_ = shown != nullptr && !settled;
         if (shown == nullptr)
             shown = &fb;
+        shown_frame_ = shown;
         convert_pixels(*shown, format_, reinterpret_cast<std::uint8_t*>(image_->data),
                        static_cast<std::size_t>(image_->bytes_per_line));
         t_.pack_ms.push_back(ms_since(t));
@@ -968,8 +999,12 @@ class App {
     TerrainStyle zoom_cache_style_ = TerrainStyle::Map;
     TerrainStyle zoom_pending_style_ = TerrainStyle::Map;
     std::vector<int> zoom_columns_;
-    bool preview_shown_ = false; // fb holds a zoom preview, not a cleared frame
+    bool preview_shown_ = false;               // fb holds a zoom preview, not a cleared frame
+    const Framebuffer* shown_frame_ = nullptr; // what the window last got (fb_ or an overlay copy)
+    bool bar_shown_ = false;                   // the last upload drew the progress bar
     unsigned zoom_previews_ = 0;
+    double max_turn_ms_ = 0;
+    double max_refine_turn_ms_ = 0;
     unsigned refinement_jobs_ = 0;
     std::size_t refine_bands_ = 0;
     std::uint64_t next_upload_ms_ = 0;

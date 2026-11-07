@@ -185,6 +185,9 @@ constexpr std::uint64_t kDoubleClickMs = 400;
 // A plain click picks only after this long without a second click, so a double click zooms and
 // does not also open a card. It must not be shorter than kDoubleClickMs.
 constexpr std::uint64_t kPickDelayMs = kDoubleClickMs;
+// Overall refinement progress 0..1 given the running job's own fraction: the elevation levels run
+// one job each, coarse to fine, so each level is an equal share. 1 when nothing is refining.
+double refine_progress(const Model& model, double job_fraction);
 constexpr double kDoubleClickSlopPx = 6.0;
 constexpr double kDoubleClickZoom = 2.0;
 

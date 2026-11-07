@@ -13,4 +13,7 @@ assert stats["wake_ticks"] == 2, stats  # Settle and Refine; the lines are a lay
 assert stats["refine_bands"] > 0, stats
 assert stats["verified_frames"] == stats["presentations"], stats
 assert stats["idle_frames"] == 0, stats
+# No turn of the event loop while refining may keep input waiting long: refinement is bounded
+# steps between event checks (a generous bound, for sanitizer builds and a loaded machine).
+assert 0 < stats["max_refine_turn_ms"] < 250, stats
 assert stats["idle_cpu_ms"] < 50, stats  # two-second wait, generous scheduling tolerance

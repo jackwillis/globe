@@ -134,10 +134,14 @@ int main() {
             RefinementJob layered(*camera, *scene, kDefaultPalette, Layers{}, q, 5, &*terrain);
             const auto palette = palette_for_style(kDefaultPalette, q.terrain_style);
             unsigned frames = 0;
+            double last_progress = 0;
             while (layered.active()) {
                 const auto step = layered.step(*fb, 5, 64);
                 CHECK(step.work_units <= 64);
                 CHECK(step.wake_after_ms == 0);
+                const double progress = layered.progress();
+                CHECK(progress >= last_progress && progress <= 1.0); // a bar never runs backwards
+                last_progress = progress;
                 if (!step.band_ready)
                     continue;
                 if (++frames == 1) {
@@ -153,6 +157,7 @@ int main() {
                 }
             }
             CHECK(frames == kRefinePasses + 3); // lines, 16 rings, the limb pass, the end
+            CHECK(last_progress > 0.9 && layered.progress() == 1.0);
             CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
             q.lines_first = false;
             q.progressive_lines = true;

@@ -188,6 +188,9 @@ class RefinementJob {
     // `snapshot` when the last stamp starts. snapshot_taken() then stays true.
     void set_snapshot(Framebuffer* snapshot) { snapshot_ = snapshot; }
     bool snapshot_taken() const { return snapshot_taken_; }
+    // How far along this job is, 0..1: monotonic, rough (set-up, line layer, the ring passes, the
+    // limb pass), meant for a progress bar.
+    double progress() const;
     void cancel() { active_ = false; }
     RenderStep step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units = 64);
     const RenderStats& stats() const { return stats_; }

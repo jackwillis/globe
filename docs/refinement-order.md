@@ -150,6 +150,24 @@ the gain here is that the terrain stays, not speed. G4 (`docs/perf/g4-2026-11-06
 about 10 ms dearer than the frame it replaces (more when zooming out: the rim-hole check). Costs one
 extra framebuffer for the cache.
 
+## Progress bar and input latency (2026-11-06)
+
+While a refinement runs, a 10-pixel bar fills across the bottom of the map (white on a darkened
+track, a dark rule above it), and it is gone when the last pass is shown, so it also says when the
+globe is done. It is an overlay on the shown copy (`draw_progress_bar`, `Overlays::compose(..,
+progress)`), never in the rendered frame, so pixels and pins are untouched. `RefinementJob::progress()`
+is a rough monotonic 0..1 (set-up 0-0.1, the 16 ring passes and the limb pass 0.1-0.98); the core's
+`refine_progress(model, job)` splits it equally over the elevation levels, which run one job each,
+and the bar stays up between levels. The bar moves when a frame is shown (once per pass, subject to
+the presentation throttle). X11 only so far; the shared `Overlays` API is ready for OS 9.
+
+Input stays live at every stage because refinement is bounded steps between event checks.
+`globe-x11 --stats` now reports `max_refine_turn_ms`, the longest event-loop turn (events, shown
+frame, one refinement step) while a refinement was running, which bounds the latency of a click or
+wheel step; `x11_idle` asserts it stays under 250 ms (1.2 ms on the laptop under Xvfb). On the G4 the
+worst job step is 5.5 ms (`docs/perf/g4-2026-11-06.txt`); the real display's upload time is the part
+only the owner's session can measure.
+
 ## Verification
 
 `tests/test_terrain.cpp`, `test_app.cpp` and `test_refine.py` compare every pixel for several foci
