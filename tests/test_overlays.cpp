@@ -3,6 +3,7 @@
 #include "check.hpp"
 #include "globe/daynight.hpp"
 #include "globe/overlays.hpp"
+#include "globe/shown_frame.hpp"
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -127,6 +128,48 @@ int main(int argc, char** argv) {
         Overlays bar;
         bar.attach(&*countries, &*scene, nullptr, nullptr);
         CHECK(bar.compose(*fb, camera, 0, true) == nullptr); // the bar alone never copies the frame
+    }
+    // ShownFrame: the shared builder. A bar alone goes into the frame itself for one conversion and
+    // is taken out again by end(); with an overlay active it goes on the copy and the frame is
+    // never touched.
+    {
+        Overlays plain;
+        plain.attach(&*countries, &*scene, nullptr, nullptr);
+        fb->clear(0x2222);
+        ShownFrame shown;
+        const auto& with_bar = shown.begin(plain, *fb, camera, 0, false, 0.5);
+        CHECK(&with_bar == &*fb && shown.bar() && !shown.quick());
+        CHECK(fb->pixel(10, 115) == kProgressFill && fb->pixel(100, 115) == 0x2222);
+        shown.end();
+        for (int i = 0; i < 160 * 120; ++i)
+            CHECK(fb->data()[i] == 0x2222);
+        const auto& none = shown.begin(plain, *fb, camera, 0, true, -1.0);
+        CHECK(&none == &*fb && !shown.bar());
+        shown.end();
+        Overlays focused;
+        focused.attach(&*countries, &*scene, nullptr, nullptr);
+        CHECK(focused.click(camera, at(camera, 0, 25)));
+        const auto& copy = shown.begin(focused, *fb, camera, 0, false, 0.5);
+        CHECK(&copy != &*fb && shown.bar() && shown.quick());
+        CHECK(copy.pixel(10, 115) == kProgressFill);
+        for (int i = 0; i < 160 * 120; ++i)
+            CHECK(fb->data()[i] == 0x2222); // the frame was never drawn on
+        shown.end();
+        const auto& settled_copy = shown.begin(focused, *fb, camera, 0, true, -1.0);
+        CHECK(&settled_copy != &*fb && !shown.quick() && !shown.bar());
+        shown.end();
+    }
+    // The settled rule and the bar fraction come from the model.
+    {
+        Model m = initial_model(160, 120);
+        CHECK(!frame_settled(m, false)); // still moving
+        m.stage = QualityStage::Refine;
+        CHECK(frame_settled(m, false) && !frame_settled(m, true));
+        CHECK(bar_progress(m, nullptr) < 0.0); // nothing refining: no bar
+        m.refine_active = true;
+        m.elevations[0] = {360, 180};
+        const double none_yet = bar_progress(m, nullptr);
+        CHECK(none_yet >= 0.0 && none_yet < 0.01);
     }
     return TEST_MAIN_RESULT();
 }

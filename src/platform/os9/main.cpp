@@ -11,6 +11,7 @@
 #include "globe/embedded_landclasses.hpp"
 #include "globe/embedded_places.hpp"
 #include "globe/overlays.hpp"
+#include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
 #include "info_card.hpp"
@@ -319,32 +320,6 @@ class Application {
             }
         }
     }
-    // The progress bar, like X11: opaque, on the overlay copy if there is one, otherwise straight
-    // into the frame for the length of one conversion with its ten rows put back afterwards.
-    Rgb565* begin_bar(Framebuffer*& shown) {
-        double progress = -1.0;
-        if (model_.refine_active) {
-            const double now = refine_progress(model_, job_ ? job_->progress() : 0.0);
-            progress = now < 1.0 ? now : -1.0;
-        }
-        bar_shown_ = progress >= 0.0 && fb_ && fb_->height() >= kProgressBarRows;
-        if (!bar_shown_)
-            return nullptr;
-        Rgb565* rows = nullptr;
-        if (shown == nullptr) {
-            rows = fb_->data() + static_cast<std::size_t>(fb_->height() - kProgressBarRows) *
-                                     static_cast<std::size_t>(fb_->stride());
-            bar_stash_.resize(static_cast<std::size_t>(fb_->width()) * kProgressBarRows);
-            std::memcpy(bar_stash_.data(), rows, bar_stash_.size() * sizeof(Rgb565));
-            shown = &*fb_;
-        }
-        draw_progress_bar(*shown, progress);
-        return rows;
-    }
-    void end_bar(Rgb565* rows) {
-        if (rows != nullptr)
-            std::memcpy(rows, bar_stash_.data(), bar_stash_.size() * sizeof(Rgb565));
-    }
     // While the view only zooms about its center, the last finished terrain frame scaled to the new
     // radius, with fresh lines on top, stands in for a render (see ZoomPreview).
     bool zoom_preview() {
@@ -370,15 +345,14 @@ class Application {
             return false;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
-        const bool settled = model_.stage == QualityStage::Refine && !model_.refine_active &&
-                             !(job_ && job_->active());
-        Framebuffer* shown = overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled);
-        shown_quick_ = shown != nullptr && !settled;
-        Rgb565* bar_rows = begin_bar(shown);
-        const bool ok =
-            convert_pixels(shown ? *shown : *fb_, format,
-                           reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
-        end_bar(bar_rows);
+        const bool settled = frame_settled(model_, job_ && job_->active());
+        const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(), settled,
+                                         bar_progress(model_, job_ ? &*job_ : nullptr));
+        shown_quick_ = shown_.quick();
+        bar_shown_ = shown_.bar();
+        const bool ok = convert_pixels(
+            shown, format, reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
+        shown_.end();
         UnlockPixels(pix); // no locked handles survive a yield
         copy_ms_ += now_ms() - start;
         return ok;
@@ -444,17 +418,19 @@ class Application {
         // Overlays (night, measure, focused country) go on a copy; the frame itself is
         // untouched. Frames that move or are still refining get the cheap overlays; the settled
         // one the full.
-        const bool settled = model_.stage == QualityStage::Refine && !(job_ && job_->active());
-        Framebuffer* shown =
-            convert ? overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled) : nullptr;
-        if (convert)
-            shown_quick_ = shown != nullptr && !settled;
-        Rgb565* bar_rows = convert ? begin_bar(shown) : nullptr;
-        const bool converted =
-            !convert || convert_pixel_rows(shown != nullptr ? *shown : *fb_, format,
+        bool converted = true;
+        if (convert) { // else the rows were converted by capture(); only submit them
+            const bool settled = frame_settled(model_, job_ && job_->active());
+            const auto& shown =
+                shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(), settled,
+                             bar_progress(model_, job_ ? &*job_ : nullptr));
+            shown_quick_ = shown_.quick();
+            bar_shown_ = shown_.bar();
+            converted = convert_pixel_rows(shown, format,
                                            reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)),
                                            stride, first, end);
-        end_bar(bar_rows);
+            shown_.end();
+        }
         if (converted) {
             SetPortWindowPort(window_);
             Rect rect{static_cast<short>(first), 0, static_cast<short>(end),
@@ -620,7 +596,7 @@ class Application {
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
     bool titled_ = true, dirty_ = false, shown_quick_ = false;
     ZoomPreview zoom_; // the last finished terrain frame, scaled while the view only zooms
-    std::vector<Rgb565> bar_stash_; // the frame's bottom rows while the bar is drawn into it
+    ShownFrame shown_; // overlays and the bar, built on a copy of the frame for each conversion
     bool bar_shown_ = false, preview_shown_ = false;
     unsigned last_unknown_ = 0, unknown_count_ = 0;
     std::uint64_t settled_ms_ = 0;
