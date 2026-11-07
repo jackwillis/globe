@@ -470,3 +470,17 @@ Installable current image and MacBinary are retained in the Codex worktree's ign
 `build-scheduling-evidence/GlobeProgressive-1440.dsk` and `GlobeProgressive.bin`.
 
 Final integration: progressive-resolution work fast-forwarded into local `main` at `afa7946`, preserving main through `7c245e9`. Identified Tiger Reset repeat: 180 bands, 2,757 ms settle, 732 ms copy, 17 ms max turn, 16 ms max continuation. The overnight progress file now records completed status. No GitHub push was performed.
+
+## 2026-11-06 (day): OS 9 parity for the new rendering work
+
+Done in core (shared, so OS 9 gets it by building): line layer (`lines_first`), the limb-cell final
+pass, `RefinementJob::progress()`, `refine_progress()`, `draw_progress_bar`, `ZoomPreview`
+(`include/globe/zoom.hpp`). Ported by hand to `src/platform/os9/main.cpp`: the zoom preview
+(`zoom_preview`, `ZoomPreview` calls in `apply` and the step loop; refine over the preview with
+`preserve_bitmap`) and the progress bar (`begin_bar`/`end_bar` in `capture` and `copy`, opaque, ten
+rows stashed and put back). Built: `tools/build-os9.sh --floppy` (payload headroom 621,013 bytes) and
+`tools/probe-retro68.sh` (0 failures, both CPUs). **Not run on OS 9**: Tiger was not free. To check on
+Tiger: zoom with the wheel/Page keys after a settle (terrain should stay), watch the bar fill, and
+note the title's turn/step times. Extra memory: line layer + zoom cache + overlay copy, about 1.8 MB
+at 640x480, inside the 24 MiB partition (12 MiB minimum, unchecked). X11-only so far:
+`--stats` `max_refine_turn_ms`, `--no-zoom-preview`, `--finish-refinement`.

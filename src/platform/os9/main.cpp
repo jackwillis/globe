@@ -12,6 +12,7 @@
 #include "globe/embedded_places.hpp"
 #include "globe/overlays.hpp"
 #include "globe/terrain.hpp"
+#include "globe/zoom.hpp"
 #include "info_card.hpp"
 #include "pixel_format.hpp"
 #include "wall_clock.hpp"
@@ -23,7 +24,9 @@
 #include <TextEdit.h>
 #include <Windows.h>
 #include <algorithm>
+#include <cstring>
 #include <optional>
+#include <vector>
 // These Appearance Manager declarations are absent from the installed Multiversal interfaces.
 // AppearanceLib exports the function; OS 9 provides arrow=0, closed hand=8, open hand=9.
 extern "C" std::int32_t SetThemeCursor(std::uint32_t cursor);
@@ -100,8 +103,11 @@ class Application {
                 apply(Tick{before});
             }
             if (foreground_ && redraw_) {
-                render_globe(*fb_, model_.camera, *scene_, kDefaultPalette,
-                             effective_layers(model_), true, quality_for(model_), &*terrain_);
+                if (!zoom_preview()) {
+                    preview_shown_ = false;
+                    render_globe(*fb_, model_.camera, *scene_, kDefaultPalette,
+                                 effective_layers(model_), true, quality_for(model_), &*terrain_);
+                }
                 copy(0, fb_->height());
                 redraw_ = false;
             }
@@ -117,6 +123,7 @@ class Application {
                 unsigned steps = 0;
                 do {
                     const auto band = job_->step(*fb_, model_.generation, kWorkUnitsPerStep);
+                    zoom_.after_step(*job_);
                     auto step_end = now_ms();
                     max_step_ms_ = std::max(max_step_ms_, step_end - step_start);
                     if (band.band_ready) {
@@ -143,7 +150,8 @@ class Application {
                         break; // dispatch queued input before spending another geometry budget
                 } while (job_->active() && step_start < slice_end);
                 // The final snapshot includes the full settled overlays.
-                if (!job_->active() && (dirty_ || shown_quick_) && !presentation_held(model_))
+                if (!job_->active() && (dirty_ || shown_quick_ || bar_shown_) &&
+                    !presentation_held(model_))
                     presentation_.request(model_.generation);
             }
             if (foreground_)
@@ -311,6 +319,50 @@ class Application {
             }
         }
     }
+    // The progress bar, like X11: opaque, on the overlay copy if there is one, otherwise straight
+    // into the frame for the length of one conversion with its ten rows put back afterwards.
+    Rgb565* begin_bar(Framebuffer*& shown) {
+        double progress = -1.0;
+        if (model_.refine_active) {
+            const double now = refine_progress(model_, job_ ? job_->progress() : 0.0);
+            progress = now < 1.0 ? now : -1.0;
+        }
+        bar_shown_ = progress >= 0.0 && fb_ && fb_->height() >= kProgressBarRows;
+        if (!bar_shown_)
+            return nullptr;
+        Rgb565* rows = nullptr;
+        if (shown == nullptr) {
+            rows = fb_->data() + static_cast<std::size_t>(fb_->height() - kProgressBarRows) *
+                                     static_cast<std::size_t>(fb_->stride());
+            bar_stash_.resize(static_cast<std::size_t>(fb_->width()) * kProgressBarRows);
+            std::memcpy(bar_stash_.data(), rows, bar_stash_.size() * sizeof(Rgb565));
+            shown = &*fb_;
+        }
+        draw_progress_bar(*shown, progress);
+        return rows;
+    }
+    void end_bar(Rgb565* rows) {
+        if (rows != nullptr)
+            std::memcpy(rows, bar_stash_.data(), bar_stash_.size() * sizeof(Rgb565));
+    }
+    // While the view only zooms about its center, the last finished terrain frame scaled to the new
+    // radius, with fresh lines on top, stands in for a render (see ZoomPreview).
+    bool zoom_preview() {
+        if (model_.stage != QualityStage::Moving || !fb_)
+            return false;
+        const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
+        if (!zoom_.preview(*fb_, model_.camera, model_.terrain_style, palette.background,
+                           palette.ocean))
+            return false;
+        if (!zoom_.baked()) {
+            auto quality = quality_for(model_);
+            quality.lines_only = true;
+            render_globe(*fb_, model_.camera, *scene_, kDefaultPalette, effective_layers(model_),
+                         true, quality, &*terrain_);
+        }
+        preview_shown_ = true;
+        return true;
+    }
     bool capture() {
         const auto start = now_ms();
         const auto pix = GetGWorldPixMap(world_);
@@ -320,16 +372,19 @@ class Application {
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
         const bool settled = model_.stage == QualityStage::Refine && !model_.refine_active &&
                              !(job_ && job_->active());
-        const auto* shown = overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled);
+        Framebuffer* shown = overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled);
         shown_quick_ = shown != nullptr && !settled;
+        Rgb565* bar_rows = begin_bar(shown);
         const bool ok =
             convert_pixels(shown ? *shown : *fb_, format,
                            reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)), stride);
+        end_bar(bar_rows);
         UnlockPixels(pix); // no locked handles survive a yield
         copy_ms_ += now_ms() - start;
         return ok;
     }
-    // The window title reports the last settle: first refine step to last, and time spent copying.
+    // The window title reports the last settle: first refine step to last, and time spent
+    // copying.
     void show_timing() {
         if (!titled_)
             settled_ms_ = now_ms() - refine_t0_;
@@ -386,17 +441,20 @@ class Application {
             return false;
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
-        // Overlays (night, measure, focused country) go on a copy; the frame itself is untouched.
-        // Frames that move or are still refining get the cheap overlays; the settled one the full.
+        // Overlays (night, measure, focused country) go on a copy; the frame itself is
+        // untouched. Frames that move or are still refining get the cheap overlays; the settled
+        // one the full.
         const bool settled = model_.stage == QualityStage::Refine && !(job_ && job_->active());
-        const Framebuffer* shown =
+        Framebuffer* shown =
             convert ? overlays_.compose(*fb_, model_.camera, unix_seconds(), !settled) : nullptr;
         if (convert)
             shown_quick_ = shown != nullptr && !settled;
+        Rgb565* bar_rows = convert ? begin_bar(shown) : nullptr;
         const bool converted =
             !convert || convert_pixel_rows(shown != nullptr ? *shown : *fb_, format,
                                            reinterpret_cast<std::uint8_t*>(GetPixBaseAddr(pix)),
                                            stride, first, end);
+        end_bar(bar_rows);
         if (converted) {
             SetPortWindowPort(window_);
             Rect rect{static_cast<short>(first), 0, static_cast<short>(end),
@@ -420,6 +478,8 @@ class Application {
         if (generation != model_.generation) {
             presentation_.cancel();
             job_waiting_ = false;
+            if (fb_)
+                zoom_.keep_partial(*fb_, job_ && job_->active(), model_.camera);
             if (job_)
                 job_->cancel();
             if (stage == QualityStage::Refine)
@@ -434,8 +494,17 @@ class Application {
             titled_ = false;
         }
         if (fx.refine) {
-            job_.emplace(model_.camera, *scene_, kDefaultPalette, effective_layers(model_),
-                         quality_for(model_), model_.generation, &*terrain_);
+            auto quality = quality_for(model_);
+            // A zoom preview is on screen: refine over it instead of clearing to the ocean.
+            quality.preserve_bitmap = quality.preserve_bitmap || preview_shown_;
+            preview_shown_ = false;
+            job_.emplace(model_.camera, *scene_, kDefaultPalette, effective_layers(model_), quality,
+                         model_.generation, &*terrain_);
+            if (quality.terrain && fb_) {
+                if (auto* snapshot = zoom_.begin_job(model_.camera, model_.terrain_style,
+                                                     fb_->width(), fb_->height()))
+                    job_->set_snapshot(snapshot);
+            }
         }
         if (std::holds_alternative<Resize>(msg))
             fx.wake_after_ms = update(model_, Tick{now_ms()}).wake_after_ms;
@@ -550,6 +619,9 @@ class Application {
     std::uint64_t wake_ = 0;
     std::uint64_t refine_t0_ = 0, copy_ms_ = 0;
     bool titled_ = true, dirty_ = false, shown_quick_ = false;
+    ZoomPreview zoom_; // the last finished terrain frame, scaled while the view only zooms
+    std::vector<Rgb565> bar_stash_; // the frame's bottom rows while the bar is drawn into it
+    bool bar_shown_ = false, preview_shown_ = false;
     unsigned last_unknown_ = 0, unknown_count_ = 0;
     std::uint64_t settled_ms_ = 0;
     ClassicPresentation presentation_;
