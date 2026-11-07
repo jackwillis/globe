@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <new>
 
 #include "globe/raster.hpp"
@@ -333,15 +334,19 @@ Palette palette_for_style(Palette palette, TerrainStyle style) {
 RenderStats render_globe(Framebuffer& fb, const Camera& camera, const Scene& scene,
                          const Palette& requested_palette, const Layers& layers,
                          bool cull_polylines, RenderQuality quality, const TerrainScene* base) {
-    const auto palette = palette_for_style(requested_palette, quality.terrain_style);
+    auto palette = palette_for_style(requested_palette, quality.terrain_style);
+    if (quality.lines_only && quality.terrain_style != TerrainStyle::Map)
+        palette.border = rgb565(0, 0, 0); // as a terrain job draws it
     const double chord_px = std::isfinite(quality.max_chord_px)
                                 ? std::clamp(quality.max_chord_px, 0.25, 16.0)
                                 : kMaxChordPx;
     RenderStats stats;
-    fb.clear(palette.background);
-    fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
-    if (base && quality.gray_base)
-        base->draw_base(fb, camera);
+    if (!quality.lines_only) {
+        fb.clear(palette.background);
+        fill_disc(fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
+        if (base && quality.gray_base)
+            base->draw_base(fb, camera);
+    }
     if (layers.graticule) {
         const Vec3* grid = scene.graticule();
         const Vec3* meridians = grid + static_cast<std::size_t>(kParallels) * kParallelSamples;
@@ -574,6 +579,11 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 result.band_ready = true;
             }
         } else if (phase_ == 10) {
+            if (row_ == 0 && after_stamp_ == 5 && snapshot_ != nullptr && !snapshot_taken_ &&
+                snapshot_->width() == fb.width() && snapshot_->height() == fb.height()) {
+                std::memcpy(snapshot_->data(), fb.data(), fb.byte_size());
+                snapshot_taken_ = true; // the terrain alone: the lines are stamped next
+            }
             // Composite the line layer over this row (a pass may have painted over the lines).
             const auto* lines = line_layer_->data() + static_cast<std::size_t>(row_) * fb.width();
             auto* pixels = fb.data() + static_cast<std::size_t>(row_) * fb.stride();

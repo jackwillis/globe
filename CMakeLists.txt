@@ -35,7 +35,8 @@ add_library(globe_core
   src/render/highlight.cpp
   src/render/daynight.cpp
   src/render/measure.cpp
-  src/render/overlays.cpp)
+  src/render/overlays.cpp
+  src/render/zoom.cpp)
 target_include_directories(globe_core PUBLIC include)
 target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
 target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
@@ -152,6 +153,10 @@ if(GLOBE_BUILD_TESTS)
   add_executable(test_line_reveal tests/test_line_reveal.cpp)
   target_link_libraries(test_line_reveal PRIVATE globe_core)
   add_test(NAME line_reveal COMMAND test_line_reveal)
+  add_executable(test_zoom tests/test_zoom.cpp)
+  target_link_libraries(test_zoom PRIVATE globe_core)
+  add_test(NAME zoom COMMAND test_zoom)
+  set_tests_properties(zoom PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   set_tests_properties(line_reveal PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   add_executable(test_landclasses tests/test_landclasses.cpp)
   target_link_libraries(test_landclasses PRIVATE globe_core)

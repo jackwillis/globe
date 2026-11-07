@@ -120,6 +120,27 @@ cells with a higher index overwrote it. The limb pass must come after every ring
 Raw output: `docs/perf/repair-diff-host.txt`. Not yet measured on the G4 (maul was off NetBSD); the
 pins should match there because the arithmetic is unchanged.
 
+## Zoom preview (prototype, X11 only, 2026-11-06)
+
+Zooming (wheel, buttons) changes only the radius about the view center, and an orthographic globe
+zoomed about its center is the same picture scaled about that point. So while the view only zooms,
+`zoom_preview` in `src/platform/x11/main.cpp` builds the moving frame by scaling the **last finished
+terrain frame** (`scale_frame`, `src/render/zoom.cpp`: nearest neighbor, one column table per frame)
+and drawing fresh lines on top (`RenderQuality::lines_only`), instead of rendering plain vectors.
+Terrain stays on screen while zooming. The cache is the settled frame copied by the final refinement
+job just before its lines are stamped (`RefinementJob::set_snapshot`), keyed by orientation, window
+size and look; it is used for factors 0.5 to 2.5 and only if the scaled picture has no hole inside the
+disc (zooming out past the old frame falls back to the plain render). Always scaled from the cache,
+never from the previous preview. When the wheel stops the refinement starts over the preview
+(`preserve_bitmap`, no clear), so it sharpens the picture instead of rebuilding it; the final pixels
+are the same as from scratch (`tests/test_zoom.cpp` for factors 1.1, 1.5 and 0.8). Not done: drag,
+double-click zoom (it recenters), OS 9. `--no-zoom-preview` turns it off; the stats show
+`zoom_previews`; `--finish-refinement` makes a script run each refinement to its end.
+
+Laptop, 640x480: a preview frame costs about 0.95 ms against 0.85 ms for the plain vector frame, so
+the gain here is that the terrain stays, not speed. G4 cost not measured (maul is on Tiger, not
+NetBSD). Costs one extra framebuffer for the cache.
+
 ## Verification
 
 `tests/test_terrain.cpp`, `test_app.cpp` and `test_refine.py` compare every pixel for several foci

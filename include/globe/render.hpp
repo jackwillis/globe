@@ -47,6 +47,9 @@ struct RenderQuality {
     // settled pixels are identical. Replaces the paced line reveal.
     bool lines_first = false;
     TerrainRepaint repaint = TerrainRepaint::LimbPass;
+    // render_globe only: draw the layers over what the frame already holds (no clear, no ocean),
+    // the way a refinement job does, so lines can go on top of a scaled zoom preview.
+    bool lines_only = false;
 };
 
 struct Palette {
@@ -181,6 +184,10 @@ class RefinementJob {
     RefinementJob(const Camera& camera, const Scene& scene, const Palette& palette, Layers layers,
                   RenderQuality quality, std::uint64_t generation, TerrainScene* terrain = nullptr);
     bool active() const { return active_; }
+    // Terrain jobs with lines_first: copy the finished terrain (before the lines go on) into
+    // `snapshot` when the last stamp starts. snapshot_taken() then stays true.
+    void set_snapshot(Framebuffer* snapshot) { snapshot_ = snapshot; }
+    bool snapshot_taken() const { return snapshot_taken_; }
     void cancel() { active_ = false; }
     RenderStep step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units = 64);
     const RenderStats& stats() const { return stats_; }
@@ -209,7 +216,9 @@ class RefinementJob {
     int phase_ = 0;
     int grid_segment_ = 0;
     std::optional<Framebuffer> line_layer_; // lines_first: key-colored except where a line is
-    bool lines_drawing_ = false;            // phases 1-4 currently draw into line_layer_
+    Framebuffer* snapshot_ = nullptr;
+    bool snapshot_taken_ = false;
+    bool lines_drawing_ = false; // phases 1-4 currently draw into line_layer_
     int after_stamp_ = 7;
     AtlasCursor cursor_{};
     AtlasPolyline line_{AtlasLayer::Coastline, 0, nullptr};

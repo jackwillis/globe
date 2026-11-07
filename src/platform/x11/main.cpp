@@ -4,7 +4,8 @@
 // X events into Msgs, runs update(), and renders only when update() asks for a redraw.
 //
 //   globe-x11 [--atlas FILE] [--elevation FILE] [--size WxH] [--script TRACE [--exit-when-done]]
-//             [--idle-seconds N] [--verify-pixels] [--stats]
+//             [--idle-seconds N] [--verify-pixels] [--stats] [--no-zoom-preview]
+//             [--finish-refinement]
 //
 // Mouse: drag the left button to rotate, wheel to zoom. Keys: arrows rotate, + / - zoom, R reset,
 // G / B toggle graticule / borders, N aligns north up, T switches between
@@ -49,6 +50,7 @@
 #include "globe/terrain.hpp"
 #include "globe/trace.hpp"
 #include "globe/trackball.hpp"
+#include "globe/zoom.hpp"
 #include "info_window.hpp"
 #include "pixel_format.hpp"
 #include "style_window.hpp"
@@ -68,6 +70,9 @@ struct Options {
     bool stats = false;
     bool verify_pixels = false;
     int idle_seconds = 0;
+    bool no_zoom_preview = false;
+    bool finish_refinement =
+        false; // script: run each refinement to its end before the next message
 };
 
 struct Timings {
@@ -227,7 +232,9 @@ class App {
         std::printf("  \"verified_frames\": %zu,\n", verified_frames_);
         std::printf("  \"refine_bands\": %zu,\n  \"refine_work_ms\": %.4f,\n", refine_bands_,
                     refine_work_ms_);
-        std::printf("  \"refinement_jobs\": %u,\n", refinement_jobs_);
+        std::printf(
+            "  \"refinement_jobs\": %u,\n  \"zoom_cache_valid\": %d,\n  \"zoom_previews\": %u,\n",
+            refinement_jobs_, zoom_cache_valid_ ? 1 : 0, zoom_previews_);
         std::printf("  \"presentations\": %zu,\n", t_.present_ms.size());
         std::printf("  \"elevation_pack_count\": %u,\n  \"terrain_cache_bytes\": %zu,\n",
                     packs_.count(), packs_.bytes());
@@ -357,8 +364,25 @@ class App {
             ++refinement_jobs_;
             next_upload_ms_ = 0;
             upload_dirty_ = false;
+            auto quality = quality_for(model_);
+            // A zoom preview is on screen: refine over it instead of clearing to the ocean.
+            quality.preserve_bitmap = quality.preserve_bitmap || preview_shown_;
+            preview_shown_ = false;
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
-                                quality_for(model_), model_.generation, packs_.for_model(model_));
+                                quality, model_.generation, packs_.for_model(model_));
+            if (quality.terrain && !quality.terrain_only && fb_) {
+                const bool fits = zoom_cache_.has_value() && zoom_cache_->width() == fb_->width() &&
+                                  zoom_cache_->height() == fb_->height();
+                if (!fits)
+                    zoom_cache_ = Framebuffer::create(fb_->width(), fb_->height());
+                if (!fits)
+                    zoom_cache_valid_ = false;
+                if (zoom_cache_.has_value()) {
+                    refinement_->set_snapshot(&*zoom_cache_);
+                    zoom_pending_camera_ = model_.camera;
+                    zoom_pending_style_ = model_.terrain_style;
+                }
+            }
         }
         if (fx.redraw && (std::holds_alternative<Resize>(msg) ||
                           std::holds_alternative<RegisterElevation>(msg))) {
@@ -406,6 +430,9 @@ class App {
                 present();
                 need_redraw_ = false;
             }
+            while (opt_.finish_refinement && refinement_ && refinement_->active() &&
+                   !refine_waiting_)
+                refine_step();
         }
         return false;
     }
@@ -546,6 +573,13 @@ class App {
         const std::uint64_t t = monotonic_ns();
         const auto step = refinement_->step(*fb_, model_.generation);
         refine_work_ms_ += ms_since(t);
+        if (refinement_->snapshot_taken() && zoom_cache_.has_value() &&
+            (!zoom_cache_valid_ || zoom_cache_camera_.radius_px != zoom_pending_camera_.radius_px ||
+             !same_orientation(zoom_cache_camera_, zoom_pending_camera_))) {
+            zoom_cache_valid_ = true;
+            zoom_cache_camera_ = zoom_pending_camera_;
+            zoom_cache_style_ = zoom_pending_style_;
+        }
         if (step.band_ready) {
             if (place_scene_) {
                 fb_->clip_rows(step.first_row, step.end_row);
@@ -604,14 +638,52 @@ class App {
         }
     }
 
+    static bool same_orientation(const Camera& a, const Camera& b) {
+        const auto close = [](const Vec3& u, const Vec3& v) {
+            return std::fabs(u.x - v.x) < 1e-9 && std::fabs(u.y - v.y) < 1e-9 &&
+                   std::fabs(u.z - v.z) < 1e-9;
+        };
+        return a.width == b.width && a.height == b.height && a.center_x == b.center_x &&
+               a.center_y == b.center_y && close(a.right, b.right) && close(a.up, b.up) &&
+               close(a.forward, b.forward);
+    }
+
+    // While the view only zooms about its center, the last finished terrain frame scaled to the new
+    // radius, with fresh lines on top, stands in for a render. False when it cannot.
+    bool zoom_preview(Framebuffer& fb) {
+        if (!zoom_cache_valid_ || !zoom_cache_.has_value() || opt_.no_zoom_preview ||
+            model_.stage != QualityStage::Moving || model_.terrain_style != zoom_cache_style_ ||
+            !same_orientation(model_.camera, zoom_cache_camera_) ||
+            zoom_cache_->width() != fb.width() || zoom_cache_->height() != fb.height())
+            return false;
+        const double factor = model_.camera.radius_px / zoom_cache_camera_.radius_px;
+        if (!(factor >= 0.5 && factor <= 2.5))
+            return false;
+        const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
+        if (!scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
+                         palette.background, model_.camera.radius_px, zoom_columns_))
+            return false;
+        auto quality = quality_for(model_);
+        quality.lines_only = true;
+        render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
+                     quality, packs_.for_model(model_));
+        preview_shown_ = true;
+        return true;
+    }
+
     void present() {
         if (!fb_ || image_ == nullptr) {
             return;
         }
         Framebuffer& fb = *fb_;
         std::uint64_t t = monotonic_ns();
-        render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
-                     quality_for(model_), packs_.for_model(model_));
+        if (zoom_preview(fb)) {
+            ++zoom_previews_;
+        } else {
+            preview_shown_ = false;
+            render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
+                         quality_for(model_), packs_.for_model(model_));
+        }
         t_.render_ms.push_back(ms_since(t));
         frame_valid_ = true;
         upload(0, fb.height());
@@ -881,6 +953,15 @@ class App {
     bool refine_waiting_ = false;
     std::uint64_t wake_at_ms_ = 0;
     std::optional<RefinementJob> refinement_;
+    std::optional<Framebuffer> zoom_cache_; // the last finished terrain frame, without lines
+    bool zoom_cache_valid_ = false;
+    Camera zoom_cache_camera_{};
+    Camera zoom_pending_camera_{};
+    TerrainStyle zoom_cache_style_ = TerrainStyle::Map;
+    TerrainStyle zoom_pending_style_ = TerrainStyle::Map;
+    std::vector<int> zoom_columns_;
+    bool preview_shown_ = false; // fb holds a zoom preview, not a cleared frame
+    unsigned zoom_previews_ = 0;
     unsigned refinement_jobs_ = 0;
     std::size_t refine_bands_ = 0;
     std::uint64_t next_upload_ms_ = 0;
@@ -923,6 +1004,10 @@ int main(int argc, char** argv) {
             opt.script_path = argv[++i];
         } else if (a == "--exit-when-done") {
             opt.exit_when_done = true;
+        } else if (a == "--finish-refinement") {
+            opt.finish_refinement = true;
+        } else if (a == "--no-zoom-preview") {
+            opt.no_zoom_preview = true;
         } else if (a == "--idle-seconds" && i + 1 < argc) {
             if (!parse_int_arg(argv[++i], 0, 3600, opt.idle_seconds)) {
                 std::fprintf(stderr, "bad --idle-seconds (0..3600)\n");
