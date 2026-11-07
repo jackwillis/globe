@@ -28,9 +28,9 @@ With terrain, one job paints the whole frame in 16 passes:
    `include/globe/refine_order.hpp`.
 3. Pass k clears nothing and draws the cells whose byte is k, with the existing rasterizer in
    16-row clip slices (at most four slices or the work-unit budget per continuation).
-4. The last pass repaints **every** visible cell in canonical index order. This costs a final full
-   fill, and it keeps today's edge ownership where clipped limb polygons overlap, so the settled
-   image is identical for every order and every focus.
+4. One more pass redraws only the cells clipped at the horizon, in index order (see "The final
+   pass" below; until 2026-11-06 this pass repainted every cell). The settled image is identical
+   for every focus.
 5. The lines (graticule, coastlines, borders) are drawn once, above all terrain, through the
    existing bounded arc/polyline continuation. Earlier passes therefore show terrain without
    outlines.
@@ -82,7 +82,7 @@ unit). The lines are on screen from the first presented frame and are never hidd
 replaces the paced reveal (no reveal wakes, no canonical repair pass); the rasterizer and the terrain
 passes are unchanged, and the settled image is pixel-identical (`tests/test_line_reveal.cpp`, the
 refined pins, `globe-line-reveal-bench` mode `layer` has the same checksums as `unpaced`).
-Presented frames per job: 1 (lines) + 16 (passes) + 1 (final).
+Presented frames per job: 1 (lines) + 16 (rings) + 1 (limb pass) + 1 (end).
 
 Laptop (release, 640x480, medians): compute 26.7 ms against 12.9 ms unpaced (the extra is the 17
 composite scans, about 8 ms of it) and against 23.8 ms paced, but wall 26.7 ms against 267 ms paced
@@ -91,26 +91,34 @@ measured on the G4 or OS 9** (maul was on Tiger/off). If the scans cost too much
 list of line pixels instead of scanning the layer. Costs 307 KB (+ coverage plane) per job at
 640x480; the OS 9 heap budget is unchecked. The OS 9 port uses the same core, so it gets this too.
 
-## Is the canonical repaint needed? (measured 2026-11-06, host only)
+## The final pass: limb cells only (2026-11-06)
 
-`globe-repair-diff` (`src/platform/bench/repair_diff.cpp`, output `docs/perf/repair-diff-host.txt`)
-renders 400 random views (radius 50-1500, random center and heading, focus anywhere from 200 px
-outside the viewport, Map and Relief) with `RenderQuality::repaint_mode` 0 (canonical: the last pass
-repaints every cell), 1 (the last pass draws only its own ring) and 2 (the last pass repaints only
-cells clipped at the limb), and compares each with the canonical frame.
+The 16 ring passes are no longer followed by a repaint of every cell. They are followed by one
+more pass that redraws **only the cells clipped at the horizon** (any corner behind it: `limb_cell`),
+in index order. Terrain fill work drops by about 47% (slices over 600 random views: 90.1 M with the
+old full repaint, 48.2 M now); host `globe-line-reveal-bench` unpaced compute went from 12.9 and
+21.0 ms to 10.6 and 9.7 ms. The refined pins are unchanged.
 
-- **No repaint:** 0 of 400 single-job views differ; in the production coarse + preserve-bitmap
-  sequence 1 view differs by 1 pixel (a limb pixel, 096c against 098d).
-- **Limb cells only:** worse (16 of 400 differ, 19 px): index-order repainting of just the limb
-  cells overwrites neighbors the canonical order would have left alone.
-- **Cost:** terrain slices over the 400 views, 26.1 M canonical against 13.8 M with no repaint:
-  the repaint is about 47% of all terrain fill slices.
+Why this is exact. Measuring what the old repaint changed (`globe-repair-diff`, 600 random views,
+radius 50-1500, random center and heading, focus anywhere from 200 px outside the viewport, Map and
+Relief, a single job and the production coarse + preserve-bitmap sequence) found one cause:
+a clipped limb cell is a flat polygon, its unclipped neighbors are shaded triangles, and the two
+rasterizers own a shared edge pixel differently, so both draw it. Shaded cells never overlap each
+other (the triangle code sorts vertices, so a shared edge is the same function for both). Rings
+alone are therefore order dependent at about 2% of views (a pixel or two on the limb), and the old
+index-order repaint hid this by always letting the higher index win. The final image is now **defined**
+as: every unclipped cell, then every clipped cell in index order (`TerrainRepaint::Reference`, drawn
+by the job in that order for testing). Ring passes plus the limb pass give exactly that (0 of 600
+views differ, single job and two-level), whatever the focus; the old canonical image differs from the
+new one in 14 of 600 views (19 px, all at the limb), which is why `TerrainRepaint::Full` (the legacy
+behavior) is kept for the bench only. `tests/test_terrain.cpp` checks the equivalence with
+contrasting neighbors and five foci, and the slice count of the limb pass.
 
-So the repaint almost never changes a pixel, and removing it would nearly halve terrain fill work,
-but "no repaint" is not strictly canonical: a rare limb pixel differs, which would break the
-every-pixel-identical guarantee. Open: find what decides that pixel (coverage marking in the
-preserve path, or limb overlap) and whether a cheap exact rule exists. Not measured on the G4.
-`repaint_mode` and `TerrainScene::limb_cell` exist only for this experiment; production uses mode 0.
+A first attempt, repainting limb cells in the same sweep as ring 15, was not exact: the shaded ring-15
+cells with a higher index overwrote it. The limb pass must come after every ring.
+
+Raw output: `docs/perf/repair-diff-host.txt`. Not yet measured on the G4 (maul was off NetBSD); the
+pins should match there because the arithmetic is unchanged.
 
 ## Verification
 

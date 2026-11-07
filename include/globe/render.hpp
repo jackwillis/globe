@@ -20,6 +20,15 @@
 namespace globe {
 class TerrainScene;
 
+// What follows the 16 ring passes of a terrain job. Final pixels never depend on the focus under
+// LimbPass, Full and Reference; RingsOnly exists for measurement (`globe-repair-diff`).
+enum class TerrainRepaint : std::uint8_t {
+    LimbPass,  // one more pass redraws the cells clipped at the horizon, in index order (default)
+    Full,      // legacy: the last ring pass repaints every cell in index order
+    RingsOnly, // rings only: order dependent at a few limb pixels
+    Reference, // every unclipped cell in index order, then every clipped cell: LimbPass must match
+};
+
 struct RenderQuality {
     double max_chord_px = 3.0;
     bool terrain = false;
@@ -37,9 +46,7 @@ struct RenderQuality {
     // frame after every terrain pass, so they are visible from the first presented frame. The
     // settled pixels are identical. Replaces the paced line reveal.
     bool lines_first = false;
-    // Experiment (repair-diff bench only): the last pass draws only its own ring instead of
-    // repainting every cell, so the result is not canonical. Remove with the experiment.
-    unsigned repaint_mode = 0; // 0 canonical, 1 no repaint, 2 repaint only limb-clipped cells
+    TerrainRepaint repaint = TerrainRepaint::LimbPass;
 };
 
 struct Palette {

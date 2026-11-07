@@ -225,6 +225,18 @@ void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan) {
         (projected_[a].y + projected_[b].y + projected_[c].y + projected_[d].y) * 0.25);
     passes_[index] = static_cast<std::uint8_t>(pass);
 }
+namespace {
+// Where the edge a-b crosses the horizon plane (z = 0). Both cells sharing an edge must compute the
+// same point whichever way they walk it, or their clipped polygons overlap or leave a gap at the
+// limb and the final pixels would depend on the order the cells are drawn in.
+Vec3 horizon_crossing(const Vec3& a, const Vec3& b) {
+    const bool swap = b.x < a.x || (b.x == a.x && (b.y < a.y || (b.y == a.y && b.z < a.z)));
+    const Vec3& from = swap ? b : a;
+    const Vec3& to = swap ? a : b;
+    const double t = from.z / (from.z - to.z);
+    return from + (to - from) * t;
+}
+} // namespace
 bool TerrainScene::limb_cell(std::size_t index) const {
     const auto x = index % grid_.width(), y = index / grid_.width(),
                first = y * (grid_.width() + 1) + x;
@@ -268,8 +280,7 @@ void TerrainScene::draw_cell(Framebuffer& fb, std::size_t index, int band, int b
     Vec3 previous = input[3];
     for (const auto current : input) {
         if ((previous.z >= 0) != (current.z >= 0)) {
-            const double t = previous.z / (previous.z - current.z);
-            clipped[count++] = previous + (current - previous) * t;
+            clipped[count++] = horizon_crossing(previous, current);
         }
         if (current.z >= 0)
             clipped[count++] = current;

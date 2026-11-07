@@ -152,7 +152,7 @@ int main() {
                     CHECK(lines > 50);
                 }
             }
-            CHECK(frames == kRefinePasses + 2);
+            CHECK(frames == kRefinePasses + 3); // lines, 16 rings, the limb pass, the end
             CHECK(std::equal(expected.begin(), expected.end(), fb->data()));
             q.lines_first = false;
             q.progressive_lines = true;

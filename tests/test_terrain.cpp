@@ -274,21 +274,32 @@ void test_orders() {
                     const auto step = job.step(*fb, 1, 256);
                     CHECK(step.work_units <= 256);
                     ready += step.band_ready;
-                    if (step.band_ready && ready == kRefinePasses - 1)
+                    if (step.band_ready && ready == kRefinePasses)
                         before_last = job.stats().terrain_slices;
                 }
                 CHECK(!job.active() && ready > 0);
-                // The last pass repaints every visible cell, once per 16-row slice.
+                // After the 16 rings one more pass redraws the visible cells clipped at the
+                // horizon, once per 16-row slice.
                 std::uint32_t slices = 0;
                 for (std::size_t i = 0; i < terrain->cell_count(); ++i) {
                     const auto b = terrain->cell_bands(i);
-                    slices += static_cast<unsigned>(b.end - b.first);
+                    if (terrain->cell_pass(i) != 255 && terrain->limb_cell(i))
+                        slices += static_cast<unsigned>(b.end - b.first);
                 }
+                CHECK(slices > 0);
                 CHECK(job.stats().terrain_slices - before_last == slices);
                 auto pixels = std::vector<Rgb565>(fb->data(), fb->data() + 100 * 81);
                 if (reference.empty())
                     reference = pixels;
                 CHECK(pixels == reference); // identical for every focus
+                // The definition of the final image: every unclipped cell in index order, then
+                // every clipped cell in index order. The ring passes plus the limb pass match it.
+                RenderQuality qr = q;
+                qr.repaint = TerrainRepaint::Reference;
+                RefinementJob ordered(camera, *scene, kDefaultPalette, Layers{}, qr, 6, &*terrain);
+                while (ordered.active())
+                    ordered.step(*fb, 6, 256);
+                CHECK(std::equal(pixels.begin(), pixels.end(), fb->data()));
                 // Generation cancellation must preserve every pixel, even at a pass boundary.
                 RefinementJob cancelled(camera, *scene, kDefaultPalette, Layers{}, q, 4, &*terrain);
                 while (cancelled.active() && !cancelled.step(*fb, 4, 256).band_ready) {
