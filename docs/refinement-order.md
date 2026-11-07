@@ -53,7 +53,13 @@ pass about 78 ms, total 711 / 765 / 635 ms (profile 1x, 2x off-center, trace), w
 `docs/perf/refine-shapes-g4-run1.json`, `-run2.json`, `refine-order-g4.json`. Not measured:
 scanout, X uploads at every pass and any OS 9 execution.
 
-## Progressive lines (GL-41)
+## Progressive lines (GL-41) — historical, removed 2026-11-07
+
+> The paced reveal described here was replaced by the line layer (below) and then deleted: the line
+> chunk table and workspace, the reveal phases, `RenderStep::wake_after_ms`, `progressive_lines` and
+> the front ends' waiting state are gone. If the layer cannot be allocated the lines are drawn at the
+> end in one pass. Kept for the record and its G4 numbers.
+
 
 After all terrain passes the lines no longer appear at once: they reveal circle-outward from the
 view center, in the same 16 rings as the terrain, one pass per timer wake (`kLineRevealDelayMs` =
@@ -64,7 +70,7 @@ line pass. Each polyline is cut once into chunks of 16 points (`LineChunk`, 8 by
 by the same plan as the terrain cells (`Scene::prepare_line_chunk`). No per-pass re-walk. When the
 reveal has drawn every chunk, one canonical layer-order pass repairs crossings, so the settled
 image is **identical** to the unpaced render for every focus and zoom (checked every pixel in
-`tests/test_line_reveal.cpp`, and by the unchanged refined pins).
+`tests/test_line_reveal.cpp` at the time, now `tests/test_line_layer.cpp`, and by the unchanged refined pins).
 
 G4 (640x480, medians of nine, `globe-line-reveal-bench`, `docs/perf/line-reveal-g4.json`):
 compute 726 ms paced against 680 ms unpaced at radius 220, 795 against 734 at radius 440 (about
@@ -80,8 +86,8 @@ RGB565 layer in the job (`line_layer_`, key color `0x0001` = no line), then comp
 over the frame after the background clear and after every terrain pass (phase 10, one row per work
 unit). The lines are on screen from the first presented frame and are never hidden by a pass. It
 replaces the paced reveal (no reveal wakes, no canonical repair pass); the rasterizer and the terrain
-passes are unchanged, and the settled image is pixel-identical (`tests/test_line_reveal.cpp`, the
-refined pins, `globe-line-reveal-bench` mode `layer` has the same checksums as `unpaced`).
+passes are unchanged, and the settled image is pixel-identical (`tests/test_line_layer.cpp`, the
+refined pins, `globe-line-layer-bench` mode `layer` has the same checksums as `unpaced`).
 Presented frames per job: 1 (lines) + 16 (rings) + 1 (limb pass) + 1 (end).
 
 Laptop (release, 640x480, medians): compute 26.7 ms against 12.9 ms unpaced (the extra is the 17
@@ -99,10 +105,10 @@ the terrain corners are projected. Costs 307 KB (+ coverage plane) per job at
 The 16 ring passes are no longer followed by a repaint of every cell. They are followed by one
 more pass that redraws **only the cells clipped at the horizon** (any corner behind it: `limb_cell`),
 in index order. Terrain fill work drops by about 47% (slices over 600 random views: 90.1 M with the
-old full repaint, 48.2 M now); host `globe-line-reveal-bench` unpaced compute went from 12.9 and
+old full repaint, 48.2 M now); host `globe-line-layer-bench` (then `globe-line-reveal-bench`) unpaced compute went from 12.9 and
 21.0 ms to 10.6 and 9.7 ms. The refined pins are unchanged.
 
-Why this is exact. Measuring what the old repaint changed (`globe-repair-diff`, 600 random views,
+Why this is exact. Measuring what the old repaint changed (a `globe-repair-diff` bench, 600 random views; its source is `src/platform/bench/repair_diff.cpp` at commit `7b61310`, removed 2026-11-07,
 radius 50-1500, random center and heading, focus anywhere from 200 px outside the viewport, Map and
 Relief, a single job and the production coarse + preserve-bitmap sequence) found one cause:
 a clipped limb cell is a flat polygon, its unclipped neighbors are shaded triangles, and the two
@@ -110,11 +116,9 @@ rasterizers own a shared edge pixel differently, so both draw it. Shaded cells n
 other (the triangle code sorts vertices, so a shared edge is the same function for both). Rings
 alone are therefore order dependent at about 2% of views (a pixel or two on the limb), and the old
 index-order repaint hid this by always letting the higher index win. The final image is now **defined**
-as: every unclipped cell, then every clipped cell in index order (`TerrainRepaint::Reference`, drawn
-by the job in that order for testing). Ring passes plus the limb pass give exactly that (0 of 600
+as: every unclipped cell, then every clipped cell in index order (`reference_terrain` in `tests/test_terrain.cpp` draws exactly that, and the job must match it). Ring passes plus the limb pass give exactly that (0 of 600
 views differ, single job and two-level), whatever the focus; the old canonical image differs from the
-new one in 14 of 600 views (19 px, all at the limb), which is why `TerrainRepaint::Full` (the legacy
-behavior) is kept for the bench only. `tests/test_terrain.cpp` checks the equivalence with
+new one in 14 of 600 views (19 px, all at the limb), which is why the old behavior is gone. `tests/test_terrain.cpp` checks the equivalence with
 contrasting neighbors and five foci, and the slice count of the limb pass.
 
 A first attempt, repainting limb cells in the same sweep as ring 15, was not exact: the shaded ring-15

@@ -3,6 +3,7 @@
 #include "atlas_util.hpp"
 #include "check.hpp"
 #include "globe/elevation.hpp"
+#include "globe/raster.hpp"
 #include "globe/render.hpp"
 #include "globe/terrain.hpp"
 #include <algorithm>
@@ -239,6 +240,38 @@ void check_assignment(TerrainScene& terrain, const Camera& camera, ScreenPoint f
     }
     CHECK(seen > 50);
 }
+// The definition of the final terrain image, drawn directly: the background and ocean, then every
+// unclipped cell in index order, then every clipped cell in index order. The ring passes plus the
+// limb pass of a refinement job must give exactly this, whatever the focus.
+std::vector<Rgb565> reference_terrain(TerrainScene& terrain, const Camera& camera,
+                                      ScreenPoint focus, const RenderQuality& quality) {
+    auto fb = Framebuffer::create(camera.width, camera.height);
+    if (!fb)
+        return {};
+    const auto palette = palette_for_style(kDefaultPalette, quality.terrain_style);
+    fb->clear(palette.background);
+    fill_disc(*fb, camera.center_x, camera.center_y, camera.radius_px, palette.ocean);
+    for (std::size_t i = 0; i < terrain.corner_count(); ++i)
+        terrain.project_corner(i, camera);
+    const auto plan = make_pass_plan(camera, focus);
+    for (std::size_t i = 0; i < terrain.cell_count(); ++i) {
+        terrain.bound_cell(i, camera.height, kRefineBandRows);
+        terrain.assign_pass(i, plan);
+    }
+    for (const bool limb : {false, true})
+        for (std::size_t i = 0; i < terrain.cell_count(); ++i) {
+            if (terrain.cell_pass(i) == 255 || terrain.limb_cell(i) != limb)
+                continue;
+            const auto bands = terrain.cell_bands(i);
+            for (int band = bands.first; band < bands.end; ++band) {
+                fb->clip_rows(band * kRefineBandRows,
+                              std::min(camera.height, (band + 1) * kRefineBandRows));
+                terrain.draw_cell(*fb, i, band, kRefineBandRows, quality.terrain_style,
+                                  quality.smooth_terrain);
+            }
+        }
+    return {fb->data(), fb->data() + static_cast<std::size_t>(camera.width) * camera.height};
+}
 void test_orders() {
     auto bytes = land_grid();
     // Contrasting neighbors expose order-dependent edge ownership and clipped limb overlaps.
@@ -294,12 +327,13 @@ void test_orders() {
                 CHECK(pixels == reference); // identical for every focus
                 // The definition of the final image: every unclipped cell in index order, then
                 // every clipped cell in index order. The ring passes plus the limb pass match it.
-                RenderQuality qr = q;
-                qr.repaint = TerrainRepaint::Reference;
-                RefinementJob ordered(camera, *scene, kDefaultPalette, Layers{}, qr, 6, &*terrain);
-                while (ordered.active())
-                    ordered.step(*fb, 6, 256);
-                CHECK(std::equal(pixels.begin(), pixels.end(), fb->data()));
+                RenderQuality terrain_only = q;
+                RefinementJob plain(camera, *scene, kDefaultPalette, Layers{false, false, false},
+                                    terrain_only, 6, &*terrain);
+                while (plain.active())
+                    plain.step(*fb, 6, 256);
+                CHECK(std::equal(fb->data(), fb->data() + 100 * 81,
+                                 reference_terrain(*terrain, camera, focus, q).begin()));
                 // Generation cancellation must preserve every pixel, even at a pass boundary.
                 RefinementJob cancelled(camera, *scene, kDefaultPalette, Layers{}, q, 4, &*terrain);
                 while (cancelled.active() && !cancelled.step(*fb, 4, 256).band_ready) {

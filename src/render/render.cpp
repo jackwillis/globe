@@ -400,11 +400,7 @@ double RefinementJob::progress() const {
         return 0.98;
     default: {
         // The ring passes and the limb pass: pass_ completed plus the sweep through the cells.
-        const unsigned passes =
-            kRefinePasses + (quality_.repaint == TerrainRepaint::LimbPass ||
-                                     quality_.repaint == TerrainRepaint::Reference
-                                 ? 1U
-                                 : 0U);
+        const unsigned passes = kRefinePasses + 1;
         const double done =
             (static_cast<double>(pass_) + fraction(terrain_cell_, terrain_->cell_count())) / passes;
         return std::clamp(0.1 + 0.88 * done, 0.0, 0.98);
@@ -450,28 +446,18 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             // Pass k paints the cells of ring k. A cell clipped at the horizon is a flat polygon
             // and overlaps its shaded neighbors by a pixel along shared edges, so after the rings
             // one more pass redraws the clipped cells in index order: the winner of every pixel is
-            // then independent of the ring order (`globe-repair-diff` checked 600 random views).
-            const auto repaint = quality_.repaint;
-            const bool extra =
-                repaint == TerrainRepaint::LimbPass || repaint == TerrainRepaint::Reference;
-            const bool last = pass_ + 1 == kRefinePasses + (extra ? 1U : 0U);
+            // then independent of the ring order (checked on 600 random views, tests/test_terrain).
+            const bool last = pass_ == kRefinePasses; // the limb pass
             const auto pass = terrain_->cell_pass(terrain_cell_);
-            bool draw = false;
-            if (pass != 255) {
-                if (repaint == TerrainRepaint::Reference && pass_ + 1 == kRefinePasses)
-                    draw = !terrain_->limb_cell(terrain_cell_);
-                else if (extra && pass_ == kRefinePasses)
-                    draw = terrain_->limb_cell(terrain_cell_);
-                else
-                    draw = pass == pass_ || (last && repaint == TerrainRepaint::Full);
-            }
+            const bool draw =
+                pass != 255 && (last ? terrain_->limb_cell(terrain_cell_) : pass == pass_);
             if (draw) {
                 const auto bands = terrain_->cell_bands(terrain_cell_);
                 if (cell_band_ < 0)
                     cell_band_ = bands.first;
                 fb.clip_rows(cell_band_ * kRefineBandRows,
                              std::min(fb.height(), (cell_band_ + 1) * kRefineBandRows));
-                if (quality_.preserve_bitmap && (last || repaint != TerrainRepaint::Full))
+                if (quality_.preserve_bitmap)
                     fb.coverage(Framebuffer::Coverage::Mark);
                 terrain_->draw_cell(fb, terrain_cell_, cell_band_, kRefineBandRows,
                                     quality_.terrain_style, quality_.smooth_terrain);
