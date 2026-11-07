@@ -484,3 +484,27 @@ Tiger: zoom with the wheel/Page keys after a settle (terrain should stay), watch
 note the title's turn/step times. Extra memory: line layer + zoom cache + overlay copy, about 1.8 MB
 at 640x480, inside the 24 MiB partition (12 MiB minimum, unchecked). X11-only so far:
 `--stats` `max_refine_turn_ms`, `--no-zoom-preview`, `--finish-refinement`.
+
+## 2026-11-07: shared front-end code (#16), line list, tip8 and after
+
+What the two front ends now share, so a change lands once (`include/globe/`): `ZoomPreview`
+(`zoom.hpp`: which frame to scale from, `scale_frame`), `ShownFrame`/`frame_settled`/`bar_progress`
+(`shown_frame.hpp`: overlays plus the progress bar on a copy), `RefineRunner` (`refine_runner.hpp`:
+job start over a preview, cancel keeping the half-refined frame, step with city markers, moving
+frame), `binding_for_char` (`app.hpp`: the shortcut keys), `same_orientation` (`projection.hpp`).
+What stays per platform on purpose: the event loop and wake timers, getting pixels on screen
+(`XPutImage` against GWorld + `CopyBits` in bounded slices and the presentation throttle), windows,
+cursors, the info card, the clock. The `apply()` skeletons (about 15 lines each) and picking (about
+8) are still duplicated; a coordinator with a host interface would buy little until a third platform
+or more shared logic appears (issue #16 has the plan; the revised comment text was not posted,
+see the 2026-11-06 notes). `tests/test_zoom.cpp` runs the runner headlessly (preview, refine over
+it equals a direct render, cancel); #14 can build its lifecycle tests the same way.
+
+Rendering since the last handoff: the line layer (lines first), the limb-cell final pass, the zoom
+preview at every level, skipping the coarse level after a pure zoom (core: `settled_camera`),
+the progress bar, a pixel list for the line composites (G4 first lines at 53 ms, whole refine 539
+ms, `docs/perf/g4-2026-11-06.txt`). Details and measurements: `docs/refinement-order.md`.
+
+Builds on maul: `/tmp/globe-x11-tip8` (everything above except the pixel list); newer tips as pushed.
+Issue #34 holds the owner's idea of low/medium/high render tiers with first-run calibration.
+Not verified on OS 9 (built and probed only): zoom preview, progress bar, shared runner and keys.

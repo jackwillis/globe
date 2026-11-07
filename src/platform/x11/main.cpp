@@ -985,7 +985,8 @@ int main(int argc, char** argv) {
             std::fprintf(
                 stderr,
                 "usage: globe-x11 [--atlas FILE] [--elevation FILE] [--size WxH] [--script TRACE "
-                "[--exit-when-done]] [--idle-seconds N] [--verify-pixels] [--stats]\n");
+                "[--exit-when-done]] [--idle-seconds N] [--verify-pixels] [--stats] "
+                "[--no-zoom-preview] [--finish-refinement]\n");
             return 2;
         }
     }
