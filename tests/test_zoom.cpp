@@ -156,9 +156,15 @@ void test_zoom_preview_cache() {
     CHECK(terrain && fb);
     if (!terrain || !fb)
         return;
-    const auto view = *make_camera({{20, 30}, 10, 40, 120, 90});
-    const auto zoomed = *make_camera({{20, 30}, 10, 50, 120, 90});
-    const auto turned = *make_camera({{20, 40}, 10, 40, 120, 90});
+    const auto view_camera = make_camera({{20, 30}, 10, 40, 120, 90});
+    const auto zoomed_camera = make_camera({{20, 30}, 10, 50, 120, 90});
+    const auto turned_camera = make_camera({{20, 40}, 10, 40, 120, 90});
+    CHECK(view_camera && zoomed_camera && turned_camera);
+    if (!view_camera || !zoomed_camera || !turned_camera)
+        return;
+    const auto view = *view_camera;
+    const auto zoomed = *zoomed_camera;
+    const auto turned = *turned_camera;
     const auto palette = palette_for_style(kDefaultPalette, TerrainStyle::Map);
     RenderQuality q{1.5, true, 0, TerrainStyle::Map};
     q.lines_first = true;
@@ -192,8 +198,10 @@ void test_zoom_preview_cache() {
     }
     CHECK(zoom.valid() && !zoom.baked());
     // Outside the factor range there is no preview.
-    const auto far = *make_camera({{20, 30}, 10, 40 * 4.5, 120, 90});
-    CHECK(!zoom.preview(*fb, far, TerrainStyle::Map, palette.background, palette.ocean));
+    const auto far = make_camera({{20, 30}, 10, 40 * 4.5, 120, 90});
+    CHECK(far.has_value());
+    if (far.has_value())
+        CHECK(!zoom.preview(*fb, *far, TerrainStyle::Map, palette.background, palette.ocean));
 }
 // The refinement lifecycle both front ends share: start, step, cancel, preview, refine over it.
 void test_refine_runner() {

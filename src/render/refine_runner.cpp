@@ -22,8 +22,11 @@ void RefineRunner::cancel(const Framebuffer* fb, const Camera& now) {
         job_->cancel();
 }
 RenderStep RefineRunner::step(Framebuffer& fb, const Model& model, unsigned max_work_units) {
-    const auto result = job_->step(fb, model.generation, max_work_units);
-    zoom_.after_step(*job_);
+    if (!job_.has_value())
+        return {};
+    auto& job = *job_;
+    const auto result = job.step(fb, model.generation, max_work_units);
+    zoom_.after_step(job);
     if (result.band_ready && places_ != nullptr) {
         fb.clip_rows(result.first_row, result.end_row);
         places_->draw(fb, model.camera);
