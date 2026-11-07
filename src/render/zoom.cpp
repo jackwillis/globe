@@ -4,18 +4,19 @@
 #include <cmath>
 #include <cstring>
 namespace globe {
-bool scale_frame(const Framebuffer& src, Framebuffer& dst, double cx, double cy, double factor,
-                 Rgb565 fill, double disc_radius, std::vector<int>& columns) {
+std::size_t scale_frame(const Framebuffer& src, Framebuffer& dst, double cx, double cy,
+                        double factor, Rgb565 outside, Rgb565 hole, double disc_radius,
+                        std::vector<int>& columns) {
     if (src.width() != dst.width() || src.height() != dst.height() || !std::isfinite(factor) ||
         factor <= 0 || !std::isfinite(cx) || !std::isfinite(cy))
-        return false;
+        return kInvalidZoom;
     const int w = dst.width(), h = dst.height();
     columns.resize(static_cast<std::size_t>(w));
     for (int x = 0; x < w; ++x) {
         const int sx = static_cast<int>(std::floor(cx + (x + 0.5 - cx) / factor));
         columns[static_cast<std::size_t>(x)] = sx >= 0 && sx < w ? sx : -1;
     }
-    bool complete = true;
+    std::size_t holes = 0;
     const double limit = disc_radius * disc_radius;
     for (int y = 0; y < h; ++y) {
         const int sy = static_cast<int>(std::floor(cy + (y + 0.5 - cy) / factor));
@@ -32,12 +33,15 @@ bool scale_frame(const Framebuffer& src, Framebuffer& dst, double cx, double cy,
                 out[x] = in[sx];
                 continue;
             }
-            out[x] = fill;
             const double dx = x + 0.5 - cx;
-            if (dx * dx + dy * dy <= limit)
-                complete = false;
+            if (dx * dx + dy * dy <= limit) {
+                out[x] = hole;
+                ++holes;
+            } else {
+                out[x] = outside;
+            }
         }
     }
-    return complete;
+    return holes;
 }
 } // namespace globe

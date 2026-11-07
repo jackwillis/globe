@@ -130,11 +130,16 @@ and drawing fresh lines on top (`RenderQuality::lines_only`), instead of renderi
 Terrain stays on screen while zooming. The cache is the settled frame copied by the final refinement
 job just before its lines are stamped (`RefinementJob::set_snapshot`), keyed by orientation, window
 size and look; it is used for factors 0.5 to 2.5 and only if the scaled picture has no hole inside the
-disc (zooming out past the old frame falls back to the plain render). Always scaled from the cache,
+disc (see below). Always scaled from the cache,
 never from the previous preview. When the wheel stops the refinement starts over the preview
 (`preserve_bitmap`, no clear), so it sharpens the picture instead of rebuilding it; the final pixels
 are the same as from scratch (`tests/test_zoom.cpp` for factors 1.1, 1.5 and 0.8). Not done: drag,
-double-click zoom (it recenters), OS 9. `--no-zoom-preview` turns it off; the stats show
+double-click zoom (it recenters), OS 9.
+
+Zooming out of a frame whose disc overflowed the window (any zoomed-in settled frame) has nothing to
+show at the rim. `scale_frame` returns the number of such hole pixels inside the new disc, fills them
+with plain ocean, and the platform uses the preview unless they exceed 35% of the disc (then the plain
+render). The first version refused any hole, so zooming out after zooming in always refreshed. `--no-zoom-preview` turns it off; the stats show
 `zoom_previews`; `--finish-refinement` makes a script run each refinement to its end.
 
 Laptop, 640x480: a preview frame costs about 0.95 ms against 0.85 ms for the plain vector frame, so

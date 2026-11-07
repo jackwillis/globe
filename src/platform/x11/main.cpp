@@ -660,8 +660,13 @@ class App {
         if (!(factor >= 0.5 && factor <= 2.5))
             return false;
         const auto palette = palette_for_style(kDefaultPalette, model_.terrain_style);
-        if (!scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
-                         palette.background, model_.camera.radius_px, zoom_columns_))
+        // Zooming out of a frame whose disc overflowed the window leaves holes at the rim. They are
+        // filled with plain ocean and refine away; too many and the plain render looks better.
+        const double radius = model_.camera.radius_px;
+        const auto holes =
+            scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
+                        palette.background, palette.ocean, radius, zoom_columns_);
+        if (holes == kInvalidZoom || static_cast<double>(holes) > 0.35 * kPi * radius * radius)
             return false;
         auto quality = quality_for(model_);
         quality.lines_only = true;

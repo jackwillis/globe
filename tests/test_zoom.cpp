@@ -25,11 +25,11 @@ void test_scaler() {
             src->set_pixel(x, y, static_cast<Rgb565>(x * 31 + y * 7 + 1));
     std::vector<int> scratch;
     // Factor 1 is the identity.
-    CHECK(scale_frame(*src, *dst, 20, 15, 1.0, 0, 1000, scratch));
+    CHECK(scale_frame(*src, *dst, 20, 15, 1.0, 0, 0, 1000, scratch) == 0);
     CHECK(pixels(*src) == pixels(*dst));
     // 2x about the center: each destination pixel reads the nearest-neighbor source pixel,
     // computed here independently (the source point is (20 + (x + .5 - 20) / 2, ...)).
-    CHECK(scale_frame(*src, *dst, 20, 15, 2.0, 0, 1000, scratch));
+    CHECK(scale_frame(*src, *dst, 20, 15, 2.0, 0, 0, 1000, scratch) == 0);
     for (int y = 0; y < 30; ++y)
         for (int x = 0; x < 40; ++x) {
             const int sx = static_cast<int>(std::floor(20 + (x + 0.5 - 20) / 2));
@@ -38,16 +38,24 @@ void test_scaler() {
         }
     // Zooming out leaves holes outside the old frame; they are filled, and reported only when they
     // fall inside the disc.
-    CHECK(!scale_frame(*src, *dst, 20, 15, 0.5, 0xFFFF, 30, scratch)); // disc reaches the corners
-    CHECK(dst->pixel(0, 0) == 0xFFFF || dst->pixel(0, 0) == src->pixel(0, 0));
+    const auto holes = scale_frame(*src, *dst, 20, 15, 0.5, 0xAAAA, 0xBBBB, 30, scratch);
+    CHECK(holes > 0 && holes != kInvalidZoom); // the disc reaches the corners
+    std::size_t counted = 0;
+    for (int y = 0; y < 30; ++y)
+        for (int x = 0; x < 40; ++x)
+            counted += dst->pixel(x, y) == 0xBBBB;
+    CHECK(counted == holes);
+    CHECK(dst->pixel(0, 0) == 0xBBBB);
+    CHECK(scale_frame(*src, *dst, 20, 15, 0.5, 0xAAAA, 0xBBBB, 3, scratch) == 0);
+    CHECK(dst->pixel(0, 0) == 0xAAAA); // outside the disc: the outside color
     // A disc of radius 6 reads sources within 12 of the center: inside the frame.
-    CHECK(scale_frame(*src, *dst, 20, 15, 0.5, 0xFFFF, 6, scratch));
+    CHECK(scale_frame(*src, *dst, 20, 15, 0.5, 0xFFFF, 0xFFFF, 6, scratch) == 0);
     CHECK(dst->pixel(20, 15) == src->pixel(21, 16));
     // Refusals.
-    CHECK(!scale_frame(*src, *dst, 20, 15, 0.0, 0, 10, scratch));
-    CHECK(!scale_frame(*src, *dst, 20, 15, std::nan(""), 0, 10, scratch));
+    CHECK(scale_frame(*src, *dst, 20, 15, 0.0, 0, 0, 10, scratch) == kInvalidZoom);
+    CHECK(scale_frame(*src, *dst, 20, 15, std::nan(""), 0, 0, 10, scratch) == kInvalidZoom);
     auto other = Framebuffer::create(41, 30);
-    CHECK(other && !scale_frame(*src, *other, 20, 15, 1.0, 0, 10, scratch));
+    CHECK(other && scale_frame(*src, *other, 20, 15, 1.0, 0, 0, 10, scratch) == kInvalidZoom);
 }
 // Refining over a scaled preview (the platform's zoom path) must end on the same pixels as a render
 // from scratch at the new radius: the preview is only ever transient.
@@ -98,10 +106,12 @@ void test_refine_over_preview() {
         // 2. The preview: scaled snapshot plus fresh lines.
         std::vector<int> scratch;
         const auto palette = palette_for_style(kDefaultPalette, q.terrain_style);
-        const bool complete = scale_frame(*cache, *fb, after->center_x, after->center_y, ratio,
-                                          palette.background, after->radius_px, scratch);
+        const auto holes =
+            scale_frame(*cache, *fb, after->center_x, after->center_y, ratio, palette.background,
+                        palette.ocean, after->radius_px, scratch);
+        CHECK(holes != kInvalidZoom);
         if (ratio < 1) // the disc fits the window at both sizes here
-            CHECK(complete);
+            CHECK(holes == 0);
         RenderQuality lines = q;
         lines.terrain = false;
         lines.lines_only = true;
