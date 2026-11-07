@@ -39,6 +39,9 @@ namespace {
 // Prefer short foreground turns to maximum settle throughput. Copy time counts in the slice.
 constexpr std::uint64_t kWorkSliceMs = 16;
 constexpr unsigned kWorkUnitsPerStep = 64;
+// Aim each slice of a frame copied to the window at about this long, so a frame wipes in as fast as
+// the machine allows without holding up input (the work slice above is 16 ms).
+constexpr std::uint64_t kPresentSliceMs = 6;
 // Inside Macintosh, Event Manager: high byte 1 is suspend/resume; low bit 1 is resume.
 // The installed Multiversal Events.h omits these two constants.
 constexpr unsigned kSuspendResumeMessage = 1;
@@ -304,7 +307,9 @@ class Application {
         }
         if (presentation_.active(model_.generation)) {
             const int first = presentation_.first(), end = presentation_.end();
+            const auto copy_start = now_ms();
             if (copy(first, end, false)) {
+                presentation_.tune(end - first, now_ms() - copy_start, kPresentSliceMs);
                 presentation_.submitted(model_.generation);
                 ++present_bands_;
             } else {
