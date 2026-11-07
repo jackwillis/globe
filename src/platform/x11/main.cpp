@@ -371,6 +371,7 @@ class App {
         Effects fx = update(model_, msg);
         if (model_.generation != old_generation) {
             refine_waiting_ = false;
+            keep_partial_frame_as_preview();
             if (refinement_)
                 refinement_->cancel();
             if (old_stage == QualityStage::Refine)
@@ -386,7 +387,7 @@ class App {
             preview_shown_ = false;
             refinement_.emplace(model_.camera, scene_, kDefaultPalette, effective_layers(model_),
                                 quality, model_.generation, packs_.for_model(model_));
-            if (quality.terrain && !quality.terrain_only && fb_) {
+            if (quality.terrain && fb_) { // every level: a coarse one is a fine preview too
                 const bool fits = zoom_cache_.has_value() && zoom_cache_->width() == fb_->width() &&
                                   zoom_cache_->height() == fb_->height();
                 if (!fits)
@@ -596,6 +597,7 @@ class App {
             zoom_cache_valid_ = true;
             zoom_cache_camera_ = zoom_pending_camera_;
             zoom_cache_style_ = zoom_pending_style_;
+            zoom_cache_baked_ = false;
         }
         if (step.band_ready) {
             if (place_scene_) {
@@ -661,6 +663,29 @@ class App {
         }
     }
 
+    // Input cancelled a refinement part-way and the cached frame is for another view (or there is
+    // none, as right after a drag): the half-refined frame on screen is the best picture of this
+    // view to zoom from. Its lines are baked in, so the preview skips the fresh ones.
+    void keep_partial_frame_as_preview() {
+        if (!refinement_ || !refinement_->active() || !fb_ || opt_.no_zoom_preview)
+            return;
+        const bool useful = zoom_cache_valid_ && zoom_cache_.has_value() &&
+                            same_orientation(zoom_cache_camera_, zoom_pending_camera_) &&
+                            zoom_cache_style_ == zoom_pending_style_;
+        if (useful || !same_orientation(zoom_pending_camera_, model_.camera))
+            return; // keep the older cache, or this is not a view we could zoom from
+        if (!zoom_cache_.has_value() || zoom_cache_->width() != fb_->width() ||
+            zoom_cache_->height() != fb_->height())
+            zoom_cache_ = Framebuffer::create(fb_->width(), fb_->height());
+        if (!zoom_cache_.has_value())
+            return;
+        std::memcpy(zoom_cache_->data(), fb_->data(), fb_->byte_size());
+        zoom_cache_valid_ = true;
+        zoom_cache_baked_ = true;
+        zoom_cache_camera_ = zoom_pending_camera_;
+        zoom_cache_style_ = zoom_pending_style_;
+    }
+
     static bool same_orientation(const Camera& a, const Camera& b) {
         const auto close = [](const Vec3& u, const Vec3& v) {
             return std::fabs(u.x - v.x) < 1e-9 && std::fabs(u.y - v.y) < 1e-9 &&
@@ -689,10 +714,12 @@ class App {
         if (scale_frame(*zoom_cache_, fb, model_.camera.center_x, model_.camera.center_y, factor,
                         palette.background, palette.ocean, radius, zoom_columns_) == kInvalidZoom)
             return false;
-        auto quality = quality_for(model_);
-        quality.lines_only = true;
-        render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
-                     quality, packs_.for_model(model_));
+        if (!zoom_cache_baked_) {
+            auto quality = quality_for(model_);
+            quality.lines_only = true;
+            render_globe(fb, model_.camera, scene_, kDefaultPalette, effective_layers(model_), true,
+                         quality, packs_.for_model(model_));
+        }
         preview_shown_ = true;
         return true;
     }
@@ -1011,6 +1038,7 @@ class App {
     std::optional<RefinementJob> refinement_;
     std::optional<Framebuffer> zoom_cache_; // the last finished terrain frame, without lines
     bool zoom_cache_valid_ = false;
+    bool zoom_cache_baked_ = false; // the cached frame already has its lines (a partial one)
     Camera zoom_cache_camera_{};
     Camera zoom_pending_camera_{};
     TerrainStyle zoom_cache_style_ = TerrainStyle::Map;

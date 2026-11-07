@@ -235,6 +235,10 @@ if(GLOBE_BUILD_TESTS)
                        --size 160x120 --script ${CMAKE_SOURCE_DIR}/tests/data/click_expose.txt
                        --exit-when-done --verify-pixels --stats)
       set_tests_properties(x11_click PROPERTIES TIMEOUT 60)
+      add_test(NAME x11_zoom COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
+        ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_x11_zoom.py $<TARGET_FILE:globe-x11>
+        ${CMAKE_SOURCE_DIR}/tests/data)
+      set_tests_properties(x11_zoom PROPERTIES TIMEOUT 120)
       add_test(NAME x11_progressive COMMAND ${XVFB_RUN} -a -s "-screen 0 800x600x24"
         ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_x11_progressive.py $<TARGET_FILE:globe-x11>)
       set_tests_properties(x11_progressive PROPERTIES TIMEOUT 120)

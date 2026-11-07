@@ -1,0 +1,8 @@
+wheel 100 1
+tick 400
+tick 401
+wheel 1100 3
+wheel 1110 2
+wheel 1120 -4
+tick 1500
+tick 1501
