@@ -105,6 +105,9 @@ if(Python3_FOUND)
   target_link_libraries(globe-line-reveal-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
       globe_embedded_landclasses globe_platform_common globe_clock_posix)
 
+  add_executable(globe-zoom-bench src/platform/bench/zoom_bench.cpp)
+  target_link_libraries(globe-zoom-bench PRIVATE globe_embedded_atlas globe_platform_common globe_clock_posix)
+
   add_executable(globe-repair-diff src/platform/bench/repair_diff.cpp)
   target_link_libraries(globe-repair-diff PRIVATE globe_embedded_atlas globe_embedded_elevation
       globe_embedded_fineelevation globe_embedded_landclasses globe_platform_common globe_clock_posix)

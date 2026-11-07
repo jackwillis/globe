@@ -86,9 +86,10 @@ Presented frames per job: 1 (lines) + 16 (rings) + 1 (limb pass) + 1 (end).
 
 Laptop (release, 640x480, medians): compute 26.7 ms against 12.9 ms unpaced (the extra is the 17
 composite scans, about 8 ms of it) and against 23.8 ms paced, but wall 26.7 ms against 267 ms paced
-(the 240 ms of reveal pauses are gone); the first frame with lines comes at 3.5 ms. **Not yet
-measured on the G4 or OS 9** (maul was on Tiger/off). If the scans cost too much there, keep a
-list of line pixels instead of scanning the layer. Costs 307 KB (+ coverage plane) per job at
+(the 240 ms of reveal pauses are gone); the first frame with lines comes at 3.5 ms. **G4 (2026-11-06):** layer
+compute 599 / 593 ms against 519 / 513 unpaced (the 17 composite scans cost about 80 ms), first lines
+at about 120 ms (the terrain corners are projected first), wall time 599 against 1,000 paced. A list of
+line pixels instead of scanning would recover most of the 80 ms. Costs 307 KB (+ coverage plane) per job at
 640x480; the OS 9 heap budget is unchecked. The OS 9 port uses the same core, so it gets this too.
 
 ## The final pass: limb cells only (2026-11-06)
@@ -117,8 +118,9 @@ contrasting neighbors and five foci, and the slice count of the limb pass.
 A first attempt, repainting limb cells in the same sweep as ring 15, was not exact: the shaded ring-15
 cells with a higher index overwrote it. The limb pass must come after every ring.
 
-Raw output: `docs/perf/repair-diff-host.txt`. Not yet measured on the G4 (maul was off NetBSD); the
-pins should match there because the arithmetic is unchanged.
+Raw output: `docs/perf/repair-diff-host.txt`. G4 (`docs/perf/g4-2026-11-06.txt`): unpaced terrain +
+lines 519 / 513 ms at radius 220 / 440 against 680 / 734 before, with identical checksums on the host
+and the G4.
 
 ## Zoom preview (prototype, X11 only, 2026-11-06)
 
@@ -143,8 +145,10 @@ first version refused any hole, the second more than 35% of the disc). It is use
 `zoom_previews`; `--finish-refinement` makes a script run each refinement to its end.
 
 Laptop, 640x480: a preview frame costs about 0.95 ms against 0.85 ms for the plain vector frame, so
-the gain here is that the terrain stays, not speed. G4 cost not measured (maul is on Tiger, not
-NetBSD). Costs one extra framebuffer for the cache.
+the gain here is that the terrain stays, not speed. G4 (`docs/perf/g4-2026-11-06.txt`): the scale costs
+5-11 ms, the lines on top 24-30 ms, against 25-32 ms for the plain vector frame, so a preview frame is
+about 10 ms dearer than the frame it replaces (more when zooming out: the rim-hole check). Costs one
+extra framebuffer for the cache.
 
 ## Verification
 
