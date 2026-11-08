@@ -1,0 +1,34 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2026 Jack Willis
+# Digital-release artifacts from one build (#47): a StuffIt archive, the MacBinary file and checksums
+# in <build>/release/. Needs the Classic build's GlobeFloppy.bin, podman (for the pinned Rust
+# image that builds tools/sit-pack) and unar (for the round-trip check). Publishes nothing.
+set -eu
+cd "$(dirname "$0")/.."
+build_dir=${1:-build-os9-floppy}
+CONTAINER=${CONTAINER:-podman}
+RUST_IMAGE=${RUST_IMAGE:-docker.io/library/rust:slim}
+[ -f "$build_dir/GlobeFloppy.bin" ] || { echo "no $build_dir/GlobeFloppy.bin: build first" >&2; exit 2; }
+out="$build_dir/release"
+mkdir -p "$out" "$build_dir/sit-target"
+rev=$(git rev-parse --short HEAD)
+# One date for every entry so the same inputs give the same archive.
+epoch=${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct)}
+"$CONTAINER" run --rm -v "$PWD/tools/sit-pack":/w:Z -v "$PWD/$build_dir/sit-target":/t:Z \
+    -w /w -e CARGO_TARGET_DIR=/t "$RUST_IMAGE" cargo build --release --locked >/dev/null
+sit="$out/Globe-$rev.sit"
+"$build_dir/sit-target/release/sit-pack" -m "${SIT_METHOD:-13}" --date "$epoch" -o "$sit" \
+    --mac GlobeFloppy="$build_dir/GlobeFloppy.bin" \
+    --text ReadMe=os9/ReadMe.txt --text License=LICENSE \
+    --text DataCredit=data/LANDCLASS-NOTICE.txt
+cp "$build_dir/GlobeFloppy.bin" "$out/Globe-$rev.bin"
+# Round trip with an independent reader: both forks must match the MacBinary.
+check=$(mktemp -d)
+trap 'rm -rf "$check"' EXIT HUP INT TERM
+unar -q -o "$check/sit" -forks visible "$sit" >/dev/null
+unar -q -o "$check/bin" -forks visible "$out/Globe-$rev.bin" >/dev/null
+cmp "$check/sit/Globe-$rev/GlobeFloppy" "$check/bin/GlobeFloppy"
+cmp "$check/sit/Globe-$rev/GlobeFloppy.rsrc" "$check/bin/GlobeFloppy.rsrc"
+(cd "$out" && sha256sum "Globe-$rev.sit" "Globe-$rev.bin" > SHA256SUMS)
+echo "round trip ok (data and resource forks); artifacts and SHA256SUMS in $out"
