@@ -17,6 +17,10 @@ Globe is an **offline-first, software-rendered interactive Earth** for NetBSD/ma
 
 **Release strategy changed 2026-11-07:** digital-first v0.1 Classic Atlas, with a tested StuffIt (.sit) download if feasible, plus MacBinary and HFS image fallbacks; packaging [#47](https://github.com/jackwillis/globe/issues/47), release [#12](https://github.com/jackwillis/globe/issues/12). The 1.44 MB physical floppy edition is **paused as a release target**, although its build/size regression checks remain useful. A later *larger* Classic edition may load external packs [#48](https://github.com/jackwillis/globe/issues/48), run from read-only volumes with Preferences elsewhere [#49](https://github.com/jackwillis/globe/issues/49), include richer data [#50](https://github.com/jackwillis/globe/issues/50) and use a proper disk-image layout [#51](https://github.com/jackwillis/globe/issues/51). Do **not** silently restore the old floppy-first release plan or implement HTTPS on the initial Classic edition.
 
+## Parallel atlas-production project (recorded, not assigned)
+
+The owner has approved treating Globe as **two cooperating projects in this repository**: the interactive C++20 runtime and a reproducible, rules-driven geographic data/edition production pipeline. Read [ADR 0003](docs/adr/0003-atlas-production-boundary.md) and [atlas-production epic #52](https://github.com/jackwillis/globe/issues/52). Initial [data audit #53](https://github.com/jackwillis/globe/issues/53) is research-only, focusing on country/microstate completeness, city selection, rivers and lakes, semantic QA, provenance, and edition sizes. This is **not** authorization to change production packs, introduce runtime data formats, or start data work without a specific assignment. Coordinate with Codex so app UX and data experiments can proceed independently.
+
 ## Architectural invariants
 
 - Keep the **Elm-inspired Model / Msg / update / Effects** core. Clock and OS events enter as messages, not hidden core calls. Small Model state is mutated through `update()`; don't force a fully immutable-model rewrite.
