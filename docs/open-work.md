@@ -1,4 +1,6 @@
-# Execution status — 2026-11-02
+# Execution status — 2026-11-02 (historical)
+
+> Superseded: this is the state of 2026-11-02. Current plans are in [backlog.md](backlog.md) and GitHub Issues; decisions since are in [ADR 0002](adr/0002-rendering-shared-code-and-usability.md). Several items below (the gray moving base as a default, dissolve ordering, trace-selectable orders) no longer exist.
 
 The live prioritized list is [backlog.md](backlog.md); the current operating instructions and dated
 agent notes are in [handoff.md](handoff.md). Work is on `main`; the owner renamed `v2`, retained tag

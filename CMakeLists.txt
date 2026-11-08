@@ -103,16 +103,12 @@ if(Python3_FOUND)
                                             globe_clock_posix)
   target_compile_options(globe-bench PRIVATE -Wall -Wextra -Wpedantic)
 
-  add_executable(globe-line-reveal-bench src/platform/bench/line_reveal_bench.cpp)
-  target_link_libraries(globe-line-reveal-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
+  add_executable(globe-line-layer-bench src/platform/bench/line_layer_bench.cpp)
+  target_link_libraries(globe-line-layer-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
       globe_embedded_landclasses globe_platform_common globe_clock_posix)
 
   add_executable(globe-zoom-bench src/platform/bench/zoom_bench.cpp)
   target_link_libraries(globe-zoom-bench PRIVATE globe_embedded_atlas globe_platform_common globe_clock_posix)
-
-  add_executable(globe-repair-diff src/platform/bench/repair_diff.cpp)
-  target_link_libraries(globe-repair-diff PRIVATE globe_embedded_atlas globe_embedded_elevation
-      globe_embedded_fineelevation globe_embedded_landclasses globe_platform_common globe_clock_posix)
 
   add_executable(globe-landclass-bench src/platform/bench/landclass_bench.cpp)
   target_link_libraries(globe-landclass-bench PRIVATE globe_embedded_atlas globe_embedded_elevation
@@ -155,14 +151,14 @@ if(GLOBE_SANITIZE)
 endif()
 
 if(GLOBE_BUILD_TESTS)
-  add_executable(test_line_reveal tests/test_line_reveal.cpp)
-  target_link_libraries(test_line_reveal PRIVATE globe_core)
-  add_test(NAME line_reveal COMMAND test_line_reveal)
+  add_executable(test_line_layer tests/test_line_layer.cpp)
+  target_link_libraries(test_line_layer PRIVATE globe_core)
+  add_test(NAME line_layer COMMAND test_line_layer)
   add_executable(test_zoom tests/test_zoom.cpp)
   target_link_libraries(test_zoom PRIVATE globe_core)
   add_test(NAME zoom COMMAND test_zoom)
   set_tests_properties(zoom PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-  set_tests_properties(line_reveal PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+  set_tests_properties(line_layer PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   add_executable(test_landclasses tests/test_landclasses.cpp)
   target_link_libraries(test_landclasses PRIVATE globe_core)
   add_test(NAME landclasses COMMAND test_landclasses)

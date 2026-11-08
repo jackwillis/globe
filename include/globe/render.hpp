@@ -20,15 +20,6 @@
 namespace globe {
 class TerrainScene;
 
-// What follows the 16 ring passes of a terrain job. Final pixels never depend on the focus under
-// LimbPass, Full and Reference; RingsOnly exists for measurement (`globe-repair-diff`).
-enum class TerrainRepaint : std::uint8_t {
-    LimbPass,  // one more pass redraws the cells clipped at the horizon, in index order (default)
-    Full,      // legacy: the last ring pass repaints every cell in index order
-    RingsOnly, // rings only: order dependent at a few limb pixels
-    Reference, // every unclipped cell in index order, then every clipped cell: LimbPass must match
-};
-
 struct RenderQuality {
     double max_chord_px = 3.0;
     bool terrain = false;
@@ -39,7 +30,6 @@ struct RenderQuality {
     // (owner's choice, 2026-11-02); the mask stays available for a later style.
     bool gray_base = false;
     ScreenPoint focus{};
-    bool progressive_lines = true;
     bool preserve_bitmap = false; // subsequent resolution replaces the existing terrain
     bool terrain_only = false;    // lines belong to the final resolution only
     // Terrain jobs only: draw the lines first into a private layer and composite them over the
@@ -49,7 +39,6 @@ struct RenderQuality {
     // Entries in the line-pixel list the composites use (0: a sixteenth of the frame). A view with
     // more line pixels falls back to scanning the layer; tests set it small to exercise that.
     std::size_t line_list_limit = 0;
-    TerrainRepaint repaint = TerrainRepaint::LimbPass;
     // render_globe only: draw the layers over what the frame already holds (no clear, no ocean),
     // the way a refinement job does, so lines can go on top of a scaled zoom preview.
     bool lines_only = false;
@@ -71,8 +60,6 @@ struct Layers {
 
 // What a frame cost, in countable terms (not time; timing belongs to the platform layer).
 struct RenderStats {
-    std::uint32_t line_chunks_prepared = 0;
-    std::uint32_t reveal_segments = 0;
     std::uint32_t terrain_slices = 0;    // admitted cell/16-row slices, including the final repaint
     std::uint32_t polylines_culled = 0;  // whole cached polylines proven behind the horizon
     std::uint32_t segments = 0;          // atlas and graticule segments considered
@@ -99,17 +86,6 @@ struct PolylineCap {
     double sin_radius;
 };
 
-enum class LineLayer : std::uint8_t { Graticule, Coastline, Border };
-struct LineChunk {
-    std::uint32_t first = 0; // index into the combined atlas/graticule world-vector storage
-    std::uint16_t count = 0; // 2..16 points; adjacent chunks share one endpoint, never a segment
-    LineLayer layer = LineLayer::Graticule;
-};
-// Immutable metadata creation, callable into a caller-owned bounded buffer for profiling.
-std::size_t line_chunk_count(const Atlas& atlas);
-bool build_line_chunks(const Atlas& atlas, LineChunk* output, std::size_t capacity);
-constexpr std::uint32_t kLineRevealDelayMs = 15; // owner-tunable, one wake between reveal passes
-
 // Geometry that does not depend on the camera, computed once: the unit vector of every atlas
 // vertex and of the graticule's sample points. A frame then needs one matrix-vector product per
 // vertex instead of four trigonometric calls, which matters on CPUs where libm is slow (a 467
@@ -119,7 +95,7 @@ constexpr std::uint32_t kLineRevealDelayMs = 15; // owner-tunable, one wake betw
 // Holds the Atlas view, so the atlas bytes must outlive the Scene.
 class Scene {
   public:
-    // Up-front geometry, caps, immutable chunks and pass workspace; nullopt on failure.
+    // Up-front geometry and caps; nullopt on failure.
     static std::optional<Scene> create(const Atlas& atlas);
 
     Scene(Scene&&) noexcept = default;
@@ -133,28 +109,13 @@ class Scene {
     const Vec3* graticule() const { return storage_.get() + atlas_.point_count(); }
     const PolylineCap* caps() const { return caps_.get(); } // atlas polyline order
     std::size_t bytes() const;
-    std::size_t line_chunk_count() const { return chunk_count_; }
-    const LineChunk& line_chunk(std::size_t i) const { return chunks_[i]; }
-    std::uint8_t line_chunk_pass(std::size_t i) const { return chunk_passes_[i]; }
-    std::size_t line_workspace_bytes() const { return chunk_count_ * (sizeof(LineChunk) + 1); }
-    std::uint64_t claim_lines() const { return ++line_token_; }
-    std::uint64_t line_token() const { return line_token_; }
-    void prepare_line_chunk(std::size_t i, const Camera& camera, const PassPlan& plan,
-                            Layers layers) const;
 
   private:
-    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps,
-          std::unique_ptr<LineChunk[]> chunks, std::unique_ptr<std::uint8_t[]> passes,
-          std::size_t count)
-        : atlas_(atlas), storage_(std::move(storage)), chunks_(std::move(chunks)),
-          chunk_passes_(std::move(passes)), chunk_count_(count), caps_(std::move(caps)) {}
+    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps)
+        : atlas_(atlas), storage_(std::move(storage)), caps_(std::move(caps)) {}
 
     Atlas atlas_;
     std::unique_ptr<Vec3[]> storage_; // atlas vertices, then graticule samples
-    std::unique_ptr<LineChunk[]> chunks_;
-    std::unique_ptr<std::uint8_t[]> chunk_passes_;
-    std::size_t chunk_count_ = 0;
-    mutable std::uint64_t line_token_ = 0;
     std::unique_ptr<PolylineCap[]> caps_;
 };
 
@@ -174,10 +135,7 @@ struct RenderStep {
     unsigned work_units = 0;
     int first_row = 0;
     int end_row = 0;
-    bool band_ready = false;
-    bool line_prepare = false;
-    std::uint32_t wake_after_ms =
-        0; // platform presents, arms its existing one-shot, resumes on Tick
+    bool band_ready = false; // the platform may present rows [first_row, end_row)
 };
 
 // One bounded continuation, no allocations. Scene must outlive the job. A work unit is one
@@ -201,10 +159,6 @@ class RefinementJob {
   private:
     TerrainScene* terrain_ = nullptr;
     std::uint64_t terrain_token_ = 0;
-    std::uint64_t line_token_ = 0;
-    std::size_t chunk_index_ = 0;
-    unsigned line_pass_ = 0;
-    std::uint16_t chunk_segment_ = 1;
     std::size_t prepare_index_ = 0;
     std::size_t terrain_cell_ = 0;
     Camera camera_;

@@ -42,6 +42,10 @@ class Overlays {
     // and countries; returns true when what is drawn over the frame changed. A card to show, if
     // any, is taken with `take_card` (its text stays valid until the next click).
     bool click(const Camera& camera, ScreenPoint at);
+    // Whether a click at `at` would do something beyond starting a drag: while measuring, anywhere
+    // on the globe; otherwise on a place. Countries are not counted (an owner decision still
+    // open), and no country test runs here, so this is cheap enough for every pointer motion.
+    bool clickable_at(const Camera& camera, ScreenPoint at) const;
     std::optional<InfoCard> take_card();
     // The frame with the active overlays drawn on a copy kept here, or null when none is active.
     // `unix_seconds` is UTC; the sun position is refreshed at most every 30 s. With `quick` (frames

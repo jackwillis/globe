@@ -182,7 +182,7 @@ Layers effective_layers(const Model& model) {
 }
 
 RenderQuality quality_for(const Model& model) {
-    const bool fine = model.stage == QualityStage::Refine || model.stage == QualityStage::Decorate;
+    const bool fine = model.stage == QualityStage::Refine;
     unsigned selected = 0;
     std::uint32_t best_width = 0;
     bool meets_target = false;
@@ -316,15 +316,15 @@ Effects start_refinement(Model& model) {
     return fx;
 }
 
-CursorIntent cursor_for(const Model& model, ScreenPoint pointer) {
+CursorIntent cursor_for(const Model& model, ScreenPoint pointer, CursorTarget target) {
     if (model.dragging)
         return CursorIntent::ClosedHand;
     const double x = pointer.x - model.camera.center_x;
     const double y = pointer.y - model.camera.center_y;
-    return std::isfinite(x) && std::isfinite(y) &&
-                   x * x + y * y <= model.camera.radius_px * model.camera.radius_px
-               ? CursorIntent::OpenHand
-               : CursorIntent::Arrow;
+    if (!std::isfinite(x) || !std::isfinite(y) ||
+        x * x + y * y > model.camera.radius_px * model.camera.radius_px)
+        return CursorIntent::Arrow;
+    return target.object || target.selection ? CursorIntent::PointingHand : CursorIntent::OpenHand;
 }
 ButtonRect toolbar_button(Command command) {
     const int i = static_cast<int>(command);

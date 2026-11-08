@@ -171,7 +171,7 @@ class App {
         XSetWMProtocols(dpy_, toolbar_, &wm_delete_, 1);
         XSelectInput(dpy_, toolbar_, ExposureMask | ButtonPressMask | KeyPressMask);
         cursors_ = {XCreateFontCursor(dpy_, XC_left_ptr), XCreateFontCursor(dpy_, XC_hand2),
-                    XCreateFontCursor(dpy_, XC_fleur)};
+                    XCreateFontCursor(dpy_, XC_fleur), XCreateFontCursor(dpy_, XC_hand2)};
         XDefineCursor(dpy_, win_, cursors_[0]);
         XMapWindow(dpy_, win_);
         XMapWindow(dpy_, toolbar_);
@@ -355,10 +355,6 @@ class App {
             upload(0, fb_->height());
     }
     bool apply(const Msg& msg) {
-        if (std::holds_alternative<Tick>(msg) && refine_waiting_) {
-            refine_waiting_ = false;
-            wake_at_ms_ = 0;
-        }
         // Repaint is a presentation request. Keep the cached frame and any in-flight job.
         if (std::holds_alternative<Repaint>(msg)) {
             if (!need_redraw_ && fb_)
@@ -369,7 +365,6 @@ class App {
         const auto old_stage = model_.stage;
         Effects fx = update(model_, msg);
         if (model_.generation != old_generation) {
-            refine_waiting_ = false;
             runner_.cancel(fb_ ? &*fb_ : nullptr, model_.camera);
             if (old_stage == QualityStage::Refine)
                 fx.redraw = true;
@@ -426,7 +421,7 @@ class App {
                 present();
                 need_redraw_ = false;
             }
-            while (opt_.finish_refinement && runner_.active() && !refine_waiting_)
+            while (opt_.finish_refinement && runner_.active())
                 refine_step();
         }
         return false;
@@ -434,7 +429,7 @@ class App {
 
     // Sleep until input, one requested wake, or a measurement deadline. No periodic polling.
     bool wait_events(std::uint64_t end_ms = 0) {
-        if (XPending(dpy_) > 0 || (runner_.active() && !refine_waiting_)) {
+        if (XPending(dpy_) > 0 || runner_.active()) {
             return true;
         }
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
@@ -564,7 +559,7 @@ class App {
     }
 
     void refine_step() {
-        if (!fb_ || !runner_.active() || refine_waiting_)
+        if (!fb_ || !runner_.active())
             return;
         const std::uint64_t t = monotonic_ns();
         const auto step = runner_.step(*fb_, model_);
@@ -581,10 +576,6 @@ class App {
         if (runner_.job() != nullptr && !runner_.active() && model_.refine_active) {
             apply(RefinementFinished{model_.generation, model_.refine_level});
             return; // a successor owns a fresh continuation and its own pacing
-        }
-        if (step.wake_after_ms) {
-            refine_waiting_ = true;
-            wake_at_ms_ = monotonic_ns() / 1000000ULL + step.wake_after_ms;
         }
     }
 
@@ -689,9 +680,11 @@ class App {
         shown_.end(); // the frame is as it was rendered
     }
 
-    // Returns true when the application should quit.
+    CursorTarget cursor_target() const {
+        return {overlays_.focused().has_value(), overlays_.clickable_at(model_.camera, pointer_)};
+    }
     void update_cursor() {
-        const auto intent = cursor_for(model_, pointer_);
+        const auto intent = cursor_for(model_, pointer_, cursor_target());
         if (intent != cursor_) {
             cursor_ = intent;
             XDefineCursor(dpy_, win_, cursors_[static_cast<unsigned>(intent)]);
@@ -904,7 +897,7 @@ class App {
     Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
-    std::array<Cursor, 3> cursors_{};
+    std::array<Cursor, 4> cursors_{};
     CursorIntent cursor_ = CursorIntent::Arrow;
     ScreenPoint pointer_{-1e20, -1e20};
     ToolbarState toolbar_cache_{};
@@ -917,7 +910,6 @@ class App {
     PixelFormat format_{};
     std::optional<Framebuffer> fb_;
     std::size_t wake_ticks_ = 0;
-    bool refine_waiting_ = false;
     std::uint64_t wake_at_ms_ = 0;
     RefineRunner runner_{scene_}; // the refinement job, the zoom preview and the markers
     ShownFrame shown_; // overlays and the bar, built on a copy of the frame for each upload

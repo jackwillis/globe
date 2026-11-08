@@ -108,3 +108,13 @@ copies, not frames. Delivery: the floppy image was attached on Tiger with `hdiut
 diskimage-class=CRawDiskImage` and the app copied with `ditto -rsrc` to
 `/Volumes/MacOS9Lives/globe-tip9/` (file type and creator were not checked from the shell; the app
 opened). Next on OS 9: cursors (#44), a looks palette (#45), a menu bar (#46).
+
+## Frame copy slices follow the machine (2026-11-07)
+
+Each refine frame was copied to the window in fixed 32-row slices from the top, one per turn, so a
+frame wiped in top-down over about fifteen turns (the owner noticed after a double click). The slice
+height now starts at 32 and adapts (`ClassicPresentation::tune`): aim each slice at about 6 ms
+(`kPresentSliceMs`), grow at most twofold at a time up to the whole frame, shrink to a floor of 8 rows.
+On bare OS 9 (whole frame a few ms) a frame should arrive in one or two slices. Host-tested
+(`test_classic_present`), OS 9 build and probe pass, **not run on OS 9**; the owner can read the
+effect in the title's band count (88 before) and by eye. Needs the app copied to the OS 9 volume again.

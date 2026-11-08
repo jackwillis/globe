@@ -42,6 +42,13 @@ int main(int argc, char** argv) {
     Overlays o;
     o.attach(&*countries, &*scene, nullptr, nullptr);
     CHECK(!o.active() && o.compose(*fb, camera, 0) == nullptr);
+    // Nothing is clickable on the globe without places or measuring; off the globe never.
+    CHECK(!o.clickable_at(camera, at(camera, 0, 25)));
+    o.toggle_measure();
+    CHECK(o.clickable_at(camera, at(camera, 0, 25)));
+    CHECK(!o.clickable_at(camera, {0, 0}));
+    CHECK(!o.clickable_at(camera, {NAN, 0}));
+    o.toggle_measure();
     // A click inside the country focuses it, offers its card once, and draws the overlay.
     CHECK(o.click(camera, at(camera, 0, 25)));
     CHECK(o.focused() == 2u && o.active());

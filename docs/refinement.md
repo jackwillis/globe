@@ -1,7 +1,9 @@
 # Bounded refinement
 
-The pure quality profile derives from stage: Moving/Settle use 3 px arc pieces; Refine/Decorate
-use 1.5 px and permit terrain when data exists. Time remains in Tick messages, not quality payloads.
+> Partly historical: the banded outline path below is still the fallback when no terrain is registered. The terrain pipeline (line layer, ring passes, limb pass, zoom preview) is described in [refinement-order.md](refinement-order.md).
+
+The pure quality profile derives from stage: Moving/Settle use 3 px arc pieces; Refine
+uses 1.5 px and permit terrain when data exists. Time remains in Tick messages, not quality payloads.
 Accepted input and resize increment Model.generation. A job snapshots the camera, layers, quality
 and generation; a stale generation cancels before touching the framebuffer. Hover/repaint do not
 invalidate geometry. No allocation occurs in the job or its step.
@@ -29,6 +31,5 @@ job nonmutation. Generation, work-limit, clip restoration and out-of-band-write 
 
 ## Multiple resolutions
 
-The full edition now sequences explicit generation/level requests and completions. Intermediate
-terrain omits line decoration; later levels preserve the bitmap and repair uncovered coarse remnants
+The full edition now sequences explicit generation/level requests and completions. Every level shows the lines first (the line layer), and the later levels preserve the bitmap and repair uncovered coarse remnants
 using bounded coverage rows. See [the implemented resolution contract](progressive-resolution-plan.md).

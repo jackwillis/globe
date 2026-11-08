@@ -33,7 +33,21 @@ class ClassicPresentation {
         return generation == generation_ && (active_ || dirty_);
     }
     int first() const { return next_; }
-    int end() const { return std::min(height_, next_ + 32); }
+    int end() const { return std::min(height_, next_ + rows_); }
+    // Rows per slice start at kStartRows (the slow Classic-under-OS-X days) and follow the machine:
+    // after a slice of `rows` took `elapsed_ms`, aim the next at `target_ms`, growing at most
+    // twofold a time. On bare OS 9 a whole frame is a few milliseconds, so a frame then arrives in
+    // one or two slices instead of wiping in from the top.
+    void tune(int rows, std::uint64_t elapsed_ms, std::uint64_t target_ms) {
+        if (rows <= 0 || target_ms == 0)
+            return;
+        long next = elapsed_ms == 0 ? static_cast<long>(rows) * 2
+                                    : static_cast<long>(rows * target_ms / elapsed_ms);
+        next = std::min(next, static_cast<long>(rows_) * 2);
+        rows_ = static_cast<int>(
+            std::clamp(next, static_cast<long>(kMinRows), static_cast<long>(kMaxRows)));
+    }
+    int rows_per_slice() const { return rows_; }
     void submitted(std::uint64_t generation) {
         if (!active(generation))
             return;
@@ -42,6 +56,8 @@ class ClassicPresentation {
     }
 
   private:
+    static constexpr int kStartRows = 32, kMinRows = 8, kMaxRows = 4096;
+    int rows_ = kStartRows;
     std::uint64_t generation_ = 0;
     int height_ = 0, next_ = 0;
     bool active_ = false, dirty_ = false;

@@ -203,7 +203,9 @@ int main(int argc, char** argv) {
         CHECK(text.find("\"refine_bands\": " + std::to_string(bands) + ",") != std::string::npos);
     } else {
         CHECK(text.find("\"toolbar_commands\": 3") != std::string::npos);
-        CHECK(text.find("\"cursor_changes\": 9") != std::string::npos);
+        // Nine before the pointing hand: it adds the changes into and out of a clickable state
+        // (a selected country, a place under the pointer, measuring).
+        CHECK(text.find("\"cursor_changes\": 11") != std::string::npos);
         CHECK(text.find("\"info_cards\": 2") != std::string::npos); // country card, then distance
         CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
         CHECK(text.find("\"terrain_style\": 1") != std::string::npos); // Relief, via the palette
