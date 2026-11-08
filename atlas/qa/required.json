@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "political": [
+    "SMR",
+    "VAT",
+    "MCO",
+    "LIE",
+    "AND",
+    "GRL",
+    "MDV",
+    "KIR",
+    "TUV",
+    "FJI"
+  ],
+  "places": [
+    "Q1764",
+    "Q70",
+    "Q226",
+    "Q1842",
+    "Q1844",
+    "Q437",
+    "Q3929"
+  ],
+  "place_labels": {
+    "Q1764": "Reykjavík",
+    "Q70": "Bern",
+    "Q226": "Nuuk",
+    "Q1842": "Luxembourg",
+    "Q1844": "Vaduz",
+    "Q437": "Ljubljana",
+    "Q3929": "Port Louis"
+  },
+  "rivers": [
+    "Nile",
+    "Amazon",
+    "Congo",
+    "Mississippi",
+    "Danube",
+    "Mekong"
+  ],
+  "accepted_source_exceptions": [
+    {
+      "source": "ne_50m_rivers_lake_centerlines",
+      "record_1_based": 461,
+      "kind": "null_geometry",
+      "reason": "Upstream null SHP record retained in audit, excluded from geometry outputs; not repaired."
+    },
+    {
+      "source": "ne_110m_coastline",
+      "record_1_based": 94,
+      "kind": "longitude_roundoff",
+      "longitude": 180.00000044181039,
+      "reason": "Vertex 606 exceeds 180 by 4.42e-7 degrees. Source-specific 1e-6 tolerance; experimental quantization clamps to 180. Other sources retain 1e-9 tolerance."
+    }
+  ]
+}

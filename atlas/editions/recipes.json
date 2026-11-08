@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "research candidates; no runtime format or release commitment",
+  "compact": {
+    "geometry_scale": "110m",
+    "place_min_zoom": 3,
+    "regional_min_zoom": 4,
+    "coverage_cell_degrees": 30,
+    "hydro_scale": "50m",
+    "river_max_scalerank": 2,
+    "elevation": [
+      "elevation-1deg.gelv"
+    ],
+    "lake_max_min_zoom": 2
+  },
+  "standard": {
+    "geometry_scale": "50m",
+    "place_min_zoom": 5,
+    "regional_min_zoom": 6,
+    "coverage_cell_degrees": 15,
+    "hydro_scale": "50m",
+    "river_max_scalerank": 5,
+    "elevation": [
+      "elevation-1deg.gelv",
+      "elevation-0.5deg.gelv"
+    ],
+    "lake_max_min_zoom": 4.7
+  },
+  "expanded": {
+    "geometry_scale": "10m",
+    "place_min_zoom": 99,
+    "regional_min_zoom": 99,
+    "coverage_cell_degrees": 15,
+    "hydro_scale": "10m",
+    "river_max_scalerank": 99,
+    "elevation": [
+      "elevation-1deg.gelv",
+      "elevation-0.5deg.gelv"
+    ],
+    "lake_max_min_zoom": 99
+  }
+}
