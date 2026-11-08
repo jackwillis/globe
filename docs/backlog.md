@@ -49,8 +49,8 @@ help overlay (#40), and the atlas features: text foundation (#36), pointer reado
 
 ## First release: recommended order
 
-1. [#7 — Verify complete green CI](https://github.com/jackwillis/globe/issues/7): prior clang-tidy fixes are committed, but a full recent successful workflow run must be checked.
-2. [#8 — Native OS 9 hardware acceptance](https://github.com/jackwillis/globe/issues/8): Tiger Classic launch is promising but is not native hardware verification.
+1. [#7 — Verify complete green CI](https://github.com/jackwillis/globe/issues/7): closed 2026-11-06 after a full successful workflow run. Check the Actions tab for the current result before relying on it.
+2. [#8 — Native OS 9 hardware acceptance](https://github.com/jackwillis/globe/issues/8): the first run on real OS 9 was recorded on 2026-11-07 ([os9-proof.md](os9-proof.md)); cursors, resizing, exposure and idle behaviour are still unchecked.
 3. [#9 — Real G4 X11 and 0.5° benchmarks](https://github.com/jackwillis/globe/issues/9) and [#10 — OS 9 memory requirements](https://github.com/jackwillis/globe/issues/10).
 4. [#13 — Precise invalidation](https://github.com/jackwillis/globe/issues/13) and [#14 — Presentation lifecycle regression tests](https://github.com/jackwillis/globe/issues/14) as narrowly scoped v0.1 improvements if warranted.
 5. [#11 — Classic Mac UI polish](https://github.com/jackwillis/globe/issues/11), then [#12 — v0.1 floppy release](https://github.com/jackwillis/globe/issues/12) after verification gates.
@@ -72,11 +72,11 @@ Ruby scripting, fantasy cartography and a separate flat-map editor; native 68k s
 - [Historical GL backlog](history/backlog-through-2026-11-05.md) contains GL-1 through GL-55 and their previous, sometimes superseded statuses; **do not treat it as an active to-do list**. New GitHub issues preserve relevant GL identifiers in their bodies.
 - Migration note: one accidentally duplicated resource-lifecycle issue [#27](https://github.com/jackwillis/globe/issues/27) was closed as duplicate of [#26](https://github.com/jackwillis/globe/issues/26).
 
-## Final repository setup (GitHub UI or a connector with milestone/label creation)
+## Tracker conventions
 
-1. Done: the milestones v0.1, v0.2 and v0.3 exist, with no dates.
-2. Create optional orthogonal labels: `type:bug`, `type:feature`, `type:refactor`, `type:research`, `type:docs`; `priority:p0`, `priority:p1`, `priority:p2`; `platform:os9`, `platform:x11`, `platform:portable`; `blocked`, `needs-decision`.
-3. Done: issues are assigned according to the **Release theme** field in their bodies; the epics stay unmilestoned. Avoid an evergreen catch-all Future milestone.
+1. **Milestones:** v0.1, v0.2 and v0.3, with no dates. An issue's milestone follows the **Release theme** line in its body. The six epics (#1–#6) span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
+2. **Labels in use:** priority `P0`–`P3` (`P3` is reserved and unused so far); area labels `area: classic-mac`, `area: rendering`, `area: architecture`, `area: discovery-design`, `area: data` and `area: release`, matching the six epics; `epic`. Some newer issues also carry `enhancement` or `bug`.
+3. **Epics:** each epic's body lists its tracked issues. The nested epic [#35](https://github.com/jackwillis/globe/issues/35) (usability) sits under #4 and is also linked from #1 and #2.
 4. Optionally convert epic checklists into native GitHub sub-issue relationships. The issue cross-references already provide usable navigation and will remain stable.
 
 **Source of truth:** GitHub issue state, not copied status tables or old GL notes. Verify current code and Actions before closing a ticket. No release tags, server infrastructure or automated machine actions are authorized by this roadmap.

@@ -29,8 +29,12 @@ The OS 9 floppy build in Classic under Mac OS X Tiger on the G4 (2026-11-02):
 The other screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
 
 This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
-checks pass on host and G4. The OS 9 application is built and packaged, and **launched and rendered once under Tiger Classic** (an emulated OS 9, 2026-11-02; see below); drag, zoom and keys there, and real OS 9 hardware, are still untested. CI is
-configured but has not run. Real-display timing and current hardware UI acceptance remain open.
+checks pass on host and G4. The OS 9 floppy edition has **run on real OS 9 on the G4** (2026-11-07:
+about 991 ms to settle at 640x480, 150 ms of it copying; zoom preview, progress bar and shortcuts
+work) and earlier in Tiger Classic, an emulated OS 9 (2026-11-02, pictured above). Native
+acceptance (cursors, resizing, exposure, idle) and real-display timing remain open
+([#8](https://github.com/jackwillis/globe/issues/8)). CI runs on GitHub Actions; check the Actions
+tab for the current result.
 
 - [Current handoff](docs/handoff.md) and [prioritized backlog](docs/backlog.md)
 - [Architecture](docs/architecture.md), [design and ADR](docs/adr/0001-m2-to-m5-decisions.md)
