@@ -43,4 +43,23 @@ before it could be launched).
 
 ## Menu bar (#46)
 
-Design only ([menu-bar.md](design/menu-bar.md)); nothing to test yet.
+Built for PowerPC (Retro68, no warnings) and the menu logic host-tested (`test_menus`); it has not
+been run on any Macintosh. Design: [menu-bar.md](design/menu-bar.md). Item numbers and ids are in
+`include/globe/menus.hpp` and `os9/globe.r`. The program grew about 4.8 KB (542,336 to 547,200
+bytes `.bin`); the resources are about 1 KB; no change to the SIZE partition.
+
+1. The bar shows Apple, File, Edit, View. The Apple menu lists About Globe, a divider, then the
+   desk accessories.
+2. View: Zoom In/Out (Cmd-+, Cmd--) dim at the zoom limits. Align North dims when already north-up.
+3. Graticule, Borders, Trackball Drag, Night Side and Measure show a check that matches the
+   shortcut keys (G, B, T, D, M) and the toolbar-equivalent state.
+4. Map/Relief: the check is on the current look; the other one switches and the palette check
+   follows; choosing the current look does nothing (no redraw).
+5. Cmd-Q and File > Quit exit cleanly, including mid-refinement.
+6. Edit is dimmed unless a desk accessory is in front; with one in front Cut/Copy/Paste reach it.
+7. Hold a menu open during refinement: the frame stays up, refinement resumes on release, and the
+   title bar timing does not report the hold as a long event-loop turn.
+8. Plain keys (no Cmd) behave as before; Cmd-P opens the palette.
+9. About Globe opens an information window with the license line; the data credits are #11.
+10. The cursor is the arrow over the menu bar; no stale hand afterward.
+11. Compare Tiger Classic and bare OS 9 (the Apple menu differs).

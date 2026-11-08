@@ -11,3 +11,29 @@ resource 'SIZE' (-1) {
     reserved, reserved, reserved,
     24 * 1024 * 1024, 12 * 1024 * 1024
 };
+
+/* Menu bar: ids and item numbers match include/globe/menus.hpp. */
+#define ITEM(name, key) name, noIcon, key, noMark, plain
+#define DIVIDER "-", noIcon, noKey, noMark, plain
+resource 'MENU' (128, preload) {
+    128, textMenuProc, allEnabled, enabled, apple,
+    { ITEM("About Globe\0xC9", noKey); DIVIDER }
+};
+resource 'MENU' (129, preload) {
+    129, textMenuProc, allEnabled, enabled, "File",
+    { ITEM("Quit", "Q") }
+};
+resource 'MENU' (130, preload) {
+    130, textMenuProc, allEnabled, enabled, "Edit",
+    { ITEM("Undo", "Z"); DIVIDER; ITEM("Cut", "X"); ITEM("Copy", "C"); ITEM("Paste", "V");
+      ITEM("Clear", noKey) }
+};
+resource 'MENU' (131, preload) {
+    131, textMenuProc, allEnabled, enabled, "View",
+    { ITEM("Zoom In", "+"); ITEM("Zoom Out", "-"); ITEM("Reset View", "R");
+      ITEM("Align North", "N"); DIVIDER;
+      ITEM("Graticule", "G"); ITEM("Borders", "B"); ITEM("Trackball Drag", "T"); DIVIDER;
+      ITEM("Map", noKey); ITEM("Relief", noKey); ITEM("Looks Palette", "P"); DIVIDER;
+      ITEM("Night Side", "D"); ITEM("Measure", "M") }
+};
+resource 'MBAR' (128, preload) { { 128, 129, 130, 131 } };

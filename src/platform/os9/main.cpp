@@ -11,6 +11,7 @@
 #include "globe/embedded_landclasses.hpp"
 #include "globe/embedded_places.hpp"
 #include "globe/looks.hpp"
+#include "globe/menus.hpp"
 #include "globe/overlays.hpp"
 #include "globe/refine_runner.hpp"
 #include "globe/shown_frame.hpp"
@@ -190,7 +191,12 @@ class Application {
             } else if (event.what == mouseDown) {
                 WindowPtr hit = nullptr;
                 const auto part = FindWindow(event.where, &hit);
-                if (hit == window_) {
+                if (part == inMenuBar) {
+                    refresh_menus();
+                    quit = menu_selected(MenuSelect(event.where), time);
+                    // The held menu is not an event-loop turn: do not count it.
+                    turn_start = now_ms();
+                } else if (hit == window_) {
                     if (part == inContent) {
                         if (FrontWindow() != window_)
                             SelectWindow(window_);
@@ -230,6 +236,13 @@ class Application {
                 // A refinement finished (or advanced) while the button was down: show it now.
                 if (dirty_ && model_.stage != QualityStage::Moving && !redraw_)
                     presentation_.request(model_.generation);
+            } else if ((event.what == keyDown || event.what == autoKey) &&
+                       (event.modifiers & cmdKey)) {
+                refresh_menus();
+                const long result = MenuKey(static_cast<CharParameter>(event.message & 0xff));
+                if (result != 0)
+                    quit = menu_selected(result, time);
+                turn_start = now_ms();
             } else if (event.what == keyDown || event.what == autoKey)
                 quit = key(event.message, time);
             else if (event.what == updateEvt) {
@@ -493,6 +506,87 @@ class Application {
         if (!redraw_ && fb_)
             copy(0, fb_->height());
     }
+    // An overlay or window the front end handles itself, from a shortcut key or a menu item.
+    void overlay(KeyBinding::Overlay which) {
+        if (which == KeyBinding::Overlay::Night) {
+            overlays_.toggle_night();
+            reshow();
+        } else if (which == KeyBinding::Overlay::Measure) {
+            overlays_.toggle_measure();
+            hover_valid_ = false; // measuring makes the whole globe clickable
+            reshow();
+        } else if (which == KeyBinding::Overlay::Palette) {
+            SetPortWindowPort(window_);
+            Point corner{window_->portRect.top, window_->portRect.right};
+            LocalToGlobal(&corner);
+            palette_.show(model_.terrain_style, corner.h);
+            SetPortWindowPort(window_);
+        }
+    }
+    // Check marks and dimming for the menu about to be shown; the model is the only state.
+    void refresh_menus() {
+        if (const MenuHandle view = GetMenuHandle(kViewMenu)) {
+            for (short item = 1; item <= kViewItemCount; ++item) {
+                const auto s =
+                    view_item_state(model_, overlays_.night(), overlays_.measuring(), item);
+                if (s.enabled)
+                    EnableItem(view, item);
+                else
+                    DisableItem(view, item);
+                CheckItem(view, item, s.checked);
+            }
+        }
+        // Edit exists for desk accessories only: live while one is in front.
+        const WindowPtr front = FrontWindow();
+        const bool accessory = front != nullptr && GetWindowKind(front) < 0;
+        if (const MenuHandle edit = GetMenuHandle(kEditMenu)) {
+            for (short item = 1; item <= 6; ++item) {
+                if (accessory)
+                    EnableItem(edit, item);
+                else
+                    DisableItem(edit, item);
+            }
+        }
+    }
+    // A MenuSelect/MenuKey result: the menu id in the high word, the item in the low. Returns true
+    // to quit.
+    bool menu_selected(long result, std::uint64_t time) {
+        const short menu = static_cast<short>(result >> 16);
+        const short item = static_cast<short>(result & 0xffff);
+        bool quit = false;
+        if (menu == kAppleMenu && item > kAboutItem + 1) {
+            unsigned char name[256];
+            GetMenuItemText(GetMenuHandle(kAppleMenu), item, name);
+            OpenDeskAcc(name);
+            SetPortWindowPort(window_);
+        } else if (menu == kEditMenu) {
+            SystemEdit(item - 1);
+        } else {
+            const auto choice = menu_choice(menu, item, model_.terrain_style);
+            if (choice.about)
+                show_about();
+            else if (choice.command)
+                quit = apply(CommandIssued{time, *choice.command});
+            else
+                overlay(choice.overlay);
+        }
+        HiliteMenu(0);
+        return quit;
+    }
+    // The program's own license and data pointers only; the data credits are #11's.
+    void show_about() {
+        InfoCard card{};
+        card.title = "About Globe";
+        card.lines[0] = "An offline, software-rendered interactive Earth.";
+        card.lines[1] = "Copyright (c) 2026 Jack Willis. GPL-3.0-or-later.";
+        card.lines[2] = "Data sources and notices: see the ReadMe.";
+        card.line_count = 3;
+        SetPortWindowPort(window_);
+        Point corner{window_->portRect.top, window_->portRect.right};
+        LocalToGlobal(&corner);
+        info_.show(card, corner.h);
+        SetPortWindowPort(window_);
+    }
     bool key(unsigned long message, std::uint64_t time) {
         const auto code = (message >> 8) & 0xff;
         const auto ch = static_cast<int>(message & 0xff);
@@ -516,20 +610,7 @@ class Application {
             command = binding.command;
         if (command)
             return apply(CommandIssued{time, *command});
-        if (binding.overlay == KeyBinding::Overlay::Night) {
-            overlays_.toggle_night();
-            reshow();
-        } else if (binding.overlay == KeyBinding::Overlay::Measure) {
-            overlays_.toggle_measure();
-            hover_valid_ = false; // measuring makes the whole globe clickable
-            reshow();
-        } else if (binding.overlay == KeyBinding::Overlay::Palette) {
-            SetPortWindowPort(window_);
-            Point corner{window_->portRect.top, window_->portRect.right};
-            LocalToGlobal(&corner);
-            palette_.show(model_.terrain_style, corner.h);
-            SetPortWindowPort(window_);
-        }
+        overlay(binding.overlay);
         return false;
     }
     WindowPtr window_ = nullptr;
@@ -572,6 +653,11 @@ int main() {
     InitFonts();
     InitWindows();
     InitMenus();
+    if (const Handle bar = GetNewMBar(128)) {
+        SetMenuBar(bar);
+        AppendResMenu(GetMenuHandle(kAppleMenu), 'DRVR');
+        DrawMenuBar();
+    }
     TEInit();
     InitDialogs(nullptr);
     InitCursor();
