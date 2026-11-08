@@ -1,0 +1,4297 @@
+{
+  "assertions": [
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:112"
+      ],
+      "id": "gcat:000001:source-link",
+      "object": "gcat:000001",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:112",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:168"
+      ],
+      "id": "gcat:000002:source-link",
+      "object": "gcat:000002",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:168",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:121"
+      ],
+      "id": "gcat:000003:source-link",
+      "object": "gcat:000003",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:121",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:129"
+      ],
+      "id": "gcat:000004:source-link",
+      "object": "gcat:000004",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:129",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:95"
+      ],
+      "id": "gcat:000005:source-link",
+      "object": "gcat:000005",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:95",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:197"
+      ],
+      "id": "gcat:000006:source-link",
+      "object": "gcat:000006",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:197",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:238"
+      ],
+      "id": "gcat:000007:source-link",
+      "object": "gcat:000007",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:238",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:239"
+      ],
+      "id": "gcat:000008:source-link",
+      "object": "gcat:000008",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:239",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:178"
+      ],
+      "id": "gcat:000009:source-link",
+      "object": "gcat:000009",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:178",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:71"
+      ],
+      "id": "gcat:000010:source-link",
+      "object": "gcat:000010",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:71",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:12"
+      ],
+      "id": "gcat:000011:source-link",
+      "object": "gcat:000011",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:12",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:11"
+      ],
+      "id": "gcat:000012:source-link",
+      "object": "gcat:000012",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:11",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:21"
+      ],
+      "id": "gcat:000013:source-link",
+      "object": "gcat:000013",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:21",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:65"
+      ],
+      "id": "gcat:000014:source-link",
+      "object": "gcat:000014",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:65",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:28"
+      ],
+      "id": "gcat:000015:source-link",
+      "object": "gcat:000015",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:28",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:189"
+      ],
+      "id": "gcat:000016:source-link",
+      "object": "gcat:000016",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:189",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:165"
+      ],
+      "id": "gcat:000017:source-link",
+      "object": "gcat:000017",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:165",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:15"
+      ],
+      "id": "gcat:000018:source-link",
+      "object": "gcat:000018",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:15",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3295"
+      ],
+      "id": "gcat:000101:source-link",
+      "object": "gcat:000101",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:3295",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:7141"
+      ],
+      "id": "gcat:000102:source-link",
+      "object": "gcat:000102",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:7141",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6466"
+      ],
+      "id": "gcat:000103:source-link",
+      "object": "gcat:000103",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:6466",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5283"
+      ],
+      "id": "gcat:000104:source-link",
+      "object": "gcat:000104",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:5283",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3440"
+      ],
+      "id": "gcat:000105:source-link",
+      "object": "gcat:000105",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:3440",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5187"
+      ],
+      "id": "gcat:000106:source-link",
+      "object": "gcat:000106",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:5187",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5226"
+      ],
+      "id": "gcat:000107:source-link",
+      "object": "gcat:000107",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:5226",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4544"
+      ],
+      "id": "gcat:000108:source-link",
+      "object": "gcat:000108",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:4544",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6823"
+      ],
+      "id": "gcat:000109:source-link",
+      "object": "gcat:000109",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:6823",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5773"
+      ],
+      "id": "gcat:000110:source-link",
+      "object": "gcat:000110",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:5773",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6980"
+      ],
+      "id": "gcat:000111:source-link",
+      "object": "gcat:000111",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:6980",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4812"
+      ],
+      "id": "gcat:000112:source-link",
+      "object": "gcat:000112",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:4812",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6317"
+      ],
+      "id": "gcat:000113:source-link",
+      "object": "gcat:000113",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:6317",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:287"
+      ],
+      "id": "gcat:000201:source-link",
+      "object": "gcat:000201",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_map_units:287",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:288"
+      ],
+      "id": "gcat:000202:source-link",
+      "object": "gcat:000202",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_map_units:288",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:24"
+      ],
+      "id": "gcat:000203:source-link",
+      "object": "gcat:000203",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_map_units:24",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:283"
+      ],
+      "id": "gcat:000204:source-link",
+      "object": "gcat:000204",
+      "rationale": "Fixture association proposal; allocated project ID is not approval of identity.",
+      "relation": "same-entity",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_map_units:283",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:12",
+        "ne_10m_admin_0_countries:11"
+      ],
+      "id": "ne_10m_admin_0_countries:12:review-association",
+      "object": "ne_10m_admin_0_countries:11",
+      "rationale": "Explicit fixture proposal based on shared SOV_A3 namespace; preserve source viewpoint, not legal sovereignty.",
+      "relation": "contested-attribution",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:12",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:178",
+        "ne_10m_admin_0_countries:71"
+      ],
+      "id": "ne_10m_admin_0_countries:178:review-association",
+      "object": "ne_10m_admin_0_countries:71",
+      "rationale": "Explicit fixture proposal based on shared SOV_A3 namespace; preserve source viewpoint, not legal sovereignty.",
+      "relation": "source-sovereign-association",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_countries:178",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:287",
+        "ne_10m_admin_0_map_units:288"
+      ],
+      "id": "ne_10m_admin_0_map_units:287:candidate:ne_10m_admin_0_map_units:288",
+      "object": "ne_10m_admin_0_map_units:288",
+      "rationale": "Spratly/Wake shared QID is a known review case; retain both source records.",
+      "relation": "unresolved-candidate",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_admin_0_map_units:287",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3295"
+      ],
+      "id": "ne_10m_populated_places:3295:candidate:ne_10m_populated_places:7141",
+      "object": "ne_10m_populated_places:7141",
+      "rationale": "Shared source QID is a review trigger, never sufficient equality evidence.",
+      "relation": "unresolved-candidate",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:3295",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3440"
+      ],
+      "id": "ne_10m_populated_places:3440:candidate:ne_10m_populated_places:5187",
+      "object": "ne_10m_populated_places:5187",
+      "rationale": "Shared source QID is a review trigger, never sufficient equality evidence.",
+      "relation": "unresolved-candidate",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:3440",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4812"
+      ],
+      "id": "ne_10m_populated_places:4812:capital-role",
+      "object": "ne_10m_admin_0_countries:95",
+      "qualifiers": {
+        "ADM0CAP": "1",
+        "CAPALT": "0"
+      },
+      "rationale": "Source capital flags with unspecified effective date; role and country association require independent review.",
+      "relation": "capital-role",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:4812",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5283"
+      ],
+      "id": "ne_10m_populated_places:5283:candidate:ne_10m_populated_places:6466",
+      "object": "ne_10m_populated_places:6466",
+      "rationale": "Shared source QID is a review trigger, never sufficient equality evidence.",
+      "relation": "unresolved-candidate",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:5283",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6317"
+      ],
+      "id": "ne_10m_populated_places:6317:code-alias",
+      "object": "ne_10m_admin_0_countries:15",
+      "rationale": "SSD place code / SDS country ADM0 code; confirm namespace before geometry join.",
+      "relation": "source-code-alias",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "subject": "ne_10m_populated_places:6317",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    }
+  ],
+  "entities": [
+    {
+      "id": "gcat:000001",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000002",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000003",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000004",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000005",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000006",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000007",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000008",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000009",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000010",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000011",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000012",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000013",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000014",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000015",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000016",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000017",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000018",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000101",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000102",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000103",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000104",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000105",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000106",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000107",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000108",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000109",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000110",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000111",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000112",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000113",
+      "kind": "settlement"
+    },
+    {
+      "id": "gcat:000201",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000202",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000203",
+      "kind": "political-unit"
+    },
+    {
+      "id": "gcat:000204",
+      "kind": "political-unit"
+    }
+  ],
+  "names": [
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:112"
+      ],
+      "id": "gcat:000001:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000001",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "San Marino",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:112"
+      ],
+      "id": "gcat:000001:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000001",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "San Marino",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:168"
+      ],
+      "id": "gcat:000002:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000002",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Vatican",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:168"
+      ],
+      "id": "gcat:000002:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000002",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Vatican City",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:121"
+      ],
+      "id": "gcat:000003:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000003",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Monaco",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:121"
+      ],
+      "id": "gcat:000003:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000003",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Monaco",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:129"
+      ],
+      "id": "gcat:000004:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000004",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Andorra",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:129"
+      ],
+      "id": "gcat:000004:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000004",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Andorra",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:95"
+      ],
+      "id": "gcat:000005:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000005",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Liechtenstein",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:95"
+      ],
+      "id": "gcat:000005:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000005",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Liechtenstein",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:197"
+      ],
+      "id": "gcat:000006:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000006",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Kiribati",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:197"
+      ],
+      "id": "gcat:000006:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000006",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Kiribati",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:238"
+      ],
+      "id": "gcat:000007:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000007",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Tuvalu",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:238"
+      ],
+      "id": "gcat:000007:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000007",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Tuvalu",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:239"
+      ],
+      "id": "gcat:000008:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000008",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Maldives",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:239"
+      ],
+      "id": "gcat:000008:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000008",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Maldives",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:178"
+      ],
+      "id": "gcat:000009:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000009",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Greenland",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:178"
+      ],
+      "id": "gcat:000009:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000009",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Greenland",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:71"
+      ],
+      "id": "gcat:000010:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000010",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Denmark",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:71"
+      ],
+      "id": "gcat:000010:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000010",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Denmark",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:12"
+      ],
+      "id": "gcat:000011:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000011",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Palestine",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:12"
+      ],
+      "id": "gcat:000011:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000011",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Palestine",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:11"
+      ],
+      "id": "gcat:000012:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000012",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Israel",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:11"
+      ],
+      "id": "gcat:000012:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000012",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Israel",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:21"
+      ],
+      "id": "gcat:000013:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000013",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Somaliland",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:21"
+      ],
+      "id": "gcat:000013:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000013",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Somaliland",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:65"
+      ],
+      "id": "gcat:000014:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000014",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Kosovo",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:65"
+      ],
+      "id": "gcat:000014:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000014",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Kosovo",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:28"
+      ],
+      "id": "gcat:000015:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000015",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "W. Sahara",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:28"
+      ],
+      "id": "gcat:000015:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000015",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Western Sahara",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:189"
+      ],
+      "id": "gcat:000016:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000016",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Taiwan",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:189"
+      ],
+      "id": "gcat:000016:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000016",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Taiwan",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:165"
+      ],
+      "id": "gcat:000017:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000017",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Eq. Guinea",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:165"
+      ],
+      "id": "gcat:000017:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000017",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Equatorial Guinea",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:15"
+      ],
+      "id": "gcat:000018:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000018",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "S. Sudan",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_countries:15"
+      ],
+      "id": "gcat:000018:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000018",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "South Sudan",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3295"
+      ],
+      "id": "gcat:000101:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000101",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Pyongsan",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3295"
+      ],
+      "id": "gcat:000101:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000101",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Pyongyang",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:7141"
+      ],
+      "id": "gcat:000102:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000102",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Pyongyang",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:7141"
+      ],
+      "id": "gcat:000102:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000102",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Pyongyang",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6466"
+      ],
+      "id": "gcat:000103:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000103",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Bose",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6466"
+      ],
+      "id": "gcat:000103:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000103",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Baicheng",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5283"
+      ],
+      "id": "gcat:000104:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000104",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Baicheng",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5283"
+      ],
+      "id": "gcat:000104:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000104",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Baicheng",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3440"
+      ],
+      "id": "gcat:000105:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000105",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Kuta",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:3440"
+      ],
+      "id": "gcat:000105:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000105",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Denpasar",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5187"
+      ],
+      "id": "gcat:000106:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000106",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Denpasar",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5187"
+      ],
+      "id": "gcat:000106:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000106",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Denpasar",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5226"
+      ],
+      "id": "gcat:000107:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000107",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Jianmen",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5226"
+      ],
+      "id": "gcat:000107:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000107",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Jingmen City",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4544"
+      ],
+      "id": "gcat:000108:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000108",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Ascension",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4544"
+      ],
+      "id": "gcat:000108:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000108",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Ascensión",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6823"
+      ],
+      "id": "gcat:000109:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000109",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Reykjavík",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6823"
+      ],
+      "id": "gcat:000109:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000109",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Reykjavík",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5773"
+      ],
+      "id": "gcat:000110:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000110",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Łódź",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:5773"
+      ],
+      "id": "gcat:000110:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000110",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Łódź",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "derived_from": "gcat:000110:NAME_EN",
+      "encoding": "mac_roman",
+      "evidence": [
+        "ne_10m_populated_places:5773"
+      ],
+      "id": "gcat:000110:mac-roman-candidate",
+      "language": "und",
+      "loss": true,
+      "rationale": "Source ASCII fallback candidate; installed font coverage remains unverified.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "display-fallback-candidate",
+      "source_field": "NAMEASCII",
+      "subject": "gcat:000110",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Lodz",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6980"
+      ],
+      "id": "gcat:000111:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000111",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Nuuk",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6980"
+      ],
+      "id": "gcat:000111:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000111",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Nuuk",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4812"
+      ],
+      "id": "gcat:000112:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000112",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Vaduz",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:4812"
+      ],
+      "id": "gcat:000112:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000112",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Vaduz",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6317"
+      ],
+      "id": "gcat:000113:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000113",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Juba",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_populated_places:6317"
+      ],
+      "id": "gcat:000113:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000113",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Juba",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:287"
+      ],
+      "id": "gcat:000201:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000201",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Spratly Is.",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:287"
+      ],
+      "id": "gcat:000201:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000201",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Wake Island",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:288"
+      ],
+      "id": "gcat:000202:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000202",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Wake Atoll",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:288"
+      ],
+      "id": "gcat:000202:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000202",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Wake Island",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:24"
+      ],
+      "id": "gcat:000203:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000203",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "French Guiana",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:24"
+      ],
+      "id": "gcat:000203:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000203",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "French Guiana",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:283"
+      ],
+      "id": "gcat:000204:NAME",
+      "language": "und",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source",
+      "source_field": "NAME",
+      "subject": "gcat:000204",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Tokelau",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "evidence": [
+        "ne_10m_admin_0_map_units:283"
+      ],
+      "id": "gcat:000204:NAME_EN",
+      "language": "en",
+      "rationale": "Exact source string, without normalization or transliteration.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "localized-source",
+      "source_field": "NAME_EN",
+      "subject": "gcat:000204",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "value": "Tokelau",
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    }
+  ],
+  "points": [
+    {
+      "containment": "unverified",
+      "coordinate": [
+        12.441206,
+        43.933916
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:112"
+      ],
+      "id": "gcat:000001:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000001",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        12.453418,
+        41.903323
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:168"
+      ],
+      "id": "gcat:000002:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000002",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        7.398291,
+        43.739652
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:121"
+      ],
+      "id": "gcat:000003:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000003",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        1.539409,
+        42.547643
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:129"
+      ],
+      "id": "gcat:000004:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000004",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        9.559439,
+        47.111405
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:95"
+      ],
+      "id": "gcat:000005:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000005",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -157.384577,
+        1.820437
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:197"
+      ],
+      "id": "gcat:000006:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000006",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        179.209587,
+        -8.513717
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:238"
+      ],
+      "id": "gcat:000007:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000007",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        73.507554,
+        4.174441
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:239"
+      ],
+      "id": "gcat:000008:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000008",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -39.335251,
+        74.319387
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:178"
+      ],
+      "id": "gcat:000009:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000009",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        9.018163,
+        55.966965
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:71"
+      ],
+      "id": "gcat:000010:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000010",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        35.291341,
+        32.047431
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:12"
+      ],
+      "id": "gcat:000011:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000011",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        34.847915,
+        30.911148
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:11"
+      ],
+      "id": "gcat:000012:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000012",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        46.731595,
+        9.443889
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:21"
+      ],
+      "id": "gcat:000013:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000013",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        20.860719,
+        42.593587
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:65"
+      ],
+      "id": "gcat:000014:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000014",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -12.630304,
+        23.967592
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:28"
+      ],
+      "id": "gcat:000015:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000015",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        120.868204,
+        23.652408
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:189"
+      ],
+      "id": "gcat:000016:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000016",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        8.9902,
+        2.333
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:165"
+      ],
+      "id": "gcat:000017:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000017",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        30.390151,
+        7.230477
+      ],
+      "evidence": [
+        "ne_10m_admin_0_countries:15"
+      ],
+      "id": "gcat:000018:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000018",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        126.3866418,
+        38.3366897
+      ],
+      "evidence": [
+        "ne_10m_populated_places:3295"
+      ],
+      "id": "gcat:000101:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000101",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        125.7527449,
+        39.0213846
+      ],
+      "evidence": [
+        "ne_10m_populated_places:7141"
+      ],
+      "id": "gcat:000102:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000102",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        106.6133268,
+        23.8997156
+      ],
+      "evidence": [
+        "ne_10m_populated_places:6466"
+      ],
+      "id": "gcat:000103:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000103",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        122.8200378,
+        45.6200177
+      ],
+      "evidence": [
+        "ne_10m_populated_places:5283"
+      ],
+      "id": "gcat:000104:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000104",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        115.1841208,
+        -8.7151125
+      ],
+      "evidence": [
+        "ne_10m_populated_places:3440"
+      ],
+      "id": "gcat:000105:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000105",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        115.2199849,
+        -8.6500289
+      ],
+      "evidence": [
+        "ne_10m_populated_places:5187"
+      ],
+      "id": "gcat:000106:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000106",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        113.1580614,
+        30.6519988
+      ],
+      "evidence": [
+        "ne_10m_populated_places:5226"
+      ],
+      "id": "gcat:000107:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000107",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -63.0799846,
+        -15.6995727
+      ],
+      "evidence": [
+        "ne_10m_populated_places:4544"
+      ],
+      "id": "gcat:000108:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000108",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -21.936546009025054,
+        64.14345946317033
+      ],
+      "evidence": [
+        "ne_10m_populated_places:6823"
+      ],
+      "id": "gcat:000109:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000109",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        19.458228648552854,
+        51.76779686697564
+      ],
+      "evidence": [
+        "ne_10m_populated_places:5773"
+      ],
+      "id": "gcat:000110:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000110",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -51.7326588,
+        64.1982815
+      ],
+      "evidence": [
+        "ne_10m_populated_places:6980"
+      ],
+      "id": "gcat:000111:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000111",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        9.5166695,
+        47.1337238
+      ],
+      "evidence": [
+        "ne_10m_populated_places:4812"
+      ],
+      "id": "gcat:000112:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000112",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        31.5800256,
+        4.8299752
+      ],
+      "evidence": [
+        "ne_10m_populated_places:6317"
+      ],
+      "id": "gcat:000113:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "settlement-location",
+      "subject": "gcat:000113",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        115.81956,
+        10.72954
+      ],
+      "evidence": [
+        "ne_10m_admin_0_map_units:287"
+      ],
+      "id": "gcat:000201:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000201",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        166.644535,
+        19.285663
+      ],
+      "evidence": [
+        "ne_10m_admin_0_map_units:288"
+      ],
+      "id": "gcat:000202:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000202",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -53.068349,
+        3.999223
+      ],
+      "evidence": [
+        "ne_10m_admin_0_map_units:24"
+      ],
+      "id": "gcat:000203:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000203",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    },
+    {
+      "containment": "unverified",
+      "coordinate": [
+        -172.48629,
+        -8.561824
+      ],
+      "evidence": [
+        "ne_10m_admin_0_map_units:283"
+      ],
+      "id": "gcat:000204:point",
+      "rationale": "Representative point is independent of geometry; never an interior guarantee.",
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "status": "unreviewed"
+      },
+      "role": "source-label",
+      "subject": "gcat:000204",
+      "time": {
+        "basis": "source-unspecified",
+        "from": null,
+        "to": null
+      },
+      "viewpoint": "Natural Earth pinned source; no Globe adjudication"
+    }
+  ],
+  "records": [
+    {
+      "fields": {
+        "ADM0_A3": "ISR",
+        "ADMIN": "Israel",
+        "GEOUNIT": "Israel",
+        "GU_A3": "ISR",
+        "ISO_A3": "ISR",
+        "ISO_A3_EH": "ISR",
+        "LABEL_X": "34.847915",
+        "LABEL_Y": "30.911148",
+        "NAME": "Israel",
+        "NAME_EN": "Israel",
+        "NE_ID": "1159320895",
+        "SOVEREIGNT": "Israel",
+        "SOV_A3": "IS1",
+        "TYPE": "Disputed",
+        "WIKIDATAID": "Q801"
+      },
+      "id": "ne_10m_admin_0_countries:11",
+      "ordinal": 11,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "SMR",
+        "ADMIN": "San Marino",
+        "GEOUNIT": "San Marino",
+        "GU_A3": "SMR",
+        "ISO_A3": "SMR",
+        "ISO_A3_EH": "SMR",
+        "LABEL_X": "12.441206",
+        "LABEL_Y": "43.933916",
+        "NAME": "San Marino",
+        "NAME_EN": "San Marino",
+        "NE_ID": "1159321255",
+        "SOVEREIGNT": "San Marino",
+        "SOV_A3": "SMR",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q238"
+      },
+      "id": "ne_10m_admin_0_countries:112",
+      "ordinal": 112,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "PSX",
+        "ADMIN": "Palestine",
+        "GEOUNIT": "Palestine",
+        "GU_A3": "PSX",
+        "ISO_A3": "PSE",
+        "ISO_A3_EH": "PSE",
+        "LABEL_X": "35.291341",
+        "LABEL_Y": "32.047431",
+        "NAME": "Palestine",
+        "NAME_EN": "Palestine",
+        "NE_ID": "1159320899",
+        "SOVEREIGNT": "Israel",
+        "SOV_A3": "IS1",
+        "TYPE": "Indeterminate",
+        "WIKIDATAID": "Q23792"
+      },
+      "id": "ne_10m_admin_0_countries:12",
+      "ordinal": 12,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "MCO",
+        "ADMIN": "Monaco",
+        "GEOUNIT": "Monaco",
+        "GU_A3": "MCO",
+        "ISO_A3": "MCO",
+        "ISO_A3_EH": "MCO",
+        "LABEL_X": "7.398291",
+        "LABEL_Y": "43.739652",
+        "NAME": "Monaco",
+        "NAME_EN": "Monaco",
+        "NE_ID": "1159321043",
+        "SOVEREIGNT": "Monaco",
+        "SOV_A3": "MCO",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q235"
+      },
+      "id": "ne_10m_admin_0_countries:121",
+      "ordinal": 121,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "AND",
+        "ADMIN": "Andorra",
+        "GEOUNIT": "Andorra",
+        "GU_A3": "AND",
+        "ISO_A3": "AND",
+        "ISO_A3_EH": "AND",
+        "LABEL_X": "1.539409",
+        "LABEL_Y": "42.547643",
+        "NAME": "Andorra",
+        "NAME_EN": "Andorra",
+        "NE_ID": "1159320327",
+        "SOVEREIGNT": "Andorra",
+        "SOV_A3": "AND",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q228"
+      },
+      "id": "ne_10m_admin_0_countries:129",
+      "ordinal": 129,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "SDS",
+        "ADMIN": "South Sudan",
+        "GEOUNIT": "South Sudan",
+        "GU_A3": "SDS",
+        "ISO_A3": "SSD",
+        "ISO_A3_EH": "SSD",
+        "LABEL_X": "30.390151",
+        "LABEL_Y": "7.230477",
+        "NAME": "S. Sudan",
+        "NAME_EN": "South Sudan",
+        "NE_ID": "1159321235",
+        "SOVEREIGNT": "South Sudan",
+        "SOV_A3": "SDS",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q958"
+      },
+      "id": "ne_10m_admin_0_countries:15",
+      "ordinal": 15,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "GNQ",
+        "ADMIN": "Equatorial Guinea",
+        "GEOUNIT": "Equatorial Guinea",
+        "GU_A3": "GNQ",
+        "ISO_A3": "GNQ",
+        "ISO_A3_EH": "GNQ",
+        "LABEL_X": "8.990200",
+        "LABEL_Y": "2.333000",
+        "NAME": "Eq. Guinea",
+        "NAME_EN": "Equatorial Guinea",
+        "NE_ID": "1159320801",
+        "SOVEREIGNT": "Equatorial Guinea",
+        "SOV_A3": "GNQ",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q983"
+      },
+      "id": "ne_10m_admin_0_countries:165",
+      "ordinal": 165,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "VAT",
+        "ADMIN": "Vatican",
+        "GEOUNIT": "Vatican",
+        "GU_A3": "VAT",
+        "ISO_A3": "VAT",
+        "ISO_A3_EH": "VAT",
+        "LABEL_X": "12.453418",
+        "LABEL_Y": "41.903323",
+        "NAME": "Vatican",
+        "NAME_EN": "Vatican City",
+        "NE_ID": "1159321407",
+        "SOVEREIGNT": "Vatican",
+        "SOV_A3": "VAT",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q237"
+      },
+      "id": "ne_10m_admin_0_countries:168",
+      "ordinal": 168,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "GRL",
+        "ADMIN": "Greenland",
+        "GEOUNIT": "Greenland",
+        "GU_A3": "GRL",
+        "ISO_A3": "GRL",
+        "ISO_A3_EH": "GRL",
+        "LABEL_X": "-39.335251",
+        "LABEL_Y": "74.319387",
+        "NAME": "Greenland",
+        "NAME_EN": "Greenland",
+        "NE_ID": "1159320551",
+        "SOVEREIGNT": "Denmark",
+        "SOV_A3": "DN1",
+        "TYPE": "Country",
+        "WIKIDATAID": "Q223"
+      },
+      "id": "ne_10m_admin_0_countries:178",
+      "ordinal": 178,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "TWN",
+        "ADMIN": "Taiwan",
+        "GEOUNIT": "Taiwan",
+        "GU_A3": "TWN",
+        "ISO_A3": "TWN",
+        "ISO_A3_EH": "TWN",
+        "LABEL_X": "120.868204",
+        "LABEL_Y": "23.652408",
+        "NAME": "Taiwan",
+        "NAME_EN": "Taiwan",
+        "NE_ID": "1159321335",
+        "SOVEREIGNT": "Taiwan",
+        "SOV_A3": "TWN",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q865"
+      },
+      "id": "ne_10m_admin_0_countries:189",
+      "ordinal": 189,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "KIR",
+        "ADMIN": "Kiribati",
+        "GEOUNIT": "Kiribati",
+        "GU_A3": "KIR",
+        "ISO_A3": "KIR",
+        "ISO_A3_EH": "KIR",
+        "LABEL_X": "-157.384577",
+        "LABEL_Y": "1.820437",
+        "NAME": "Kiribati",
+        "NAME_EN": "Kiribati",
+        "NE_ID": "1159320981",
+        "SOVEREIGNT": "Kiribati",
+        "SOV_A3": "KIR",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q710"
+      },
+      "id": "ne_10m_admin_0_countries:197",
+      "ordinal": 197,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "SOL",
+        "ADMIN": "Somaliland",
+        "GEOUNIT": "Somaliland",
+        "GU_A3": "SOL",
+        "ISO_A3": "-99",
+        "ISO_A3_EH": "-99",
+        "LABEL_X": "46.731595",
+        "LABEL_Y": "9.443889",
+        "NAME": "Somaliland",
+        "NAME_EN": "Somaliland",
+        "NE_ID": "1159321259",
+        "SOVEREIGNT": "Somaliland",
+        "SOV_A3": "SOL",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q34754"
+      },
+      "id": "ne_10m_admin_0_countries:21",
+      "ordinal": 21,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "TUV",
+        "ADMIN": "Tuvalu",
+        "GEOUNIT": "Tuvalu",
+        "GU_A3": "TUV",
+        "ISO_A3": "TUV",
+        "ISO_A3_EH": "TUV",
+        "LABEL_X": "179.209587",
+        "LABEL_Y": "-8.513717",
+        "NAME": "Tuvalu",
+        "NAME_EN": "Tuvalu",
+        "NE_ID": "1159321333",
+        "SOVEREIGNT": "Tuvalu",
+        "SOV_A3": "TUV",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q672"
+      },
+      "id": "ne_10m_admin_0_countries:238",
+      "ordinal": 238,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "MDV",
+        "ADMIN": "Maldives",
+        "GEOUNIT": "Maldives",
+        "GU_A3": "MDV",
+        "ISO_A3": "MDV",
+        "ISO_A3_EH": "MDV",
+        "LABEL_X": "73.507554",
+        "LABEL_Y": "4.174441",
+        "NAME": "Maldives",
+        "NAME_EN": "Maldives",
+        "NE_ID": "1159321053",
+        "SOVEREIGNT": "Maldives",
+        "SOV_A3": "MDV",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q826"
+      },
+      "id": "ne_10m_admin_0_countries:239",
+      "ordinal": 239,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "SAH",
+        "ADMIN": "Western Sahara",
+        "GEOUNIT": "Western Sahara",
+        "GU_A3": "SAH",
+        "ISO_A3": "ESH",
+        "ISO_A3_EH": "ESH",
+        "LABEL_X": "-12.630304",
+        "LABEL_Y": "23.967592",
+        "NAME": "W. Sahara",
+        "NAME_EN": "Western Sahara",
+        "NE_ID": "1159321223",
+        "SOVEREIGNT": "Western Sahara",
+        "SOV_A3": "SAH",
+        "TYPE": "Indeterminate",
+        "WIKIDATAID": "Q6250"
+      },
+      "id": "ne_10m_admin_0_countries:28",
+      "ordinal": 28,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "KOS",
+        "ADMIN": "Kosovo",
+        "GEOUNIT": "Kosovo",
+        "GU_A3": "KOS",
+        "ISO_A3": "-99",
+        "ISO_A3_EH": "-99",
+        "LABEL_X": "20.860719",
+        "LABEL_Y": "42.593587",
+        "NAME": "Kosovo",
+        "NAME_EN": "Kosovo",
+        "NE_ID": "1159321007",
+        "SOVEREIGNT": "Kosovo",
+        "SOV_A3": "KOS",
+        "TYPE": "Disputed",
+        "WIKIDATAID": "Q1246"
+      },
+      "id": "ne_10m_admin_0_countries:65",
+      "ordinal": 65,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "DNK",
+        "ADMIN": "Denmark",
+        "GEOUNIT": "Denmark",
+        "GU_A3": "DNK",
+        "ISO_A3": "DNK",
+        "ISO_A3_EH": "DNK",
+        "LABEL_X": "9.018163",
+        "LABEL_Y": "55.966965",
+        "NAME": "Denmark",
+        "NAME_EN": "Denmark",
+        "NE_ID": "1159320547",
+        "SOVEREIGNT": "Denmark",
+        "SOV_A3": "DN1",
+        "TYPE": "Country",
+        "WIKIDATAID": "Q35"
+      },
+      "id": "ne_10m_admin_0_countries:71",
+      "ordinal": 71,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "LIE",
+        "ADMIN": "Liechtenstein",
+        "GEOUNIT": "Liechtenstein",
+        "GU_A3": "LIE",
+        "ISO_A3": "LIE",
+        "ISO_A3_EH": "LIE",
+        "LABEL_X": "9.559439",
+        "LABEL_Y": "47.111405",
+        "NAME": "Liechtenstein",
+        "NAME_EN": "Liechtenstein",
+        "NE_ID": "1159321021",
+        "SOVEREIGNT": "Liechtenstein",
+        "SOV_A3": "LIE",
+        "TYPE": "Sovereign country",
+        "WIKIDATAID": "Q347"
+      },
+      "id": "ne_10m_admin_0_countries:95",
+      "ordinal": 95,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "FRA",
+        "ADMIN": "France",
+        "GEOUNIT": "French Guiana",
+        "GU_A3": "GUF",
+        "ISO_A3": "GUF",
+        "ISO_A3_EH": "GUF",
+        "LABEL_X": "-53.068349",
+        "LABEL_Y": "3.999223",
+        "NAME": "French Guiana",
+        "NAME_EN": "French Guiana",
+        "NE_ID": "1159320655",
+        "SOVEREIGNT": "France",
+        "SOV_A3": "FR1",
+        "TYPE": "Geo unit",
+        "WIKIDATAID": "Q3769"
+      },
+      "id": "ne_10m_admin_0_map_units:24",
+      "ordinal": 24,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "NZL",
+        "ADMIN": "New Zealand",
+        "GEOUNIT": "Tokelau",
+        "GU_A3": "TKL",
+        "ISO_A3": "TKL",
+        "ISO_A3_EH": "TKL",
+        "LABEL_X": "-172.486290",
+        "LABEL_Y": "-8.561824",
+        "NAME": "Tokelau",
+        "NAME_EN": "Tokelau",
+        "NE_ID": "1159321137",
+        "SOVEREIGNT": "New Zealand",
+        "SOV_A3": "NZ1",
+        "TYPE": "Geo unit",
+        "WIKIDATAID": "Q36823"
+      },
+      "id": "ne_10m_admin_0_map_units:283",
+      "ordinal": 283,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "PGA",
+        "ADMIN": "Spratly Islands",
+        "GEOUNIT": "Spratly Islands",
+        "GU_A3": "PGA",
+        "ISO_A3": "-99",
+        "ISO_A3_EH": "-99",
+        "LABEL_X": "115.819560",
+        "LABEL_Y": "10.729540",
+        "NAME": "Spratly Is.",
+        "NAME_EN": "Wake Island",
+        "NE_ID": "1159321165",
+        "SOVEREIGNT": "Spratly Islands",
+        "SOV_A3": "PGA",
+        "TYPE": "Indeterminate",
+        "WIKIDATAID": "Q43296"
+      },
+      "id": "ne_10m_admin_0_map_units:287",
+      "ordinal": 287,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "fields": {
+        "ADM0_A3": "UMI",
+        "ADMIN": "United States Minor Outlying Islands",
+        "GEOUNIT": "Wake Atoll",
+        "GU_A3": "WQI",
+        "ISO_A3": "-99",
+        "ISO_A3_EH": "USA",
+        "LABEL_X": "166.644535",
+        "LABEL_Y": "19.285663",
+        "NAME": "Wake Atoll",
+        "NAME_EN": "Wake Island",
+        "NE_ID": "1159321391",
+        "SOVEREIGNT": "United States of America",
+        "SOV_A3": "US1",
+        "TYPE": "Geo unit",
+        "WIKIDATAID": "Q43296"
+      },
+      "id": "ne_10m_admin_0_map_units:288",
+      "ordinal": 288,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "PRK",
+        "CAPALT": "0",
+        "FEATURECLA": "Populated place",
+        "NAME": "Pyongsan",
+        "NAMEASCII": "Pyongsan",
+        "NAME_EN": "Pyongyang",
+        "NE_ID": "1159139161",
+        "SOV_A3": "PRK",
+        "WIKIDATAID": "Q18808"
+      },
+      "id": "ne_10m_populated_places:3295",
+      "ordinal": 3295,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "IDN",
+        "CAPALT": "0",
+        "FEATURECLA": "Populated place",
+        "NAME": "Kuta",
+        "NAMEASCII": "Kuta",
+        "NAME_EN": "Denpasar",
+        "NE_ID": "1159139827",
+        "SOV_A3": "IDN",
+        "WIKIDATAID": "Q11506"
+      },
+      "id": "ne_10m_populated_places:3440",
+      "ordinal": 3440,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "BOL",
+        "CAPALT": "0",
+        "FEATURECLA": "Populated place",
+        "NAME": "Ascension",
+        "NAMEASCII": "Ascension",
+        "NAME_EN": "Ascensión",
+        "NE_ID": "1159144877",
+        "SOV_A3": "BOL",
+        "WIKIDATAID": "Q2450325"
+      },
+      "id": "ne_10m_populated_places:4544",
+      "ordinal": 4544,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "1",
+        "ADM0_A3": "LIE",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-0 capital",
+        "NAME": "Vaduz",
+        "NAMEASCII": "Vaduz",
+        "NAME_EN": "Vaduz",
+        "NE_ID": "1159146061",
+        "SOV_A3": "LIE",
+        "WIKIDATAID": "Q1844"
+      },
+      "id": "ne_10m_populated_places:4812",
+      "ordinal": 4812,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "IDN",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-1 capital",
+        "NAME": "Denpasar",
+        "NAMEASCII": "Denpasar",
+        "NAME_EN": "Denpasar",
+        "NE_ID": "1159146905",
+        "SOV_A3": "IDN",
+        "WIKIDATAID": "Q11506"
+      },
+      "id": "ne_10m_populated_places:5187",
+      "ordinal": 5187,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "CHN",
+        "CAPALT": "0",
+        "FEATURECLA": "Populated place",
+        "NAME": "Jianmen",
+        "NAMEASCII": "Jianmen",
+        "NAME_EN": "Jingmen City",
+        "NE_ID": "1159146993",
+        "SOV_A3": "CHN",
+        "WIKIDATAID": "Q71323"
+      },
+      "id": "ne_10m_populated_places:5226",
+      "ordinal": 5226,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "CHN",
+        "CAPALT": "0",
+        "FEATURECLA": "Populated place",
+        "NAME": "Baicheng",
+        "NAMEASCII": "Baicheng",
+        "NAME_EN": "Baicheng",
+        "NE_ID": "1159147121",
+        "SOV_A3": "CHN",
+        "WIKIDATAID": "Q92381"
+      },
+      "id": "ne_10m_populated_places:5283",
+      "ordinal": 5283,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "POL",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-1 capital",
+        "NAME": "Łódź",
+        "NAMEASCII": "Lodz",
+        "NAME_EN": "Łódź",
+        "NE_ID": "1159148225",
+        "SOV_A3": "POL",
+        "WIKIDATAID": "Q580"
+      },
+      "id": "ne_10m_populated_places:5773",
+      "ordinal": 5773,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "SSD",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-0 capital",
+        "NAME": "Juba",
+        "NAMEASCII": "Juba",
+        "NAME_EN": "Juba",
+        "NE_ID": "1159149449",
+        "SOV_A3": "SSD",
+        "WIKIDATAID": "Q1947"
+      },
+      "id": "ne_10m_populated_places:6317",
+      "ordinal": 6317,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "CHN",
+        "CAPALT": "0",
+        "FEATURECLA": "Populated place",
+        "NAME": "Bose",
+        "NAMEASCII": "Bose",
+        "NAME_EN": "Baicheng",
+        "NE_ID": "1159149783",
+        "SOV_A3": "CHN",
+        "WIKIDATAID": "Q92381"
+      },
+      "id": "ne_10m_populated_places:6466",
+      "ordinal": 6466,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "1",
+        "ADM0_A3": "ISL",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-0 capital",
+        "NAME": "Reykjavík",
+        "NAMEASCII": "Reykjavik",
+        "NAME_EN": "Reykjavík",
+        "NE_ID": "1159150587",
+        "SOV_A3": "ISL",
+        "WIKIDATAID": "Q1764"
+      },
+      "id": "ne_10m_populated_places:6823",
+      "ordinal": 6823,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "0",
+        "ADM0_A3": "GRL",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-0 region capital",
+        "NAME": "Nuuk",
+        "NAMEASCII": "Nuuk",
+        "NAME_EN": "Nuuk",
+        "NE_ID": "1159150939",
+        "SOV_A3": "DNK",
+        "WIKIDATAID": "Q226"
+      },
+      "id": "ne_10m_populated_places:6980",
+      "ordinal": 6980,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "fields": {
+        "ADM0CAP": "1",
+        "ADM0_A3": "PRK",
+        "CAPALT": "0",
+        "FEATURECLA": "Admin-0 capital",
+        "NAME": "Pyongyang",
+        "NAMEASCII": "Pyongyang",
+        "NAME_EN": "Pyongyang",
+        "NE_ID": "1159151303",
+        "SOV_A3": "PRK",
+        "WIKIDATAID": "Q18808"
+      },
+      "id": "ne_10m_populated_places:7141",
+      "ordinal": 7141,
+      "source": "ne_10m_populated_places"
+    }
+  ],
+  "schema": 1,
+  "sources": [
+    {
+      "id": "ne_10m_admin_0_countries",
+      "lock": "sources.lock.json",
+      "sha256": "ce1ac7036499a0edd641fbc093cd209a98f96a49d2eca8480aaacad35138a7f6"
+    },
+    {
+      "id": "ne_10m_admin_0_map_units",
+      "lock": "sources.lock.json",
+      "sha256": "45bebe2aaf8bf42b9daf4428594925bcb11eabd32fe9dc6e0acf681438053eb5"
+    },
+    {
+      "id": "ne_10m_populated_places",
+      "lock": "sources.lock.json",
+      "sha256": "cd149186f03d2603e0410da399b980a4357d0ac32d3a2305a49ed3dffcc41d7b"
+    }
+  ],
+  "status": "research-prototype"
+}

@@ -1,0 +1,44 @@
+{
+  "status": "Fixture allocation registry only; IDs do not approve political classifications or joins. Never recycle an allocated ID.",
+  "political": {
+    "SMR": "gcat:000001",
+    "VAT": "gcat:000002",
+    "MCO": "gcat:000003",
+    "AND": "gcat:000004",
+    "LIE": "gcat:000005",
+    "KIR": "gcat:000006",
+    "TUV": "gcat:000007",
+    "MDV": "gcat:000008",
+    "GRL": "gcat:000009",
+    "DNK": "gcat:000010",
+    "PSX": "gcat:000011",
+    "ISR": "gcat:000012",
+    "SOL": "gcat:000013",
+    "KOS": "gcat:000014",
+    "SAH": "gcat:000015",
+    "TWN": "gcat:000016",
+    "GNQ": "gcat:000017",
+    "SDS": "gcat:000018"
+  },
+  "places": {
+    "Pyongsan": "gcat:000101",
+    "Pyongyang": "gcat:000102",
+    "Bose": "gcat:000103",
+    "Baicheng": "gcat:000104",
+    "Kuta": "gcat:000105",
+    "Denpasar": "gcat:000106",
+    "Jianmen": "gcat:000107",
+    "Ascension": "gcat:000108",
+    "Reykjavík": "gcat:000109",
+    "Łódź": "gcat:000110",
+    "Nuuk": "gcat:000111",
+    "Vaduz": "gcat:000112",
+    "Juba": "gcat:000113"
+  },
+  "map_units": {
+    "PGA": "gcat:000201",
+    "WQI": "gcat:000202",
+    "GUF": "gcat:000203",
+    "TKL": "gcat:000204"
+  }
+}

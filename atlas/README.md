@@ -92,3 +92,26 @@ python3 atlas/research/reproduce_rasters.py /tmp/globe-atlas-rebuild \
 
 Without `--run`, the command verifies retained outputs/logs and their production matches. The
 quarter-degree file is a research output only and is deliberately absent from edition recipes.
+
+## Identity contract and geographic selection checkpoint
+
+The [small canonical catalog prototype](catalog/README.md) keeps project entity IDs, locked source
+records, attributed/time-qualified assertions, names and representative points separate. Every
+geographic assertion in the fixture is unreviewed. See the [checkpoint and acceptance gaps](reports/identity-selection-checkpoint.md)
+and the separate [proposed memory-ledger interface](reports/memory-ledger-design.md).
+
+```sh
+python3 atlas/research/build_catalog_fixture.py CACHE /tmp/catalog.json
+cmp atlas/catalog/fixture.json /tmp/catalog.json
+python3 atlas/research/catalog.py atlas/catalog/fixture.json --cache CACHE
+python3 atlas/research/test_catalog.py -v
+python3 atlas/research/test_selection.py -v
+python3 atlas/research/selection.py CACHE /tmp/selection-a /tmp/selection-a.json
+python3 atlas/research/selection.py CACHE /tmp/selection-b /tmp/selection-b.json
+diff -q /tmp/selection-a.json /tmp/selection-b.json
+diff -qr /tmp/selection-a /tmp/selection-b
+```
+
+`selection.py` compares equal-angle, equal-area and an equal-count distance-supplemented candidate
+using actual selected rosters. The committed summary includes differences and measured payloads;
+full generated catalogs stay outside Git. No production or experimental edition recipe is changed.
