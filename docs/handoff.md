@@ -20,6 +20,10 @@
 - CI and release: inspect live issue status, especially [#7](https://github.com/jackwillis/globe/issues/7) (previously closed), OS 9 acceptance [#8](https://github.com/jackwillis/globe/issues/8), G4 performance [#9](https://github.com/jackwillis/globe/issues/9), memory [#10](https://github.com/jackwillis/globe/issues/10), packaging [#47](https://github.com/jackwillis/globe/issues/47) and release [#12](https://github.com/jackwillis/globe/issues/12).
 - **Digital-first release decision:** v0.1 is now the Classic Atlas, favoring a tested StuffIt archive with MacBinary/HFS alternatives. A physical 1.44 MB floppy is **paused as a release target** but continues as a size/build check. Later external-pack/full Classic edition [#48](https://github.com/jackwillis/globe/issues/48)–[#51](https://github.com/jackwillis/globe/issues/51) is separately scoped. No v0.1 networking.
 
+## Parallel atlas production (direction, not a new automatic task)
+
+The owner has endorsed **two projects in one repository**: Globe's interactive runtime and a transparent, reproducible atlas-production pipeline. See [ADR 0003](adr/0003-atlas-production-boundary.md), [epic #52](https://github.com/jackwillis/globe/issues/52), and first [research issue #53](https://github.com/jackwillis/globe/issues/53). City selection, microstates, rivers/lakes, geographic identity and QA are under data-side review. No production pack replacement, new runtime loader, or independent format redesign is authorized by this note. Keep any assigned text/render work compatible with future identity-rich catalog data without guessing its final schema. Coordinate source files and worktrees with Claude.
+
 ## Current architecture: preserve before expanding
 
 - **Portable application state:** `include/globe/app.hpp`, `src/core/app.cpp` use `Model`, typed `Msg`, deterministic `update(Model&, Msg)`, and declarative `Effects`. Clock values enter via messages; input/camera generations and refine level completion govern cancellation. A small mutable model behind one update boundary is intentional; don't force pure immutable copies or a new state-management framework.
