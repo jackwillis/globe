@@ -5,6 +5,8 @@
 // platform adapter's job; this type only owns native-endian 16-bit pixel values.
 #pragma once
 
+#include "globe/memory_ledger.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -24,7 +26,10 @@ class Framebuffer {
     static constexpr int kMaxDimension = 4096;
 
     // Fails (nullopt) for a dimension outside 1..kMaxDimension or if allocation fails.
-    static std::optional<Framebuffer> create(int width, int height);
+    // Optional accounting borrows a stable ledger which must outlive this framebuffer. Passing
+    // nullptr preserves uninstrumented behavior; category distinguishes primary/line workspaces.
+    static std::optional<Framebuffer> create(int width, int height, MemoryLedger* ledger = nullptr,
+                                             MemoryCategory category = MemoryCategory::Framebuffer);
 
     Framebuffer(Framebuffer&&) noexcept = default;
     Framebuffer& operator=(Framebuffer&&) noexcept = default;
@@ -67,14 +72,20 @@ class Framebuffer {
 
   private:
     Framebuffer(int width, int height, std::unique_ptr<Rgb565[]> pixels,
-                std::unique_ptr<std::uint8_t[]> coverage)
-        : width_(width), height_(height), clip_end_(height), pixels_(std::move(pixels)),
-          coverage_(std::move(coverage)) {}
+                std::unique_ptr<std::uint8_t[]> coverage, MemoryCharge pixels_charge,
+                MemoryCharge coverage_charge)
+        : width_(width), height_(height), clip_end_(height),
+          pixels_charge_(std::move(pixels_charge)), coverage_charge_(std::move(coverage_charge)),
+          pixels_(std::move(pixels)), coverage_(std::move(coverage)) {}
 
     int width_;
     int height_;
     int clip_first_ = 0;
     int clip_end_;
+    // Tickets precede payload owners so ordinary destruction frees storage before releasing its
+    // accounting. Default moves transfer tickets without reacquiring allocation events.
+    MemoryCharge pixels_charge_;
+    MemoryCharge coverage_charge_;
     std::unique_ptr<Rgb565[]> pixels_;
     std::unique_ptr<std::uint8_t[]> coverage_;
     Coverage coverage_mode_ = Coverage::Off;

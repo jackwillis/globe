@@ -16,3 +16,18 @@ if(LEDGER_SANITIZE)
 endif()
 enable_testing()
 add_test(NAME memory_ledger_primitive COMMAND test_memory_ledger)
+
+add_executable(test_framebuffer_ledger
+  "${GLOBE_ROOT}/tests/test_framebuffer_ledger.cpp"
+  "${GLOBE_ROOT}/src/render/framebuffer.cpp")
+target_include_directories(test_framebuffer_ledger PRIVATE "${GLOBE_ROOT}/include")
+target_compile_features(test_framebuffer_ledger PRIVATE cxx_std_20)
+# Existing framebuffer drawing code mixes validated nonnegative ints with size_t. Keep its
+# established signedness warnings separate from this ownership/accounting change.
+target_compile_options(test_framebuffer_ledger PRIVATE
+  -fno-exceptions -fno-rtti -Wall -Wextra -Wpedantic -Wconversion -Wno-sign-conversion -Wshadow -Werror)
+if(LEDGER_SANITIZE)
+  target_compile_options(test_framebuffer_ledger PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+  target_link_options(test_framebuffer_ledger PRIVATE -fsanitize=address,undefined)
+endif()
+add_test(NAME framebuffer_ledger COMMAND test_framebuffer_ledger)

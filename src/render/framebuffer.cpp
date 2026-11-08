@@ -7,20 +7,33 @@
 
 namespace globe {
 
-std::optional<Framebuffer> Framebuffer::create(int width, int height) {
+std::optional<Framebuffer> Framebuffer::create(int width, int height, MemoryLedger* ledger,
+                                               MemoryCategory category) {
     if (width < 1 || height < 1 || width > kMaxDimension || height > kMaxDimension) {
         return std::nullopt;
     }
     const std::size_t count = static_cast<std::size_t>(width) * static_cast<std::size_t>(height);
+    MemoryCharge pixels_charge, coverage_charge;
     std::unique_ptr<Rgb565[]> pixels(new (std::nothrow) Rgb565[count]());
     if (!pixels) {
+        if (ledger != nullptr)
+            ledger->allocation_failed(category);
         return std::nullopt;
     }
-    std::unique_ptr<std::uint8_t[]> coverage(
-        new (std::nothrow) std::uint8_t[static_cast<std::size_t>((width + 7) / 8) * height]());
-    if (!coverage)
+    if (ledger != nullptr)
+        pixels_charge = MemoryCharge(*ledger, category, count * sizeof(Rgb565));
+    const auto coverage_bytes =
+        static_cast<std::size_t>((width + 7) / 8) * static_cast<std::size_t>(height);
+    std::unique_ptr<std::uint8_t[]> coverage(new (std::nothrow) std::uint8_t[coverage_bytes]());
+    if (!coverage) {
+        if (ledger != nullptr)
+            ledger->allocation_failed(category);
         return std::nullopt;
-    return Framebuffer(width, height, std::move(pixels), std::move(coverage));
+    }
+    if (ledger != nullptr)
+        coverage_charge = MemoryCharge(*ledger, category, coverage_bytes);
+    return Framebuffer(width, height, std::move(pixels), std::move(coverage),
+                       std::move(pixels_charge), std::move(coverage_charge));
 }
 
 void Framebuffer::clip_rows(int first, int end) {

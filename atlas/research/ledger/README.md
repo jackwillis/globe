@@ -6,9 +6,12 @@ checked byte arithmetic, failure events, snapshots, peak-window reset and move-o
 ownership. `MemoryCharge` owns an accounting entry, **not** the allocation itself. The ledger must
 outlive every ticket and remain at a stable address. One event-loop owner; no synchronization.
 
-No allocation site, renderer, pack format, cache guard, platform adapter or main build file is
-changed. This standalone CMake project gives the primitive a reproducible test without editing
-Claude's shared build integration. Root Globe CTest does not yet register this new test.
+`Framebuffer::create(width, height, ledger, category)` now optionally reports its pixel and coverage
+allocations and failures. Existing two-argument callers remain uninstrumented. Charges follow the
+framebuffer's moves/lifetime, with no extra heap allocation or drawing-time allocation. No platform
+adapter, renderer algorithm, pack format, cache guard or root build file is changed. This standalone
+CMake project registers two tests without editing Claude's shared build integration; root Globe
+CTest does not yet register these new tests.
 
 ```sh
 cmake -S atlas/research/ledger -B /tmp/globe-ledger-build -G Ninja
@@ -21,7 +24,7 @@ Use `-DCMAKE_CXX_COMPILER=clang++` in a separate build directory for Clang. Use
 LeakSanitizer can fail under ptrace; `ASAN_OPTIONS=detect_leaks=0 ctest ...` permits the separate
 ASan/UBSan checks, and must be reported as leak detection disabled.
 
-The C++ test verifies overlapping/disjoint category peaks, reset while live, zero-byte events,
+The primitive C++ test verifies overlapping/disjoint category peaks, reset while live, zero-byte events,
 partial construction failure, correct event counts, invalid categories, underflow, byte overflow,
 move construction/assignment/self-move, cross-ledger moves and idempotent release. It compares
 10,000 interleaved operations with a separate fixed-array reference model. Independent global
@@ -37,13 +40,29 @@ count requested payload, excluding allocator metadata, RSS, inline arrays and em
 Failure event-counter overflow is checked in code; exhausting uint64 event counters is not exercised
 by the bounded tests. Checked allocation-size multiplication belongs at future allocation sites.
 
-On the tested Linux x86-64 ABI the ledger is 248 inline bytes and a ticket is 24 inline bytes.
-Those are object-size measurements, not added heap allocations or verified Classic sizes.
-Both PowerPC and m68k Retro68 compilers accept the final header/test translation unit in offline
-compile-only checks. No cross-target test executable or hardware was run; 68k runtime support is
-not claimed.
+The framebuffer test independently observes exact requested allocations, injects failure at each
+of the two allocations, verifies partial cleanup and old-buffer retention during replacement failure,
+checks same-/cross-ledger moves, compares pixels with an uninstrumented buffer, and observes no
+allocation during 10,000 drawing/measurement iterations. A failing accounting charge flags the
+ledger without changing allocation success. The factory counts both arrays; the framebuffer object
+itself and ledger/ticket inline storage are separate metadata costs.
 
-Next scoped step: coordinate root-build registration and instrument framebuffer pixels/coverage
-plus one scene constructor, with owner tickets and failure injection. Keep current guards until
+| ABI / evidence | Ledger | Ticket | Framebuffer before → after | Pointer |
+| --- | ---: | ---: | ---: | ---: |
+| Linux x86-64 / executed sizeof | 248 | 24 | 40 → 88 | 8 |
+| Retro68 PowerPC GCC 16.1.0 / assembly constants | 244 | 16 | 28 → 60 | 4 |
+| Retro68 m68k GCC 16.1.0 / assembly constants | 242 | 14 | 26 → 54 | 4 |
+
+Values are bytes of inline object storage. `abi_probe.cpp` exposes compile-time constants for
+assembly inspection (compile with `-std=c++20 -Iinclude -S`; compare the old framebuffer header at
+base `52ccb33` for the baseline). These are not allocator overhead/partition measurements. Both
+Retro68 compilers also accept the final framebuffer/ledger test translation units and framebuffer
+implementation offline. No target executable or hardware was run; 68k runtime support is not claimed.
+The standalone framebuffer target suppresses preexisting signedness warnings in drawing code;
+the primitive retains strict conversion warnings. No unrelated drawing-loop cleanup was made.
+
+Next scoped step: coordinate root-build registration and a stable ledger owner in each frontend,
+then instrument a scene constructor with owner tickets and failure injection. The framebuffer
+capability is present but no frontend passes a ledger yet. Keep current guards until
 all relevant allocations are counted and estimates reconciled. The primitive alone does not
 complete #55/#59, and supplies no degradation (#56), eviction (#57) or CI budget (#60).

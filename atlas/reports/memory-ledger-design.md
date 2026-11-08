@@ -2,12 +2,16 @@
 
 **Continuation:** Jack accepted the research checkpoint and authorized both follow-ups. The first
 primitive is now implemented and independently tested; see [the standalone ledger project](../research/ledger/README.md).
-The original proposal below remains the basis; allocation-site integration and guards are unchanged.
+Optional framebuffer pixel/coverage instrumentation and failure-injection tests now exercise real
+allocation lifetimes. Frontend wiring and guards remain unchanged. The original proposal below is
+the design basis; see the continuation handoff for current implementation scope.
 
 Research design, not an implemented ledger or budget decision. Based on committed runtime
 `52ccb33`, inspected on Linux x86-64. Atlas catalog/selection work changes no allocation path.
-The owner's main worktree has unfinished renderer phase work; this session deliberately avoids
-shared renderer headers, platform files and CMake integration.
+The owner's main worktree has unfinished renderer phase work. The initial proposal avoided shared
+renderer headers, platform files and CMake integration; the continuation adds only optional
+framebuffer accounting in its isolated branch, leaving `render.hpp`/`render.cpp` WIP and root CMake
+untouched.
 
 ## Counted quantity and ownership
 
