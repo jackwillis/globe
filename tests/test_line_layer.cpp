@@ -123,7 +123,8 @@ int main() {
     if (other && view) {
         RefinementJob old(*view, *scene, kDefaultPalette, Layers{}, {1.5, true}, 9, &*terrain);
         old.step(*fb, 9, 1);
-        RefinementJob independent(*view, *scene, kDefaultPalette, Layers{}, {1.5, true}, 9, &*other);
+        RefinementJob independent(*view, *scene, kDefaultPalette, Layers{}, {1.5, true}, 9,
+                                  &*other);
         CHECK(old.step(*fb, 9, 1).work_units == 1 && old.active());
         RefinementJob same(*view, *scene, kDefaultPalette, Layers{}, {1.5, true}, 9, &*terrain);
         CHECK(old.step(*fb, 9, 1).work_units == 0 && !old.active());

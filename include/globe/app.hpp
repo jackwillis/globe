@@ -197,7 +197,7 @@ constexpr std::uint64_t kPickDelayMs = kDoubleClickMs;
 // is character 27.
 struct KeyBinding {
     enum class Overlay : std::uint8_t { Nothing, Night, Measure, Palette };
-    std::optional<Command> command;  // sent through update()
+    std::optional<Command> command;     // sent through update()
     Overlay overlay = Overlay::Nothing; // an overlay or window the front end handles itself
 };
 KeyBinding binding_for_char(int ch);

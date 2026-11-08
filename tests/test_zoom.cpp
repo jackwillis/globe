@@ -98,7 +98,7 @@ void test_refine_over_preview() {
             return;
         RenderQuality q{1.5, true, 0, TerrainStyle::Map};
         q.lines_first = true;
-            // 1. A settled frame, snapshotted before its lines go on.
+        // 1. A settled frame, snapshotted before its lines go on.
         RefinementJob first(*before, *scene, kDefaultPalette, layers, q, 1, &*terrain);
         first.set_snapshot(&*cache);
         while (first.active())
