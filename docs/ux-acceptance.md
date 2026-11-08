@@ -73,3 +73,10 @@ turn 23 ms, step 9 ms; Classic under Tiger is much slower than bare OS 9, so the
 comparable), and the menu bar showed File, Edit and View (plus the Help menu Classic adds). No input
 can be sent remotely, so steps 1 to 11 above are all still open: menu tracking, check marks, Cmd keys
 and the About window were **not** exercised. The instance was left running.
+
+**Observed after the smoke test (owner at the console, 2026-11-08):** the Tiger pointer stopped
+responding for a while, then recovered, but the Globe window could not be closed. Classic was
+ended by killing `TruBlueEnvironment` with the owner's approval. Cause unknown: the owner did not
+report whether menus, Cmd-Q or the close box had worked first, and the Globe build under test was
+`18b08b5`. Re-test the menus and Quit on a fresh Classic launch, and on bare OS 9, before treating
+this as a Classic artifact; a hang in `MenuSelect`/`MenuKey` handling is still possible.
