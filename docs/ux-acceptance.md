@@ -63,3 +63,13 @@ bytes `.bin`); the resources are about 1 KB; no change to the SIZE partition.
 9. About Globe opens an information window with the license line; the data credits are #11.
 10. The cursor is the arrow over the menu bar; no stale hand afterward.
 11. Compare Tiger Classic and bare OS 9 (the Apple menu differs).
+
+### Tiger Classic smoke test, 2026-11-08 (not bare OS 9)
+
+Build `18b08b5` (`GlobeFloppy` 546,172 byte application, Retro68 PowerPC), pushed as
+`/tmp/globe-menubar-18b08b5.dsk` and copied to `/tmp/globe-menubar-ux/` on maul (Mac OS X 10.4.11,
+Classic). It launched, rendered Map with the title-bar timing (125 bands, 2748 ms, copy 890 ms,
+turn 23 ms, step 9 ms; Classic under Tiger is much slower than bare OS 9, so these are not
+comparable), and the menu bar showed File, Edit and View (plus the Help menu Classic adds). No input
+can be sent remotely, so steps 1 to 11 above are all still open: menu tracking, check marks, Cmd keys
+and the About window were **not** exercised. The instance was left running.
