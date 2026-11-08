@@ -1,0 +1,4568 @@
+{
+  "country_legacy_changes": [
+    {
+      "legacy": "Curacao",
+      "source": "Curaçao"
+    },
+    {
+      "legacy": "Sao Tome and Principe",
+      "source": "São Tomé and Principe"
+    }
+  ],
+  "encoding_profiles": {
+    "ascii": {
+      "examples": [
+        {
+          "id": "ne:place:1159112935",
+          "name": "Tây Ninh"
+        },
+        {
+          "id": "ne:place:1159112975",
+          "name": "Bắc Kạn"
+        },
+        {
+          "id": "ne:place:1159112987",
+          "name": "Lạng Sơn"
+        },
+        {
+          "id": "ne:place:1159113001",
+          "name": "Sơn La"
+        },
+        {
+          "id": "ne:place:1159113019",
+          "name": "Tuyên Quang"
+        },
+        {
+          "id": "ne:place:1159113041",
+          "name": "Yên Bái"
+        },
+        {
+          "id": "ne:place:1159113073",
+          "name": "Thái Bình"
+        },
+        {
+          "id": "ne:place:1159113089",
+          "name": "Tuy Hòa"
+        },
+        {
+          "id": "ne:place:1159113119",
+          "name": "Đông Hà"
+        },
+        {
+          "id": "ne:place:1159113135",
+          "name": "Cao Lãnh"
+        },
+        {
+          "id": "ne:place:1159113175",
+          "name": "Vĩnh Long"
+        },
+        {
+          "id": "ne:place:1159113189",
+          "name": "Cao Bằng"
+        },
+        {
+          "id": "ne:place:1159113253",
+          "name": "Santa Bárbara"
+        },
+        {
+          "id": "ne:place:1159113299",
+          "name": "Yuscarán"
+        },
+        {
+          "id": "ne:place:1159113315",
+          "name": "Jérémie"
+        },
+        {
+          "id": "ne:place:1159113361",
+          "name": "Fort-Liberté"
+        },
+        {
+          "id": "ne:place:1159113387",
+          "name": "Kırklareli"
+        },
+        {
+          "id": "ne:place:1159113471",
+          "name": "Kırşehir"
+        },
+        {
+          "id": "ne:place:1159113485",
+          "name": "Nevşehir"
+        },
+        {
+          "id": "ne:place:1159113575",
+          "name": "Bingöl"
+        },
+        {
+          "id": "ne:place:1159113633",
+          "name": "Çankırı"
+        },
+        {
+          "id": "ne:place:1159113643",
+          "name": "Niğde"
+        },
+        {
+          "id": "ne:place:1159113677",
+          "name": "Gümüşhane"
+        },
+        {
+          "id": "ne:place:1159114055",
+          "name": "Veszprém"
+        },
+        {
+          "id": "ne:place:1159114091",
+          "name": "Tatabánya"
+        },
+        {
+          "id": "ne:place:1159114109",
+          "name": "Szekszárd"
+        },
+        {
+          "id": "ne:place:1159114123",
+          "name": "Salgótarján"
+        },
+        {
+          "id": "ne:place:1159114145",
+          "name": "Békéscsaba"
+        },
+        {
+          "id": "ne:place:1159114265",
+          "name": "Târgu Jiu"
+        },
+        {
+          "id": "ne:place:1159114313",
+          "name": "Târgoviște"
+        }
+      ],
+      "unrepresentable_count": 696
+    },
+    "iso8859-1": {
+      "examples": [
+        {
+          "id": "ne:place:1159112975",
+          "name": "Bắc Kạn"
+        },
+        {
+          "id": "ne:place:1159112987",
+          "name": "Lạng Sơn"
+        },
+        {
+          "id": "ne:place:1159113001",
+          "name": "Sơn La"
+        },
+        {
+          "id": "ne:place:1159113119",
+          "name": "Đông Hà"
+        },
+        {
+          "id": "ne:place:1159113175",
+          "name": "Vĩnh Long"
+        },
+        {
+          "id": "ne:place:1159113189",
+          "name": "Cao Bằng"
+        },
+        {
+          "id": "ne:place:1159113387",
+          "name": "Kırklareli"
+        },
+        {
+          "id": "ne:place:1159113471",
+          "name": "Kırşehir"
+        },
+        {
+          "id": "ne:place:1159113485",
+          "name": "Nevşehir"
+        },
+        {
+          "id": "ne:place:1159113633",
+          "name": "Çankırı"
+        },
+        {
+          "id": "ne:place:1159113643",
+          "name": "Niğde"
+        },
+        {
+          "id": "ne:place:1159113677",
+          "name": "Gümüşhane"
+        },
+        {
+          "id": "ne:place:1159114313",
+          "name": "Târgoviște"
+        },
+        {
+          "id": "ne:place:1159114783",
+          "name": "Bistrița"
+        },
+        {
+          "id": "ne:place:1159114819",
+          "name": "Zalău"
+        },
+        {
+          "id": "ne:place:1159114919",
+          "name": "Brăila"
+        },
+        {
+          "id": "ne:place:1159116487",
+          "name": "Dubăsari"
+        },
+        {
+          "id": "ne:place:1159118027",
+          "name": "Šibenik"
+        },
+        {
+          "id": "ne:place:1159120515",
+          "name": "Oğuz"
+        },
+        {
+          "id": "ne:place:1159127383",
+          "name": "Aydın"
+        },
+        {
+          "id": "ne:place:1159127429",
+          "name": "Muğla"
+        },
+        {
+          "id": "ne:place:1159127441",
+          "name": "Elâzığ"
+        },
+        {
+          "id": "ne:place:1159127453",
+          "name": "Kahramanmaraş"
+        },
+        {
+          "id": "ne:place:1159127659",
+          "name": "Polatlı"
+        },
+        {
+          "id": "ne:place:1159127843",
+          "name": "Buzău"
+        },
+        {
+          "id": "ne:place:1159127855",
+          "name": "Galați"
+        },
+        {
+          "id": "ne:place:1159127869",
+          "name": "Focșani"
+        },
+        {
+          "id": "ne:place:1159128241",
+          "name": "Rēzekne"
+        },
+        {
+          "id": "ne:place:1159128249",
+          "name": "Panevežys"
+        },
+        {
+          "id": "ne:place:1159128255",
+          "name": "Šiauliai"
+        }
+      ],
+      "unrepresentable_count": 108
+    },
+    "mac_roman": {
+      "examples": [
+        {
+          "id": "ne:place:1159112975",
+          "name": "Bắc Kạn"
+        },
+        {
+          "id": "ne:place:1159112987",
+          "name": "Lạng Sơn"
+        },
+        {
+          "id": "ne:place:1159113001",
+          "name": "Sơn La"
+        },
+        {
+          "id": "ne:place:1159113119",
+          "name": "Đông Hà"
+        },
+        {
+          "id": "ne:place:1159113175",
+          "name": "Vĩnh Long"
+        },
+        {
+          "id": "ne:place:1159113189",
+          "name": "Cao Bằng"
+        },
+        {
+          "id": "ne:place:1159113471",
+          "name": "Kırşehir"
+        },
+        {
+          "id": "ne:place:1159113485",
+          "name": "Nevşehir"
+        },
+        {
+          "id": "ne:place:1159113643",
+          "name": "Niğde"
+        },
+        {
+          "id": "ne:place:1159113677",
+          "name": "Gümüşhane"
+        },
+        {
+          "id": "ne:place:1159114313",
+          "name": "Târgoviște"
+        },
+        {
+          "id": "ne:place:1159114783",
+          "name": "Bistrița"
+        },
+        {
+          "id": "ne:place:1159114819",
+          "name": "Zalău"
+        },
+        {
+          "id": "ne:place:1159114919",
+          "name": "Brăila"
+        },
+        {
+          "id": "ne:place:1159116487",
+          "name": "Dubăsari"
+        },
+        {
+          "id": "ne:place:1159118027",
+          "name": "Šibenik"
+        },
+        {
+          "id": "ne:place:1159120515",
+          "name": "Oğuz"
+        },
+        {
+          "id": "ne:place:1159127429",
+          "name": "Muğla"
+        },
+        {
+          "id": "ne:place:1159127441",
+          "name": "Elâzığ"
+        },
+        {
+          "id": "ne:place:1159127453",
+          "name": "Kahramanmaraş"
+        },
+        {
+          "id": "ne:place:1159127843",
+          "name": "Buzău"
+        },
+        {
+          "id": "ne:place:1159127855",
+          "name": "Galați"
+        },
+        {
+          "id": "ne:place:1159127869",
+          "name": "Focșani"
+        },
+        {
+          "id": "ne:place:1159128241",
+          "name": "Rēzekne"
+        },
+        {
+          "id": "ne:place:1159128249",
+          "name": "Panevežys"
+        },
+        {
+          "id": "ne:place:1159128255",
+          "name": "Šiauliai"
+        },
+        {
+          "id": "ne:place:1159129491",
+          "name": "Elbląg"
+        },
+        {
+          "id": "ne:place:1159129497",
+          "name": "Inowrocław"
+        },
+        {
+          "id": "ne:place:1159130069",
+          "name": "České Budějovice"
+        },
+        {
+          "id": "ne:place:1159130353",
+          "name": "Ōtsu"
+        }
+      ],
+      "unrepresentable_count": 101
+    }
+  },
+  "legacy_changes": [
+    {
+      "id": "ne:place:1159112935",
+      "legacy_ascii": "Tay Ninh",
+      "source": "Tây Ninh",
+      "source_ascii": "Tay Ninh"
+    },
+    {
+      "id": "ne:place:1159112975",
+      "legacy_ascii": "Bac Kan",
+      "source": "Bắc Kạn",
+      "source_ascii": "Bac Kan"
+    },
+    {
+      "id": "ne:place:1159112987",
+      "legacy_ascii": "Lang Son",
+      "source": "Lạng Sơn",
+      "source_ascii": "Lang Son"
+    },
+    {
+      "id": "ne:place:1159113001",
+      "legacy_ascii": "Son La",
+      "source": "Sơn La",
+      "source_ascii": "Son La"
+    },
+    {
+      "id": "ne:place:1159113019",
+      "legacy_ascii": "Tuyen Quang",
+      "source": "Tuyên Quang",
+      "source_ascii": "Tuyen Quang"
+    },
+    {
+      "id": "ne:place:1159113041",
+      "legacy_ascii": "Yen Bai",
+      "source": "Yên Bái",
+      "source_ascii": "Yen Bai"
+    },
+    {
+      "id": "ne:place:1159113073",
+      "legacy_ascii": "Thai Binh",
+      "source": "Thái Bình",
+      "source_ascii": "Thai Binh"
+    },
+    {
+      "id": "ne:place:1159113089",
+      "legacy_ascii": "Tuy Hoa",
+      "source": "Tuy Hòa",
+      "source_ascii": "Tuy Hoa"
+    },
+    {
+      "id": "ne:place:1159113119",
+      "legacy_ascii": "Dong Ha",
+      "source": "Đông Hà",
+      "source_ascii": "Dong Ha"
+    },
+    {
+      "id": "ne:place:1159113135",
+      "legacy_ascii": "Cao Lanh",
+      "source": "Cao Lãnh",
+      "source_ascii": "Cao Lanh"
+    },
+    {
+      "id": "ne:place:1159113175",
+      "legacy_ascii": "Vinh Long",
+      "source": "Vĩnh Long",
+      "source_ascii": "Vinh Long"
+    },
+    {
+      "id": "ne:place:1159113189",
+      "legacy_ascii": "Cao Bang",
+      "source": "Cao Bằng",
+      "source_ascii": "Cao Bang"
+    },
+    {
+      "id": "ne:place:1159113253",
+      "legacy_ascii": "Santa Barbara",
+      "source": "Santa Bárbara",
+      "source_ascii": "Santa Barbara"
+    },
+    {
+      "id": "ne:place:1159113299",
+      "legacy_ascii": "Yuscaran",
+      "source": "Yuscarán",
+      "source_ascii": "Yuscaran"
+    },
+    {
+      "id": "ne:place:1159113315",
+      "legacy_ascii": "Jeremie",
+      "source": "Jérémie",
+      "source_ascii": "Jeremie"
+    },
+    {
+      "id": "ne:place:1159113361",
+      "legacy_ascii": "Fort-Liberte",
+      "source": "Fort-Liberté",
+      "source_ascii": "Fort-Liberte"
+    },
+    {
+      "id": "ne:place:1159113387",
+      "legacy_ascii": "Kirklareli",
+      "source": "Kırklareli",
+      "source_ascii": "Kirklareli"
+    },
+    {
+      "id": "ne:place:1159113471",
+      "legacy_ascii": "Kirsehir",
+      "source": "Kırşehir",
+      "source_ascii": "Kirsehir"
+    },
+    {
+      "id": "ne:place:1159113485",
+      "legacy_ascii": "Nevsehir",
+      "source": "Nevşehir",
+      "source_ascii": "Nevsehir"
+    },
+    {
+      "id": "ne:place:1159113575",
+      "legacy_ascii": "Bingol",
+      "source": "Bingöl",
+      "source_ascii": "Bingol"
+    },
+    {
+      "id": "ne:place:1159113633",
+      "legacy_ascii": "Cankiri",
+      "source": "Çankırı",
+      "source_ascii": "Cankiri"
+    },
+    {
+      "id": "ne:place:1159113643",
+      "legacy_ascii": "Nigde",
+      "source": "Niğde",
+      "source_ascii": "Nigde"
+    },
+    {
+      "id": "ne:place:1159113677",
+      "legacy_ascii": "Gumushane",
+      "source": "Gümüşhane",
+      "source_ascii": "Gumushane"
+    },
+    {
+      "id": "ne:place:1159114055",
+      "legacy_ascii": "Veszprem",
+      "source": "Veszprém",
+      "source_ascii": "Veszprem"
+    },
+    {
+      "id": "ne:place:1159114091",
+      "legacy_ascii": "Tatabanya",
+      "source": "Tatabánya",
+      "source_ascii": "Tatabanya"
+    },
+    {
+      "id": "ne:place:1159114109",
+      "legacy_ascii": "Szekszard",
+      "source": "Szekszárd",
+      "source_ascii": "Szekszard"
+    },
+    {
+      "id": "ne:place:1159114123",
+      "legacy_ascii": "Salgotarjan",
+      "source": "Salgótarján",
+      "source_ascii": "Salgotarjan"
+    },
+    {
+      "id": "ne:place:1159114145",
+      "legacy_ascii": "Bekescsaba",
+      "source": "Békéscsaba",
+      "source_ascii": "Bekescsaba"
+    },
+    {
+      "id": "ne:place:1159114265",
+      "legacy_ascii": "Targu Jiu",
+      "source": "Târgu Jiu",
+      "source_ascii": "Targu Jiu"
+    },
+    {
+      "id": "ne:place:1159114313",
+      "legacy_ascii": "Targoviste",
+      "source": "Târgoviște",
+      "source_ascii": "Targoviste"
+    },
+    {
+      "id": "ne:place:1159114441",
+      "legacy_ascii": "Delemont",
+      "source": "Delémont",
+      "source_ascii": "Delemont"
+    },
+    {
+      "id": "ne:place:1159114457",
+      "legacy_ascii": "Neuchatel",
+      "source": "Neuchâtel",
+      "source_ascii": "Neuchatel"
+    },
+    {
+      "id": "ne:place:1159114723",
+      "legacy_ascii": "Nykoping",
+      "source": "Nyköping",
+      "source_ascii": "Nykoping"
+    },
+    {
+      "id": "ne:place:1159114733",
+      "legacy_ascii": "Harnosand",
+      "source": "Härnösand",
+      "source_ascii": "Harnosand"
+    },
+    {
+      "id": "ne:place:1159114783",
+      "legacy_ascii": "Bistrita",
+      "source": "Bistrița",
+      "source_ascii": "Bistrita"
+    },
+    {
+      "id": "ne:place:1159114819",
+      "legacy_ascii": "Zalau",
+      "source": "Zalău",
+      "source_ascii": "Zalau"
+    },
+    {
+      "id": "ne:place:1159114919",
+      "legacy_ascii": "Braila",
+      "source": "Brăila",
+      "source_ascii": "Braila"
+    },
+    {
+      "id": "ne:place:1159115685",
+      "legacy_ascii": "Merida",
+      "source": "Mérida",
+      "source_ascii": "Merida"
+    },
+    {
+      "id": "ne:place:1159115725",
+      "legacy_ascii": "Evora",
+      "source": "Évora",
+      "source_ascii": "Evora"
+    },
+    {
+      "id": "ne:place:1159115765",
+      "legacy_ascii": "Santarem",
+      "source": "Santarém",
+      "source_ascii": "Santarem"
+    },
+    {
+      "id": "ne:place:1159115789",
+      "legacy_ascii": "Braganca",
+      "source": "Bragança",
+      "source_ascii": "Braganca"
+    },
+    {
+      "id": "ne:place:1159116103",
+      "legacy_ascii": "Baerum",
+      "source": "Bærum",
+      "source_ascii": "Baerum"
+    },
+    {
+      "id": "ne:place:1159116137",
+      "legacy_ascii": "Tonsberg",
+      "source": "Tønsberg",
+      "source_ascii": "Tonsberg"
+    },
+    {
+      "id": "ne:place:1159116487",
+      "legacy_ascii": "Dubasari",
+      "source": "Dubăsari",
+      "source_ascii": "Dubasari"
+    },
+    {
+      "id": "ne:place:1159117115",
+      "legacy_ascii": "Gabu",
+      "source": "Gabú",
+      "source_ascii": "Gabu"
+    },
+    {
+      "id": "ne:place:1159117133",
+      "legacy_ascii": "Catio",
+      "source": "Catió",
+      "source_ascii": "Catio"
+    },
+    {
+      "id": "ne:place:1159117611",
+      "legacy_ascii": "Ahuachapan",
+      "source": "Ahuachapán",
+      "source_ascii": "Ahuachapan"
+    },
+    {
+      "id": "ne:place:1159117687",
+      "legacy_ascii": "La Union",
+      "source": "La Unión",
+      "source_ascii": "La Union"
+    },
+    {
+      "id": "ne:place:1159117729",
+      "legacy_ascii": "Usulutan",
+      "source": "Usulután",
+      "source_ascii": "Usulutan"
+    },
+    {
+      "id": "ne:place:1159117969",
+      "legacy_ascii": "Cotui",
+      "source": "Cotuí",
+      "source_ascii": "Cotui"
+    },
+    {
+      "id": "ne:place:1159118027",
+      "legacy_ascii": "Sibenik",
+      "source": "Šibenik",
+      "source_ascii": "Sibenik"
+    },
+    {
+      "id": "ne:place:1159118411",
+      "legacy_ascii": "Salama",
+      "source": "Salamá",
+      "source_ascii": "Salama"
+    },
+    {
+      "id": "ne:place:1159118501",
+      "legacy_ascii": "Solola",
+      "source": "Sololá",
+      "source_ascii": "Solola"
+    },
+    {
+      "id": "ne:place:1159118521",
+      "legacy_ascii": "Totonicapan",
+      "source": "Totonicapán",
+      "source_ascii": "Totonicapan"
+    },
+    {
+      "id": "ne:place:1159118639",
+      "legacy_ascii": "Dajabon",
+      "source": "Dajabón",
+      "source_ascii": "Dajabon"
+    },
+    {
+      "id": "ne:place:1159118691",
+      "legacy_ascii": "Jimani",
+      "source": "Jimaní",
+      "source_ascii": "Jimani"
+    },
+    {
+      "id": "ne:place:1159118785",
+      "legacy_ascii": "Bani",
+      "source": "Baní",
+      "source_ascii": "Bani"
+    },
+    {
+      "id": "ne:place:1159118863",
+      "legacy_ascii": "Samana",
+      "source": "Samaná",
+      "source_ascii": "Samana"
+    },
+    {
+      "id": "ne:place:1159118885",
+      "legacy_ascii": "San Cristobal",
+      "source": "San Cristóbal",
+      "source_ascii": "San Cristobal"
+    },
+    {
+      "id": "ne:place:1159119035",
+      "legacy_ascii": "Ebebiyin",
+      "source": "Ebebiyín",
+      "source_ascii": "Ebebiyin"
+    },
+    {
+      "id": "ne:place:1159119251",
+      "legacy_ascii": "Hameenlinna",
+      "source": "Hämeenlinna",
+      "source_ascii": "Hameenlinna"
+    },
+    {
+      "id": "ne:place:1159119497",
+      "legacy_ascii": "Hillerod",
+      "source": "Hillerød",
+      "source_ascii": "Hillerod"
+    },
+    {
+      "id": "ne:place:1159119505",
+      "legacy_ascii": "Soro",
+      "source": "Sorø",
+      "source_ascii": "Soro"
+    },
+    {
+      "id": "ne:place:1159119683",
+      "legacy_ascii": "Telimele",
+      "source": "Télimélé",
+      "source_ascii": "Telimele"
+    },
+    {
+      "id": "ne:place:1159119809",
+      "legacy_ascii": "Bouafle",
+      "source": "Bouaflé",
+      "source_ascii": "Bouafle"
+    },
+    {
+      "id": "ne:place:1159119919",
+      "legacy_ascii": "Kruje",
+      "source": "Krujë",
+      "source_ascii": "Kruje"
+    },
+    {
+      "id": "ne:place:1159119955",
+      "legacy_ascii": "Lushnje",
+      "source": "Lushnjë",
+      "source_ascii": "Lushnje"
+    },
+    {
+      "id": "ne:place:1159119975",
+      "legacy_ascii": "Puke",
+      "source": "Pukë",
+      "source_ascii": "Puke"
+    },
+    {
+      "id": "ne:place:1159120009",
+      "legacy_ascii": "Kukes",
+      "source": "Kukës",
+      "source_ascii": "Kukes"
+    },
+    {
+      "id": "ne:place:1159120029",
+      "legacy_ascii": "Sarande",
+      "source": "Sarandë",
+      "source_ascii": "Sarande"
+    },
+    {
+      "id": "ne:place:1159120047",
+      "legacy_ascii": "Erseke",
+      "source": "Ersekë",
+      "source_ascii": "Erseke"
+    },
+    {
+      "id": "ne:place:1159120077",
+      "legacy_ascii": "Korce",
+      "source": "Korçë",
+      "source_ascii": "Korce"
+    },
+    {
+      "id": "ne:place:1159120119",
+      "legacy_ascii": "Corovode",
+      "source": "Çorovodë",
+      "source_ascii": "Corovode"
+    },
+    {
+      "id": "ne:place:1159120171",
+      "legacy_ascii": "Tepelene",
+      "source": "Tepelenë",
+      "source_ascii": "Tepelene"
+    },
+    {
+      "id": "ne:place:1159120189",
+      "legacy_ascii": "Permet",
+      "source": "Përmet",
+      "source_ascii": "Permet"
+    },
+    {
+      "id": "ne:place:1159120207",
+      "legacy_ascii": "Gjirokaster",
+      "source": "Gjirokastër",
+      "source_ascii": "Gjirokaster"
+    },
+    {
+      "id": "ne:place:1159120259",
+      "legacy_ascii": "Lezhe",
+      "source": "Lezhë",
+      "source_ascii": "Lezhe"
+    },
+    {
+      "id": "ne:place:1159120277",
+      "legacy_ascii": "Rreshen",
+      "source": "Rrëshen",
+      "source_ascii": "Rreshen"
+    },
+    {
+      "id": "ne:place:1159120515",
+      "legacy_ascii": "Oguz",
+      "source": "Oğuz",
+      "source_ascii": "Oguz"
+    },
+    {
+      "id": "ne:place:1159121009",
+      "legacy_ascii": "Bordj Bou Arreridj",
+      "source": "Bordj Bou Arréridj",
+      "source_ascii": "Bordj Bou Arreridj"
+    },
+    {
+      "id": "ne:place:1159121417",
+      "legacy_ascii": "Dedougou",
+      "source": "Dédougou",
+      "source_ascii": "Dedougou"
+    },
+    {
+      "id": "ne:place:1159121505",
+      "legacy_ascii": "Ziniare",
+      "source": "Ziniaré",
+      "source_ascii": "Ziniare"
+    },
+    {
+      "id": "ne:place:1159121539",
+      "legacy_ascii": "Reo",
+      "source": "Réo",
+      "source_ascii": "Reo"
+    },
+    {
+      "id": "ne:place:1159121621",
+      "legacy_ascii": "Koupela",
+      "source": "Koupéla",
+      "source_ascii": "Koupela"
+    },
+    {
+      "id": "ne:place:1159121629",
+      "legacy_ascii": "Po",
+      "source": "Pô",
+      "source_ascii": "Po"
+    },
+    {
+      "id": "ne:place:1159121675",
+      "legacy_ascii": "Diebougou",
+      "source": "Diébougou",
+      "source_ascii": "Diebougou"
+    },
+    {
+      "id": "ne:place:1159121701",
+      "legacy_ascii": "Bogande",
+      "source": "Bogandé",
+      "source_ascii": "Bogande"
+    },
+    {
+      "id": "ne:place:1159121905",
+      "legacy_ascii": "Santo Antonio",
+      "source": "Santo António",
+      "source_ascii": "Santo Antonio"
+    },
+    {
+      "id": "ne:place:1159122025",
+      "legacy_ascii": "La Asuncion",
+      "source": "La Asunción",
+      "source_ascii": "La Asuncion"
+    },
+    {
+      "id": "ne:place:1159122085",
+      "legacy_ascii": "Roatan",
+      "source": "Roatán",
+      "source_ascii": "Roatan"
+    },
+    {
+      "id": "ne:place:1159122193",
+      "legacy_ascii": "Caacupe",
+      "source": "Caacupé",
+      "source_ascii": "Caacupe"
+    },
+    {
+      "id": "ne:place:1159122385",
+      "legacy_ascii": "Tulcan",
+      "source": "Tulcán",
+      "source_ascii": "Tulcan"
+    },
+    {
+      "id": "ne:place:1159122417",
+      "legacy_ascii": "Klaksvik",
+      "source": "Klaksvík",
+      "source_ascii": "Klaksvik"
+    },
+    {
+      "id": "ne:place:1159122433",
+      "legacy_ascii": "Lai",
+      "source": "Laï",
+      "source_ascii": "Lai"
+    },
+    {
+      "id": "ne:place:1159122475",
+      "legacy_ascii": "Hradec Kralove",
+      "source": "Hradec Králové",
+      "source_ascii": "Hradec Kralove"
+    },
+    {
+      "id": "ne:place:1159122745",
+      "legacy_ascii": "San Andres",
+      "source": "San Andrés",
+      "source_ascii": "San Andres"
+    },
+    {
+      "id": "ne:place:1159122929",
+      "legacy_ascii": "Tacuarembo",
+      "source": "Tacuarembó",
+      "source_ascii": "Tacuarembo"
+    },
+    {
+      "id": "ne:place:1159122991",
+      "legacy_ascii": "Santa Lucia",
+      "source": "Santa Lucía",
+      "source_ascii": "Santa Lucia"
+    },
+    {
+      "id": "ne:place:1159123015",
+      "legacy_ascii": "Jose Batlle y Ordonez",
+      "source": "José Batlle y Ordóñez",
+      "source_ascii": "Jose Batlle y Ordonez"
+    },
+    {
+      "id": "ne:place:1159123083",
+      "legacy_ascii": "Aigua",
+      "source": "Aiguá",
+      "source_ascii": "Aigua"
+    },
+    {
+      "id": "ne:place:1159125869",
+      "legacy_ascii": "Carupano",
+      "source": "Carúpano",
+      "source_ascii": "Carupano"
+    },
+    {
+      "id": "ne:place:1159126109",
+      "legacy_ascii": "Leon",
+      "source": "León",
+      "source_ascii": "Leon"
+    },
+    {
+      "id": "ne:place:1159126121",
+      "legacy_ascii": "Mataro",
+      "source": "Mataró",
+      "source_ascii": "Mataro"
+    },
+    {
+      "id": "ne:place:1159126673",
+      "legacy_ascii": "Borlange",
+      "source": "Borlänge",
+      "source_ascii": "Borlange"
+    },
+    {
+      "id": "ne:place:1159126687",
+      "legacy_ascii": "Vasteras",
+      "source": "Västerås",
+      "source_ascii": "Vasteraas"
+    },
+    {
+      "id": "ne:place:1159127165",
+      "legacy_ascii": "Santa Rosa de Copan",
+      "source": "Santa Rosa de Copán",
+      "source_ascii": "Santa Rosa de Copan"
+    },
+    {
+      "id": "ne:place:1159127215",
+      "legacy_ascii": "Gijon",
+      "source": "Gijón",
+      "source_ascii": "Gijon"
+    },
+    {
+      "id": "ne:place:1159127383",
+      "legacy_ascii": "Aydin",
+      "source": "Aydın",
+      "source_ascii": "Aydin"
+    },
+    {
+      "id": "ne:place:1159127395",
+      "legacy_ascii": "Luleburgaz",
+      "source": "Lüleburgaz",
+      "source_ascii": "Luleburgaz"
+    },
+    {
+      "id": "ne:place:1159127413",
+      "legacy_ascii": "Kutahya",
+      "source": "Kütahya",
+      "source_ascii": "Kutahya"
+    },
+    {
+      "id": "ne:place:1159127429",
+      "legacy_ascii": "Mugla",
+      "source": "Muğla",
+      "source_ascii": "Mugla"
+    },
+    {
+      "id": "ne:place:1159127441",
+      "legacy_ascii": "Elazig",
+      "source": "Elâzığ",
+      "source_ascii": "Elazig"
+    },
+    {
+      "id": "ne:place:1159127453",
+      "legacy_ascii": "Kahramanmaras",
+      "source": "Kahramanmaraş",
+      "source_ascii": "Kahramanmaras"
+    },
+    {
+      "id": "ne:place:1159127659",
+      "legacy_ascii": "Polatli",
+      "source": "Polatlı",
+      "source_ascii": "Polatli"
+    },
+    {
+      "id": "ne:place:1159127675",
+      "legacy_ascii": "Karabuk",
+      "source": "Karabük",
+      "source_ascii": "Karabuk"
+    },
+    {
+      "id": "ne:place:1159127697",
+      "legacy_ascii": "Hakkari",
+      "source": "Hakkâri",
+      "source_ascii": "Hakkari"
+    },
+    {
+      "id": "ne:place:1159127719",
+      "legacy_ascii": "Kecskemet",
+      "source": "Kecskemét",
+      "source_ascii": "Kecskemet"
+    },
+    {
+      "id": "ne:place:1159127731",
+      "legacy_ascii": "Szekesfehervar",
+      "source": "Székesfehérvár",
+      "source_ascii": "Szekesfehervar"
+    },
+    {
+      "id": "ne:place:1159127743",
+      "legacy_ascii": "Nyiregyhaza",
+      "source": "Nyíregyháza",
+      "source_ascii": "Nyiregyhaza"
+    },
+    {
+      "id": "ne:place:1159127843",
+      "legacy_ascii": "Buzau",
+      "source": "Buzău",
+      "source_ascii": "Buzau"
+    },
+    {
+      "id": "ne:place:1159127855",
+      "legacy_ascii": "Galati",
+      "source": "Galați",
+      "source_ascii": "Galati"
+    },
+    {
+      "id": "ne:place:1159127869",
+      "legacy_ascii": "Focsani",
+      "source": "Focșani",
+      "source_ascii": "Focsani"
+    },
+    {
+      "id": "ne:place:1159127875",
+      "legacy_ascii": "Ferrenafe",
+      "source": "Ferreñafe",
+      "source_ascii": "Ferrenafe"
+    },
+    {
+      "id": "ne:place:1159128077",
+      "legacy_ascii": "Ypacarai",
+      "source": "Ypacaraí",
+      "source_ascii": "Ypacarai"
+    },
+    {
+      "id": "ne:place:1159128091",
+      "legacy_ascii": "Paraguari",
+      "source": "Paraguarí",
+      "source_ascii": "Paraguari"
+    },
+    {
+      "id": "ne:place:1159128097",
+      "legacy_ascii": "Nacunday",
+      "source": "Ñacunday",
+      "source_ascii": "Nacunday"
+    },
+    {
+      "id": "ne:place:1159128111",
+      "legacy_ascii": "Caazapa",
+      "source": "Caazapá",
+      "source_ascii": "Caazapa"
+    },
+    {
+      "id": "ne:place:1159128125",
+      "legacy_ascii": "Encarnacion",
+      "source": "Encarnación",
+      "source_ascii": "Encarnacion"
+    },
+    {
+      "id": "ne:place:1159128139",
+      "legacy_ascii": "Esteli",
+      "source": "Estelí",
+      "source_ascii": "Esteli"
+    },
+    {
+      "id": "ne:place:1159128165",
+      "legacy_ascii": "Covilha",
+      "source": "Covilhã",
+      "source_ascii": "Covilha"
+    },
+    {
+      "id": "ne:place:1159128215",
+      "legacy_ascii": "Gjovik",
+      "source": "Gjøvik",
+      "source_ascii": "Gjovik"
+    },
+    {
+      "id": "ne:place:1159128221",
+      "legacy_ascii": "Rorvik",
+      "source": "Rørvik",
+      "source_ascii": "Rorvik"
+    },
+    {
+      "id": "ne:place:1159128229",
+      "legacy_ascii": "Banska Bystrica",
+      "source": "Banská Bystrica",
+      "source_ascii": "Banska Bystrica"
+    },
+    {
+      "id": "ne:place:1159128241",
+      "legacy_ascii": "Rezekne",
+      "source": "Rēzekne",
+      "source_ascii": "Rezekne"
+    },
+    {
+      "id": "ne:place:1159128249",
+      "legacy_ascii": "Panevezys",
+      "source": "Panevežys",
+      "source_ascii": "Panevezys"
+    },
+    {
+      "id": "ne:place:1159128255",
+      "legacy_ascii": "Siauliai",
+      "source": "Šiauliai",
+      "source_ascii": "Siauliai"
+    },
+    {
+      "id": "ne:place:1159128433",
+      "legacy_ascii": "Chitre",
+      "source": "Chitré",
+      "source_ascii": "Chitre"
+    },
+    {
+      "id": "ne:place:1159128439",
+      "legacy_ascii": "Jaque",
+      "source": "Jaqué",
+      "source_ascii": "Jaque"
+    },
+    {
+      "id": "ne:place:1159128511",
+      "legacy_ascii": "Zvezdnyj",
+      "source": "Zvëzdnyj",
+      "source_ascii": "Zvezdnyj"
+    },
+    {
+      "id": "ne:place:1159129119",
+      "legacy_ascii": "Ciudad Constitucion",
+      "source": "Ciudad Constitución",
+      "source_ascii": "Ciudad Constitucion"
+    },
+    {
+      "id": "ne:place:1159129147",
+      "legacy_ascii": "Ascension",
+      "source": "Ascensión",
+      "source_ascii": "Ascension"
+    },
+    {
+      "id": "ne:place:1159129151",
+      "legacy_ascii": "Gomez Palacio",
+      "source": "Gómez Palacio",
+      "source_ascii": "Gomez Palacio"
+    },
+    {
+      "id": "ne:place:1159129165",
+      "legacy_ascii": "Villa Union",
+      "source": "Villa Unión",
+      "source_ascii": "Villa Union"
+    },
+    {
+      "id": "ne:place:1159129193",
+      "legacy_ascii": "Nacozari de Garcia",
+      "source": "Nacozari de García",
+      "source_ascii": "Nacozari de Garcia"
+    },
+    {
+      "id": "ne:place:1159129277",
+      "legacy_ascii": "Apatzingan",
+      "source": "Apatzingán",
+      "source_ascii": "Apatzingan"
+    },
+    {
+      "id": "ne:place:1159129295",
+      "legacy_ascii": "Miahuatlan",
+      "source": "Miahuatlán",
+      "source_ascii": "Miahuatlan"
+    },
+    {
+      "id": "ne:place:1159129317",
+      "legacy_ascii": "Paraiso",
+      "source": "Paraíso",
+      "source_ascii": "Paraiso"
+    },
+    {
+      "id": "ne:place:1159129321",
+      "legacy_ascii": "Balancan",
+      "source": "Balancán",
+      "source_ascii": "Balancan"
+    },
+    {
+      "id": "ne:place:1159129387",
+      "legacy_ascii": "San Juan del Rio",
+      "source": "San Juan del Río",
+      "source_ascii": "San Juan del Rio"
+    },
+    {
+      "id": "ne:place:1159129455",
+      "legacy_ascii": "Halacho",
+      "source": "Halachó",
+      "source_ascii": "Halacho"
+    },
+    {
+      "id": "ne:place:1159129491",
+      "legacy_ascii": "Elblag",
+      "source": "Elbląg",
+      "source_ascii": "Elblag"
+    },
+    {
+      "id": "ne:place:1159129497",
+      "legacy_ascii": "Inowroclaw",
+      "source": "Inowrocław",
+      "source_ascii": "Inowroclaw"
+    },
+    {
+      "id": "ne:place:1159129813",
+      "legacy_ascii": "Pinas",
+      "source": "Piñas",
+      "source_ascii": "Pinas"
+    },
+    {
+      "id": "ne:place:1159129839",
+      "legacy_ascii": "Alausi",
+      "source": "Alausí",
+      "source_ascii": "Alausi"
+    },
+    {
+      "id": "ne:place:1159129843",
+      "legacy_ascii": "Sangolqui",
+      "source": "Sangolquí",
+      "source_ascii": "Sangolqui"
+    },
+    {
+      "id": "ne:place:1159129849",
+      "legacy_ascii": "Sonson",
+      "source": "Sonsón",
+      "source_ascii": "Sonson"
+    },
+    {
+      "id": "ne:place:1159129877",
+      "legacy_ascii": "Canas",
+      "source": "Cañas",
+      "source_ascii": "Canas"
+    },
+    {
+      "id": "ne:place:1159129897",
+      "legacy_ascii": "Ciego de Avila",
+      "source": "Ciego de Ávila",
+      "source_ascii": "Ciego de Avila"
+    },
+    {
+      "id": "ne:place:1159129925",
+      "legacy_ascii": "Tuquerres",
+      "source": "Túquerres",
+      "source_ascii": "Tuquerres"
+    },
+    {
+      "id": "ne:place:1159129957",
+      "legacy_ascii": "Magangue",
+      "source": "Magangué",
+      "source_ascii": "Magangue"
+    },
+    {
+      "id": "ne:place:1159129965",
+      "legacy_ascii": "San Jose del Guaviare",
+      "source": "San José del Guaviare",
+      "source_ascii": "San Jose del Guaviare"
+    },
+    {
+      "id": "ne:place:1159129969",
+      "legacy_ascii": "Puerto Lopez",
+      "source": "Puerto López",
+      "source_ascii": "Puerto Lopez"
+    },
+    {
+      "id": "ne:place:1159129975",
+      "legacy_ascii": "San Antonio de los Banos",
+      "source": "San Antonio de los Baños",
+      "source_ascii": "San Antonio de los Banos"
+    },
+    {
+      "id": "ne:place:1159129979",
+      "legacy_ascii": "Guines",
+      "source": "Güines",
+      "source_ascii": "Guines"
+    },
+    {
+      "id": "ne:place:1159129983",
+      "legacy_ascii": "Caibarien",
+      "source": "Caibarién",
+      "source_ascii": "Caibarien"
+    },
+    {
+      "id": "ne:place:1159130065",
+      "legacy_ascii": "Furth",
+      "source": "Fürth",
+      "source_ascii": "Furth"
+    },
+    {
+      "id": "ne:place:1159130069",
+      "legacy_ascii": "Ceske Budejovice",
+      "source": "České Budějovice",
+      "source_ascii": "Ceske Budejovice"
+    },
+    {
+      "id": "ne:place:1159130121",
+      "legacy_ascii": "Kohtla-Jarve",
+      "source": "Kohtla-Järve",
+      "source_ascii": "Kohtla-Jarve"
+    },
+    {
+      "id": "ne:place:1159130353",
+      "legacy_ascii": "Otsu",
+      "source": "Ōtsu",
+      "source_ascii": "Otsu"
+    },
+    {
+      "id": "ne:place:1159130375",
+      "legacy_ascii": "Hachioji",
+      "source": "Hachiōji",
+      "source_ascii": "Hachioji"
+    },
+    {
+      "id": "ne:place:1159130379",
+      "legacy_ascii": "Koriyama",
+      "source": "Kōriyama",
+      "source_ascii": "Koriyama"
+    },
+    {
+      "id": "ne:place:1159130389",
+      "legacy_ascii": "Coban",
+      "source": "Cobán",
+      "source_ascii": "Coban"
+    },
+    {
+      "id": "ne:place:1159130411",
+      "legacy_ascii": "San Francisco de Macoris",
+      "source": "San Francisco de Macorís",
+      "source_ascii": "San Francisco de Macoris"
+    },
+    {
+      "id": "ne:place:1159130531",
+      "legacy_ascii": "Besancon",
+      "source": "Besançon",
+      "source_ascii": "Besancon"
+    },
+    {
+      "id": "ne:place:1159130535",
+      "legacy_ascii": "Rio Verde",
+      "source": "Río Verde",
+      "source_ascii": "Rio Verde"
+    },
+    {
+      "id": "ne:place:1159130551",
+      "legacy_ascii": "Maria Elena",
+      "source": "María Elena",
+      "source_ascii": "Maria Elena"
+    },
+    {
+      "id": "ne:place:1159130559",
+      "legacy_ascii": "Combarbala",
+      "source": "Combarbalá",
+      "source_ascii": "Combarbala"
+    },
+    {
+      "id": "ne:place:1159130573",
+      "legacy_ascii": "Vina del Mar",
+      "source": "Viña del Mar",
+      "source_ascii": "Vina del Mar"
+    },
+    {
+      "id": "ne:place:1159130597",
+      "legacy_ascii": "Tolten",
+      "source": "Toltén",
+      "source_ascii": "Tolten"
+    },
+    {
+      "id": "ne:place:1159130615",
+      "legacy_ascii": "La Union",
+      "source": "La Unión",
+      "source_ascii": "La Union"
+    },
+    {
+      "id": "ne:place:1159130621",
+      "legacy_ascii": "Rio Bueno",
+      "source": "Río Bueno",
+      "source_ascii": "Rio Bueno"
+    },
+    {
+      "id": "ne:place:1159130643",
+      "legacy_ascii": "Santa Barbara",
+      "source": "Santa Bárbara",
+      "source_ascii": "Santa Barbara"
+    },
+    {
+      "id": "ne:place:1159130891",
+      "legacy_ascii": "Sao Jose de Ribamar",
+      "source": "São José de Ribamar",
+      "source_ascii": "Sao Jose de Ribamar"
+    },
+    {
+      "id": "ne:place:1159130895",
+      "legacy_ascii": "Santa Ines",
+      "source": "Santa Inês",
+      "source_ascii": "Santa Ines"
+    },
+    {
+      "id": "ne:place:1159130899",
+      "legacy_ascii": "Rosario",
+      "source": "Rosário",
+      "source_ascii": "Rosario"
+    },
+    {
+      "id": "ne:place:1159130927",
+      "legacy_ascii": "Ponta Pora",
+      "source": "Ponta Porã",
+      "source_ascii": "Ponta Pora"
+    },
+    {
+      "id": "ne:place:1159130939",
+      "legacy_ascii": "Tres Lagoas",
+      "source": "Três Lagoas",
+      "source_ascii": "Tres Lagoas"
+    },
+    {
+      "id": "ne:place:1159130945",
+      "legacy_ascii": "Guanhaes",
+      "source": "Guanhães",
+      "source_ascii": "Guanhaes"
+    },
+    {
+      "id": "ne:place:1159130963",
+      "legacy_ascii": "Itauna",
+      "source": "Itaúna",
+      "source_ascii": "Itauna"
+    },
+    {
+      "id": "ne:place:1159130987",
+      "legacy_ascii": "Pocos de Caldas",
+      "source": "Poços de Caldas",
+      "source_ascii": "Pocos de Caldas"
+    },
+    {
+      "id": "ne:place:1159130991",
+      "legacy_ascii": "Guaxupe",
+      "source": "Guaxupé",
+      "source_ascii": "Guaxupe"
+    },
+    {
+      "id": "ne:place:1159130995",
+      "legacy_ascii": "Sao Joao del Rei",
+      "source": "São João del Rei",
+      "source_ascii": "Sao Joao del Rei"
+    },
+    {
+      "id": "ne:place:1159131001",
+      "legacy_ascii": "Muriae",
+      "source": "Muriaé",
+      "source_ascii": "Muriae"
+    },
+    {
+      "id": "ne:place:1159131041",
+      "legacy_ascii": "Varzea Grande",
+      "source": "Várzea Grande",
+      "source_ascii": "Varzea Grande"
+    },
+    {
+      "id": "ne:place:1159131045",
+      "legacy_ascii": "Caceres",
+      "source": "Cáceres",
+      "source_ascii": "Caceres"
+    },
+    {
+      "id": "ne:place:1159131059",
+      "legacy_ascii": "Quarai",
+      "source": "Quaraí",
+      "source_ascii": "Quarai"
+    },
+    {
+      "id": "ne:place:1159131063",
+      "legacy_ascii": "Santa Vitoria do Palmar",
+      "source": "Santa Vitória do Palmar",
+      "source_ascii": "Santa Vitoria do Palmar"
+    },
+    {
+      "id": "ne:place:1159131067",
+      "legacy_ascii": "Sao Lourenco do Sul",
+      "source": "São Lourenço do Sul",
+      "source_ascii": "Sao Lourenco do Sul"
+    },
+    {
+      "id": "ne:place:1159131077",
+      "legacy_ascii": "Sao Gabriel",
+      "source": "São Gabriel",
+      "source_ascii": "Sao Gabriel"
+    },
+    {
+      "id": "ne:place:1159131081",
+      "legacy_ascii": "Rosario do Sul",
+      "source": "Rosário do Sul",
+      "source_ascii": "Rosario do Sul"
+    },
+    {
+      "id": "ne:place:1159131091",
+      "legacy_ascii": "Osorio",
+      "source": "Osório",
+      "source_ascii": "Osorio"
+    },
+    {
+      "id": "ne:place:1159131099",
+      "legacy_ascii": "Sao Luiz Gonzaga",
+      "source": "São Luiz Gonzaga",
+      "source_ascii": "Sao Luiz Gonzaga"
+    },
+    {
+      "id": "ne:place:1159131103",
+      "legacy_ascii": "Santo Angelo",
+      "source": "Santo Ângelo",
+      "source_ascii": "Santo Angelo"
+    },
+    {
+      "id": "ne:place:1159131131",
+      "legacy_ascii": "Paranagua",
+      "source": "Paranaguá",
+      "source_ascii": "Paranagua"
+    },
+    {
+      "id": "ne:place:1159131135",
+      "legacy_ascii": "Sao Jose dos Pinhais",
+      "source": "São José dos Pinhais",
+      "source_ascii": "Sao Jose dos Pinhais"
+    },
+    {
+      "id": "ne:place:1159131165",
+      "legacy_ascii": "Telemaco Borba",
+      "source": "Telêmaco Borba",
+      "source_ascii": "Telemaco Borba"
+    },
+    {
+      "id": "ne:place:1159131173",
+      "legacy_ascii": "Concordia",
+      "source": "Concórdia",
+      "source_ascii": "Concordia"
+    },
+    {
+      "id": "ne:place:1159131187",
+      "legacy_ascii": "Ararangua",
+      "source": "Araranguá",
+      "source_ascii": "Ararangua"
+    },
+    {
+      "id": "ne:place:1159131191",
+      "legacy_ascii": "Jaragua do Sul",
+      "source": "Jaraguá do Sul",
+      "source_ascii": "Jaragua do Sul"
+    },
+    {
+      "id": "ne:place:1159131197",
+      "legacy_ascii": "Tubarao",
+      "source": "Tubarão",
+      "source_ascii": "Tubarao"
+    },
+    {
+      "id": "ne:place:1159131205",
+      "legacy_ascii": "Joacaba",
+      "source": "Joaçaba",
+      "source_ascii": "Joacaba"
+    },
+    {
+      "id": "ne:place:1159131209",
+      "legacy_ascii": "Cacador",
+      "source": "Caçador",
+      "source_ascii": "Cacador"
+    },
+    {
+      "id": "ne:place:1159131239",
+      "legacy_ascii": "Quixada",
+      "source": "Quixadá",
+      "source_ascii": "Quixada"
+    },
+    {
+      "id": "ne:place:1159131243",
+      "legacy_ascii": "Caninde",
+      "source": "Canindé",
+      "source_ascii": "Caninde"
+    },
+    {
+      "id": "ne:place:1159131261",
+      "legacy_ascii": "Palmeira dos Indios",
+      "source": "Palmeira dos Índios",
+      "source_ascii": "Palmeira dos Indios"
+    },
+    {
+      "id": "ne:place:1159131263",
+      "legacy_ascii": "Santa Cruz Cabralia",
+      "source": "Santa Cruz Cabrália",
+      "source_ascii": "Santa Cruz Cabralia"
+    },
+    {
+      "id": "ne:place:1159131299",
+      "legacy_ascii": "Nova Iguacu",
+      "source": "Nova Iguaçu",
+      "source_ascii": "Nova Iguacu"
+    },
+    {
+      "id": "ne:place:1159131309",
+      "legacy_ascii": "Niteroi",
+      "source": "Niterói",
+      "source_ascii": "Niteroi"
+    },
+    {
+      "id": "ne:place:1159131317",
+      "legacy_ascii": "Macae",
+      "source": "Macaé",
+      "source_ascii": "Macae"
+    },
+    {
+      "id": "ne:place:1159131515",
+      "legacy_ascii": "Riviere-du-Loup",
+      "source": "Rivière-du-Loup",
+      "source_ascii": "Riviere-du-Loup"
+    },
+    {
+      "id": "ne:place:1159131643",
+      "legacy_ascii": "Paso Rio Mayo",
+      "source": "Paso Río Mayo",
+      "source_ascii": "Paso Rio Mayo"
+    },
+    {
+      "id": "ne:place:1159131653",
+      "legacy_ascii": "El Maiten",
+      "source": "El Maitén",
+      "source_ascii": "El Maiten"
+    },
+    {
+      "id": "ne:place:1159131671",
+      "legacy_ascii": "San Martin",
+      "source": "San Martín",
+      "source_ascii": "San Martin"
+    },
+    {
+      "id": "ne:place:1159131679",
+      "legacy_ascii": "Cutral Co",
+      "source": "Cutral Có",
+      "source_ascii": "Cutral Co"
+    },
+    {
+      "id": "ne:place:1159131707",
+      "legacy_ascii": "Guayaramerin",
+      "source": "Guayaramerín",
+      "source_ascii": "Guayaramerin"
+    },
+    {
+      "id": "ne:place:1159131729",
+      "legacy_ascii": "Catalao",
+      "source": "Catalão",
+      "source_ascii": "Catalao"
+    },
+    {
+      "id": "ne:place:1159131743",
+      "legacy_ascii": "Ipora",
+      "source": "Iporá",
+      "source_ascii": "Ipora"
+    },
+    {
+      "id": "ne:place:1159131751",
+      "legacy_ascii": "Itaberai",
+      "source": "Itaberaí",
+      "source_ascii": "Itaberai"
+    },
+    {
+      "id": "ne:place:1159131809",
+      "legacy_ascii": "Coronel Suarez",
+      "source": "Coronel Suárez",
+      "source_ascii": "Coronel Suarez"
+    },
+    {
+      "id": "ne:place:1159131853",
+      "legacy_ascii": "Villa Maria",
+      "source": "Villa María",
+      "source_ascii": "Villa Maria"
+    },
+    {
+      "id": "ne:place:1159131899",
+      "legacy_ascii": "Yacuiba",
+      "source": "Yacuíba",
+      "source_ascii": "Yacuiba"
+    },
+    {
+      "id": "ne:place:1159131907",
+      "legacy_ascii": "Joaquin V. Gonzalez",
+      "source": "Joaquín V. González",
+      "source_ascii": "Joaquin V. Gonzalez"
+    },
+    {
+      "id": "ne:place:1159131929",
+      "legacy_ascii": "Villa Angela",
+      "source": "Villa Ángela",
+      "source_ascii": "Villa Angela"
+    },
+    {
+      "id": "ne:place:1159131943",
+      "legacy_ascii": "Doctor Pedro P. Pena",
+      "source": "Doctor Pedro P. Peña",
+      "source_ascii": "Doctor Pedro P. Pena"
+    },
+    {
+      "id": "ne:place:1159131957",
+      "legacy_ascii": "Concepcion del Uruguay",
+      "source": "Concepción del Uruguay",
+      "source_ascii": "Concepcion del Uruguay"
+    },
+    {
+      "id": "ne:place:1159131971",
+      "legacy_ascii": "Parana",
+      "source": "Paraná",
+      "source_ascii": "Parana"
+    },
+    {
+      "id": "ne:place:1159131975",
+      "legacy_ascii": "Villa Constitucion",
+      "source": "Villa Constitución",
+      "source_ascii": "Villa Constitucion"
+    },
+    {
+      "id": "ne:place:1159131983",
+      "legacy_ascii": "Santo Andre",
+      "source": "Santo André",
+      "source_ascii": "Santo Andre"
+    },
+    {
+      "id": "ne:place:1159132011",
+      "legacy_ascii": "Braganca Paulista",
+      "source": "Bragança Paulista",
+      "source_ascii": "Braganca Paulista"
+    },
+    {
+      "id": "ne:place:1159132015",
+      "legacy_ascii": "Jundiai",
+      "source": "Jundiaí",
+      "source_ascii": "Jundiai"
+    },
+    {
+      "id": "ne:place:1159132019",
+      "legacy_ascii": "Sao Jose dos Campos",
+      "source": "São José dos Campos",
+      "source_ascii": "Sao Jose dos Campos"
+    },
+    {
+      "id": "ne:place:1159132025",
+      "legacy_ascii": "Guaratingueta",
+      "source": "Guaratinguetá",
+      "source_ascii": "Guaratingueta"
+    },
+    {
+      "id": "ne:place:1159132043",
+      "legacy_ascii": "Sao Joao da Boa Vista",
+      "source": "São João da Boa Vista",
+      "source_ascii": "Sao Joao da Boa Vista"
+    },
+    {
+      "id": "ne:place:1159132047",
+      "legacy_ascii": "Sao Carlos",
+      "source": "São Carlos",
+      "source_ascii": "Sao Carlos"
+    },
+    {
+      "id": "ne:place:1159132049",
+      "legacy_ascii": "Tupa",
+      "source": "Tupã",
+      "source_ascii": "Tupa"
+    },
+    {
+      "id": "ne:place:1159132055",
+      "legacy_ascii": "Penapolis",
+      "source": "Penápolis",
+      "source_ascii": "Penapolis"
+    },
+    {
+      "id": "ne:place:1159132069",
+      "legacy_ascii": "Tatui",
+      "source": "Tatuí",
+      "source_ascii": "Tatui"
+    },
+    {
+      "id": "ne:place:1159132073",
+      "legacy_ascii": "Avare",
+      "source": "Avaré",
+      "source_ascii": "Avare"
+    },
+    {
+      "id": "ne:place:1159132079",
+      "legacy_ascii": "Garca",
+      "source": "Garça",
+      "source_ascii": "Garca"
+    },
+    {
+      "id": "ne:place:1159132097",
+      "legacy_ascii": "Marilia",
+      "source": "Marília",
+      "source_ascii": "Marilia"
+    },
+    {
+      "id": "ne:place:1159132141",
+      "legacy_ascii": "Vlore",
+      "source": "Vlorë",
+      "source_ascii": "Vlore"
+    },
+    {
+      "id": "ne:place:1159132269",
+      "legacy_ascii": "Entre Rios",
+      "source": "Entre Ríos",
+      "source_ascii": "Entre Rios"
+    },
+    {
+      "id": "ne:place:1159132333",
+      "legacy_ascii": "Liege",
+      "source": "Liège",
+      "source_ascii": "Liege"
+    },
+    {
+      "id": "ne:place:1159132411",
+      "legacy_ascii": "Bella Union",
+      "source": "Bella Unión",
+      "source_ascii": "Bella Union"
+    },
+    {
+      "id": "ne:place:1159133669",
+      "legacy_ascii": "Maiquetia",
+      "source": "Maiquetía",
+      "source_ascii": "Maiquetia"
+    },
+    {
+      "id": "ne:place:1159133773",
+      "legacy_ascii": "Almeria",
+      "source": "Almería",
+      "source_ascii": "Almeria"
+    },
+    {
+      "id": "ne:place:1159133777",
+      "legacy_ascii": "Malaga",
+      "source": "Málaga",
+      "source_ascii": "Malaga"
+    },
+    {
+      "id": "ne:place:1159133781",
+      "legacy_ascii": "Jaen",
+      "source": "Jaén",
+      "source_ascii": "Jaen"
+    },
+    {
+      "id": "ne:place:1159133817",
+      "legacy_ascii": "Kpalime",
+      "source": "Kpalimé",
+      "source_ascii": "Kpalime"
+    },
+    {
+      "id": "ne:place:1159133821",
+      "legacy_ascii": "Sokode",
+      "source": "Sokodé",
+      "source_ascii": "Sokode"
+    },
+    {
+      "id": "ne:place:1159133853",
+      "legacy_ascii": "Beja",
+      "source": "Béja",
+      "source_ascii": "Beja"
+    },
+    {
+      "id": "ne:place:1159133879",
+      "legacy_ascii": "Gabes",
+      "source": "Gabès",
+      "source_ascii": "Gabes"
+    },
+    {
+      "id": "ne:place:1159133927",
+      "legacy_ascii": "Ad Damazin",
+      "source": "Ad Damazīn",
+      "source_ascii": "Ad Damazin"
+    },
+    {
+      "id": "ne:place:1159133939",
+      "legacy_ascii": "Zabid",
+      "source": "Zabīd",
+      "source_ascii": "Zabid"
+    },
+    {
+      "id": "ne:place:1159134095",
+      "legacy_ascii": "Bollnas",
+      "source": "Bollnäs",
+      "source_ascii": "Bollnas"
+    },
+    {
+      "id": "ne:place:1159134099",
+      "legacy_ascii": "Gavle",
+      "source": "Gävle",
+      "source_ascii": "Gavle"
+    },
+    {
+      "id": "ne:place:1159134107",
+      "legacy_ascii": "Vaxjo",
+      "source": "Växjö",
+      "source_ascii": "Vaxjo"
+    },
+    {
+      "id": "ne:place:1159134115",
+      "legacy_ascii": "Orebro",
+      "source": "Örebro",
+      "source_ascii": "Orebro"
+    },
+    {
+      "id": "ne:place:1159134119",
+      "legacy_ascii": "Norrkoping",
+      "source": "Norrköping",
+      "source_ascii": "Norrkoping"
+    },
+    {
+      "id": "ne:place:1159134133",
+      "legacy_ascii": "Skelleftea",
+      "source": "Skellefteå",
+      "source_ascii": "Skelleftea"
+    },
+    {
+      "id": "ne:place:1159134497",
+      "legacy_ascii": "Cam Pha",
+      "source": "Cẩm Phả",
+      "source_ascii": "Cam Pha"
+    },
+    {
+      "id": "ne:place:1159134573",
+      "legacy_ascii": "Son Tay",
+      "source": "Sơn Tây",
+      "source_ascii": "Son Tay"
+    },
+    {
+      "id": "ne:place:1159134577",
+      "legacy_ascii": "Ninh Binh",
+      "source": "Ninh Bình",
+      "source_ascii": "Ninh Binh"
+    },
+    {
+      "id": "ne:place:1159134583",
+      "legacy_ascii": "Viet Tri",
+      "source": "Việt Trì",
+      "source_ascii": "Viet Tri"
+    },
+    {
+      "id": "ne:place:1159134587",
+      "legacy_ascii": "Bac Giang",
+      "source": "Bắc Giang",
+      "source_ascii": "Bac Giang"
+    },
+    {
+      "id": "ne:place:1159134595",
+      "legacy_ascii": "Ha Tinh",
+      "source": "Hà Tĩnh",
+      "source_ascii": "Ha Tinh"
+    },
+    {
+      "id": "ne:place:1159134625",
+      "legacy_ascii": "Quang Ngai",
+      "source": "Quảng Ngãi",
+      "source_ascii": "Quang Ngai"
+    },
+    {
+      "id": "ne:place:1159134629",
+      "legacy_ascii": "Quang Tri",
+      "source": "Quảng Trị",
+      "source_ascii": "Quang Tri"
+    },
+    {
+      "id": "ne:place:1159134653",
+      "legacy_ascii": "Chau Doc",
+      "source": "Châu Đốc",
+      "source_ascii": "Chau Doc"
+    },
+    {
+      "id": "ne:place:1159134657",
+      "legacy_ascii": "Rach Gia",
+      "source": "Rạch Giá",
+      "source_ascii": "Rach Gia"
+    },
+    {
+      "id": "ne:place:1159134677",
+      "legacy_ascii": "My Tho",
+      "source": "Mỹ Tho",
+      "source_ascii": "My Tho"
+    },
+    {
+      "id": "ne:place:1159134681",
+      "legacy_ascii": "Bac Lieu",
+      "source": "Bạc Liêu",
+      "source_ascii": "Bac Lieu"
+    },
+    {
+      "id": "ne:place:1159134685",
+      "legacy_ascii": "Ca Mau",
+      "source": "Cà Mau",
+      "source_ascii": "Ca Mau"
+    },
+    {
+      "id": "ne:place:1159134691",
+      "legacy_ascii": "Soc Trang",
+      "source": "Sóc Trăng",
+      "source_ascii": "Soc Trang"
+    },
+    {
+      "id": "ne:place:1159134905",
+      "legacy_ascii": null,
+      "source": "Egilsstaðir",
+      "source_ascii": "Egilsstadir"
+    },
+    {
+      "id": "ne:place:1159134909",
+      "legacy_ascii": null,
+      "source": "Sauðárkrókur",
+      "source_ascii": "Saudarkrokur"
+    },
+    {
+      "id": "ne:place:1159134943",
+      "legacy_ascii": "Logrono",
+      "source": "Logroño",
+      "source_ascii": "Logrono"
+    },
+    {
+      "id": "ne:place:1159134947",
+      "legacy_ascii": "San Sebastian",
+      "source": "San Sebastián",
+      "source_ascii": "San Sebastian"
+    },
+    {
+      "id": "ne:place:1159135037",
+      "legacy_ascii": "Gonaives",
+      "source": "Gonaïves",
+      "source_ascii": "Gonaives"
+    },
+    {
+      "id": "ne:place:1159135125",
+      "legacy_ascii": "Soke",
+      "source": "Söke",
+      "source_ascii": "Soke"
+    },
+    {
+      "id": "ne:place:1159135129",
+      "legacy_ascii": "Balikesir",
+      "source": "Balıkesir",
+      "source_ascii": "Balikesir"
+    },
+    {
+      "id": "ne:place:1159135133",
+      "legacy_ascii": "Canakkale",
+      "source": "Çanakkale",
+      "source_ascii": "Canakkale"
+    },
+    {
+      "id": "ne:place:1159135143",
+      "legacy_ascii": "Tekirdag",
+      "source": "Tekirdağ",
+      "source_ascii": "Tekirdag"
+    },
+    {
+      "id": "ne:place:1159135147",
+      "legacy_ascii": "Izmit",
+      "source": "İzmit",
+      "source_ascii": "Izmit"
+    },
+    {
+      "id": "ne:place:1159135169",
+      "legacy_ascii": "Adiyaman",
+      "source": "Adıyaman",
+      "source_ascii": "Adiyaman"
+    },
+    {
+      "id": "ne:place:1159135193",
+      "legacy_ascii": "Iskenderun",
+      "source": "İskenderun",
+      "source_ascii": "Iskenderun"
+    },
+    {
+      "id": "ne:place:1159135223",
+      "legacy_ascii": "Agri",
+      "source": "Ağrı",
+      "source_ascii": "Agri"
+    },
+    {
+      "id": "ne:place:1159135229",
+      "legacy_ascii": "Diyarbakir",
+      "source": "Diyarbakır",
+      "source_ascii": "Diyarbakir"
+    },
+    {
+      "id": "ne:place:1159135233",
+      "legacy_ascii": "Mus",
+      "source": "Muş",
+      "source_ascii": "Mus"
+    },
+    {
+      "id": "ne:place:1159135331",
+      "legacy_ascii": "Eregli",
+      "source": "Ereğli",
+      "source_ascii": "Eregli"
+    },
+    {
+      "id": "ne:place:1159135341",
+      "legacy_ascii": "Usak",
+      "source": "Uşak",
+      "source_ascii": "Usak"
+    },
+    {
+      "id": "ne:place:1159135349",
+      "legacy_ascii": "Kirikkale",
+      "source": "Kırıkkale",
+      "source_ascii": "Kirikkale"
+    },
+    {
+      "id": "ne:place:1159135445",
+      "legacy_ascii": "Pecs",
+      "source": "Pécs",
+      "source_ascii": "Pecs"
+    },
+    {
+      "id": "ne:place:1159135449",
+      "legacy_ascii": "Gyor",
+      "source": "Győr",
+      "source_ascii": "Gyor"
+    },
+    {
+      "id": "ne:place:1159135453",
+      "legacy_ascii": "Kaposvar",
+      "source": "Kaposvár",
+      "source_ascii": "Kaposvar"
+    },
+    {
+      "id": "ne:place:1159135457",
+      "legacy_ascii": "Vac",
+      "source": "Vác",
+      "source_ascii": "Vac"
+    },
+    {
+      "id": "ne:place:1159135715",
+      "legacy_ascii": "Trollhattan",
+      "source": "Trollhättan",
+      "source_ascii": "Trollhattan"
+    },
+    {
+      "id": "ne:place:1159135719",
+      "legacy_ascii": "Boras",
+      "source": "Borås",
+      "source_ascii": "Boras"
+    },
+    {
+      "id": "ne:place:1159135791",
+      "legacy_ascii": "Goure",
+      "source": "Gouré",
+      "source_ascii": "Goure"
+    },
+    {
+      "id": "ne:place:1159135799",
+      "legacy_ascii": "Tillaberi",
+      "source": "Tillabéri",
+      "source_ascii": "Tillaberi"
+    },
+    {
+      "id": "ne:place:1159135823",
+      "legacy_ascii": "Calarasi",
+      "source": "Călărași",
+      "source_ascii": "Calarasi"
+    },
+    {
+      "id": "ne:place:1159135831",
+      "legacy_ascii": "Resita",
+      "source": "Reșița",
+      "source_ascii": "Resita"
+    },
+    {
+      "id": "ne:place:1159135835",
+      "legacy_ascii": "Timisoara",
+      "source": "Timișoara",
+      "source_ascii": "Timisoara"
+    },
+    {
+      "id": "ne:place:1159135841",
+      "legacy_ascii": "Botosani",
+      "source": "Botoșani",
+      "source_ascii": "Botosani"
+    },
+    {
+      "id": "ne:place:1159135853",
+      "legacy_ascii": "Pitesti",
+      "source": "Pitești",
+      "source_ascii": "Pitesti"
+    },
+    {
+      "id": "ne:place:1159135859",
+      "legacy_ascii": "Brasov",
+      "source": "Brașov",
+      "source_ascii": "Brasov"
+    },
+    {
+      "id": "ne:place:1159135863",
+      "legacy_ascii": "Ploiesti",
+      "source": "Ploiești",
+      "source_ascii": "Ploiesti"
+    },
+    {
+      "id": "ne:place:1159135867",
+      "legacy_ascii": "Bacau",
+      "source": "Bacău",
+      "source_ascii": "Bacau"
+    },
+    {
+      "id": "ne:place:1159135901",
+      "legacy_ascii": "Camana",
+      "source": "Camaná",
+      "source_ascii": "Camana"
+    },
+    {
+      "id": "ne:place:1159135937",
+      "legacy_ascii": "Jaen",
+      "source": "Jaén",
+      "source_ascii": "Jaen"
+    },
+    {
+      "id": "ne:place:1159135945",
+      "legacy_ascii": "Tingo Maria",
+      "source": "Tingo María",
+      "source_ascii": "Tingo Maria"
+    },
+    {
+      "id": "ne:place:1159135955",
+      "legacy_ascii": "Juanjui",
+      "source": "Juanjuí",
+      "source_ascii": "Juanjui"
+    },
+    {
+      "id": "ne:place:1159136023",
+      "legacy_ascii": "Junin",
+      "source": "Junín",
+      "source_ascii": "Junin"
+    },
+    {
+      "id": "ne:place:1159136065",
+      "legacy_ascii": "Belen",
+      "source": "Belén",
+      "source_ascii": "Belen"
+    },
+    {
+      "id": "ne:place:1159136075",
+      "legacy_ascii": "Ita",
+      "source": "Itá",
+      "source_ascii": "Ita"
+    },
+    {
+      "id": "ne:place:1159136093",
+      "legacy_ascii": "Abai",
+      "source": "Abaí",
+      "source_ascii": "Abai"
+    },
+    {
+      "id": "ne:place:1159136097",
+      "legacy_ascii": "Ygatimi",
+      "source": "Ygatimí",
+      "source_ascii": "Ygatimi"
+    },
+    {
+      "id": "ne:place:1159136105",
+      "legacy_ascii": null,
+      "source": "Granada‎",
+      "source_ascii": "Granada"
+    },
+    {
+      "id": "ne:place:1159136123",
+      "legacy_ascii": "Angra do Heroismo",
+      "source": "Angra do Heroísmo",
+      "source_ascii": "Angra do Heroismo"
+    },
+    {
+      "id": "ne:place:1159136129",
+      "legacy_ascii": "Portimao",
+      "source": "Portimão",
+      "source_ascii": "Portimao"
+    },
+    {
+      "id": "ne:place:1159136157",
+      "legacy_ascii": "Thies",
+      "source": "Thiès",
+      "source_ascii": "Thies"
+    },
+    {
+      "id": "ne:place:1159136171",
+      "legacy_ascii": "Kedougou",
+      "source": "Kédougou",
+      "source_ascii": "Kedougou"
+    },
+    {
+      "id": "ne:place:1159136323",
+      "legacy_ascii": "Alesund",
+      "source": "Ålesund",
+      "source_ascii": "Alesund"
+    },
+    {
+      "id": "ne:place:1159136351",
+      "legacy_ascii": "Klaipeda",
+      "source": "Klaipėda",
+      "source_ascii": "Klaipeda"
+    },
+    {
+      "id": "ne:place:1159136359",
+      "legacy_ascii": "Zilina",
+      "source": "Žilina",
+      "source_ascii": "Zilina"
+    },
+    {
+      "id": "ne:place:1159136365",
+      "legacy_ascii": "Kosice",
+      "source": "Košice",
+      "source_ascii": "Kosice"
+    },
+    {
+      "id": "ne:place:1159136371",
+      "legacy_ascii": "Presov",
+      "source": "Prešov",
+      "source_ascii": "Presov"
+    },
+    {
+      "id": "ne:place:1159136931",
+      "legacy_ascii": "Balti",
+      "source": "Bălți",
+      "source_ascii": "Balti"
+    },
+    {
+      "id": "ne:place:1159138275",
+      "legacy_ascii": "San Quintin",
+      "source": "San Quintín",
+      "source_ascii": "San Quintin"
+    },
+    {
+      "id": "ne:place:1159138289",
+      "legacy_ascii": "Santa Rosalia",
+      "source": "Santa Rosalía",
+      "source_ascii": "Santa Rosalia"
+    },
+    {
+      "id": "ne:place:1159138301",
+      "legacy_ascii": "Cuauhtemoc",
+      "source": "Cuauhtémoc",
+      "source_ascii": "Cuauhtemoc"
+    },
+    {
+      "id": "ne:place:1159138331",
+      "legacy_ascii": "Guamuchil",
+      "source": "Guamúchil",
+      "source_ascii": "Guamuchil"
+    },
+    {
+      "id": "ne:place:1159138371",
+      "legacy_ascii": "Mazatlan",
+      "source": "Mazatlán",
+      "source_ascii": "Mazatlan"
+    },
+    {
+      "id": "ne:place:1159138393",
+      "legacy_ascii": "Valparaiso",
+      "source": "Valparaíso",
+      "source_ascii": "Valparaiso"
+    },
+    {
+      "id": "ne:place:1159138411",
+      "legacy_ascii": "Tamuin",
+      "source": "Tamuín",
+      "source_ascii": "Tamuin"
+    },
+    {
+      "id": "ne:place:1159138455",
+      "legacy_ascii": "Lazaro Cardenas",
+      "source": "Lázaro Cárdenas",
+      "source_ascii": "Lazaro Cardenas"
+    },
+    {
+      "id": "ne:place:1159138495",
+      "legacy_ascii": "Champoton",
+      "source": "Champotón",
+      "source_ascii": "Champoton"
+    },
+    {
+      "id": "ne:place:1159138523",
+      "legacy_ascii": "Huajuapan de Leon",
+      "source": "Huajuapan de León",
+      "source_ascii": "Huajuapan de Leon"
+    },
+    {
+      "id": "ne:place:1159138531",
+      "legacy_ascii": "Teziutlan",
+      "source": "Teziutlán",
+      "source_ascii": "Teziutlan"
+    },
+    {
+      "id": "ne:place:1159138567",
+      "legacy_ascii": "Petatlan",
+      "source": "Petatlán",
+      "source_ascii": "Petatlan"
+    },
+    {
+      "id": "ne:place:1159138585",
+      "legacy_ascii": "Minatitlan",
+      "source": "Minatitlán",
+      "source_ascii": "Minatitlan"
+    },
+    {
+      "id": "ne:place:1159138599",
+      "legacy_ascii": "Cordoba",
+      "source": "Córdoba",
+      "source_ascii": "Cordoba"
+    },
+    {
+      "id": "ne:place:1159138613",
+      "legacy_ascii": "Panuco",
+      "source": "Pánuco",
+      "source_ascii": "Panuco"
+    },
+    {
+      "id": "ne:place:1159138631",
+      "legacy_ascii": "Tizimin",
+      "source": "Tizimín",
+      "source_ascii": "Tizimin"
+    },
+    {
+      "id": "ne:place:1159138673",
+      "legacy_ascii": "Selibaby",
+      "source": "Sélibaby",
+      "source_ascii": "Selibaby"
+    },
+    {
+      "id": "ne:place:1159138695",
+      "legacy_ascii": "Bafoulabe",
+      "source": "Bafoulabé",
+      "source_ascii": "Bafoulabe"
+    },
+    {
+      "id": "ne:place:1159138705",
+      "legacy_ascii": "Yelimane",
+      "source": "Yélimané",
+      "source_ascii": "Yelimane"
+    },
+    {
+      "id": "ne:place:1159139037",
+      "legacy_ascii": "Zahle",
+      "source": "Zahlé",
+      "source_ascii": "Zahle"
+    },
+    {
+      "id": "ne:place:1159139041",
+      "legacy_ascii": "Elk",
+      "source": "Ełk",
+      "source_ascii": "Elk"
+    },
+    {
+      "id": "ne:place:1159139051",
+      "legacy_ascii": "Wroclaw",
+      "source": "Wrocław",
+      "source_ascii": "Wroclaw"
+    },
+    {
+      "id": "ne:place:1159139059",
+      "legacy_ascii": "Zielona Gora",
+      "source": "Zielona Góra",
+      "source_ascii": "Zielona Gora"
+    },
+    {
+      "id": "ne:place:1159139065",
+      "legacy_ascii": "Poznan",
+      "source": "Poznań",
+      "source_ascii": "Poznan"
+    },
+    {
+      "id": "ne:place:1159139069",
+      "legacy_ascii": "Grudziadz",
+      "source": "Grudziądz",
+      "source_ascii": "Grudziadz"
+    },
+    {
+      "id": "ne:place:1159139091",
+      "legacy_ascii": "Bialystok",
+      "source": "Białystok",
+      "source_ascii": "Bialystok"
+    },
+    {
+      "id": "ne:place:1159139101",
+      "legacy_ascii": "Rzeszow",
+      "source": "Rzeszów",
+      "source_ascii": "Rzeszow"
+    },
+    {
+      "id": "ne:place:1159139425",
+      "legacy_ascii": "Bafata",
+      "source": "Bafatá",
+      "source_ascii": "Bafata"
+    },
+    {
+      "id": "ne:place:1159139429",
+      "legacy_ascii": "Mbaiki",
+      "source": "Mbaïki",
+      "source_ascii": "Mbaiki"
+    },
+    {
+      "id": "ne:place:1159139913",
+      "legacy_ascii": "Saint-Etienne",
+      "source": "Saint-Étienne",
+      "source_ascii": "Saint-Etienne"
+    },
+    {
+      "id": "ne:place:1159139921",
+      "legacy_ascii": "Macara",
+      "source": "Macará",
+      "source_ascii": "Macara"
+    },
+    {
+      "id": "ne:place:1159139981",
+      "legacy_ascii": "Puerto Berrio",
+      "source": "Puerto Berrío",
+      "source_ascii": "Puerto Berrio"
+    },
+    {
+      "id": "ne:place:1159139993",
+      "legacy_ascii": "Chiquinquira",
+      "source": "Chiquinquirá",
+      "source_ascii": "Chiquinquira"
+    },
+    {
+      "id": "ne:place:1159140031",
+      "legacy_ascii": "Sancti Spiritus",
+      "source": "Sancti Spíritus",
+      "source_ascii": "Sancti Spiritus"
+    },
+    {
+      "id": "ne:place:1159140045",
+      "legacy_ascii": "Ciudad Cortes",
+      "source": "Ciudad Cortés",
+      "source_ascii": "Ciudad Cortes"
+    },
+    {
+      "id": "ne:place:1159140081",
+      "legacy_ascii": "Moron",
+      "source": "Morón",
+      "source_ascii": "Moron"
+    },
+    {
+      "id": "ne:place:1159140109",
+      "legacy_ascii": "San Pedro de Macoris",
+      "source": "San Pedro de Macorís",
+      "source_ascii": "San Pedro de Macoris"
+    },
+    {
+      "id": "ne:place:1159140127",
+      "legacy_ascii": "San Vicente del Caguan",
+      "source": "San Vicente del Caguán",
+      "source_ascii": "San Vicente del Caguan"
+    },
+    {
+      "id": "ne:place:1159140145",
+      "legacy_ascii": "Garzon",
+      "source": "Garzón",
+      "source_ascii": "Garzon"
+    },
+    {
+      "id": "ne:place:1159140157",
+      "legacy_ascii": "Tulua",
+      "source": "Tuluá",
+      "source_ascii": "Tulua"
+    },
+    {
+      "id": "ne:place:1159140167",
+      "legacy_ascii": "El Carmen de Bolivar",
+      "source": "El Carmen de Bolívar",
+      "source_ascii": "El Carmen de Bolivar"
+    },
+    {
+      "id": "ne:place:1159140171",
+      "legacy_ascii": "Jurado",
+      "source": "Juradó",
+      "source_ascii": "Jurado"
+    },
+    {
+      "id": "ne:place:1159140175",
+      "legacy_ascii": "Nuqui",
+      "source": "Nuquí",
+      "source_ascii": "Nuqui"
+    },
+    {
+      "id": "ne:place:1159140181",
+      "legacy_ascii": "Quibdo",
+      "source": "Quibdó",
+      "source_ascii": "Quibdo"
+    },
+    {
+      "id": "ne:place:1159140189",
+      "legacy_ascii": "Cienaga",
+      "source": "Ciénaga",
+      "source_ascii": "Cienaga"
+    },
+    {
+      "id": "ne:place:1159140199",
+      "legacy_ascii": "Tolu",
+      "source": "Tolú",
+      "source_ascii": "Tolu"
+    },
+    {
+      "id": "ne:place:1159140217",
+      "legacy_ascii": "Ocana",
+      "source": "Ocaña",
+      "source_ascii": "Ocana"
+    },
+    {
+      "id": "ne:place:1159140225",
+      "legacy_ascii": "Inirida",
+      "source": "Inírida",
+      "source_ascii": "Inirida"
+    },
+    {
+      "id": "ne:place:1159140229",
+      "legacy_ascii": "San Martin",
+      "source": "San Martín",
+      "source_ascii": "San Martin"
+    },
+    {
+      "id": "ne:place:1159140235",
+      "legacy_ascii": "Puerto Carreno",
+      "source": "Puerto Carreño",
+      "source_ascii": "Puerto Carreno"
+    },
+    {
+      "id": "ne:place:1159140247",
+      "legacy_ascii": "Colon",
+      "source": "Colón",
+      "source_ascii": "Colon"
+    },
+    {
+      "id": "ne:place:1159140377",
+      "legacy_ascii": "Ismailia",
+      "source": "Ismaïlia",
+      "source_ascii": "Ismailia"
+    },
+    {
+      "id": "ne:place:1159140407",
+      "legacy_ascii": "Damanhur",
+      "source": "Damanhûr",
+      "source_ascii": "Damanhur"
+    },
+    {
+      "id": "ne:place:1159140543",
+      "legacy_ascii": "Munster",
+      "source": "Münster",
+      "source_ascii": "Munster"
+    },
+    {
+      "id": "ne:place:1159140545",
+      "legacy_ascii": "Dusseldorf",
+      "source": "Düsseldorf",
+      "source_ascii": "Dusseldorf"
+    },
+    {
+      "id": "ne:place:1159140559",
+      "legacy_ascii": "Giessen",
+      "source": "Gießen",
+      "source_ascii": "Giessen"
+    },
+    {
+      "id": "ne:place:1159140571",
+      "legacy_ascii": "Osnabruck",
+      "source": "Osnabrück",
+      "source_ascii": "Osnabruck"
+    },
+    {
+      "id": "ne:place:1159140581",
+      "legacy_ascii": "Gottingen",
+      "source": "Göttingen",
+      "source_ascii": "Gottingen"
+    },
+    {
+      "id": "ne:place:1159140599",
+      "legacy_ascii": "Lubeck",
+      "source": "Lübeck",
+      "source_ascii": "Lubeck"
+    },
+    {
+      "id": "ne:place:1159140613",
+      "legacy_ascii": "Saarbrucken",
+      "source": "Saarbrücken",
+      "source_ascii": "Saarbrucken"
+    },
+    {
+      "id": "ne:place:1159140635",
+      "legacy_ascii": "Wurzburg",
+      "source": "Würzburg",
+      "source_ascii": "Wurzburg"
+    },
+    {
+      "id": "ne:place:1159140657",
+      "legacy_ascii": "Zlin",
+      "source": "Zlín",
+      "source_ascii": "Zlin"
+    },
+    {
+      "id": "ne:place:1159141097",
+      "legacy_ascii": "Kitakyushu",
+      "source": "Kitakyūshū",
+      "source_ascii": "Kitakyushu"
+    },
+    {
+      "id": "ne:place:1159141105",
+      "legacy_ascii": "Oita",
+      "source": "Ōita",
+      "source_ascii": "Oita"
+    },
+    {
+      "id": "ne:place:1159141313",
+      "legacy_ascii": "Kofu",
+      "source": "Kōfu",
+      "source_ascii": "Kofu"
+    },
+    {
+      "id": "ne:place:1159141585",
+      "legacy_ascii": "Bavaro",
+      "source": "Bávaro",
+      "source_ascii": "Bavaro"
+    },
+    {
+      "id": "ne:place:1159141673",
+      "legacy_ascii": "Mekambo",
+      "source": "Mékambo",
+      "source_ascii": "Mekambo"
+    },
+    {
+      "id": "ne:place:1159141891",
+      "legacy_ascii": "Lambarene",
+      "source": "Lambaréné",
+      "source_ascii": "Lambarene"
+    },
+    {
+      "id": "ne:place:1159141909",
+      "legacy_ascii": "Omboue",
+      "source": "Omboué",
+      "source_ascii": "Omboue"
+    },
+    {
+      "id": "ne:place:1159141973",
+      "legacy_ascii": "Beziers",
+      "source": "Béziers",
+      "source_ascii": "Beziers"
+    },
+    {
+      "id": "ne:place:1159141983",
+      "legacy_ascii": "Nimes",
+      "source": "Nîmes",
+      "source_ascii": "Nimes"
+    },
+    {
+      "id": "ne:place:1159142017",
+      "legacy_ascii": "Orleans",
+      "source": "Orléans",
+      "source_ascii": "Orleans"
+    },
+    {
+      "id": "ne:place:1159142107",
+      "legacy_ascii": "Vicuna",
+      "source": "Vicuña",
+      "source_ascii": "Vicuna"
+    },
+    {
+      "id": "ne:place:1159142151",
+      "legacy_ascii": "Quellon",
+      "source": "Quellón",
+      "source_ascii": "Quellon"
+    },
+    {
+      "id": "ne:place:1159142155",
+      "legacy_ascii": "Constitucion",
+      "source": "Constitución",
+      "source_ascii": "Constitucion"
+    },
+    {
+      "id": "ne:place:1159142379",
+      "legacy_ascii": "Sodankyla",
+      "source": "Sodankylä",
+      "source_ascii": "Sodankyla"
+    },
+    {
+      "id": "ne:place:1159142383",
+      "legacy_ascii": "Jyvaskyla",
+      "source": "Jyväskylä",
+      "source_ascii": "Jyvaskyla"
+    },
+    {
+      "id": "ne:place:1159143053",
+      "legacy_ascii": "Ferkessedougou",
+      "source": "Ferkessédougou",
+      "source_ascii": "Ferkessedougou"
+    },
+    {
+      "id": "ne:place:1159143059",
+      "legacy_ascii": "Kerouane",
+      "source": "Kérouané",
+      "source_ascii": "Kerouane"
+    },
+    {
+      "id": "ne:place:1159143081",
+      "legacy_ascii": "Odienne",
+      "source": "Odienné",
+      "source_ascii": "Odienne"
+    },
+    {
+      "id": "ne:place:1159143107",
+      "legacy_ascii": "Seguela",
+      "source": "Séguéla",
+      "source_ascii": "Seguela"
+    },
+    {
+      "id": "ne:place:1159143117",
+      "legacy_ascii": "Soubre",
+      "source": "Soubré",
+      "source_ascii": "Soubre"
+    },
+    {
+      "id": "ne:place:1159143177",
+      "legacy_ascii": "Pointe-a-Pitre",
+      "source": "Pointe-à-Pitre",
+      "source_ascii": "Pointe-a-Pitre"
+    },
+    {
+      "id": "ne:place:1159143195",
+      "legacy_ascii": "Maues",
+      "source": "Maués",
+      "source_ascii": "Maues"
+    },
+    {
+      "id": "ne:place:1159143205",
+      "legacy_ascii": "Codo",
+      "source": "Codó",
+      "source_ascii": "Codo"
+    },
+    {
+      "id": "ne:place:1159143209",
+      "legacy_ascii": "Coroata",
+      "source": "Coroatá",
+      "source_ascii": "Coroata"
+    },
+    {
+      "id": "ne:place:1159143241",
+      "legacy_ascii": "Capitao Poco",
+      "source": "Capitão Poço",
+      "source_ascii": "Capitao Poco"
+    },
+    {
+      "id": "ne:place:1159143249",
+      "legacy_ascii": "Salinopolis",
+      "source": "Salinópolis",
+      "source_ascii": "Salinopolis"
+    },
+    {
+      "id": "ne:place:1159143259",
+      "legacy_ascii": "Oriximina",
+      "source": "Oriximiná",
+      "source_ascii": "Oriximina"
+    },
+    {
+      "id": "ne:place:1159143267",
+      "legacy_ascii": "Jacunda",
+      "source": "Jacundá",
+      "source_ascii": "Jacunda"
+    },
+    {
+      "id": "ne:place:1159143271",
+      "legacy_ascii": "Uruara",
+      "source": "Uruará",
+      "source_ascii": "Uruara"
+    },
+    {
+      "id": "ne:place:1159143285",
+      "legacy_ascii": "Cameta",
+      "source": "Cametá",
+      "source_ascii": "Cameta"
+    },
+    {
+      "id": "ne:place:1159143299",
+      "legacy_ascii": "Abuna",
+      "source": "Abunã",
+      "source_ascii": "Abuna"
+    },
+    {
+      "id": "ne:place:1159143303",
+      "legacy_ascii": "Tocantinopolis",
+      "source": "Tocantinópolis",
+      "source_ascii": "Tocantinopolis"
+    },
+    {
+      "id": "ne:place:1159143317",
+      "legacy_ascii": "Paranaiba",
+      "source": "Paranaíba",
+      "source_ascii": "Paranaiba"
+    },
+    {
+      "id": "ne:place:1159143325",
+      "legacy_ascii": "Divinopolis",
+      "source": "Divinópolis",
+      "source_ascii": "Divinopolis"
+    },
+    {
+      "id": "ne:place:1159143337",
+      "legacy_ascii": "Araxa",
+      "source": "Araxá",
+      "source_ascii": "Araxa"
+    },
+    {
+      "id": "ne:place:1159143347",
+      "legacy_ascii": "Uba",
+      "source": "Ubá",
+      "source_ascii": "Uba"
+    },
+    {
+      "id": "ne:place:1159143369",
+      "legacy_ascii": "Bocaiuva",
+      "source": "Bocaiúva",
+      "source_ascii": "Bocaiuva"
+    },
+    {
+      "id": "ne:place:1159143373",
+      "legacy_ascii": "Aracuai",
+      "source": "Araçuaí",
+      "source_ascii": "Aracuai"
+    },
+    {
+      "id": "ne:place:1159143375",
+      "legacy_ascii": "Janauba",
+      "source": "Janaúba",
+      "source_ascii": "Janauba"
+    },
+    {
+      "id": "ne:place:1159143387",
+      "legacy_ascii": "Barra do Garcas",
+      "source": "Barra do Garças",
+      "source_ascii": "Barra do Garcas"
+    },
+    {
+      "id": "ne:place:1159143401",
+      "legacy_ascii": "Rondonopolis",
+      "source": "Rondonópolis",
+      "source_ascii": "Rondonopolis"
+    },
+    {
+      "id": "ne:place:1159143409",
+      "legacy_ascii": "Sao Borja",
+      "source": "São Borja",
+      "source_ascii": "Sao Borja"
+    },
+    {
+      "id": "ne:place:1159143423",
+      "legacy_ascii": "Camaqua",
+      "source": "Camaquã",
+      "source_ascii": "Camaqua"
+    },
+    {
+      "id": "ne:place:1159143427",
+      "legacy_ascii": "Bento Goncalves",
+      "source": "Bento Gonçalves",
+      "source_ascii": "Bento Goncalves"
+    },
+    {
+      "id": "ne:place:1159143433",
+      "legacy_ascii": "Ijui",
+      "source": "Ijuí",
+      "source_ascii": "Ijui"
+    },
+    {
+      "id": "ne:place:1159143445",
+      "legacy_ascii": "Maringa",
+      "source": "Maringá",
+      "source_ascii": "Maringa"
+    },
+    {
+      "id": "ne:place:1159143459",
+      "legacy_ascii": "Foz do Iguacu",
+      "source": "Foz do Iguaçu",
+      "source_ascii": "Foz do Iguacu"
+    },
+    {
+      "id": "ne:place:1159143463",
+      "legacy_ascii": "Sao Francisco do Sul",
+      "source": "São Francisco do Sul",
+      "source_ascii": "Sao Francisco do Sul"
+    },
+    {
+      "id": "ne:place:1159143469",
+      "legacy_ascii": "Porto Uniao",
+      "source": "Porto União",
+      "source_ascii": "Porto Uniao"
+    },
+    {
+      "id": "ne:place:1159143475",
+      "legacy_ascii": "Itajai",
+      "source": "Itajaí",
+      "source_ascii": "Itajai"
+    },
+    {
+      "id": "ne:place:1159143503",
+      "legacy_ascii": "Acarau",
+      "source": "Acaraú",
+      "source_ascii": "Acarau"
+    },
+    {
+      "id": "ne:place:1159143509",
+      "legacy_ascii": "Taua",
+      "source": "Tauá",
+      "source_ascii": "Taua"
+    },
+    {
+      "id": "ne:place:1159143513",
+      "legacy_ascii": "Crateus",
+      "source": "Crateús",
+      "source_ascii": "Crateus"
+    },
+    {
+      "id": "ne:place:1159143517",
+      "legacy_ascii": "Baturite",
+      "source": "Baturité",
+      "source_ascii": "Baturite"
+    },
+    {
+      "id": "ne:place:1159143521",
+      "legacy_ascii": "Ipu",
+      "source": "Ipú",
+      "source_ascii": "Ipu"
+    },
+    {
+      "id": "ne:place:1159143557",
+      "legacy_ascii": "Valenca",
+      "source": "Valença",
+      "source_ascii": "Valenca"
+    },
+    {
+      "id": "ne:place:1159143581",
+      "legacy_ascii": "Itambe",
+      "source": "Itambé",
+      "source_ascii": "Itambe"
+    },
+    {
+      "id": "ne:place:1159143593",
+      "legacy_ascii": "Sao Mateus",
+      "source": "São Mateus",
+      "source_ascii": "Sao Mateus"
+    },
+    {
+      "id": "ne:place:1159143607",
+      "legacy_ascii": "Petropolis",
+      "source": "Petrópolis",
+      "source_ascii": "Petropolis"
+    },
+    {
+      "id": "ne:place:1159143617",
+      "legacy_ascii": "Caico",
+      "source": "Caicó",
+      "source_ascii": "Caico"
+    },
+    {
+      "id": "ne:place:1159143621",
+      "legacy_ascii": "Acu",
+      "source": "Açu",
+      "source_ascii": "Acu"
+    },
+    {
+      "id": "ne:place:1159143625",
+      "legacy_ascii": "Estancia",
+      "source": "Estância",
+      "source_ascii": "Estancia"
+    },
+    {
+      "id": "ne:place:1159143785",
+      "legacy_ascii": "Caracarai",
+      "source": "Caracaraí",
+      "source_ascii": "Caracarai"
+    },
+    {
+      "id": "ne:place:1159144041",
+      "legacy_ascii": "Cacak",
+      "source": "Čačak",
+      "source_ascii": "Cacak"
+    },
+    {
+      "id": "ne:place:1159144045",
+      "legacy_ascii": "Nis",
+      "source": "Niš",
+      "source_ascii": "Nis"
+    },
+    {
+      "id": "ne:place:1159144091",
+      "legacy_ascii": "Malargue",
+      "source": "Malargüe",
+      "source_ascii": "Malargue"
+    },
+    {
+      "id": "ne:place:1159144095",
+      "legacy_ascii": "Tunuyan",
+      "source": "Tunuyán",
+      "source_ascii": "Tunuyan"
+    },
+    {
+      "id": "ne:place:1159144145",
+      "legacy_ascii": "San Ramon",
+      "source": "San Ramón",
+      "source_ascii": "San Ramon"
+    },
+    {
+      "id": "ne:place:1159144159",
+      "legacy_ascii": "Anapolis",
+      "source": "Anápolis",
+      "source_ascii": "Anapolis"
+    },
+    {
+      "id": "ne:place:1159144163",
+      "legacy_ascii": "Goianesia",
+      "source": "Goianésia",
+      "source_ascii": "Goianesia"
+    },
+    {
+      "id": "ne:place:1159144167",
+      "legacy_ascii": "Niquelandia",
+      "source": "Niquelândia",
+      "source_ascii": "Niquelandia"
+    },
+    {
+      "id": "ne:place:1159144177",
+      "legacy_ascii": "Jatai",
+      "source": "Jataí",
+      "source_ascii": "Jatai"
+    },
+    {
+      "id": "ne:place:1159144189",
+      "legacy_ascii": "Zarate",
+      "source": "Zárate",
+      "source_ascii": "Zarate"
+    },
+    {
+      "id": "ne:place:1159144195",
+      "legacy_ascii": "Carhue",
+      "source": "Carhué",
+      "source_ascii": "Carhue"
+    },
+    {
+      "id": "ne:place:1159144205",
+      "legacy_ascii": "Benito Juarez",
+      "source": "Benito Juárez",
+      "source_ascii": "Juarez"
+    },
+    {
+      "id": "ne:place:1159144211",
+      "legacy_ascii": "Mar de Ajo",
+      "source": "Mar de Ajó",
+      "source_ascii": "Mar de Ajo"
+    },
+    {
+      "id": "ne:place:1159144219",
+      "legacy_ascii": "Chascomus",
+      "source": "Chascomús",
+      "source_ascii": "Chascomus"
+    },
+    {
+      "id": "ne:place:1159144223",
+      "legacy_ascii": "Junin",
+      "source": "Junín",
+      "source_ascii": "Junin"
+    },
+    {
+      "id": "ne:place:1159144237",
+      "legacy_ascii": "Lujan",
+      "source": "Luján",
+      "source_ascii": "Lujan"
+    },
+    {
+      "id": "ne:place:1159144273",
+      "legacy_ascii": "Rio Tercero",
+      "source": "Río Tercero",
+      "source_ascii": "Rio Tercero"
+    },
+    {
+      "id": "ne:place:1159144291",
+      "legacy_ascii": "Libertador General San Martin",
+      "source": "Libertador General San Martín",
+      "source_ascii": "Libertador General San Martin"
+    },
+    {
+      "id": "ne:place:1159144323",
+      "legacy_ascii": "Anatuya",
+      "source": "Añatuya",
+      "source_ascii": "Anatuya"
+    },
+    {
+      "id": "ne:place:1159144337",
+      "legacy_ascii": "Juan Jose Castelli",
+      "source": "Juan José Castelli",
+      "source_ascii": "Juan Jose Castelli"
+    },
+    {
+      "id": "ne:place:1159144383",
+      "legacy_ascii": "Sao Jose do Rio Preto",
+      "source": "São José do Rio Preto",
+      "source_ascii": "Sao Jose do Rio Preto"
+    },
+    {
+      "id": "ne:place:1159144395",
+      "legacy_ascii": "Taubate",
+      "source": "Taubaté",
+      "source_ascii": "Taubate"
+    },
+    {
+      "id": "ne:place:1159144399",
+      "legacy_ascii": "Jau",
+      "source": "Jaú",
+      "source_ascii": "Jau"
+    },
+    {
+      "id": "ne:place:1159144423",
+      "legacy_ascii": "Fernandopolis",
+      "source": "Fernandópolis",
+      "source_ascii": "Fernandopolis"
+    },
+    {
+      "id": "ne:place:1159144441",
+      "legacy_ascii": "Timbauba",
+      "source": "Timbaúba",
+      "source_ascii": "Timbauba"
+    },
+    {
+      "id": "ne:place:1159144463",
+      "legacy_ascii": "Bossembele",
+      "source": "Bossembélé",
+      "source_ascii": "Bossembele"
+    },
+    {
+      "id": "ne:place:1159144471",
+      "legacy_ascii": "Edea",
+      "source": "Edéa",
+      "source_ascii": "Edea"
+    },
+    {
+      "id": "ne:place:1159144493",
+      "legacy_ascii": "Eseka",
+      "source": "Eséka",
+      "source_ascii": "Eseka"
+    },
+    {
+      "id": "ne:place:1159144511",
+      "legacy_ascii": "Belabo",
+      "source": "Bélabo",
+      "source_ascii": "Belabo"
+    },
+    {
+      "id": "ne:place:1159144521",
+      "legacy_ascii": "Ngaoundere",
+      "source": "Ngaoundéré",
+      "source_ascii": "Ngaoundere"
+    },
+    {
+      "id": "ne:place:1159144543",
+      "legacy_ascii": "Durres",
+      "source": "Durrës",
+      "source_ascii": "Durres"
+    },
+    {
+      "id": "ne:place:1159144547",
+      "legacy_ascii": "Shkoder",
+      "source": "Shkodër",
+      "source_ascii": "Shkoder"
+    },
+    {
+      "id": "ne:place:1159144565",
+      "legacy_ascii": "Sirvan",
+      "source": "Şirvan",
+      "source_ascii": "Shirvan"
+    },
+    {
+      "id": "ne:place:1159144669",
+      "legacy_ascii": "Takeo",
+      "source": "Takéo",
+      "source_ascii": "Takeo"
+    },
+    {
+      "id": "ne:place:1159144801",
+      "legacy_ascii": "Charana",
+      "source": "Charaña",
+      "source_ascii": "Charana"
+    },
+    {
+      "id": "ne:place:1159144841",
+      "legacy_ascii": "Potosi",
+      "source": "Potosí",
+      "source_ascii": "Potosi"
+    },
+    {
+      "id": "ne:place:1159144845",
+      "legacy_ascii": "Villazon",
+      "source": "Villazón",
+      "source_ascii": "Villazon"
+    },
+    {
+      "id": "ne:place:1159144863",
+      "legacy_ascii": "Robore",
+      "source": "Roboré",
+      "source_ascii": "Robore"
+    },
+    {
+      "id": "ne:place:1159144895",
+      "legacy_ascii": "Puerto Suarez",
+      "source": "Puerto Suárez",
+      "source_ascii": "Puerto Suarez"
+    },
+    {
+      "id": "ne:place:1159144925",
+      "legacy_ascii": "Beni Ounif",
+      "source": "Béni Ounif",
+      "source_ascii": "Beni Ounif"
+    },
+    {
+      "id": "ne:place:1159145007",
+      "legacy_ascii": "Saida",
+      "source": "Saïda",
+      "source_ascii": "Saida"
+    },
+    {
+      "id": "ne:place:1159145015",
+      "legacy_ascii": "Bejaia",
+      "source": "Béjaïa",
+      "source_ascii": "Bejaia"
+    },
+    {
+      "id": "ne:place:1159145025",
+      "legacy_ascii": "Bouira",
+      "source": "Bouïra",
+      "source_ascii": "Bouira"
+    },
+    {
+      "id": "ne:place:1159145029",
+      "legacy_ascii": "Medea",
+      "source": "Médéa",
+      "source_ascii": "Medea"
+    },
+    {
+      "id": "ne:place:1159145039",
+      "legacy_ascii": "Tebessa",
+      "source": "Tébessa",
+      "source_ascii": "Tebessa"
+    },
+    {
+      "id": "ne:place:1159146025",
+      "legacy_ascii": "Mayaguez",
+      "source": "Mayagüez",
+      "source_ascii": "Mayaguez"
+    },
+    {
+      "id": "ne:place:1159146123",
+      "legacy_ascii": null,
+      "source": "Amundsen–Scott South Pole Station",
+      "source_ascii": "AmundseniScott South Pole Station"
+    },
+    {
+      "id": "ne:place:1159146147",
+      "legacy_ascii": "San Martin Base",
+      "source": "San Martín Base",
+      "source_ascii": "San Martin Base"
+    },
+    {
+      "id": "ne:place:1159146181",
+      "legacy_ascii": "San Jose de Mayo",
+      "source": "San José de Mayo",
+      "source_ascii": "San Jose de Mayo"
+    },
+    {
+      "id": "ne:place:1159146289",
+      "legacy_ascii": "Maturin",
+      "source": "Maturín",
+      "source_ascii": "Maturin"
+    },
+    {
+      "id": "ne:place:1159146291",
+      "legacy_ascii": "Cumana",
+      "source": "Cumaná",
+      "source_ascii": "Cumana"
+    },
+    {
+      "id": "ne:place:1159146295",
+      "legacy_ascii": "Cadiz",
+      "source": "Cádiz",
+      "source_ascii": "Cadiz"
+    },
+    {
+      "id": "ne:place:1159146299",
+      "legacy_ascii": null,
+      "source": "Granada‎",
+      "source_ascii": "Granada"
+    },
+    {
+      "id": "ne:place:1159146309",
+      "legacy_ascii": "Jonkoping",
+      "source": "Jönköping",
+      "source_ascii": "Jonkoping"
+    },
+    {
+      "id": "ne:place:1159146311",
+      "legacy_ascii": "Ornskoldsvik",
+      "source": "Örnsköldsvik",
+      "source_ascii": "Ornskoldsvik"
+    },
+    {
+      "id": "ne:place:1159146331",
+      "legacy_ascii": "Thai Nguyen",
+      "source": "Thái Nguyên",
+      "source_ascii": "Thai Nguyen"
+    },
+    {
+      "id": "ne:place:1159146335",
+      "legacy_ascii": "Thanh Hoa",
+      "source": "Thanh Hóa",
+      "source_ascii": "Thanh Hoa"
+    },
+    {
+      "id": "ne:place:1159146337",
+      "legacy_ascii": "Nam Dinh",
+      "source": "Nam Định",
+      "source_ascii": "Nam Dinh"
+    },
+    {
+      "id": "ne:place:1159146341",
+      "legacy_ascii": "Dong Hoi",
+      "source": "Đồng Hới",
+      "source_ascii": "Dong Hoi"
+    },
+    {
+      "id": "ne:place:1159146353",
+      "legacy_ascii": "Hofn",
+      "source": "Höfn",
+      "source_ascii": "Hofn"
+    },
+    {
+      "id": "ne:place:1159146359",
+      "legacy_ascii": "La Coruna",
+      "source": "La Coruña",
+      "source_ascii": "La Coruna"
+    },
+    {
+      "id": "ne:place:1159146363",
+      "legacy_ascii": "Cap-Haitien",
+      "source": "Cap-Haïtien",
+      "source_ascii": "Cap-Haitien"
+    },
+    {
+      "id": "ne:place:1159146375",
+      "legacy_ascii": "Adapazari",
+      "source": "Adapazarı",
+      "source_ascii": "Adapazari"
+    },
+    {
+      "id": "ne:place:1159146389",
+      "legacy_ascii": "Sanliurfa",
+      "source": "Şanlıurfa",
+      "source_ascii": "Sanliurfa"
+    },
+    {
+      "id": "ne:place:1159146395",
+      "legacy_ascii": "Svolvaer",
+      "source": "Svolvær",
+      "source_ascii": "Svolvaer"
+    },
+    {
+      "id": "ne:place:1159146401",
+      "legacy_ascii": "Bodo",
+      "source": "Bodø",
+      "source_ascii": "Bodo"
+    },
+    {
+      "id": "ne:place:1159146417",
+      "legacy_ascii": "Concepcion",
+      "source": "Concepción",
+      "source_ascii": "Concepcion"
+    },
+    {
+      "id": "ne:place:1159146425",
+      "legacy_ascii": "Leon",
+      "source": "León",
+      "source_ascii": "Leon"
+    },
+    {
+      "id": "ne:place:1159146427",
+      "legacy_ascii": "Setubal",
+      "source": "Setúbal",
+      "source_ascii": "Setubal"
+    },
+    {
+      "id": "ne:place:1159146453",
+      "legacy_ascii": "Vadso",
+      "source": "Vadsø",
+      "source_ascii": "Vadso"
+    },
+    {
+      "id": "ne:place:1159146487",
+      "legacy_ascii": "Colon",
+      "source": "Colón",
+      "source_ascii": "Colon"
+    },
+    {
+      "id": "ne:place:1159146515",
+      "legacy_ascii": "Matockin Sar",
+      "source": "Matočkin Šar",
+      "source_ascii": "Matochkin Shar"
+    },
+    {
+      "id": "ne:place:1159146789",
+      "legacy_ascii": "Ciudad Juarez",
+      "source": "Ciudad Juárez",
+      "source_ascii": "Ciudad Juarez"
+    },
+    {
+      "id": "ne:place:1159146811",
+      "legacy_ascii": "Queretaro",
+      "source": "Querétaro",
+      "source_ascii": "Queretaro"
+    },
+    {
+      "id": "ne:place:1159146833",
+      "legacy_ascii": "Ondorkhaan",
+      "source": "Öndörkhaan",
+      "source_ascii": "Ondorhaan"
+    },
+    {
+      "id": "ne:place:1159146843",
+      "legacy_ascii": "Moron",
+      "source": "Mörön",
+      "source_ascii": "Moron"
+    },
+    {
+      "id": "ne:place:1159146853",
+      "legacy_ascii": "Zuunkharaa",
+      "source": "Züünkharaa",
+      "source_ascii": "Dzuunharaa"
+    },
+    {
+      "id": "ne:place:1159146907",
+      "legacy_ascii": "Noumea",
+      "source": "Nouméa",
+      "source_ascii": "Noumea"
+    },
+    {
+      "id": "ne:place:1159146915",
+      "legacy_ascii": "Monteria",
+      "source": "Montería",
+      "source_ascii": "Monteria"
+    },
+    {
+      "id": "ne:place:1159146921",
+      "legacy_ascii": "Camaguey",
+      "source": "Camagüey",
+      "source_ascii": "Camaguey"
+    },
+    {
+      "id": "ne:place:1159146923",
+      "legacy_ascii": "Guantanamo",
+      "source": "Guantánamo",
+      "source_ascii": "Guantanamo"
+    },
+    {
+      "id": "ne:place:1159146925",
+      "legacy_ascii": "Holguin",
+      "source": "Holguín",
+      "source_ascii": "Holguin"
+    },
+    {
+      "id": "ne:place:1159146931",
+      "legacy_ascii": "Ibague",
+      "source": "Ibagué",
+      "source_ascii": "Ibague"
+    },
+    {
+      "id": "ne:place:1159146933",
+      "legacy_ascii": "Popayan",
+      "source": "Popayán",
+      "source_ascii": "Popayan"
+    },
+    {
+      "id": "ne:place:1159146937",
+      "legacy_ascii": "Cucuta",
+      "source": "Cúcuta",
+      "source_ascii": "Cucuta"
+    },
+    {
+      "id": "ne:place:1159146943",
+      "legacy_ascii": "Torshavn",
+      "source": "Tórshavn",
+      "source_ascii": "Torshavn"
+    },
+    {
+      "id": "ne:place:1159146953",
+      "legacy_ascii": "Nurnberg",
+      "source": "Nürnberg",
+      "source_ascii": "Nurnberg"
+    },
+    {
+      "id": "ne:place:1159147165",
+      "legacy_ascii": "Kobe",
+      "source": "Kōbe",
+      "source_ascii": "Kobe"
+    },
+    {
+      "id": "ne:place:1159147231",
+      "legacy_ascii": "Puerto Aisen",
+      "source": "Puerto Aisén",
+      "source_ascii": "Puerto Aisen"
+    },
+    {
+      "id": "ne:place:1159147271",
+      "legacy_ascii": "Kemijarvi",
+      "source": "Kemijärvi",
+      "source_ascii": "Kemijarvi"
+    },
+    {
+      "id": "ne:place:1159147335",
+      "legacy_ascii": "Paysandu",
+      "source": "Paysandú",
+      "source_ascii": "Paysandu"
+    },
+    {
+      "id": "ne:place:1159147473",
+      "legacy_ascii": "Ciudad Bolivar",
+      "source": "Ciudad Bolívar",
+      "source_ascii": "Ciudad Bolivar"
+    },
+    {
+      "id": "ne:place:1159147533",
+      "legacy_ascii": "Dasoguz",
+      "source": "Daşoguz",
+      "source_ascii": "Dasoguz"
+    },
+    {
+      "id": "ne:place:1159147551",
+      "legacy_ascii": "Bien Hoa",
+      "source": "Biên Hòa",
+      "source_ascii": "Bien Hoa"
+    },
+    {
+      "id": "ne:place:1159147585",
+      "legacy_ascii": "Braganca",
+      "source": "Bragança",
+      "source_ascii": "Braganca"
+    },
+    {
+      "id": "ne:place:1159147587",
+      "legacy_ascii": "Obidos",
+      "source": "Óbidos",
+      "source_ascii": "Obidos"
+    },
+    {
+      "id": "ne:place:1159147615",
+      "legacy_ascii": "Nova Vicosa",
+      "source": "Nova Viçosa",
+      "source_ascii": "Nova Vicosa"
+    },
+    {
+      "id": "ne:place:1159147621",
+      "legacy_ascii": "Vitoria",
+      "source": "Vitória",
+      "source_ascii": "Vitoria"
+    },
+    {
+      "id": "ne:place:1159147623",
+      "legacy_ascii": "Joao Pessoa",
+      "source": "João Pessoa",
+      "source_ascii": "Joao Pessoa"
+    },
+    {
+      "id": "ne:place:1159147663",
+      "legacy_ascii": "Trois-Rivieres",
+      "source": "Trois-Rivières",
+      "source_ascii": "Trois Rivieres"
+    },
+    {
+      "id": "ne:place:1159147667",
+      "legacy_ascii": "Sept-Iles",
+      "source": "Sept-Îles",
+      "source_ascii": "Sept-Iles"
+    },
+    {
+      "id": "ne:place:1159147671",
+      "legacy_ascii": null,
+      "source": "Ísafjörður",
+      "source_ascii": "Isafjordur"
+    },
+    {
+      "id": "ne:place:1159147675",
+      "legacy_ascii": "Keflavik",
+      "source": "Keflavík",
+      "source_ascii": "Keflavik"
+    },
+    {
+      "id": "ne:place:1159147685",
+      "legacy_ascii": "Olavarria",
+      "source": "Olavarría",
+      "source_ascii": "Olavarria"
+    },
+    {
+      "id": "ne:place:1159147693",
+      "legacy_ascii": "Rio Cuarto",
+      "source": "Río Cuarto",
+      "source_ascii": "Rio Cuarto"
+    },
+    {
+      "id": "ne:place:1159147697",
+      "legacy_ascii": "San Ramon de la Nueva Oran",
+      "source": "San Ramón de la Nueva Orán",
+      "source_ascii": "San Ramon de la Nueva Oran"
+    },
+    {
+      "id": "ne:place:1159147703",
+      "legacy_ascii": "Aracatuba",
+      "source": "Araçatuba",
+      "source_ascii": "Aracatuba"
+    },
+    {
+      "id": "ne:place:1159147715",
+      "legacy_ascii": "Eskisehir",
+      "source": "Eskişehir",
+      "source_ascii": "Eskisehir"
+    },
+    {
+      "id": "ne:place:1159147877",
+      "legacy_ascii": "Linkoping",
+      "source": "Linköping",
+      "source_ascii": "Linkoping"
+    },
+    {
+      "id": "ne:place:1159147879",
+      "legacy_ascii": "Ostersund",
+      "source": "Östersund",
+      "source_ascii": "Ostersund"
+    },
+    {
+      "id": "ne:place:1159147885",
+      "legacy_ascii": "Umea",
+      "source": "Umeå",
+      "source_ascii": "Umea"
+    },
+    {
+      "id": "ne:place:1159147921",
+      "legacy_ascii": "Huanuco",
+      "source": "Huánuco",
+      "source_ascii": "Huanuco"
+    },
+    {
+      "id": "ne:place:1159148225",
+      "legacy_ascii": "Lodz",
+      "source": "Łódź",
+      "source_ascii": "Lodz"
+    },
+    {
+      "id": "ne:place:1159148231",
+      "legacy_ascii": "Maltahohe",
+      "source": "Maltahöhe",
+      "source_ascii": "Maltahohe"
+    },
+    {
+      "id": "ne:place:1159148253",
+      "legacy_ascii": "Goteborg",
+      "source": "Göteborg",
+      "source_ascii": "Goteborg"
+    },
+    {
+      "id": "ne:place:1159148293",
+      "legacy_ascii": "Berberati",
+      "source": "Berbérati",
+      "source_ascii": "Berberati"
+    },
+    {
+      "id": "ne:place:1159148363",
+      "legacy_ascii": "Tolanaro",
+      "source": "Tôlanaro",
+      "source_ascii": "Tolanaro"
+    },
+    {
+      "id": "ne:place:1159148515",
+      "legacy_ascii": "Parnu",
+      "source": "Pärnu",
+      "source_ascii": "Parnu"
+    },
+    {
+      "id": "ne:place:1159148545",
+      "legacy_ascii": "Menaka",
+      "source": "Ménaka",
+      "source_ascii": "Menaka"
+    },
+    {
+      "id": "ne:place:1159148559",
+      "legacy_ascii": "Chanaral",
+      "source": "Chañaral",
+      "source_ascii": "Chanaral"
+    },
+    {
+      "id": "ne:place:1159148563",
+      "legacy_ascii": "Chillan",
+      "source": "Chillán",
+      "source_ascii": "Chillan"
+    },
+    {
+      "id": "ne:place:1159148575",
+      "legacy_ascii": "Curico",
+      "source": "Curicó",
+      "source_ascii": "Curico"
+    },
+    {
+      "id": "ne:place:1159148591",
+      "legacy_ascii": "Ouesso",
+      "source": "Ouésso",
+      "source_ascii": "Ouesso"
+    },
+    {
+      "id": "ne:place:1159148623",
+      "legacy_ascii": "Tarabulus",
+      "source": "Ṭarābulus",
+      "source_ascii": "Tarabulus"
+    },
+    {
+      "id": "ne:place:1159148699",
+      "legacy_ascii": "Arhus",
+      "source": "Århus",
+      "source_ascii": "Aarhus"
+    },
+    {
+      "id": "ne:place:1159148703",
+      "legacy_ascii": "Labe",
+      "source": "Labé",
+      "source_ascii": "Labe"
+    },
+    {
+      "id": "ne:place:1159148705",
+      "legacy_ascii": "Boke",
+      "source": "Boké",
+      "source_ascii": "Boke"
+    },
+    {
+      "id": "ne:place:1159148721",
+      "legacy_ascii": "Eirunepe",
+      "source": "Eirunepé",
+      "source_ascii": "Eirunepe"
+    },
+    {
+      "id": "ne:place:1159148723",
+      "legacy_ascii": "Manicore",
+      "source": "Manicoré",
+      "source_ascii": "Manicore"
+    },
+    {
+      "id": "ne:place:1159148731",
+      "legacy_ascii": "Tefe",
+      "source": "Tefé",
+      "source_ascii": "Tefe"
+    },
+    {
+      "id": "ne:place:1159148735",
+      "legacy_ascii": "Sao Gabriel da Cachoeira",
+      "source": "São Gabriel da Cachoeira",
+      "source_ascii": "Sao Cabriel da Cachoeira"
+    },
+    {
+      "id": "ne:place:1159148737",
+      "legacy_ascii": "Novo Airao",
+      "source": "Novo Airão",
+      "source_ascii": "Novo Airao"
+    },
+    {
+      "id": "ne:place:1159148757",
+      "legacy_ascii": "Tucurui",
+      "source": "Tucuruí",
+      "source_ascii": "Tucurui"
+    },
+    {
+      "id": "ne:place:1159148761",
+      "legacy_ascii": "Conceicao do Araguaia",
+      "source": "Conceição do Araguaia",
+      "source_ascii": "Conceicao do Araguaia"
+    },
+    {
+      "id": "ne:place:1159148769",
+      "legacy_ascii": "Araguaina",
+      "source": "Araguaína",
+      "source_ascii": "Araguaina"
+    },
+    {
+      "id": "ne:place:1159148773",
+      "legacy_ascii": "Teofilo Otoni",
+      "source": "Teófilo Otoni",
+      "source_ascii": "Teofilo Otoni"
+    },
+    {
+      "id": "ne:place:1159148777",
+      "legacy_ascii": "Januaria",
+      "source": "Januária",
+      "source_ascii": "Januaria"
+    },
+    {
+      "id": "ne:place:1159148783",
+      "legacy_ascii": "Aripuana",
+      "source": "Aripuanã",
+      "source_ascii": "Aripuana"
+    },
+    {
+      "id": "ne:place:1159148787",
+      "legacy_ascii": "Jaguarao",
+      "source": "Jaguarão",
+      "source_ascii": "Jaguarao"
+    },
+    {
+      "id": "ne:place:1159148789",
+      "legacy_ascii": "Bage",
+      "source": "Bagé",
+      "source_ascii": "Bage"
+    },
+    {
+      "id": "ne:place:1159148793",
+      "legacy_ascii": "Criciuma",
+      "source": "Criciúma",
+      "source_ascii": "Criciuma"
+    },
+    {
+      "id": "ne:place:1159148797",
+      "legacy_ascii": "Ico",
+      "source": "Icó",
+      "source_ascii": "Ico"
+    },
+    {
+      "id": "ne:place:1159148801",
+      "legacy_ascii": "Parnaiba",
+      "source": "Parnaíba",
+      "source_ascii": "Parnaiba"
+    },
+    {
+      "id": "ne:place:1159148807",
+      "legacy_ascii": "Jequie",
+      "source": "Jequié",
+      "source_ascii": "Jequie"
+    },
+    {
+      "id": "ne:place:1159148809",
+      "legacy_ascii": "Ilheus",
+      "source": "Ilhéus",
+      "source_ascii": "Ilheus"
+    },
+    {
+      "id": "ne:place:1159148813",
+      "legacy_ascii": "Santa Maria da Vitoria",
+      "source": "Santa Maria da Vitória",
+      "source_ascii": "Santa Maria da Vitoria"
+    },
+    {
+      "id": "ne:place:1159148815",
+      "legacy_ascii": "Irece",
+      "source": "Irecê",
+      "source_ascii": "Irece"
+    },
+    {
+      "id": "ne:place:1159148825",
+      "legacy_ascii": "Mossoro",
+      "source": "Mossoró",
+      "source_ascii": "Mossoro"
+    },
+    {
+      "id": "ne:place:1159148897",
+      "legacy_ascii": "Amapa",
+      "source": "Amapá",
+      "source_ascii": "Amapa"
+    },
+    {
+      "id": "ne:place:1159148911",
+      "legacy_ascii": "Gaspe",
+      "source": "Gaspé",
+      "source_ascii": "Gaspe"
+    },
+    {
+      "id": "ne:place:1159148947",
+      "legacy_ascii": "Puerto San Julian",
+      "source": "Puerto San Julián",
+      "source_ascii": "Puerto San Julian"
+    },
+    {
+      "id": "ne:place:1159148963",
+      "legacy_ascii": "Rio Colorado",
+      "source": "Río Colorado",
+      "source_ascii": "Rio Colorado"
+    },
+    {
+      "id": "ne:place:1159148973",
+      "legacy_ascii": "Gualeguaychu",
+      "source": "Gualeguaychú",
+      "source_ascii": "Gualeguaychu"
+    },
+    {
+      "id": "ne:place:1159149001",
+      "legacy_ascii": "Uige",
+      "source": "Uíge",
+      "source_ascii": "Uige"
+    },
+    {
+      "id": "ne:place:1159149011",
+      "legacy_ascii": "Tombua",
+      "source": "Tômbua",
+      "source_ascii": "Tombua"
+    },
+    {
+      "id": "ne:place:1159149023",
+      "legacy_ascii": "Bechar",
+      "source": "Béchar",
+      "source_ascii": "Bechar"
+    },
+    {
+      "id": "ne:place:1159149035",
+      "legacy_ascii": "El Golea",
+      "source": "El Goléa",
+      "source_ascii": "El Golea"
+    },
+    {
+      "id": "ne:place:1159149047",
+      "legacy_ascii": "Setif",
+      "source": "Sétif",
+      "source_ascii": "Setif"
+    },
+    {
+      "id": "ne:place:1159149271",
+      "legacy_ascii": "Merida",
+      "source": "Mérida",
+      "source_ascii": "Merida"
+    },
+    {
+      "id": "ne:place:1159149313",
+      "legacy_ascii": "Atakpame",
+      "source": "Atakpamé",
+      "source_ascii": "Atakpame"
+    },
+    {
+      "id": "ne:place:1159149335",
+      "legacy_ascii": "Turkmenbasy",
+      "source": "Türkmenbaşy",
+      "source_ascii": "Turkmenbasy"
+    },
+    {
+      "id": "ne:place:1159149343",
+      "legacy_ascii": "Turkmenabat",
+      "source": "Türkmenabat",
+      "source_ascii": "Turkmenabat"
+    },
+    {
+      "id": "ne:place:1159149371",
+      "legacy_ascii": "Izmir",
+      "source": "İzmir",
+      "source_ascii": "Izmir"
+    },
+    {
+      "id": "ne:place:1159149389",
+      "legacy_ascii": "Cordoba",
+      "source": "Córdoba",
+      "source_ascii": "Cordoba"
+    },
+    {
+      "id": "ne:place:1159149397",
+      "legacy_ascii": "Constanta",
+      "source": "Constanța",
+      "source_ascii": "Constanta"
+    },
+    {
+      "id": "ne:place:1159149399",
+      "legacy_ascii": "Lulea",
+      "source": "Luleå",
+      "source_ascii": "Lulea"
+    },
+    {
+      "id": "ne:place:1159149403",
+      "legacy_ascii": "Iasi",
+      "source": "Iași",
+      "source_ascii": "Iasi"
+    },
+    {
+      "id": "ne:place:1159149439",
+      "legacy_ascii": "Kaedi",
+      "source": "Kaédi",
+      "source_ascii": "Kaedi"
+    },
+    {
+      "id": "ne:place:1159149665",
+      "legacy_ascii": "Torreon",
+      "source": "Torreón",
+      "source_ascii": "Torreon"
+    },
+    {
+      "id": "ne:place:1159149667",
+      "legacy_ascii": "Culiacan",
+      "source": "Culiacán",
+      "source_ascii": "Culiacan"
+    },
+    {
+      "id": "ne:place:1159149675",
+      "legacy_ascii": "San Luis Potosi",
+      "source": "San Luis Potosí",
+      "source_ascii": "San Luis Potosi"
+    },
+    {
+      "id": "ne:place:1159149689",
+      "legacy_ascii": "Leon",
+      "source": "León",
+      "source_ascii": "Leon"
+    },
+    {
+      "id": "ne:place:1159149707",
+      "legacy_ascii": "Gdansk",
+      "source": "Gdańsk",
+      "source_ascii": "Gdansk"
+    },
+    {
+      "id": "ne:place:1159149709",
+      "legacy_ascii": "Krakow",
+      "source": "Kraków",
+      "source_ascii": "Krakow"
+    },
+    {
+      "id": "ne:place:1159149723",
+      "legacy_ascii": "Luderitz",
+      "source": "Lüderitz",
+      "source_ascii": "Luderitz"
+    },
+    {
+      "id": "ne:place:1159149739",
+      "legacy_ascii": "Malmo",
+      "source": "Malmö",
+      "source_ascii": "Malmo"
+    },
+    {
+      "id": "ne:place:1159149833",
+      "legacy_ascii": "Limon",
+      "source": "Limón",
+      "source_ascii": "Puerto Limon"
+    },
+    {
+      "id": "ne:place:1159149935",
+      "legacy_ascii": "Kochi",
+      "source": "Kōchi",
+      "source_ascii": "Kochi"
+    },
+    {
+      "id": "ne:place:1159150049",
+      "legacy_ascii": "Copiapo",
+      "source": "Copiapó",
+      "source_ascii": "Copiapo"
+    },
+    {
+      "id": "ne:place:1159150071",
+      "legacy_ascii": "Segou",
+      "source": "Ségou",
+      "source_ascii": "Segou"
+    },
+    {
+      "id": "ne:place:1159150175",
+      "legacy_ascii": "Nzerekore",
+      "source": "Nzérékoré",
+      "source_ascii": "Nzerekore"
+    },
+    {
+      "id": "ne:place:1159150177",
+      "legacy_ascii": "Bouake",
+      "source": "Bouaké",
+      "source_ascii": "Bouake"
+    },
+    {
+      "id": "ne:place:1159150183",
+      "legacy_ascii": "Sao Luis",
+      "source": "São Luís",
+      "source_ascii": "Sao Luis"
+    },
+    {
+      "id": "ne:place:1159150191",
+      "legacy_ascii": "Corumba",
+      "source": "Corumbá",
+      "source_ascii": "Corumba"
+    },
+    {
+      "id": "ne:place:1159150197",
+      "legacy_ascii": "Uberlandia",
+      "source": "Uberlândia",
+      "source_ascii": "Uberlandia"
+    },
+    {
+      "id": "ne:place:1159150199",
+      "legacy_ascii": "Colider",
+      "source": "Colíder",
+      "source_ascii": "Colider"
+    },
+    {
+      "id": "ne:place:1159150205",
+      "legacy_ascii": "Cuiaba",
+      "source": "Cuiabá",
+      "source_ascii": "Cuiaba"
+    },
+    {
+      "id": "ne:place:1159150215",
+      "legacy_ascii": "Maceio",
+      "source": "Maceió",
+      "source_ascii": "Maceio"
+    },
+    {
+      "id": "ne:place:1159150217",
+      "legacy_ascii": "Vitoria da Conquista",
+      "source": "Vitória da Conquista",
+      "source_ascii": "Vitoria da Conquista"
+    },
+    {
+      "id": "ne:place:1159150285",
+      "legacy_ascii": "Neuquen",
+      "source": "Neuquén",
+      "source_ascii": "Neuquen"
+    },
+    {
+      "id": "ne:place:1159150297",
+      "legacy_ascii": "Tucuman",
+      "source": "Tucumán",
+      "source_ascii": "Tucuman"
+    },
+    {
+      "id": "ne:place:1159150309",
+      "legacy_ascii": "Ribeirao Preto",
+      "source": "Ribeirão Preto",
+      "source_ascii": "Ribeirao Preto"
+    },
+    {
+      "id": "ne:place:1159150335",
+      "legacy_ascii": "Mocamedes",
+      "source": "Moçâmedes",
+      "source_ascii": "Namibe"
+    },
+    {
+      "id": "ne:place:1159150505",
+      "legacy_ascii": "San Cristobal",
+      "source": "San Cristóbal",
+      "source_ascii": "San Cristobal"
+    },
+    {
+      "id": "ne:place:1159150535",
+      "legacy_ascii": "Lome",
+      "source": "Lomé",
+      "source_ascii": "Lome"
+    },
+    {
+      "id": "ne:place:1159150549",
+      "legacy_ascii": "Utqiagvik",
+      "source": "Utqiaġvik",
+      "source_ascii": "Utqiaġvik"
+    },
+    {
+      "id": "ne:place:1159150587",
+      "legacy_ascii": "Reykjavik",
+      "source": "Reykjavík",
+      "source_ascii": "Reykjavik"
+    },
+    {
+      "id": "ne:place:1159150621",
+      "legacy_ascii": "Asuncion",
+      "source": "Asunción",
+      "source_ascii": "Asuncion"
+    },
+    {
+      "id": "ne:place:1159150639",
+      "legacy_ascii": "Tromso",
+      "source": "Tromsø",
+      "source_ascii": "Tromso"
+    },
+    {
+      "id": "ne:place:1159150677",
+      "legacy_ascii": "Chisinau",
+      "source": "Chișinău",
+      "source_ascii": "Chisinau"
+    },
+    {
+      "id": "ne:place:1159150755",
+      "legacy_ascii": "Mazatlan",
+      "source": "Mazatlán",
+      "source_ascii": "Mazatlan"
+    },
+    {
+      "id": "ne:place:1159150765",
+      "legacy_ascii": "Tuxtla Gutierrez",
+      "source": "Tuxtla Gutiérrez",
+      "source_ascii": "Tuxtla Gutierrez"
+    },
+    {
+      "id": "ne:place:1159150767",
+      "legacy_ascii": "Cancun",
+      "source": "Cancún",
+      "source_ascii": "Cancun"
+    },
+    {
+      "id": "ne:place:1159150769",
+      "legacy_ascii": "Merida",
+      "source": "Mérida",
+      "source_ascii": "Merida"
+    },
+    {
+      "id": "ne:place:1159150849",
+      "legacy_ascii": "San Jose",
+      "source": "San José",
+      "source_ascii": "San Jose"
+    },
+    {
+      "id": "ne:place:1159150859",
+      "legacy_ascii": "Mitu",
+      "source": "Mitú",
+      "source_ascii": "Mitu"
+    },
+    {
+      "id": "ne:place:1159150865",
+      "legacy_ascii": "Abeche",
+      "source": "Abéché",
+      "source_ascii": "Abeche"
+    },
+    {
+      "id": "ne:place:1159150931",
+      "legacy_ascii": "Valparaiso",
+      "source": "Valparaíso",
+      "source_ascii": "Valparaiso"
+    },
+    {
+      "id": "ne:place:1159150935",
+      "legacy_ascii": "Concepcion",
+      "source": "Concepción",
+      "source_ascii": "Concepcion"
+    },
+    {
+      "id": "ne:place:1159150949",
+      "legacy_ascii": "Djenne",
+      "source": "Djenné",
+      "source_ascii": "Djenne"
+    },
+    {
+      "id": "ne:place:1159151009",
+      "legacy_ascii": "Santarem",
+      "source": "Santarém",
+      "source_ascii": "Santarem"
+    },
+    {
+      "id": "ne:place:1159151011",
+      "legacy_ascii": "Maraba",
+      "source": "Marabá",
+      "source_ascii": "Maraba"
+    },
+    {
+      "id": "ne:place:1159151017",
+      "legacy_ascii": "Ji-Parana",
+      "source": "Ji-Paraná",
+      "source_ascii": "Ji-Parana"
+    },
+    {
+      "id": "ne:place:1159151021",
+      "legacy_ascii": "Florianopolis",
+      "source": "Florianópolis",
+      "source_ascii": "Florianopolis"
+    },
+    {
+      "id": "ne:place:1159151057",
+      "legacy_ascii": "Macapa",
+      "source": "Macapá",
+      "source_ascii": "Macapa"
+    },
+    {
+      "id": "ne:place:1159151065",
+      "legacy_ascii": "Quebec",
+      "source": "Québec",
+      "source_ascii": "Quebec"
+    },
+    {
+      "id": "ne:place:1159151077",
+      "legacy_ascii": "N'Dele",
+      "source": "N'Délé",
+      "source_ascii": "Ndele"
+    },
+    {
+      "id": "ne:place:1159151089",
+      "legacy_ascii": "Rio Gallegos",
+      "source": "Río Gallegos",
+      "source_ascii": "Rio Gallegos"
+    },
+    {
+      "id": "ne:place:1159151099",
+      "legacy_ascii": "Bahia Blanca",
+      "source": "Bahía Blanca",
+      "source_ascii": "Bahia Blanca"
+    },
+    {
+      "id": "ne:place:1159151105",
+      "legacy_ascii": "Cordoba",
+      "source": "Córdoba",
+      "source_ascii": "Cordoba"
+    },
+    {
+      "id": "ne:place:1159151115",
+      "legacy_ascii": "Yaounde",
+      "source": "Yaoundé",
+      "source_ascii": "Yaounde"
+    },
+    {
+      "id": "ne:place:1159151195",
+      "legacy_ascii": "Sao Tome",
+      "source": "São Tomé",
+      "source_ascii": "Sao Tome"
+    },
+    {
+      "id": "ne:place:1159151201",
+      "legacy_ascii": "Male",
+      "source": "Malé",
+      "source_ascii": "Male"
+    },
+    {
+      "id": "ne:place:1159151271",
+      "legacy_ascii": "Zurich",
+      "source": "Zürich",
+      "source_ascii": "Zurich"
+    },
+    {
+      "id": "ne:place:1159151343",
+      "legacy_ascii": "Medellin",
+      "source": "Medellín",
+      "source_ascii": "Medellin"
+    },
+    {
+      "id": "ne:place:1159151437",
+      "legacy_ascii": "Kobenhavn",
+      "source": "København",
+      "source_ascii": "Kobenhavn"
+    },
+    {
+      "id": "ne:place:1159151441",
+      "legacy_ascii": "Belem",
+      "source": "Belém",
+      "source_ascii": "Belem"
+    },
+    {
+      "id": "ne:place:1159151443",
+      "legacy_ascii": "Brasilia",
+      "source": "Brasília",
+      "source_ascii": "Brasilia"
+    },
+    {
+      "id": "ne:place:1159151457",
+      "legacy_ascii": "Montreal",
+      "source": "Montréal",
+      "source_ascii": "Montreal"
+    },
+    {
+      "id": "ne:place:1159151459",
+      "legacy_ascii": "Goiania",
+      "source": "Goiânia",
+      "source_ascii": "Goiania"
+    },
+    {
+      "id": "ne:place:1159151531",
+      "legacy_ascii": "Urumqi",
+      "source": "Ürümqi",
+      "source_ascii": "Urumqi"
+    },
+    {
+      "id": "ne:place:1159151537",
+      "legacy_ascii": "Osaka",
+      "source": "Ōsaka",
+      "source_ascii": "Osaka"
+    },
+    {
+      "id": "ne:place:1159151621",
+      "legacy_ascii": "Sao Paulo",
+      "source": "São Paulo",
+      "source_ascii": "Sao Paulo"
+    }
+  ],
+  "note": "Codec representability only, not installed glyph or shaping verification. Source NAME has unspecified language; language-specific fields retained separately."
+}

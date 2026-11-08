@@ -1,0 +1,2452 @@
+{
+  "catalog_basis": "10m Natural Earth admin0 countries; source convention, not a sovereign-state list",
+  "omitted_at_110m": [
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:ESB",
+      "name": "Dhekelia Sovereign Base Area",
+      "wikidata": "Q9206745"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:MAF",
+      "name": "Saint Martin",
+      "wikidata": "Q126125"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:SXM",
+      "name": "Sint Maarten",
+      "wikidata": "Q26273"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:LIE",
+      "name": "Liechtenstein",
+      "wikidata": "Q347"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:SMR",
+      "name": "San Marino",
+      "wikidata": "Q238"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:MCO",
+      "name": "Monaco",
+      "wikidata": "Q235"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:AND",
+      "name": "Andorra",
+      "wikidata": "Q228"
+    },
+    {
+      "classification": "Lease",
+      "id": "ne:admin0:USG",
+      "name": "US Naval Base Guantanamo Bay",
+      "wikidata": "Q762570"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:BRI",
+      "name": "Brazilian Island",
+      "wikidata": "Q2093778"
+    },
+    {
+      "classification": "Disputed",
+      "id": "ne:admin0:GIB",
+      "name": "Gibraltar",
+      "wikidata": "Q1410"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:HKG",
+      "name": "Hong Kong S.A.R.",
+      "wikidata": "Q8646"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:VAT",
+      "name": "Vatican",
+      "wikidata": "Q237"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:CNM",
+      "name": "Cyprus No Mans Area",
+      "wikidata": "Q116970"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:KAS",
+      "name": "Siachen Glacier",
+      "wikidata": "Q333946"
+    },
+    {
+      "classification": "Lease",
+      "id": "ne:admin0:KAB",
+      "name": "Baykonur Cosmodrome",
+      "wikidata": "Q165413"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:WSB",
+      "name": "Akrotiri Sovereign Base Area",
+      "wikidata": "Q9143535"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:SPI",
+      "name": "Southern Patagonian Ice Field",
+      "wikidata": "Q1031467"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:BRT",
+      "name": "Bir Tawil",
+      "wikidata": "Q620634"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:CUW",
+      "name": "Curaçao",
+      "wikidata": "Q25279"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:ABW",
+      "name": "Aruba",
+      "wikidata": "Q21203"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:TCA",
+      "name": "Turks and Caicos Islands",
+      "wikidata": "Q18221"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:SPM",
+      "name": "Saint Pierre and Miquelon",
+      "wikidata": "Q34617"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:PCN",
+      "name": "Pitcairn Islands",
+      "wikidata": "Q35672"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:PYF",
+      "name": "French Polynesia",
+      "wikidata": "Q30971"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:SYC",
+      "name": "Seychelles",
+      "wikidata": "Q1042"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:KIR",
+      "name": "Kiribati",
+      "wikidata": "Q710"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:MHL",
+      "name": "Marshall Islands",
+      "wikidata": "Q709"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:GRD",
+      "name": "Grenada",
+      "wikidata": "Q769"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:VCT",
+      "name": "Saint Vincent and the Grenadines",
+      "wikidata": "Q757"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:BRB",
+      "name": "Barbados",
+      "wikidata": "Q244"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:LCA",
+      "name": "Saint Lucia",
+      "wikidata": "Q760"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:DMA",
+      "name": "Dominica",
+      "wikidata": "Q784"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:UMI",
+      "name": "United States Minor Outlying Islands",
+      "wikidata": "Q16645"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:MSR",
+      "name": "Montserrat",
+      "wikidata": "Q13353"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:ATG",
+      "name": "Antigua and Barbuda",
+      "wikidata": "Q781"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:KNA",
+      "name": "Saint Kitts and Nevis",
+      "wikidata": "Q763"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:VIR",
+      "name": "United States Virgin Islands",
+      "wikidata": "Q11703"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:BLM",
+      "name": "Saint Barthelemy",
+      "wikidata": "Q25362"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:AIA",
+      "name": "Anguilla",
+      "wikidata": "Q25228"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:VGB",
+      "name": "British Virgin Islands",
+      "wikidata": "Q25305"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:CYM",
+      "name": "Cayman Islands",
+      "wikidata": "Q5785"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:BMU",
+      "name": "Bermuda",
+      "wikidata": "Q23635"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:HMD",
+      "name": "Heard Island and McDonald Islands",
+      "wikidata": "Q131198"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:SHN",
+      "name": "Saint Helena",
+      "wikidata": "Q34497"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:MUS",
+      "name": "Mauritius",
+      "wikidata": "Q1027"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:COM",
+      "name": "Comoros",
+      "wikidata": "Q970"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:STP",
+      "name": "São Tomé and Principe",
+      "wikidata": "Q1039"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:CPV",
+      "name": "Cabo Verde",
+      "wikidata": "Q1011"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:MLT",
+      "name": "Malta",
+      "wikidata": "Q233"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:JEY",
+      "name": "Jersey",
+      "wikidata": "Q785"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:GGY",
+      "name": "Guernsey",
+      "wikidata": "Q25230"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:IMN",
+      "name": "Isle of Man",
+      "wikidata": "Q9676"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:ALD",
+      "name": "Aland",
+      "wikidata": "Q5689"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:FRO",
+      "name": "Faroe Islands",
+      "wikidata": "Q4628"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:IOA",
+      "name": "Indian Ocean Territories",
+      "wikidata": "Q4824275"
+    },
+    {
+      "classification": "Disputed",
+      "id": "ne:admin0:IOT",
+      "name": "British Indian Ocean Territory",
+      "wikidata": "Q43448"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:SGP",
+      "name": "Singapore",
+      "wikidata": "Q334"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:NFK",
+      "name": "Norfolk Island",
+      "wikidata": "Q31057"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:COK",
+      "name": "Cook Islands",
+      "wikidata": "Q26988"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:TON",
+      "name": "Tonga",
+      "wikidata": "Q678"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:WLF",
+      "name": "Wallis and Futuna",
+      "wikidata": "Q35555"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:WSM",
+      "name": "Samoa",
+      "wikidata": "Q683"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:TUV",
+      "name": "Tuvalu",
+      "wikidata": "Q672"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:MDV",
+      "name": "Maldives",
+      "wikidata": "Q826"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:NRU",
+      "name": "Nauru",
+      "wikidata": "Q697"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:FSM",
+      "name": "Federated States of Micronesia",
+      "wikidata": "Q702"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:SGS",
+      "name": "South Georgia and the Islands",
+      "wikidata": "Q35086"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:NIU",
+      "name": "Niue",
+      "wikidata": "Q34020"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:ASM",
+      "name": "American Samoa",
+      "wikidata": "Q16641"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:PLW",
+      "name": "Palau",
+      "wikidata": "Q695"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:GUM",
+      "name": "Guam",
+      "wikidata": "Q16635"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:MNP",
+      "name": "Northern Mariana Islands",
+      "wikidata": "Q16644"
+    },
+    {
+      "classification": "Sovereign country",
+      "id": "ne:admin0:BHR",
+      "name": "Bahrain",
+      "wikidata": "Q398"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:CSI",
+      "name": "Coral Sea Islands",
+      "wikidata": "Q172216"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:PGA",
+      "name": "Spratly Islands",
+      "wikidata": "Q43296"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:CLP",
+      "name": "Clipperton Island",
+      "wikidata": "Q161258"
+    },
+    {
+      "classification": "Country",
+      "id": "ne:admin0:MAC",
+      "name": "Macao S.A.R",
+      "wikidata": "Q14773"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:ATC",
+      "name": "Ashmore and Cartier Islands",
+      "wikidata": "Q133888"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:BJN",
+      "name": "Bajo Nuevo Bank (Petrel Is.)",
+      "wikidata": "Q1257783"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:SER",
+      "name": "Serranilla Bank",
+      "wikidata": "Q1169008"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:SCR",
+      "name": "Scarborough Reef",
+      "wikidata": "Q628716"
+    }
+  ],
+  "omitted_at_50m": [
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:ESB",
+      "name": "Dhekelia Sovereign Base Area",
+      "wikidata": "Q9206745"
+    },
+    {
+      "classification": "Lease",
+      "id": "ne:admin0:USG",
+      "name": "US Naval Base Guantanamo Bay",
+      "wikidata": "Q762570"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:BRI",
+      "name": "Brazilian Island",
+      "wikidata": "Q2093778"
+    },
+    {
+      "classification": "Disputed",
+      "id": "ne:admin0:GIB",
+      "name": "Gibraltar",
+      "wikidata": "Q1410"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:CNM",
+      "name": "Cyprus No Mans Area",
+      "wikidata": "Q116970"
+    },
+    {
+      "classification": "Lease",
+      "id": "ne:admin0:KAB",
+      "name": "Baykonur Cosmodrome",
+      "wikidata": "Q165413"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:WSB",
+      "name": "Akrotiri Sovereign Base Area",
+      "wikidata": "Q9143535"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:SPI",
+      "name": "Southern Patagonian Ice Field",
+      "wikidata": "Q1031467"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:BRT",
+      "name": "Bir Tawil",
+      "wikidata": "Q620634"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:UMI",
+      "name": "United States Minor Outlying Islands",
+      "wikidata": "Q16645"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:CSI",
+      "name": "Coral Sea Islands",
+      "wikidata": "Q172216"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:PGA",
+      "name": "Spratly Islands",
+      "wikidata": "Q43296"
+    },
+    {
+      "classification": "Dependency",
+      "id": "ne:admin0:CLP",
+      "name": "Clipperton Island",
+      "wikidata": "Q161258"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:BJN",
+      "name": "Bajo Nuevo Bank (Petrel Is.)",
+      "wikidata": "Q1257783"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:SER",
+      "name": "Serranilla Bank",
+      "wikidata": "Q1169008"
+    },
+    {
+      "classification": "Indeterminate",
+      "id": "ne:admin0:SCR",
+      "name": "Scarborough Reef",
+      "wikidata": "Q628716"
+    }
+  ],
+  "required_cases": [
+    {
+      "adm0_a3": "LIE",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:LIE",
+      "name": "Liechtenstein",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "ليختنشتاين"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "লিশটেনস্টাইন"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Λίχτενσταϊν"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "لیختناشتاین"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "ליכטנשטיין"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "लिक्टेन्स्टाइन"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "リヒテンシュタイン"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "리히텐슈타인"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Лихтенштейн"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Lihtenştayn"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Ліхтенштейн"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "لیختینستائن"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Liechtenstein"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "列支敦士登"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "列支敦斯登"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        9.559439,
+        47.111405
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "LIE",
+      "sovereign_source_name": "Liechtenstein",
+      "tiny_point_scales": [
+        "50m"
+      ],
+      "wikidata": "Q347"
+    },
+    {
+      "adm0_a3": "SMR",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:SMR",
+      "name": "San Marino",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "San Marino"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "سان مارينو"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "সান মারিনো"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "San Marino"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Άγιος Μαρίνος"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "San Marino"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "San Marino"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "سان مارینو"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Saint-Marin"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "סן מרינו"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "सान मारिनो"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "San Marino"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "San Marino"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "San Marino"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "サンマリノ"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "산마리노"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "San Marino"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "San Marino"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "San Marino"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Сан-Марино"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "San Marino"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "San Marino"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Сан-Марино"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "سان مارینو"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "San Marino"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "圣马力诺"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "聖馬力諾"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        12.441206,
+        43.933916
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "SMR",
+      "sovereign_source_name": "San Marino",
+      "tiny_point_scales": [
+        "50m"
+      ],
+      "wikidata": "Q238"
+    },
+    {
+      "adm0_a3": "MCO",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:MCO",
+      "name": "Monaco",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Monaco"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "موناكو"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "মোনাকো"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Monaco"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Μονακό"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Monaco"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Mónaco"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "موناکو"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Monaco"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "מונקו"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "मोनैको"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Monaco"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Monako"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Principato di Monaco"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "モナコ"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "모나코"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Monaco"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Monako"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Mónaco"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Монако"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Monaco"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Monako"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Монако"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "موناکو"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Monaco"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "摩纳哥"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "摩納哥"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        7.398291,
+        43.739652
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "MCO",
+      "sovereign_source_name": "Monaco",
+      "tiny_point_scales": [
+        "50m"
+      ],
+      "wikidata": "Q235"
+    },
+    {
+      "adm0_a3": "AND",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:AND",
+      "name": "Andorra",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Andorra"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "أندورا"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "অ্যান্ডোরা"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Andorra"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Ανδόρρα"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Andorra"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Andorra"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "آندورا"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Andorre"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "אנדורה"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "अण्डोरा"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Andorra"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Andorra"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Andorra"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "アンドラ"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "안도라"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Andorra"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Andora"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Andorra"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Андорра"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Andorra"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Andorra"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Андорра"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "انڈورا"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Andorra"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "安道尔"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "安道爾"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        1.539409,
+        42.547643
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "AND",
+      "sovereign_source_name": "Andorra",
+      "tiny_point_scales": [
+        "50m"
+      ],
+      "wikidata": "Q228"
+    },
+    {
+      "adm0_a3": "VAT",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:VAT",
+      "name": "Vatican",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Vatican"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "الفاتيكان"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "ভ্যাটিকান সিটি"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Vatikanstadt"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Βατικανό"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Vatican City"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Ciudad del Vaticano"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "واتیکان"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Cité du Vatican"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "קריית הוותיקן"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "वैटिकन नगर"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Vatikán"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Vatikan"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Città del Vaticano"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "バチカン"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "바티칸 시국"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Vaticaanstad"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Watykan"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Vaticano"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Ватикан"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Vatikanstaten"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Vatikan"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Ватикан"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "ویٹیکن سٹی"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Thành Vatican"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "梵蒂冈"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "梵蒂岡"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        12.453418,
+        41.903323
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "VAT",
+      "sovereign_source_name": "Vatican",
+      "tiny_point_scales": [
+        "50m"
+      ],
+      "wikidata": "Q237"
+    },
+    {
+      "adm0_a3": "GRL",
+      "classification": "Country",
+      "geometry_scales": [
+        "110m",
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:GRL",
+      "name": "Greenland",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Greenland"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "جرينلاند"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "গ্রিনল্যান্ড"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Grönland"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Γροιλανδία"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Greenland"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Groenlandia"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "گرینلند"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Groenland"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "גרינלנד"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "ग्रीनलैण्ड"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Grönland"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Greenland"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Groenlandia"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "グリーンランド"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "그린란드"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Groenland"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Grenlandia"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Groenlândia"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Гренландия"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Grönland"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Grönland"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Гренландія"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "گرین لینڈ"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Greenland"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "格陵兰"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "格陵蘭"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        -39.335251,
+        74.319387
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "DN1",
+      "sovereign_source_name": "Denmark",
+      "tiny_point_scales": [],
+      "wikidata": "Q223"
+    },
+    {
+      "adm0_a3": "FJI",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "110m",
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:FJI",
+      "name": "Fiji",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Fiji"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "فيجي"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "ফিজি"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Fidschi"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Φίτζι"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Fiji"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Fiyi"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "فیجی"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Fidji"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "פיג'י"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "फ़िजी"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Fidzsi-szigetek"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Fiji"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Figi"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "フィジー"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "피지"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Fiji"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Fidżi"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Fiji"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Фиджи"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Fiji"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Fiji"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Фіджі"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "فجی"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Fiji"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "斐济"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "斐濟"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        177.975427,
+        -17.826099
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "FJI",
+      "sovereign_source_name": "Fiji",
+      "tiny_point_scales": [],
+      "wikidata": "Q712"
+    },
+    {
+      "adm0_a3": "KIR",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:KIR",
+      "name": "Kiribati",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Kiribati"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "كيريباتي"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "কিরিবাস"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Kiribati"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Κιριμπάτι"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Kiribati"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Kiribati"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "کیریباتی"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Kiribati"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "קיריבטי"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "किरिबाती"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Kiribati"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Kiribati"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Kiribati"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "キリバス"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "키리바시"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Kiribati"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Kiribati"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Kiribati"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Кирибати"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Kiribati"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Kiribati"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Кірибаті"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "کیریباتی"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Kiribati"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "基里巴斯"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "吉里巴斯"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        -157.384577,
+        1.820437
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "KIR",
+      "sovereign_source_name": "Kiribati",
+      "tiny_point_scales": [
+        "110m",
+        "50m"
+      ],
+      "wikidata": "Q710"
+    },
+    {
+      "adm0_a3": "TUV",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:TUV",
+      "name": "Tuvalu",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "توفالو"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "টুভালু"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Τουβαλού"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "تووالو"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "טובאלו"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "तुवालू"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "ツバル"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "투발루"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Тувалу"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Тувалу"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "تووالو"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Tuvalu"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "图瓦卢"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "吐瓦魯"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        179.209587,
+        -8.513717
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "TUV",
+      "sovereign_source_name": "Tuvalu",
+      "tiny_point_scales": [
+        "110m",
+        "50m"
+      ],
+      "wikidata": "Q672"
+    },
+    {
+      "adm0_a3": "MDV",
+      "classification": "Sovereign country",
+      "geometry_scales": [
+        "50m",
+        "10m"
+      ],
+      "id": "ne:admin0:MDV",
+      "name": "Maldives",
+      "names": [
+        {
+          "language": "und",
+          "role": "source",
+          "source_field": "NAME",
+          "value": "Maldives"
+        },
+        {
+          "language": "ar",
+          "role": "localized-source",
+          "source_field": "NAME_AR",
+          "value": "المالديف"
+        },
+        {
+          "language": "bn",
+          "role": "localized-source",
+          "source_field": "NAME_BN",
+          "value": "মালদ্বীপ"
+        },
+        {
+          "language": "de",
+          "role": "localized-source",
+          "source_field": "NAME_DE",
+          "value": "Malediven"
+        },
+        {
+          "language": "el",
+          "role": "localized-source",
+          "source_field": "NAME_EL",
+          "value": "Μαλδίβες"
+        },
+        {
+          "language": "en",
+          "role": "localized-source",
+          "source_field": "NAME_EN",
+          "value": "Maldives"
+        },
+        {
+          "language": "es",
+          "role": "localized-source",
+          "source_field": "NAME_ES",
+          "value": "Maldivas"
+        },
+        {
+          "language": "fa",
+          "role": "localized-source",
+          "source_field": "NAME_FA",
+          "value": "مالدیو"
+        },
+        {
+          "language": "fr",
+          "role": "localized-source",
+          "source_field": "NAME_FR",
+          "value": "Maldives"
+        },
+        {
+          "language": "he",
+          "role": "localized-source",
+          "source_field": "NAME_HE",
+          "value": "האיים המלדיביים"
+        },
+        {
+          "language": "hi",
+          "role": "localized-source",
+          "source_field": "NAME_HI",
+          "value": "मालदीव"
+        },
+        {
+          "language": "hu",
+          "role": "localized-source",
+          "source_field": "NAME_HU",
+          "value": "Maldív-szigetek"
+        },
+        {
+          "language": "id",
+          "role": "localized-source",
+          "source_field": "NAME_ID",
+          "value": "Maladewa"
+        },
+        {
+          "language": "it",
+          "role": "localized-source",
+          "source_field": "NAME_IT",
+          "value": "Maldive"
+        },
+        {
+          "language": "ja",
+          "role": "localized-source",
+          "source_field": "NAME_JA",
+          "value": "モルディブ"
+        },
+        {
+          "language": "ko",
+          "role": "localized-source",
+          "source_field": "NAME_KO",
+          "value": "몰디브"
+        },
+        {
+          "language": "nl",
+          "role": "localized-source",
+          "source_field": "NAME_NL",
+          "value": "Maldiven"
+        },
+        {
+          "language": "pl",
+          "role": "localized-source",
+          "source_field": "NAME_PL",
+          "value": "Malediwy"
+        },
+        {
+          "language": "pt",
+          "role": "localized-source",
+          "source_field": "NAME_PT",
+          "value": "Maldivas"
+        },
+        {
+          "language": "ru",
+          "role": "localized-source",
+          "source_field": "NAME_RU",
+          "value": "Мальдивы"
+        },
+        {
+          "language": "sv",
+          "role": "localized-source",
+          "source_field": "NAME_SV",
+          "value": "Maldiverna"
+        },
+        {
+          "language": "tr",
+          "role": "localized-source",
+          "source_field": "NAME_TR",
+          "value": "Maldivler"
+        },
+        {
+          "language": "uk",
+          "role": "localized-source",
+          "source_field": "NAME_UK",
+          "value": "Мальдіви"
+        },
+        {
+          "language": "ur",
+          "role": "localized-source",
+          "source_field": "NAME_UR",
+          "value": "مالدیپ"
+        },
+        {
+          "language": "vi",
+          "role": "localized-source",
+          "source_field": "NAME_VI",
+          "value": "Maldives"
+        },
+        {
+          "language": "zh",
+          "role": "localized-source",
+          "source_field": "NAME_ZH",
+          "value": "马尔代夫"
+        },
+        {
+          "language": "zh-Hant",
+          "role": "localized-source",
+          "source_field": "NAME_ZHT",
+          "value": "馬爾地夫"
+        }
+      ],
+      "point_role": "Natural Earth label point; not verified as inside every polygon",
+      "representative_point": [
+        73.507554,
+        4.174441
+      ],
+      "source": "ne_10m_admin_0_countries",
+      "sovereign_source_code": "MDV",
+      "sovereign_source_name": "Maldives",
+      "tiny_point_scales": [
+        "110m",
+        "50m"
+      ],
+      "wikidata": "Q826"
+    }
+  ]
+}

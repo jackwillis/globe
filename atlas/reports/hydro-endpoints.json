@@ -1,0 +1,1514 @@
+{
+  "cases": {
+    "10m": {
+      "Amazon": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            -52.71176757812499,
+            -1.5838192687558887
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 0.721,
+          "nearest_lake_vertex_km_upper_bound": 175.224,
+          "part": 1,
+          "source_record_1_based": 748
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -54.32084960937499,
+              -2.18962981563088
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 190.843,
+            "nearest_lake_vertex_km_upper_bound": 0.75,
+            "part": 0,
+            "source_record_1_based": 747
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -54.14348144531249,
+              -2.24504973750588
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 174.897,
+            "nearest_lake_vertex_km_upper_bound": 0.056,
+            "part": 0,
+            "source_record_1_based": 747
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -53.78972167968749,
+              -1.9231747375058887
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 125.467,
+            "nearest_lake_vertex_km_upper_bound": 53.118,
+            "part": 0,
+            "source_record_1_based": 748
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -54.14360351562499,
+              -2.24504973750588
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 174.91,
+            "nearest_lake_vertex_km_upper_bound": 0.07,
+            "part": 0,
+            "source_record_1_based": 748
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -73.48862304687499,
+              -4.444854425005886
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 722.223,
+            "nearest_lake_vertex_km_upper_bound": 1252.335,
+            "part": 1,
+            "source_record_1_based": 748
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -52.71176757812499,
+              -1.5838192687558887
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.721,
+            "nearest_lake_vertex_km_upper_bound": 175.224,
+            "part": 1,
+            "source_record_1_based": 748
+          }
+        ],
+        "qid": "Q3783",
+        "source_names": [
+          "Amazonas"
+        ],
+        "source_record_count": 2
+      },
+      "Congo": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            13.184326171875,
+            -5.856280206255889
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 0.007,
+          "nearest_lake_vertex_km_upper_bound": 629.696,
+          "part": 0,
+          "source_record_1_based": 741
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              26.930419921875,
+              -5.61028411250588
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1311.408,
+            "nearest_lake_vertex_km_upper_bound": 247.221,
+            "part": 0,
+            "source_record_1_based": 737
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              26.441308593750023,
+              -8.272002862505886
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1383.207,
+            "nearest_lake_vertex_km_upper_bound": 25.819,
+            "part": 0,
+            "source_record_1_based": 737
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              24.292236328125,
+              0.7816836609316198
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1437.241,
+            "nearest_lake_vertex_km_upper_bound": 575.683,
+            "part": 0,
+            "source_record_1_based": 741
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              13.184326171875,
+              -5.856280206255889
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.007,
+            "nearest_lake_vertex_km_upper_bound": 629.696,
+            "part": 0,
+            "source_record_1_based": 741
+          }
+        ],
+        "qid": "Q3503",
+        "source_names": [
+          "Congo"
+        ],
+        "source_record_count": 2
+      },
+      "Danube": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            28.746972656250023,
+            45.23073151249412
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 30.185,
+          "nearest_lake_vertex_km_upper_bound": 159.63,
+          "part": 0,
+          "source_record_1_based": 997
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              17.206445312500023,
+              48.06110260624412
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 367.29,
+            "nearest_lake_vertex_km_upper_bound": 127.89,
+            "part": 0,
+            "source_record_1_based": 997
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              28.746972656250023,
+              45.23073151249412
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 30.185,
+            "nearest_lake_vertex_km_upper_bound": 159.63,
+            "part": 0,
+            "source_record_1_based": 997
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              8.17919921875,
+              48.09352448124412
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 409.588,
+            "nearest_lake_vertex_km_upper_bound": 69.16,
+            "part": 0,
+            "source_record_1_based": 998
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              12.506591796875,
+              48.92384674686912
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 353.498,
+            "nearest_lake_vertex_km_upper_bound": 256.806,
+            "part": 0,
+            "source_record_1_based": 998
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              17.206445312500023,
+              48.06110260624412
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 367.29,
+            "nearest_lake_vertex_km_upper_bound": 127.89,
+            "part": 1,
+            "source_record_1_based": 998
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              12.506591796875,
+              48.931268621869116
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 354.316,
+            "nearest_lake_vertex_km_upper_bound": 257.289,
+            "part": 1,
+            "source_record_1_based": 998
+          }
+        ],
+        "qid": "Q1653",
+        "source_names": [
+          "Danube",
+          "Donau"
+        ],
+        "source_record_count": 2
+      },
+      "Mekong": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            105.83798828125003,
+            10.004999090619108
+          ],
+          "end": "start",
+          "nearest_coast_vertex_km_upper_bound": 0.009,
+          "nearest_lake_vertex_km_upper_bound": 295.502,
+          "part": 3,
+          "source_record_1_based": 742
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              96.94130859375002,
+              31.96552155155662
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1117.614,
+            "nearest_lake_vertex_km_upper_bound": 319.455,
+            "part": 0,
+            "source_record_1_based": 736
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              101.56357421875003,
+              17.82050202030662
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 429.66,
+            "nearest_lake_vertex_km_upper_bound": 102.824,
+            "part": 0,
+            "source_record_1_based": 736
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              103.09228515625,
+              18.14142487186912
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 281.247,
+            "nearest_lake_vertex_km_upper_bound": 46.291,
+            "part": 0,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              101.56357421875003,
+              17.82050202030662
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 429.66,
+            "nearest_lake_vertex_km_upper_bound": 102.824,
+            "part": 0,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              103.09033203125,
+              18.13703034061912
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 281.597,
+            "nearest_lake_vertex_km_upper_bound": 46.697,
+            "part": 1,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              105.76669921875003,
+              15.132928778119123
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 242.512,
+            "nearest_lake_vertex_km_upper_bound": 288.074,
+            "part": 1,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              105.78173828125,
+              15.12055084843162
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 242.644,
+            "nearest_lake_vertex_km_upper_bound": 288.112,
+            "part": 2,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              104.952392578125,
+              11.594989324994117
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 137.333,
+            "nearest_lake_vertex_km_upper_bound": 94.362,
+            "part": 2,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              105.83798828125003,
+              10.004999090619108
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 0.009,
+            "nearest_lake_vertex_km_upper_bound": 295.502,
+            "part": 3,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              104.951171875,
+              11.59088776249412
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 136.881,
+            "nearest_lake_vertex_km_upper_bound": 94.733,
+            "part": 3,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              106.11865234375,
+              10.237567449994117
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 0.079,
+            "nearest_lake_vertex_km_upper_bound": 288.763,
+            "part": 4,
+            "source_record_1_based": 742
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              104.94999999999999,
+              11.592547918744117
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 136.963,
+            "nearest_lake_vertex_km_upper_bound": 94.514,
+            "part": 4,
+            "source_record_1_based": 742
+          }
+        ],
+        "qid": "Q41179",
+        "source_names": [
+          "Lancang",
+          "Mekong"
+        ],
+        "source_record_count": 2
+      },
+      "Mississippi": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            -89.03056640624999,
+            29.195868231244013
+          ],
+          "end": "start",
+          "nearest_coast_vertex_km_upper_bound": 0.006,
+          "nearest_lake_vertex_km_upper_bound": 125.083,
+          "part": 1,
+          "source_record_1_based": 1465
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -94.5068359375,
+              47.45641510624421
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1045.548,
+            "nearest_lake_vertex_km_upper_bound": 0.179,
+            "part": 0,
+            "source_record_1_based": 1416
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.63706054687495,
+              47.440008856244205
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1054.627,
+            "nearest_lake_vertex_km_upper_bound": 0.014,
+            "part": 0,
+            "source_record_1_based": 1416
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.09409179687509,
+              47.43280670780666
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1021.736,
+            "nearest_lake_vertex_km_upper_bound": 0.004,
+            "part": 1,
+            "source_record_1_based": 1416
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.32646484375013,
+              47.40563385624405
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1037.713,
+            "nearest_lake_vertex_km_upper_bound": 0.177,
+            "part": 1,
+            "source_record_1_based": 1416
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.32646484375013,
+              47.40563385624405
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1037.713,
+            "nearest_lake_vertex_km_upper_bound": 0.177,
+            "part": 0,
+            "source_record_1_based": 1417
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -94.50773925781263,
+              47.45656159061897
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1045.595,
+            "nearest_lake_vertex_km_upper_bound": 0.211,
+            "part": 0,
+            "source_record_1_based": 1417
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.09409179687509,
+              47.43280670780666
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1021.736,
+            "nearest_lake_vertex_km_upper_bound": 0.004,
+            "part": 1,
+            "source_record_1_based": 1417
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -90.13217773437486,
+              38.818670965618985
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 918.763,
+            "nearest_lake_vertex_km_upper_bound": 257.359,
+            "part": 1,
+            "source_record_1_based": 1417
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.63706054687495,
+              47.440008856244205
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1054.627,
+            "nearest_lake_vertex_km_upper_bound": 0.014,
+            "part": 2,
+            "source_record_1_based": 1417
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -95.17993164062518,
+              47.21642487186922
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1089.05,
+            "nearest_lake_vertex_km_upper_bound": 41.92,
+            "part": 2,
+            "source_record_1_based": 1417
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.18823242187491,
+              29.318793035931677
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 0.011,
+            "nearest_lake_vertex_km_upper_bound": 105.114,
+            "part": 0,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.2701904296875,
+              29.202093817181698
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 4.706,
+            "nearest_lake_vertex_km_upper_bound": 105.096,
+            "part": 0,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.03056640624999,
+              29.195868231244013
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 0.006,
+            "nearest_lake_vertex_km_upper_bound": 125.083,
+            "part": 1,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.25712890624997,
+              29.154901434369172
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1.939,
+            "nearest_lake_vertex_km_upper_bound": 109.237,
+            "part": 1,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -90.76352539062489,
+              34.36249420780664
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 444.898,
+            "nearest_lake_vertex_km_upper_bound": 284.148,
+            "part": 2,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -90.13217773437486,
+              38.818670965618985
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 918.763,
+            "nearest_lake_vertex_km_upper_bound": 257.359,
+            "part": 2,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -89.26098632812503,
+              29.155145574994144
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1.576,
+            "nearest_lake_vertex_km_upper_bound": 108.923,
+            "part": 3,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.41357421874997,
+              28.92833893436918
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.008,
+            "nearest_lake_vertex_km_upper_bound": 115.027,
+            "part": 3,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -90.76108398437495,
+              34.352118231244106
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 443.726,
+            "nearest_lake_vertex_km_upper_bound": 284.133,
+            "part": 4,
+            "source_record_1_based": 1465
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -89.26098632812503,
+              29.155145574994144
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1.576,
+            "nearest_lake_vertex_km_upper_bound": 108.923,
+            "part": 4,
+            "source_record_1_based": 1465
+          }
+        ],
+        "qid": "Q1497",
+        "source_names": [
+          "Mississippi"
+        ],
+        "source_record_count": 3
+      },
+      "Nile": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+          "coordinate": [
+            31.236914062500006,
+            30.12384674686912
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 118.943,
+          "nearest_lake_vertex_km_upper_bound": 104.775,
+          "part": 2,
+          "source_record_1_based": 749
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              33.69326171875002,
+              18.48981354374412
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 390.289,
+            "nearest_lake_vertex_km_upper_bound": 439.017,
+            "part": 0,
+            "source_record_1_based": 749
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              33.79052734375,
+              18.352411199994123
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 383.678,
+            "nearest_lake_vertex_km_upper_bound": 441.497,
+            "part": 0,
+            "source_record_1_based": 749
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              32.49013671875002,
+              15.634540106244117
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 635.275,
+            "nearest_lake_vertex_km_upper_bound": 372.826,
+            "part": 1,
+            "source_record_1_based": 749
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              31.090576171875,
+              21.60919830936912
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 494.192,
+            "nearest_lake_vertex_km_upper_bound": 0.012,
+            "part": 1,
+            "source_record_1_based": 749
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              32.87939453125,
+              23.987665106244123
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 233.841,
+            "nearest_lake_vertex_km_upper_bound": 0.021,
+            "part": 2,
+            "source_record_1_based": 749
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              31.236914062500006,
+              30.12384674686912
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 118.943,
+            "nearest_lake_vertex_km_upper_bound": 104.775,
+            "part": 2,
+            "source_record_1_based": 749
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              31.090576171875,
+              21.60919830936912
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 494.192,
+            "nearest_lake_vertex_km_upper_bound": 0.012,
+            "part": 0,
+            "source_record_1_based": 750
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              32.87939453125,
+              23.987665106244123
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 233.841,
+            "nearest_lake_vertex_km_upper_bound": 0.021,
+            "part": 0,
+            "source_record_1_based": 750
+          }
+        ],
+        "qid": "Q3392",
+        "source_names": [
+          "Nile"
+        ],
+        "source_record_count": 2
+      }
+    },
+    "50m": {
+      "Amazon": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            -52.664170091276674,
+            -1.5517912736482913
+          ],
+          "end": "start",
+          "nearest_coast_vertex_km_upper_bound": 0.004,
+          "nearest_lake_vertex_km_upper_bound": 415.821,
+          "part": 0,
+          "source_record_1_based": 112
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -52.664170091276674,
+              -1.5517912736482913
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 0.004,
+            "nearest_lake_vertex_km_upper_bound": 415.821,
+            "part": 0,
+            "source_record_1_based": 112
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              -73.48863542338603,
+              -4.444844658853867
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 723.062,
+            "nearest_lake_vertex_km_upper_bound": 1271.463,
+            "part": 0,
+            "source_record_1_based": 112
+          }
+        ],
+        "qid": "Q3783",
+        "source_names": [
+          "Amazonas"
+        ],
+        "source_record_count": 1
+      },
+      "Congo": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            13.068174268927407,
+            -5.864861341677511
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 0.002,
+          "nearest_lake_vertex_km_upper_bound": 775.668,
+          "part": 1,
+          "source_record_1_based": 158
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              26.44131147644356,
+              -8.272001234469371
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1385.666,
+            "nearest_lake_vertex_km_upper_bound": 230.899,
+            "part": 0,
+            "source_record_1_based": 158
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              26.930480584811164,
+              -5.610251560361178
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1314.467,
+            "nearest_lake_vertex_km_upper_bound": 247.985,
+            "part": 0,
+            "source_record_1_based": 158
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              24.292295363340372,
+              0.7817097027406135
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1448.814,
+            "nearest_lake_vertex_km_upper_bound": 578.496,
+            "part": 1,
+            "source_record_1_based": 158
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              13.068174268927407,
+              -5.864861341677511
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.002,
+            "nearest_lake_vertex_km_upper_bound": 775.668,
+            "part": 1,
+            "source_record_1_based": 158
+          }
+        ],
+        "qid": "Q3503",
+        "source_names": [
+          "Congo"
+        ],
+        "source_record_count": 1
+      },
+      "Danube": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            28.76070478699637,
+            45.23413849569505
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 31.896,
+          "nearest_lake_vertex_km_upper_bound": 397.873,
+          "part": 0,
+          "source_record_1_based": 167
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              17.206422966946434,
+              48.061097724280614
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 368.013,
+            "nearest_lake_vertex_km_upper_bound": 129.599,
+            "part": 0,
+            "source_record_1_based": 167
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              28.76070478699637,
+              45.23413849569505
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 31.896,
+            "nearest_lake_vertex_km_upper_bound": 397.873,
+            "part": 0,
+            "source_record_1_based": 167
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              8.21978803918671,
+              48.046809190391855
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 405.205,
+            "nearest_lake_vertex_km_upper_bound": 65.726,
+            "part": 0,
+            "source_record_1_based": 178
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              12.506554803461484,
+              48.92383576141134
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 354.475,
+            "nearest_lake_vertex_km_upper_bound": 257.679,
+            "part": 0,
+            "source_record_1_based": 178
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              17.206422966946434,
+              48.061097724280614
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 368.013,
+            "nearest_lake_vertex_km_upper_bound": 129.599,
+            "part": 1,
+            "source_record_1_based": 178
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              12.506554803461484,
+              48.931277167507346
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 355.293,
+            "nearest_lake_vertex_km_upper_bound": 258.167,
+            "part": 1,
+            "source_record_1_based": 178
+          }
+        ],
+        "qid": "Q1653",
+        "source_names": [
+          "Danube",
+          "Donau"
+        ],
+        "source_record_count": 2
+      },
+      "Mekong": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            105.83098758361018,
+            10.000733547215475
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 0.003,
+          "nearest_lake_vertex_km_upper_bound": 302.261,
+          "part": 0,
+          "source_record_1_based": 278
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              96.94129764157299,
+              31.9655427105277
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1120.013,
+            "nearest_lake_vertex_km_upper_bound": 319.18,
+            "part": 0,
+            "source_record_1_based": 255
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              101.56365115777476,
+              17.820514634442873
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 430.757,
+            "nearest_lake_vertex_km_upper_bound": 132.853,
+            "part": 0,
+            "source_record_1_based": 255
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              104.95114464710781,
+              11.590920721913847
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 138.823,
+            "nearest_lake_vertex_km_upper_bound": 101.368,
+            "part": 0,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              105.83098758361018,
+              10.000733547215475
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.003,
+            "nearest_lake_vertex_km_upper_bound": 302.261,
+            "part": 0,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              104.95114464710781,
+              11.590920721913847
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 138.823,
+            "nearest_lake_vertex_km_upper_bound": 101.368,
+            "part": 1,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              106.13639529820449,
+              10.22170197146886
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.004,
+            "nearest_lake_vertex_km_upper_bound": 297.965,
+            "part": 1,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              101.56365115777476,
+              17.820514634442873
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 430.757,
+            "nearest_lake_vertex_km_upper_bound": 132.853,
+            "part": 2,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 4,
+            "coordinate": [
+              103.09119974437277,
+              18.138253009368952
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 282.203,
+            "nearest_lake_vertex_km_upper_bound": 48.675,
+            "part": 2,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              103.09037967328334,
+              18.137058620658877
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 282.329,
+            "nearest_lake_vertex_km_upper_bound": 48.753,
+            "part": 3,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 4,
+            "coordinate": [
+              103.09119974437277,
+              18.138253009368952
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 282.203,
+            "nearest_lake_vertex_km_upper_bound": 48.675,
+            "part": 3,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 4,
+            "coordinate": [
+              103.09119974437277,
+              18.138253009368952
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 282.203,
+            "nearest_lake_vertex_km_upper_bound": 48.675,
+            "part": 4,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              103.09234337804452,
+              18.141399441331203
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 281.973,
+            "nearest_lake_vertex_km_upper_bound": 48.421,
+            "part": 4,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 4,
+            "coordinate": [
+              103.09119974437277,
+              18.138253009368952
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 282.203,
+            "nearest_lake_vertex_km_upper_bound": 48.675,
+            "part": 5,
+            "source_record_1_based": 278
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              104.95114464710781,
+              11.590920721913847
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 138.823,
+            "nearest_lake_vertex_km_upper_bound": 101.368,
+            "part": 5,
+            "source_record_1_based": 278
+          }
+        ],
+        "qid": "Q41179",
+        "source_names": [
+          "Lancang",
+          "Mekong"
+        ],
+        "source_record_count": 2
+      },
+      "Mississippi": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+          "coordinate": [
+            -89.37614112031639,
+            28.981332099296992
+          ],
+          "end": "start",
+          "nearest_coast_vertex_km_upper_bound": 0.002,
+          "nearest_lake_vertex_km_upper_bound": 171.517,
+          "part": 0,
+          "source_record_1_based": 282
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.32648495181905,
+              47.405633856717145
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1042.57,
+            "nearest_lake_vertex_km_upper_bound": 13.645,
+            "part": 0,
+            "source_record_1_based": 39
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.09412187352558,
+              47.43278982209267
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1026.605,
+            "nearest_lake_vertex_km_upper_bound": 22.445,
+            "part": 0,
+            "source_record_1_based": 39
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -94.5068098615858,
+              47.45640595157346
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1050.385,
+            "nearest_lake_vertex_km_upper_bound": 24.814,
+            "part": 1,
+            "source_record_1_based": 39
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.63706030938573,
+              47.43999868419195
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1059.46,
+            "nearest_lake_vertex_km_upper_bound": 26.099,
+            "part": 1,
+            "source_record_1_based": 39
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.37614112031639,
+              28.981332099296992
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 0.002,
+            "nearest_lake_vertex_km_upper_bound": 171.517,
+            "part": 0,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.01574968140261,
+              29.202868964331287
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.003,
+            "nearest_lake_vertex_km_upper_bound": 178.547,
+            "part": 0,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.26095435276113,
+              29.15514577895459
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 8.58,
+            "nearest_lake_vertex_km_upper_bound": 164.352,
+            "part": 1,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              -89.28860124365241,
+              29.17752167408605
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 11.873,
+            "nearest_lake_vertex_km_upper_bound": 160.695,
+            "part": 1,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              -89.28860124365241,
+              29.17752167408605
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 11.873,
+            "nearest_lake_vertex_km_upper_bound": 160.695,
+            "part": 2,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -89.18077836782737,
+              29.33570323361738
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 0.002,
+            "nearest_lake_vertex_km_upper_bound": 156.83,
+            "part": 2,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              -89.28860124365241,
+              29.17752167408605
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 11.873,
+            "nearest_lake_vertex_km_upper_bound": 160.695,
+            "part": 3,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.09412187352558,
+              47.43278982209267
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1026.605,
+            "nearest_lake_vertex_km_upper_bound": 22.445,
+            "part": 3,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -95.02582210960264,
+              47.15611420310802
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1096.4,
+            "nearest_lake_vertex_km_upper_bound": 30.641,
+            "part": 4,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.63706030938573,
+              47.43999868419195
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1059.46,
+            "nearest_lake_vertex_km_upper_bound": 26.099,
+            "part": 4,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 1,
+            "coordinate": [
+              -94.50774003757266,
+              47.456535142782684
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 1050.434,
+            "nearest_lake_vertex_km_upper_bound": 24.87,
+            "part": 5,
+            "source_record_1_based": 282
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              -94.32648495181905,
+              47.405633856717145
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 1042.57,
+            "nearest_lake_vertex_km_upper_bound": 13.645,
+            "part": 5,
+            "source_record_1_based": 282
+          }
+        ],
+        "qid": "Q1497",
+        "source_names": [
+          "Mississippi"
+        ],
+        "source_record_count": 2
+      },
+      "Nile": {
+        "closest_coast_endpoint": {
+          "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+          "coordinate": [
+            31.237607863512153,
+            30.12069407766961
+          ],
+          "end": "end",
+          "nearest_coast_vertex_km_upper_bound": 120.155,
+          "nearest_lake_vertex_km_upper_bound": 413.008,
+          "part": 1,
+          "source_record_1_based": 299
+        },
+        "endpoints": [
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              32.87947146973261,
+              23.9876834174558
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 237.177,
+            "nearest_lake_vertex_km_upper_bound": 0.002,
+            "part": 0,
+            "source_record_1_based": 48
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              31.090640089968247,
+              21.60919810680724
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 495.495,
+            "nearest_lake_vertex_km_upper_bound": 0.003,
+            "part": 0,
+            "source_record_1_based": 48
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              32.490141228734785,
+              15.634549872378784
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 636.582,
+            "nearest_lake_vertex_km_upper_bound": 621.769,
+            "part": 0,
+            "source_record_1_based": 299
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              31.090640089968247,
+              21.60919810680724
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 495.495,
+            "nearest_lake_vertex_km_upper_bound": 0.003,
+            "part": 0,
+            "source_record_1_based": 299
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 2,
+            "coordinate": [
+              32.87947146973261,
+              23.9876834174558
+            ],
+            "end": "start",
+            "nearest_coast_vertex_km_upper_bound": 237.177,
+            "nearest_lake_vertex_km_upper_bound": 0.002,
+            "part": 1,
+            "source_record_1_based": 299
+          },
+          {
+            "all_river_endpoint_incidence_at_1e5_degree_quantum": 3,
+            "coordinate": [
+              31.237607863512153,
+              30.12069407766961
+            ],
+            "end": "end",
+            "nearest_coast_vertex_km_upper_bound": 120.155,
+            "nearest_lake_vertex_km_upper_bound": 413.008,
+            "part": 1,
+            "source_record_1_based": 299
+          }
+        ],
+        "qid": "Q3392",
+        "source_names": [
+          "Nile"
+        ],
+        "source_record_count": 2
+      }
+    }
+  },
+  "interpretation": "Closest coast endpoint is a mouth candidate only. Direction, true outlet, confluences inside segments, island channels, lake interior connectivity, and navigability are unverified. No failure threshold is implied.",
+  "method": "Spherical distance to source vertices (upper bound, not distance to shoreline segments); endpoint incidence uses 1e-5 degree rounded lon/lat. QID source grouping is provisional."
+}

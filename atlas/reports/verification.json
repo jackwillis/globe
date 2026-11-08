@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "python": "3.14.8 (main, Oct  1 2026, 00:00:00) [GCC 16.2.1 20260819 (Red Hat 16.2.1-2)]",
+  "zlib_runtime": "1.3.1.zlib-ng",
+  "compiler": "c++ (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "audit_original_base": "886d126",
+  "integrated_main_base": "ce54d39",
+  "sanitizers": false,
+  "host_suite": {
+    "registered": 49,
+    "executed": 49,
+    "passed": 49,
+    "failed": 0,
+    "serial_seconds": 60.24,
+    "command": "ctest --test-dir build --output-on-failure -j 1",
+    "test_names": [
+      "line_layer",
+      "zoom",
+      "landclasses",
+      "compression_bench",
+      "floppy_report",
+      "place_builder",
+      "country_builder",
+      "landclass_builder",
+      "lakes_builder",
+      "elevation_builder",
+      "atlas_builder",
+      "bytes",
+      "framebuffer",
+      "projection",
+      "trackball",
+      "atlas",
+      "render",
+      "app",
+      "elevation",
+      "terrain",
+      "toolbar",
+      "countries",
+      "places",
+      "shaded",
+      "highlight",
+      "daynight",
+      "measure",
+      "overlays",
+      "pixel_format",
+      "frame_stats",
+      "cli",
+      "elevation_packs",
+      "classic_wait",
+      "classic_present",
+      "wall_clock",
+      "progressive",
+      "x11_smoke_24",
+      "x11_smoke_16",
+      "x11_pixels_24",
+      "x11_pixels_16",
+      "x11_toolbar",
+      "x11_repaint",
+      "x11_click",
+      "x11_zoom",
+      "x11_progressive",
+      "x11_idle",
+      "bench_refine",
+      "bench_smoke",
+      "codec"
+    ]
+  },
+  "configuration_only": [
+    {
+      "options": [
+        "-DCMAKE_DISABLE_FIND_PACKAGE_X11=TRUE"
+      ],
+      "registered": 39,
+      "executed": 0
+    },
+    {
+      "options": [
+        "-DGLOBE_BUILD_TESTS=OFF"
+      ],
+      "registered": 0,
+      "executed": 0
+    }
+  ],
+  "research_unit_tests": {
+    "command": "python3 atlas/research/test_audit.py -v",
+    "executed": 8,
+    "passed": 8
+  },
+  "semantic_qa": {
+    "checks": 75,
+    "passed": 69,
+    "warnings": 6,
+    "failed": 0
+  },
+  "reproducibility": {
+    "complete_builds": 2,
+    "comparison": "diff -qr /tmp/globe-atlas-output /tmp/globe-atlas-output-repeat",
+    "result": "identical"
+  },
+  "measurement_limits": [
+    "host only; no G4 access",
+    "allocation probe counts requested heap payload, not RSS or allocator overhead",
+    "candidate edition resident/peak figures are estimates, not actual JSON decoder allocations"
+  ]
+}

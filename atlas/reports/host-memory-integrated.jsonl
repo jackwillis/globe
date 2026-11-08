@@ -1,0 +1,7 @@
+{"sizeof_Vec3":24,"sizeof_CellBands":4,"sizeof_PolylineCap":32,"sizeof_TerrainScene":3152,"sizeof_pointer":8}
+{"layer":"atlas_scene","heap_payload_live_bytes":241912,"heap_payload_peak_bytes":241912,"allocations":2,"runtime_reported_bytes":241912}
+{"layer":"country_scene","heap_payload_live_bytes":248640,"heap_payload_peak_bytes":248640,"allocations":1,"runtime_reported_bytes":0}
+{"layer":"place_scene","heap_payload_live_bytes":7296,"heap_payload_peak_bytes":7296,"allocations":1,"runtime_reported_bytes":0}
+{"layer":"landclasses","heap_payload_live_bytes":64800,"heap_payload_peak_bytes":64800,"allocations":1,"runtime_reported_bytes":64800}
+{"layer":"data/elevation-1deg.gelv","heap_payload_live_bytes":3590509,"heap_payload_peak_bytes":3590509,"allocations":6,"runtime_reported_bytes":3593581}
+{"layer":"data/elevation-0.5deg.gelv","heap_payload_live_bytes":14308969,"heap_payload_peak_bytes":14308969,"allocations":6,"runtime_reported_bytes":14312041}

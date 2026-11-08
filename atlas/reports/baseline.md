@@ -88,3 +88,16 @@ measurement; no G4 run was performed.
   budget formula includes the correct combined 3,072. Documentation correction is a follow-up.
 * Historical sections in `data/SOURCES.md` describe work that was not implemented at that earlier
   time; later adoption entries and current builders supersede those statements.
+
+## Integration verification
+
+After merging local main through `ce54d39` and recording the already-equivalent historical Codex CI
+branches, a fresh configure again registered 49 tests; the complete serial run passed 49/49 in
+60.24 seconds. No-X11 configure (`-DCMAKE_DISABLE_FIND_PACKAGE_X11=TRUE`) registered **39**;
+tests-disabled configure (`-DGLOBE_BUILD_TESTS=OFF`) registered **0**. Those two configurations
+were registration checks only, not built or executed suites.
+
+The repeated memory probe on the integrated code records atlas scene heap **241,912** bytes in
+two allocations rather than baseline 249,697 in four; Claude's committed rendering simplification
+removed the old line-chunk workspace. Other measured layer figures are unchanged. Both snapshots
+are retained with their distinct bases; atlas research did not make that runtime change.

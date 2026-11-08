@@ -1,0 +1,2013 @@
+{
+  "10m": {
+    "lake_rank_distribution": {
+      "0": 19,
+      "1": 10,
+      "2": 17,
+      "3": 42,
+      "4": 95,
+      "5": 153,
+      "6": 98,
+      "7": 277,
+      "8": 173,
+      "9": 471
+    },
+    "lake_zoom_distribution": {
+      "1.0": 19,
+      "1.7": 10,
+      "2.0": 17,
+      "3.0": 42,
+      "4.0": 95,
+      "4.7": 153,
+      "5.0": 98,
+      "5.7": 276,
+      "6.0": 174,
+      "7.0": 471
+    },
+    "rank_distribution": {
+      "0": 1,
+      "1": 29,
+      "10": 26,
+      "11": 2,
+      "12": 3,
+      "2": 32,
+      "3": 54,
+      "4": 82,
+      "5": 83,
+      "6": 237,
+      "7": 318,
+      "8": 395,
+      "9": 211
+    },
+    "review_cases": {
+      "Amazon": [
+        {
+          "class": "Lake Centerline",
+          "english": "Amazon",
+          "name": "Amazonas",
+          "parts": 1,
+          "rank": "1",
+          "record_1_based": 747,
+          "vertices": 16
+        },
+        {
+          "class": "River",
+          "english": "Amazon",
+          "name": "Amazonas",
+          "parts": 2,
+          "rank": "1",
+          "record_1_based": 748,
+          "vertices": 701
+        }
+      ],
+      "Congo": [
+        {
+          "class": "River",
+          "english": "Congo",
+          "name": "Congo",
+          "parts": 1,
+          "rank": "2",
+          "record_1_based": 737,
+          "vertices": 153
+        },
+        {
+          "class": "River",
+          "english": "Congo",
+          "name": "Congo",
+          "parts": 1,
+          "rank": "2",
+          "record_1_based": 741,
+          "vertices": 421
+        }
+      ],
+      "Danube": [
+        {
+          "class": "River",
+          "english": "Danube",
+          "name": "Danube",
+          "parts": 1,
+          "rank": "2",
+          "record_1_based": 997,
+          "vertices": 543
+        },
+        {
+          "class": "River",
+          "english": "Danube",
+          "name": "Donau",
+          "parts": 2,
+          "rank": "2",
+          "record_1_based": 998,
+          "vertices": 360
+        }
+      ],
+      "Mekong": [
+        {
+          "class": "River",
+          "english": "Mekong",
+          "name": "Lancang",
+          "parts": 1,
+          "rank": "2",
+          "record_1_based": 736,
+          "vertices": 861
+        },
+        {
+          "class": "River",
+          "english": "Mekong",
+          "name": "Mekong",
+          "parts": 5,
+          "rank": "2",
+          "record_1_based": 742,
+          "vertices": 649
+        }
+      ],
+      "Mississippi": [
+        {
+          "class": "Lake Centerline",
+          "english": "Mississippi",
+          "name": "Mississippi",
+          "parts": 2,
+          "rank": "5",
+          "record_1_based": 1416,
+          "vertices": 18
+        },
+        {
+          "class": "River",
+          "english": "Mississippi",
+          "name": "Mississippi",
+          "parts": 3,
+          "rank": "5",
+          "record_1_based": 1417,
+          "vertices": 523
+        },
+        {
+          "class": "River",
+          "english": "Mississippi",
+          "name": "Mississippi",
+          "parts": 5,
+          "rank": "1",
+          "record_1_based": 1465,
+          "vertices": 658
+        }
+      ],
+      "Nile": [
+        {
+          "class": "River",
+          "english": "Nile",
+          "name": "Nile",
+          "parts": 3,
+          "rank": "1",
+          "record_1_based": 749,
+          "vertices": 740
+        },
+        {
+          "class": "Lake Centerline",
+          "english": "Nile",
+          "name": "Nile",
+          "parts": 1,
+          "rank": "1",
+          "record_1_based": 750,
+          "vertices": 102
+        }
+      ]
+    },
+    "summary": {
+      "antimeridian_segment_records": [],
+      "duplicate_ne_ids": {
+        "1159111155": [
+          "Burnett",
+          "Burnett"
+        ],
+        "1159113673": [
+          "Amu Darya",
+          "Amu Darya"
+        ],
+        "1159115199": [
+          "Ord",
+          "Ord"
+        ],
+        "1159117293": [
+          "Fitzroy",
+          "Fitzroy"
+        ],
+        "1159126777": [
+          "Roper",
+          "Roper"
+        ],
+        "1159126791": [
+          "Burdekin",
+          "Burdekin",
+          "Burdekin"
+        ],
+        "1159127389": [
+          "Victoria",
+          "Victoria"
+        ],
+        "1159127421": [
+          "Blackwood",
+          "Blackwood"
+        ],
+        "1159128907": [
+          "Fitzroy",
+          "Fitzroy"
+        ],
+        "1746531435": [
+          "Mitchell",
+          "Mitchell"
+        ]
+      },
+      "duplicate_wikidata_ids": {
+        "Q1010448": [
+          "Burdekin",
+          "Burdekin",
+          "Burdekin"
+        ],
+        "Q1016767": [
+          "Burnett",
+          "Burnett"
+        ],
+        "Q1046685": [
+          "Gan",
+          "Gan"
+        ],
+        "Q1048219": [
+          "Waikato",
+          "Waikato"
+        ],
+        "Q1060631": [
+          "Chambal",
+          "Chambal"
+        ],
+        "Q1063190": [
+          "Yuan",
+          "Yuan"
+        ],
+        "Q1068297": [
+          "Chattahoochee",
+          "Chattahoochee"
+        ],
+        "Q1089460": [
+          "Qumar",
+          "Qumar"
+        ],
+        "Q1129218": [
+          "Atoyac",
+          "Balsas",
+          "Balsas"
+        ],
+        "Q1131514": [
+          "Coppermine",
+          "Coppermine"
+        ],
+        "Q1139404": [
+          "Msta",
+          "Msta"
+        ],
+        "Q1143718": [
+          "Cumberland",
+          "Cumberland"
+        ],
+        "Q1147118": [
+          "Sheksna",
+          "Sheksna"
+        ],
+        "Q1149171": [
+          "Kola",
+          "Kola"
+        ],
+        "Q1161204": [
+          "San Juan",
+          "San Juan"
+        ],
+        "Q1161673": [
+          "Salinas",
+          "Salinas"
+        ],
+        "Q1162389": [
+          "Guárico",
+          "Guárico"
+        ],
+        "Q118771": [
+          "Guainía",
+          "Rio Negro"
+        ],
+        "Q1191116": [
+          "Voronya",
+          "Voronya"
+        ],
+        "Q1194112": [
+          "Mae Klong",
+          "Mae Klong"
+        ],
+        "Q1199792": [
+          "Komadugu Yobe",
+          "Komadugu Yobe"
+        ],
+        "Q1229": [
+          "Don",
+          "Don"
+        ],
+        "Q1239783": [
+          "Severn",
+          "Severn"
+        ],
+        "Q1241991": [
+          "Albany",
+          "Albany"
+        ],
+        "Q1256528": [
+          "Mouhoun",
+          "Mouhoun"
+        ],
+        "Q1259188": [
+          "Nakanbé",
+          "Nakanbé"
+        ],
+        "Q127892": [
+          "Paraná",
+          "Paraná"
+        ],
+        "Q128102": [
+          "Ertis",
+          "Ertis",
+          "Ertix",
+          "Irtysh"
+        ],
+        "Q128350": [
+          "Lukuga",
+          "Lukuga"
+        ],
+        "Q1295629": [
+          "Suda",
+          "Suda"
+        ],
+        "Q131210": [
+          "Dniester",
+          "Dniester"
+        ],
+        "Q1321316": [
+          "Lachlan",
+          "Lachlan"
+        ],
+        "Q1326653": [
+          "Corumbá",
+          "Corumbá"
+        ],
+        "Q1338024": [
+          "Klarälven",
+          "Klarälven"
+        ],
+        "Q134350": [
+          "Tisza",
+          "Tisa"
+        ],
+        "Q135477": [
+          "Chari",
+          "Bamingui"
+        ],
+        "Q1356561": [
+          "Pecos",
+          "Pecos"
+        ],
+        "Q1361278": [
+          "Humboldt",
+          "Humboldt"
+        ],
+        "Q1364584": [
+          "Ness",
+          "Ness"
+        ],
+        "Q1399312": [
+          "Feather",
+          "Feather"
+        ],
+        "Q1400022": [
+          "Winnipeg",
+          "Winnipeg"
+        ],
+        "Q141915": [
+          "Shebele",
+          "Shabeelle"
+        ],
+        "Q1421409": [
+          "Fitzroy",
+          "Fitzroy"
+        ],
+        "Q1421418": [
+          "Fitzroy",
+          "Fitzroy"
+        ],
+        "Q142148": [
+          "São Francisco",
+          "São Francisco"
+        ],
+        "Q14294": [
+          "Tajo",
+          "Tajo",
+          "Tejo"
+        ],
+        "Q14305": [
+          "Guadiana",
+          "Guadiana"
+        ],
+        "Q1431174": [
+          "Unzha",
+          "Unzha"
+        ],
+        "Q14366": [
+          "Ticino",
+          "Ticino",
+          "Ticino"
+        ],
+        "Q14506269": [
+          "Bell",
+          "Bell"
+        ],
+        "Q14554": [
+          "Mio",
+          "Minho"
+        ],
+        "Q1470945": [
+          "Limay",
+          "Limay"
+        ],
+        "Q1497": [
+          "Mississippi",
+          "Mississippi",
+          "Mississippi"
+        ],
+        "Q1506343": [
+          "Motala ström",
+          "Motala ström"
+        ],
+        "Q1511505": [
+          "Kyzyl-Khem",
+          "Malyy Yenisey"
+        ],
+        "Q1511554": [
+          "Lempa",
+          "Lempa"
+        ],
+        "Q1514693": [
+          "Malagarasi",
+          "Malagarasi"
+        ],
+        "Q1518007": [
+          "Mahaweli",
+          "Mahaweli"
+        ],
+        "Q15243": [
+          "Volkhov",
+          "Volkhov"
+        ],
+        "Q15277375": [
+          "Shishhid Gol",
+          "Shishhid Gol"
+        ],
+        "Q1535828": [
+          "Sassandra",
+          "Sassandra"
+        ],
+        "Q1540063": [
+          "Victoria",
+          "Victoria"
+        ],
+        "Q1542855": [
+          "Grand",
+          "Grand"
+        ],
+        "Q156032": [
+          "Red",
+          "Red",
+          "Red",
+          "Red"
+        ],
+        "Q156054": [
+          "Tocantins",
+          "Tocantins",
+          "Tocantins"
+        ],
+        "Q156557": [
+          "Kura",
+          "Kura"
+        ],
+        "Q157042": [
+          "Pripyat",
+          "Pripyat"
+        ],
+        "Q1584933": [
+          "Roanoke",
+          "Roanoke"
+        ],
+        "Q160636": [
+          "Rio Grande",
+          "Rio Grande"
+        ],
+        "Q162737": [
+          "Angara",
+          "Angara",
+          "Angara",
+          "Angara"
+        ],
+        "Q1633955": [
+          "Lerma",
+          "Lerma"
+        ],
+        "Q1637839": [
+          "Niari",
+          "Kouilou"
+        ],
+        "Q1653": [
+          "Danube",
+          "Donau"
+        ],
+        "Q1669474": [
+          "Nottaway",
+          "Nottaway"
+        ],
+        "Q1677915": [
+          "Saint Johns",
+          "Saint Johns"
+        ],
+        "Q1714941": [
+          "Jänisjoki",
+          "Jänisjoki"
+        ],
+        "Q171675": [
+          "Sutlej",
+          "Sutlej"
+        ],
+        "Q171840": [
+          "Caquetá",
+          "Japurá"
+        ],
+        "Q1755015": [
+          "North Platte",
+          "North Platte"
+        ],
+        "Q1760800": [
+          "Pit",
+          "Pit"
+        ],
+        "Q179444": [
+          "S. Branch Potomac",
+          "Potomac"
+        ],
+        "Q181475": [
+          "Orange",
+          "Orange",
+          "Orange"
+        ],
+        "Q182942": [
+          "Cuando",
+          "Linyanti",
+          "Chobe"
+        ],
+        "Q183078": [
+          "Murray",
+          "Murray",
+          "Murray"
+        ],
+        "Q1871142": [
+          "Lotta",
+          "Lotta"
+        ],
+        "Q188773": [
+          "Okavango",
+          "Cubango"
+        ],
+        "Q188940": [
+          "Southern Bug",
+          "Southern Bug"
+        ],
+        "Q1889886": [
+          "Yaqui",
+          "Yaqui"
+        ],
+        "Q191524": [
+          "Esil",
+          "Ishim"
+        ],
+        "Q192157": [
+          "Belaya",
+          "Belaya"
+        ],
+        "Q192415": [
+          "Volta",
+          "Volta"
+        ],
+        "Q192495": [
+          "Vyatka",
+          "Vyatka"
+        ],
+        "Q192567": [
+          "Ile",
+          "Ile"
+        ],
+        "Q192820": [
+          "Shannon",
+          "Shannon"
+        ],
+        "Q193499": [
+          "Krishna",
+          "Krishna"
+        ],
+        "Q193737": [
+          "Tennessee",
+          "Tennessee"
+        ],
+        "Q1939518": [
+          "Mitchell",
+          "Mitchell"
+        ],
+        "Q1970278": [
+          "Conchos",
+          "Conchos"
+        ],
+        "Q2028742": [
+          "Ord",
+          "Ord",
+          "Ord"
+        ],
+        "Q204806": [
+          "Bénoué",
+          "Benue"
+        ],
+        "Q205428": [
+          "Semliki",
+          "Semliki"
+        ],
+        "Q207777": [
+          "Ussuri",
+          "Ussuri"
+        ],
+        "Q209031": [
+          "Narva",
+          "Narva"
+        ],
+        "Q209530": [
+          "Vaal",
+          "Vaal"
+        ],
+        "Q2096856": [
+          "Pongola",
+          "Pongola"
+        ],
+        "Q210220": [
+          "Zeya",
+          "Zeya"
+        ],
+        "Q210326": [
+          "Di’er Songhua",
+          "Di’er Songhua",
+          "Di’er Songhua",
+          "Songhua"
+        ],
+        "Q2116752": [
+          "Cheyenne",
+          "Cheyenne"
+        ],
+        "Q2128582": [
+          "Rainy",
+          "Rainy"
+        ],
+        "Q213067": [
+          "Svir",
+          "Svir"
+        ],
+        "Q214779": [
+          "Kemijoki",
+          "Kemijoki"
+        ],
+        "Q214874": [
+          "Jhelum",
+          "Jhelum"
+        ],
+        "Q2155503": [
+          "Oich",
+          "Oich"
+        ],
+        "Q216239": [
+          "Cauvery",
+          "Cauvery"
+        ],
+        "Q216627": [
+          "Dalälven",
+          "Dalälven"
+        ],
+        "Q21791781": [
+          "Verde",
+          "Verde"
+        ],
+        "Q21842561": [
+          "Chico",
+          "Chico"
+        ],
+        "Q2207501": [
+          "Trombetas",
+          "Trombetas"
+        ],
+        "Q220839": [
+          "Luvua",
+          "Luvua"
+        ],
+        "Q2216": [
+          "Athabasca",
+          "Athabasca"
+        ],
+        "Q2220": [
+          "Peace",
+          "Peace"
+        ],
+        "Q2242": [
+          "South Saskatchewan",
+          "South Saskatchewan"
+        ],
+        "Q2251": [
+          "Columbia",
+          "Columbia"
+        ],
+        "Q2279579": [
+          "Shire",
+          "Shire"
+        ],
+        "Q2302661": [
+          "Río Grande de Santiago",
+          "Río Grande de Santiago"
+        ],
+        "Q2305285": [
+          "Kovzha River",
+          "Kovzha River"
+        ],
+        "Q2416760": [
+          "Thelon",
+          "Thelon"
+        ],
+        "Q2459279": [
+          "Tugaloo",
+          "Tugaloo"
+        ],
+        "Q2485103": [
+          "Waiau",
+          "Waiau"
+        ],
+        "Q252472": [
+          "Oti",
+          "Oti"
+        ],
+        "Q26076": [
+          "Ayeyarwady",
+          "Irrawaddy Delta"
+        ],
+        "Q2635327": [
+          "Tshuapa",
+          "Busira",
+          "Ruki"
+        ],
+        "Q26361": [
+          "Katanga",
+          "Podkamennaya Tunguska"
+        ],
+        "Q26422": [
+          "Nu",
+          "Nu",
+          "Salween"
+        ],
+        "Q26433": [
+          "Vilyuy",
+          "Vilyuy"
+        ],
+        "Q26439": [
+          "Hailar",
+          "Argun’"
+        ],
+        "Q2656862": [
+          "Tao’er",
+          "Tao’er"
+        ],
+        "Q268532": [
+          "Flathead",
+          "Flathead"
+        ],
+        "Q27035": [
+          "Grijalva",
+          "Grijalva"
+        ],
+        "Q270627": [
+          "Colorado",
+          "Colorado"
+        ],
+        "Q271112": [
+          "Ångermanälven",
+          "Ångermanälven"
+        ],
+        "Q272074": [
+          "Snake",
+          "Snake"
+        ],
+        "Q2745932": [
+          "Wind",
+          "Wind"
+        ],
+        "Q284495": [
+          "Teslin",
+          "Teslin"
+        ],
+        "Q28457542": [
+          "Verde",
+          "Verde",
+          "Verde",
+          "Verde"
+        ],
+        "Q286703": [
+          "English",
+          "English"
+        ],
+        "Q288695": [
+          "Oka",
+          "Oka"
+        ],
+        "Q291233": [
+          "Churchill",
+          "Churchill"
+        ],
+        "Q2992976": [
+          "Congaree",
+          "Congaree"
+        ],
+        "Q3047": [
+          "Saskatchewan",
+          "Saskatchewan"
+        ],
+        "Q31379": [
+          "La Grande",
+          "La Grande"
+        ],
+        "Q319590": [
+          "Beas",
+          "Beas"
+        ],
+        "Q3258735": [
+          "Lokoro",
+          "Lokoro"
+        ],
+        "Q3285958": [
+          "Maningory",
+          "Maningory"
+        ],
+        "Q3292": [
+          "Nelson",
+          "Nelson"
+        ],
+        "Q331162": [
+          "Tana",
+          "Tana"
+        ],
+        "Q3318": [
+          "Churchill",
+          "Churchill"
+        ],
+        "Q335575": [
+          "Sacramento",
+          "Sacramento"
+        ],
+        "Q3392": [
+          "Nile",
+          "Nile"
+        ],
+        "Q3411": [
+          "Mackenzie",
+          "Mackenzie"
+        ],
+        "Q34589": [
+          "Euphrates",
+          "Firat",
+          "Firat",
+          "Al Furat",
+          "Al Furat"
+        ],
+        "Q3503": [
+          "Congo",
+          "Congo"
+        ],
+        "Q3542": [
+          "Niger",
+          "Niger"
+        ],
+        "Q35591": [
+          "Dicle",
+          "Tigris"
+        ],
+        "Q370750": [
+          "Savannah",
+          "Savannah"
+        ],
+        "Q374772": [
+          "Yellowstone",
+          "Yellowstone"
+        ],
+        "Q3783": [
+          "Amazonas",
+          "Amazonas"
+        ],
+        "Q386331": [
+          "Grande",
+          "Grande"
+        ],
+        "Q392161": [
+          "Saguenay",
+          "Saguenay"
+        ],
+        "Q40059": [
+          "Jordan",
+          "Jordan"
+        ],
+        "Q403053": [
+          "Ahuriri",
+          "Ahuriri"
+        ],
+        "Q40855": [
+          "Dnipro",
+          "Dnipro",
+          "Dnepre"
+        ],
+        "Q41179": [
+          "Lancang",
+          "Mekong"
+        ],
+        "Q41986": [
+          "Maas",
+          "Maas"
+        ],
+        "Q426516": [
+          "Indalsälven",
+          "Indalsälven"
+        ],
+        "Q427437": [
+          "Rupert",
+          "Rupert"
+        ],
+        "Q43106": [
+          "Zambezi",
+          "Zambezi"
+        ],
+        "Q43990": [
+          "Caniapiscau",
+          "Caniapiscau"
+        ],
+        "Q45403": [
+          "Dihang",
+          "Brahmaputra"
+        ],
+        "Q461457": [
+          "White Sea Canal",
+          "White Sea Canal"
+        ],
+        "Q4814791": [
+          "Victoria Nile",
+          "Victoria Nile",
+          "Albert Nile",
+          "Albert Nile",
+          "Bahr el Jebel",
+          "Bahr el Jebel",
+          "El Bahr el Abyad"
+        ],
+        "Q483159": [
+          "Syr Darya",
+          "Syr Darya"
+        ],
+        "Q491660": [
+          "Anderson",
+          "Anderson"
+        ],
+        "Q496173": [
+          "Péribonka",
+          "Péribonka"
+        ],
+        "Q496274": [
+          "Manicouagan",
+          "Manicouagan"
+        ],
+        "Q506955": [
+          "Pangani",
+          "Pangani"
+        ],
+        "Q508582": [
+          "Courantyne",
+          "Corantijn"
+        ],
+        "Q514864": [
+          "Fuerte",
+          "Fuerte"
+        ],
+        "Q5167806": [
+          "Cooper",
+          "Cooper"
+        ],
+        "Q5179786": [
+          "Cowpasture",
+          "Cowpasture"
+        ],
+        "Q5214284": [
+          "Dan",
+          "Dan"
+        ],
+        "Q524612": [
+          "Patsoyoki",
+          "Patsoyoki"
+        ],
+        "Q5299143": [
+          "Bois",
+          "Bois"
+        ],
+        "Q5413": [
+          "Yangtze",
+          "Chang Jiang"
+        ],
+        "Q5419": [
+          "Missouri",
+          "Missouri"
+        ],
+        "Q548": [
+          "Vistula",
+          "Vistula"
+        ],
+        "Q55498": [
+          "Yalu",
+          "Yalu"
+        ],
+        "Q558643": [
+          "Alabama",
+          "Alabama"
+        ],
+        "Q576337": [
+          "Vorma",
+          "Vorma",
+          "Vorma",
+          "Vorma"
+        ],
+        "Q582321": [
+          "Mearim",
+          "Mearim"
+        ],
+        "Q584": [
+          "Rhein",
+          "Rhein",
+          "Rhin",
+          "Rhine"
+        ],
+        "Q586733": [
+          "Yom",
+          "Yom"
+        ],
+        "Q590533": [
+          "Caroní",
+          "Caroní"
+        ],
+        "Q592383": [
+          "Ping",
+          "Ping"
+        ],
+        "Q595037": [
+          "Ouémé",
+          "Ouémé"
+        ],
+        "Q596106": [
+          "Sabine",
+          "Sabine"
+        ],
+        "Q597753": [
+          "Canadian",
+          "Canadian"
+        ],
+        "Q602": [
+          "Rhône",
+          "Rhône"
+        ],
+        "Q607976": [
+          "Paranapanema",
+          "Paranapanema"
+        ],
+        "Q60974": [
+          "Ottawa",
+          "Ottawa"
+        ],
+        "Q6115723": [
+          "Soto la Marina",
+          "Soto la Marina"
+        ],
+        "Q621609": [
+          "Macquarie",
+          "Macquarie"
+        ],
+        "Q624223": [
+          "Lufira",
+          "Lufira"
+        ],
+        "Q626": [
+          "Volga",
+          "Volga"
+        ],
+        "Q645": [
+          "Neva",
+          "Neva"
+        ],
+        "Q651195": [
+          "Naryn",
+          "Naryn"
+        ],
+        "Q664874": [
+          "Clark Fork",
+          "Clark Fork"
+        ],
+        "Q6862": [
+          "Amur",
+          "Amur",
+          "Heilong Jiang"
+        ],
+        "Q695602": [
+          "Blackwood",
+          "Blackwood"
+        ],
+        "Q7080633": [
+          "Ohau",
+          "Ohau"
+        ],
+        "Q719436": [
+          "Kazan",
+          "Kazan"
+        ],
+        "Q72075": [
+          "Thlewiaza",
+          "Thlewiaza"
+        ],
+        "Q7348": [
+          "Indus",
+          "Indus"
+        ],
+        "Q7350": [
+          "Panama Canal",
+          "Panama Canal"
+        ],
+        "Q7355": [
+          "Huang",
+          "Huang"
+        ],
+        "Q741351": [
+          "Moscow Canal",
+          "Moscow Canal"
+        ],
+        "Q7414617": [
+          "San Juan",
+          "San Juan",
+          "San Juan",
+          "San Juan"
+        ],
+        "Q743160": [
+          "Roper",
+          "Roper"
+        ],
+        "Q748195": [
+          "Rusizi",
+          "Rusizi"
+        ],
+        "Q750021": [
+          "Ogooué",
+          "Ogooué"
+        ],
+        "Q751347": [
+          "San Joaquin",
+          "San Joaquin"
+        ],
+        "Q753897": [
+          "Atbara",
+          "Atbara"
+        ],
+        "Q756091": [
+          "Chusovaya",
+          "Chusovaya"
+        ],
+        "Q776155": [
+          "Paranaíba",
+          "Paranaíba"
+        ],
+        "Q782845": [
+          "Awash",
+          "Awash"
+        ],
+        "Q78707": [
+          "Yenisey",
+          "Verkhniy Yenisey"
+        ],
+        "Q79082": [
+          "Kama",
+          "Kama"
+        ],
+        "Q798339": [
+          "Back",
+          "Back"
+        ],
+        "Q80240": [
+          "Ural",
+          "Ural"
+        ],
+        "Q813008": [
+          "Bear",
+          "Bear"
+        ],
+        "Q819448": [
+          "Vuoksi",
+          "Vuoksi"
+        ],
+        "Q827505": [
+          "Volga-Don Canal",
+          "Volga-Don Canal"
+        ],
+        "Q82812": [
+          "Sukhona",
+          "Sukhona"
+        ],
+        "Q836812": [
+          "Lualaba",
+          "Lualaba"
+        ],
+        "Q843308": [
+          "Tekezé",
+          "Setit"
+        ],
+        "Q845520": [
+          "Kalix",
+          "Kalix"
+        ],
+        "Q8493": [
+          "Amu Darya",
+          "Amu Darya"
+        ],
+        "Q849539": [
+          "Tietê",
+          "Tietê"
+        ],
+        "Q859548": [
+          "Río Negro",
+          "Río Negro"
+        ],
+        "Q859934": [
+          "Biya",
+          "Biya"
+        ],
+        "Q868103": [
+          "Coatzacoalcos",
+          "Coatzacoalcos"
+        ],
+        "Q875573": [
+          "Han",
+          "Han"
+        ],
+        "Q882739": [
+          "Abay",
+          "El Bahr el Azraq",
+          "El Bahr el Azraq",
+          "Abay"
+        ],
+        "Q899": [
+          "Suez Canal",
+          "Suez Canal"
+        ],
+        "Q913193": [
+          "Murat",
+          "Murat"
+        ],
+        "Q916349": [
+          "Guaporé",
+          "Guaporé"
+        ],
+        "Q921081": [
+          "Tekapo",
+          "Tekapo"
+        ],
+        "Q939958": [
+          "Tonle Sap",
+          "Tonle Sap"
+        ],
+        "Q947477": [
+          "Madison",
+          "Madison"
+        ],
+        "Q949183": [
+          "Tungabhadra",
+          "Tungabhadra"
+        ],
+        "Q952429": [
+          "Green",
+          "Green"
+        ],
+        "Q968640": [
+          "Klamath",
+          "Klamath"
+        ],
+        "Q973": [
+          "Ob",
+          "Ob",
+          "Ob"
+        ],
+        "Q978496": [
+          "Wisconsin",
+          "Wisconsin"
+        ]
+      },
+      "feature_classes": {
+        "Canal": 2,
+        "Lake Centerline": 259,
+        "River": 1201,
+        "River (Intermittent)": 11
+      },
+      "multipart_records": 420,
+      "null_geometry_records": [],
+      "parts": 2269,
+      "records": 1473,
+      "shape_type": 3,
+      "vertices": 257645
+    },
+    "unnamed_records": 86
+  },
+  "50m": {
+    "lake_rank_distribution": {
+      "0": 272,
+      "1": 68,
+      "2": 4,
+      "3": 10,
+      "4": 7,
+      "5": 13,
+      "6": 38
+    },
+    "lake_zoom_distribution": {
+      "1.0": 19,
+      "1.7": 9,
+      "2.0": 16,
+      "3.0": 34,
+      "4.0": 81,
+      "4.7": 149,
+      "5.0": 96,
+      "5.6": 1,
+      "5.7": 5,
+      "6.0": 2
+    },
+    "rank_distribution": {
+      "1": 27,
+      "10": 6,
+      "12": 3,
+      "2": 35,
+      "3": 54,
+      "4": 71,
+      "5": 69,
+      "6": 209,
+      "7": 1,
+      "9": 3
+    },
+    "review_cases": {
+      "Amazon": [
+        {
+          "class": "River",
+          "english": "Amazon",
+          "name": "Amazonas",
+          "parts": 1,
+          "rank": "1",
+          "record_1_based": 112,
+          "vertices": 216
+        }
+      ],
+      "Congo": [
+        {
+          "class": "River",
+          "english": "Congo",
+          "name": "Congo",
+          "parts": 2,
+          "rank": "2",
+          "record_1_based": 158,
+          "vertices": 112
+        }
+      ],
+      "Danube": [
+        {
+          "class": "River",
+          "english": "Danube",
+          "name": "Danube",
+          "parts": 1,
+          "rank": "2",
+          "record_1_based": 167,
+          "vertices": 144
+        },
+        {
+          "class": "River",
+          "english": "Danube",
+          "name": "Donau",
+          "parts": 2,
+          "rank": "2",
+          "record_1_based": 178,
+          "vertices": 68
+        }
+      ],
+      "Mekong": [
+        {
+          "class": "River",
+          "english": "Mekong",
+          "name": "Lancang",
+          "parts": 1,
+          "rank": "2",
+          "record_1_based": 255,
+          "vertices": 180
+        },
+        {
+          "class": "River",
+          "english": "Mekong",
+          "name": "Mekong",
+          "parts": 6,
+          "rank": "2",
+          "record_1_based": 278,
+          "vertices": 148
+        }
+      ],
+      "Mississippi": [
+        {
+          "class": "Lake Centerline",
+          "english": "Mississippi",
+          "name": "Mississippi",
+          "parts": 2,
+          "rank": "5",
+          "record_1_based": 39,
+          "vertices": 6
+        },
+        {
+          "class": "River",
+          "english": "Mississippi",
+          "name": "Mississippi",
+          "parts": 6,
+          "rank": "1",
+          "record_1_based": 282,
+          "vertices": 362
+        }
+      ],
+      "Nile": [
+        {
+          "class": "Lake Centerline",
+          "english": "Nile",
+          "name": "Nile",
+          "parts": 1,
+          "rank": "1",
+          "record_1_based": 48,
+          "vertices": 25
+        },
+        {
+          "class": "River",
+          "english": "Nile",
+          "name": "Nile",
+          "parts": 2,
+          "rank": "1",
+          "record_1_based": 299,
+          "vertices": 174
+        }
+      ]
+    },
+    "summary": {
+      "antimeridian_segment_records": [],
+      "duplicate_ne_ids": {
+        "1159111937": [
+          "Ob",
+          "Ob"
+        ],
+        "1159112449": [
+          "Nu",
+          "Nu"
+        ],
+        "1159112807": [
+          "",
+          ""
+        ],
+        "1159113063": [
+          "Bahr el Jebel",
+          "Bahr el Jebel"
+        ],
+        "1159113739": [
+          "",
+          "",
+          ""
+        ],
+        "1159117577": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "1159120477": [
+          "Lualaba",
+          "Lualaba"
+        ],
+        "1159128181": [
+          "Abay",
+          "Abay"
+        ],
+        "1159128895": [
+          "Huang",
+          "Huang"
+        ],
+        "1159129677": [
+          "Loire",
+          "Loire"
+        ]
+      },
+      "duplicate_wikidata_ids": {
+        "Q1046685": [
+          "Gan",
+          "Gan"
+        ],
+        "Q1048219": [
+          "Waikato",
+          "Waikato"
+        ],
+        "Q1063190": [
+          "Yuan",
+          "Yuan"
+        ],
+        "Q1068297": [
+          "Chattahoochee",
+          "Chattahoochee"
+        ],
+        "Q1131514": [
+          "Coppermine",
+          "Coppermine"
+        ],
+        "Q1147118": [
+          "Sheksna",
+          "Sheksna",
+          "Sheksna"
+        ],
+        "Q1161204": [
+          "San Juan",
+          "San Juan"
+        ],
+        "Q1229": [
+          "Don",
+          "Don"
+        ],
+        "Q1241991": [
+          "Albany",
+          "Albany"
+        ],
+        "Q1256528": [
+          "Mouhoun",
+          "Mouhoun"
+        ],
+        "Q1259188": [
+          "Nakanbé",
+          "Nakanbé"
+        ],
+        "Q128102": [
+          "Ertis",
+          "Ertis",
+          "Ertix",
+          "Irtysh"
+        ],
+        "Q131210": [
+          "Dniester",
+          "Dniester"
+        ],
+        "Q134350": [
+          "Tisa",
+          "Tisza"
+        ],
+        "Q135477": [
+          "Bamingui",
+          "Chari"
+        ],
+        "Q1400022": [
+          "Winnipeg",
+          "Winnipeg"
+        ],
+        "Q142148": [
+          "São Francisco",
+          "São Francisco"
+        ],
+        "Q14294": [
+          "Tajo",
+          "Tajo",
+          "Tejo"
+        ],
+        "Q1469": [
+          "Loire",
+          "Loire"
+        ],
+        "Q1497": [
+          "Mississippi",
+          "Mississippi"
+        ],
+        "Q1511505": [
+          "Kyzyl-Khem",
+          "Malyy Yenisey"
+        ],
+        "Q15277375": [
+          "Shishhid Gol",
+          "Shishhid Gol"
+        ],
+        "Q1535828": [
+          "Sassandra",
+          "Sassandra"
+        ],
+        "Q156054": [
+          "Tocantins",
+          "Tocantins"
+        ],
+        "Q160636": [
+          "Rio Grande",
+          "Rio Grande"
+        ],
+        "Q162737": [
+          "Angara",
+          "Angara"
+        ],
+        "Q1653": [
+          "Danube",
+          "Donau"
+        ],
+        "Q171675": [
+          "Sutlej",
+          "Sutlej"
+        ],
+        "Q171840": [
+          "Caquetá",
+          "Japurá"
+        ],
+        "Q1760800": [
+          "Pit",
+          "Pit"
+        ],
+        "Q179444": [
+          "Potomac",
+          "S. Branch Potomac"
+        ],
+        "Q181475": [
+          "Orange",
+          "Orange"
+        ],
+        "Q183078": [
+          "Murray",
+          "Murray"
+        ],
+        "Q188773": [
+          "Cubango",
+          "Okavango"
+        ],
+        "Q192415": [
+          "Volta",
+          "Volta"
+        ],
+        "Q193499": [
+          "Krishna",
+          "Krishna"
+        ],
+        "Q193737": [
+          "Tennessee",
+          "Tennessee"
+        ],
+        "Q2028742": [
+          "Ord",
+          "Ord"
+        ],
+        "Q204806": [
+          "Benue",
+          "Bénoué"
+        ],
+        "Q205428": [
+          "Semliki",
+          "Semliki"
+        ],
+        "Q209530": [
+          "Vaal",
+          "Vaal"
+        ],
+        "Q2128582": [
+          "Rainy",
+          "Rainy"
+        ],
+        "Q213067": [
+          "Svir",
+          "Svir",
+          "Svir"
+        ],
+        "Q214779": [
+          "Kemijoki",
+          "Kemijoki"
+        ],
+        "Q216627": [
+          "Dalälven",
+          "Dalälven"
+        ],
+        "Q2216": [
+          "Athabasca",
+          "Athabasca"
+        ],
+        "Q2220": [
+          "Peace",
+          "Peace"
+        ],
+        "Q2242": [
+          "South Saskatchewan",
+          "South Saskatchewan"
+        ],
+        "Q2251": [
+          "Columbia",
+          "Columbia"
+        ],
+        "Q2279579": [
+          "Shire",
+          "Shire"
+        ],
+        "Q2302661": [
+          "Río Grande de Santiago",
+          "Río Grande de Santiago"
+        ],
+        "Q2305285": [
+          "Kovzha River",
+          "Kovzha River",
+          "Kovzha River"
+        ],
+        "Q2416760": [
+          "Thelon",
+          "Thelon"
+        ],
+        "Q2459279": [
+          "Tugaloo",
+          "Tugaloo"
+        ],
+        "Q26076": [
+          "Ayeyarwady",
+          "Irrawaddy Delta"
+        ],
+        "Q2635327": [
+          "Busira",
+          "Ruki",
+          "Tshuapa"
+        ],
+        "Q26422": [
+          "Nu",
+          "Nu",
+          "Salween"
+        ],
+        "Q26433": [
+          "Vilyuy",
+          "Vilyuy"
+        ],
+        "Q26439": [
+          "Argun’",
+          "Hailar"
+        ],
+        "Q272074": [
+          "Snake",
+          "Snake"
+        ],
+        "Q284495": [
+          "Teslin",
+          "Teslin"
+        ],
+        "Q291233": [
+          "Churchill",
+          "Churchill"
+        ],
+        "Q3047": [
+          "Saskatchewan",
+          "Saskatchewan"
+        ],
+        "Q31379": [
+          "La Grande",
+          "La Grande"
+        ],
+        "Q3292": [
+          "Nelson",
+          "Nelson"
+        ],
+        "Q335575": [
+          "Sacramento",
+          "Sacramento"
+        ],
+        "Q3392": [
+          "Nile",
+          "Nile"
+        ],
+        "Q3411": [
+          "Mackenzie",
+          "Mackenzie"
+        ],
+        "Q34589": [
+          "Al Furat",
+          "Firat",
+          "Al Furat",
+          "Euphrates",
+          "Firat"
+        ],
+        "Q3542": [
+          "Niger",
+          "Niger"
+        ],
+        "Q35591": [
+          "Dicle",
+          "Tigris"
+        ],
+        "Q370750": [
+          "Savannah",
+          "Savannah"
+        ],
+        "Q40059": [
+          "Jordan",
+          "Jordan"
+        ],
+        "Q40855": [
+          "Dnipro",
+          "Dnepre",
+          "Dnipro"
+        ],
+        "Q41179": [
+          "Lancang",
+          "Mekong"
+        ],
+        "Q427437": [
+          "Rupert",
+          "Rupert"
+        ],
+        "Q43106": [
+          "Zambezi",
+          "Zambezi"
+        ],
+        "Q45403": [
+          "Brahmaputra",
+          "Dihang"
+        ],
+        "Q461457": [
+          "White Sea Canal",
+          "White Sea Canal",
+          "White Sea Canal",
+          "White Sea Canal",
+          "White Sea Canal",
+          "White Sea Canal"
+        ],
+        "Q4814791": [
+          "Albert Nile",
+          "Victoria Nile",
+          "Albert Nile",
+          "Bahr el Jebel",
+          "Bahr el Jebel",
+          "El Bahr el Abyad",
+          "Victoria Nile"
+        ],
+        "Q483159": [
+          "Syr Darya",
+          "Syr Darya"
+        ],
+        "Q5413": [
+          "Chang Jiang",
+          "Yangtze"
+        ],
+        "Q5419": [
+          "Missouri",
+          "Missouri"
+        ],
+        "Q548": [
+          "Vistula",
+          "Vistula"
+        ],
+        "Q558643": [
+          "Alabama",
+          "Alabama"
+        ],
+        "Q576337": [
+          "Vorma",
+          "Vorma"
+        ],
+        "Q584": [
+          "Rhein",
+          "Rhein",
+          "Rhin",
+          "Rhine"
+        ],
+        "Q60974": [
+          "Ottawa",
+          "Ottawa"
+        ],
+        "Q626": [
+          "Volga",
+          "Volga"
+        ],
+        "Q645": [
+          "Neva",
+          "Neva"
+        ],
+        "Q651195": [
+          "Naryn",
+          "Naryn"
+        ],
+        "Q6862": [
+          "Amur",
+          "Amur",
+          "Heilong Jiang"
+        ],
+        "Q7348": [
+          "Indus",
+          "Indus"
+        ],
+        "Q7350": [
+          "Panama Canal",
+          "Panama Canal"
+        ],
+        "Q7355": [
+          "Huang",
+          "Huang"
+        ],
+        "Q751347": [
+          "San Joaquin",
+          "San Joaquin"
+        ],
+        "Q753897": [
+          "Atbara",
+          "Atbara"
+        ],
+        "Q776155": [
+          "Paranaíba",
+          "Paranaíba"
+        ],
+        "Q79082": [
+          "Kama",
+          "Kama"
+        ],
+        "Q798339": [
+          "Back",
+          "Back"
+        ],
+        "Q80240": [
+          "Ural",
+          "Ural"
+        ],
+        "Q819448": [
+          "Vuoksi",
+          "Vuoksi"
+        ],
+        "Q827505": [
+          "Volga-Don Canal",
+          "Volga-Don Canal"
+        ],
+        "Q82812": [
+          "Sukhona",
+          "Sukhona"
+        ],
+        "Q836812": [
+          "Lualaba",
+          "Lualaba"
+        ],
+        "Q859934": [
+          "Biya",
+          "Biya"
+        ],
+        "Q875573": [
+          "Han",
+          "Han"
+        ],
+        "Q882739": [
+          "El Bahr el Azraq",
+          "Abay",
+          "Abay",
+          "El Bahr el Azraq"
+        ],
+        "Q899": [
+          "Suez Canal",
+          "Suez Canal"
+        ],
+        "Q947477": [
+          "Madison",
+          "Madison"
+        ],
+        "Q968640": [
+          "Klamath",
+          "Klamath"
+        ],
+        "Q973": [
+          "Ob",
+          "Ob",
+          "Ob",
+          "Ob"
+        ]
+      },
+      "feature_classes": {
+        "Canal": 4,
+        "Lake Centerline": 113,
+        "River": 361
+      },
+      "multipart_records": 182,
+      "null_geometry_records": [
+        461
+      ],
+      "parts": 909,
+      "records": 478,
+      "shape_type": 3,
+      "vertices": 25751
+    },
+    "unnamed_records": 6
+  }
+}

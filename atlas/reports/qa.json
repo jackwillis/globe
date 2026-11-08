@@ -1,0 +1,438 @@
+{
+  "accepted_exceptions": [
+    {
+      "kind": "null_geometry",
+      "reason": "Upstream null SHP record retained in audit, excluded from geometry outputs; not repaired.",
+      "record_1_based": 461,
+      "source": "ne_50m_rivers_lake_centerlines"
+    },
+    {
+      "kind": "longitude_roundoff",
+      "longitude": 180.00000044181039,
+      "reason": "Vertex 606 exceeds 180 by 4.42e-7 degrees. Source-specific 1e-6 tolerance; experimental quantization clamps to 180. Other sources retain 1e-9 tolerance.",
+      "record_1_based": 94,
+      "source": "ne_110m_coastline"
+    }
+  ],
+  "checks": [
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_admin_0_boundary_lines_land",
+      "status": "warning"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_admin_0_boundary_lines_land",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "unique-source-ne-id",
+      "source": "ne_10m_admin_0_countries",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_admin_0_countries",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_admin_0_map_subunits",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_admin_0_map_subunits",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_admin_0_map_units",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_admin_0_map_units",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_admin_0_sovereignty",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_admin_0_sovereignty",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_coastline",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_coastline",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_lakes",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_lakes",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "unique-source-ne-id",
+      "source": "ne_10m_populated_places",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_populated_places",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_10m_rivers_lake_centerlines",
+      "status": "warning"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_10m_rivers_lake_centerlines",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_110m_admin_0_boundary_lines_land",
+      "status": "warning"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_110m_admin_0_boundary_lines_land",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "unique-source-ne-id",
+      "source": "ne_110m_admin_0_countries",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_110m_admin_0_countries",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_110m_admin_0_tiny_countries",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_110m_admin_0_tiny_countries",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_110m_coastline",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_110m_coastline",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_50m_admin_0_boundary_lines_land",
+      "status": "warning"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_admin_0_boundary_lines_land",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "unique-source-ne-id",
+      "source": "ne_50m_admin_0_countries",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_admin_0_countries",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_50m_admin_0_tiny_countries",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_admin_0_tiny_countries",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_50m_coastline",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_coastline",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_50m_lakes",
+      "status": "warning"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_lakes",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "unique-source-ne-id",
+      "source": "ne_50m_populated_places",
+      "status": "pass"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_populated_places",
+      "status": "pass"
+    },
+    {
+      "interpretation": "Geometry records may share a feature ID; record identity includes source lock and ordinal.",
+      "kind": "geometry-feature-id-reuse",
+      "source": "ne_50m_rivers_lake_centerlines",
+      "status": "warning"
+    },
+    {
+      "kind": "expected-null-geometries",
+      "source": "ne_50m_rivers_lake_centerlines",
+      "status": "pass"
+    },
+    {
+      "id": "FJI",
+      "kind": "multipart-archipelago",
+      "source_scale": "110m",
+      "status": "pass"
+    },
+    {
+      "id": "FJI",
+      "kind": "multipart-archipelago",
+      "source_scale": "50m",
+      "status": "pass"
+    },
+    {
+      "id": "FJI",
+      "kind": "multipart-archipelago",
+      "source_scale": "10m",
+      "status": "pass"
+    },
+    {
+      "edition": "compact",
+      "kind": "all-source-capital-flags-preserved",
+      "missing_source_ids": [],
+      "status": "pass"
+    },
+    {
+      "edition": "standard",
+      "kind": "all-source-capital-flags-preserved",
+      "missing_source_ids": [],
+      "status": "pass"
+    },
+    {
+      "edition": "expanded",
+      "kind": "all-source-capital-flags-preserved",
+      "missing_source_ids": [],
+      "status": "pass"
+    },
+    {
+      "id": "SMR",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "VAT",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "MCO",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "LIE",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "AND",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "GRL",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "MDV",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "KIR",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "TUV",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "FJI",
+      "kind": "required-political-identity",
+      "status": "pass"
+    },
+    {
+      "id": "Q1764",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "id": "Q70",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "id": "Q226",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "id": "Q1842",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "id": "Q1844",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "id": "Q437",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "id": "Q3929",
+      "kind": "required-place-standard",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Nile",
+      "scale": "50m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Amazon",
+      "scale": "50m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Congo",
+      "scale": "50m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Mississippi",
+      "scale": "50m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Danube",
+      "scale": "50m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Mekong",
+      "scale": "50m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Nile",
+      "scale": "10m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Amazon",
+      "scale": "10m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Congo",
+      "scale": "10m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Mississippi",
+      "scale": "10m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Danube",
+      "scale": "10m",
+      "status": "pass"
+    },
+    {
+      "kind": "required-river-source",
+      "name": "Mekong",
+      "scale": "10m",
+      "status": "pass"
+    }
+  ],
+  "failures": [],
+  "warnings": [
+    "Source identities/QIDs and political classifications need editorial review; duplicate source QIDs are reported in sources.json.",
+    "Hydrography presence is verified; connectivity, direction, river mouths and lake/coast alignment are not certified.",
+    "Required cases are a small fixture, not a complete sovereign/capital list."
+  ]
+}
