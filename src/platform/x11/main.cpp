@@ -45,6 +45,7 @@
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_fineelevation.hpp"
 #include "globe/embedded_places.hpp"
+#include "globe/looks.hpp"
 #include "globe/overlays.hpp"
 #include "globe/places.hpp"
 #include "globe/refine_runner.hpp"
@@ -720,10 +721,8 @@ class App {
         if (info_.handle(ev))
             return false;
         if (const auto r = styles_.handle(ev); r.handled) {
-            const int current = model_.terrain_style == TerrainStyle::Map ? 0 : 1;
-            // Two looks: clicking the other row is a switch.
-            if (r.picked >= 0 && r.picked != current)
-                return apply(CommandIssued{now, Command::CycleStyle});
+            if (const auto pick = looks_pick(model_.terrain_style, r.picked))
+                return apply(CommandIssued{now, *pick});
             return false;
         }
         if (ev.xany.window == toolbar_) {
@@ -874,8 +873,7 @@ class App {
             reshow();
             break;
         case KeyBinding::Overlay::Palette:
-            styles_.show(win_, model_.camera.width + 20,
-                         model_.terrain_style == TerrainStyle::Map ? 0 : 1);
+            styles_.show(win_, model_.camera.width + 20, looks_row(model_.terrain_style));
             break;
         case KeyBinding::Overlay::Nothing:
             break;

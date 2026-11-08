@@ -10,12 +10,14 @@
 #include "globe/embedded_elevation.hpp"
 #include "globe/embedded_landclasses.hpp"
 #include "globe/embedded_places.hpp"
+#include "globe/looks.hpp"
 #include "globe/overlays.hpp"
 #include "globe/refine_runner.hpp"
 #include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
 #include "info_card.hpp"
+#include "looks_palette.hpp"
 #include "pixel_format.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
@@ -215,7 +217,13 @@ class Application {
                     }
                 } else if (hit == info_.window())
                     info_.mouse_down(event);
-                else if (part == inSysWindow)
+                else if (hit == palette_.window()) {
+                    int row = -1;
+                    palette_.mouse_down(event, row);
+                    SetPortWindowPort(window_);
+                    if (const auto pick = looks_pick(model_.terrain_style, row))
+                        quit = apply(CommandIssued{time, *pick});
+                } else if (part == inSysWindow)
                     SystemClick(&event, hit);
             } else if (event.what == mouseUp) {
                 quit = apply(PointerUp{time});
@@ -231,6 +239,11 @@ class Application {
                     copy(0, fb_->height(),
                          foreground_ && !presentation_.pending(model_.generation));
                     EndUpdate(window_);
+                } else if (reinterpret_cast<WindowPtr>(event.message) == palette_.window()) {
+                    BeginUpdate(palette_.window());
+                    palette_.draw();
+                    EndUpdate(palette_.window());
+                    SetPortWindowPort(window_);
                 } else if (reinterpret_cast<WindowPtr>(event.message) == info_.window()) {
                     BeginUpdate(info_.window());
                     info_.draw();
@@ -247,6 +260,8 @@ class Application {
                 ++unknown_count_;
                 show_timing(); // refresh the title so the code is visible
             }
+            palette_.sync(model_.terrain_style); // the check follows the look, whoever changed it
+            SetPortWindowPort(window_);
             // A one-pixel mouse region wakes on motion, even with no button held. No periodic poll.
             Point current;
             GetMouse(&current);
@@ -508,6 +523,12 @@ class Application {
             overlays_.toggle_measure();
             hover_valid_ = false; // measuring makes the whole globe clickable
             reshow();
+        } else if (binding.overlay == KeyBinding::Overlay::Palette) {
+            SetPortWindowPort(window_);
+            Point corner{window_->portRect.top, window_->portRect.right};
+            LocalToGlobal(&corner);
+            palette_.show(model_.terrain_style, corner.h);
+            SetPortWindowPort(window_);
         }
         return false;
     }
@@ -524,6 +545,7 @@ class Application {
     std::optional<PlaceScene> place_scene_;
     Overlays overlays_;
     InfoCardWindow info_;
+    LooksPalette palette_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
     std::uint64_t wake_ = 0;
