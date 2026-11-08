@@ -66,8 +66,11 @@ class CatalogTests(unittest.TestCase):
     def test_relation_types_remain_distinct(self):
         for relation in RELATIONS:
             with self.subTest(relation=relation):
-                if relation == 'capital-role':
-                    self.assertTrue(any(a['relation'] == relation for a in self.catalog['assertions']))
+                if relation in {'capital-role', 'source-capital-classification'}:
+                    if relation == 'capital-role':
+                        self.assertTrue(any(a['relation'] == relation for a in self.catalog['assertions']))
+                    else:
+                        continue  # Full inventory tests cover class-only capital evidence.
                 else:
                     self.catalog['assertions'][0]['relation'] = relation
                 validate(self.catalog)

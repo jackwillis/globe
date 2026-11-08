@@ -76,3 +76,48 @@ The fixture is small enough to review in Git; full downloaded datasets and selec
 outputs remain outside Git. Production adoption requires reviewed identity/relationship decisions,
 source-update reconciliation, claim-level reference adapters, a capital/territory inventory and a
 separately approved bounded output contract. Neither #52 nor #53 is completed by this prototype.
+
+## Expanded source-concept inventory and explicit review
+
+Following Jack's acceptance of the research checkpoint, `allocations.json` extends the fixture
+without renumbering its IDs. It allocates **808 proposed source concepts**: all 258 country records,
+all 298 map-unit records, and 252 settlements (244 source-role candidates plus retained anomaly
+fixtures). Country and map-unit representations remain separate even where source identifiers
+match. The first assignment uses a deterministic traversal once; subsequent generation consumes
+this persisted registry and cannot allocate implicitly. A changed source revision/ordinal or
+missing record fails and requires explicit reconciliation. IDs are never silently dropped or reused.
+
+The full catalog retains 21,818 name records, 808 representative points and 1,059 attributed
+assertions. It is generated outside Git (about 12 MB of JSON); the compact allocation registry and
+`../reports/catalog-inventory.json` retain reviewable state and diagnostics. Classification/source
+fields remain exact. Candidate links and all geographic assertions stay unreviewed.
+
+The broader role roster has 214 national-or-alternate **flag** records and 30 additional Admin-0
+**class-only** records. Juba has `FEATURECLA=Admin-0 capital` with both flags zero; Yangon and
+Johannesburg also illustrate why class-only rows require review. Quezon City is a flag-only case.
+Regional/territory roles remain distinct from national roles. `source-capital-classification`
+assertions preserve class-only evidence; they do not assert a current national-capital relationship.
+Juba needs an SSD/SDS alias candidate, while Longyearbyen targets a map-unit source representation.
+
+`review-decisions.json` records acceptance of the **research checkpoint**, separately from its
+initially empty geographic decision list. `research/reviews.py` binds individual decisions to a
+SHA-256 of the claim semantics, referenced evidence, source digests and name lineage. Changed
+records/relations/coordinates invalidate prior decisions. Duplicate or missing targets fail.
+The overlay changes only review fields, never source data or relation type. An unresolved candidate
+cannot be accepted into equality by changing its status. A new typed assertion needs its own review.
+
+```sh
+python3 atlas/research/inventory.py CACHE /tmp/inventory.json /tmp/inventory-report.json \
+  --review-queue /tmp/review-queue.jsonl
+python3 atlas/research/catalog.py /tmp/inventory.json --cache CACHE
+python3 atlas/research/test_inventory.py -v
+python3 atlas/research/test_reviews.py -v
+```
+
+Normal generation consumes the committed allocation registry and review overlay. `--allocate` is
+only for deliberately reviewed roster extensions; it is not source-update reconciliation. The
+review queue covers relationship assertions, representative points and lossy fallback candidates;
+it omits the thousands of exact localized source-name rows to keep the first review manageable.
+Each queue entry contains the target table/ID and `basis_sha256` needed for a named, dated decision.
+No geographic decision is fabricated in the shipped overlay. Historical source policy and disputed
+attributions remain Jack's editorial choices, distinct from approval to implement these tools.

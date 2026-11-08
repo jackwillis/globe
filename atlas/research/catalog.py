@@ -14,7 +14,7 @@ from sources import ATLAS, locked_sources, read_source
 
 RELATIONS = {'same-entity', 'part-of', 'administrative-relationship', 'historical-successor',
              'contested-attribution', 'unresolved-candidate', 'source-sovereign-association',
-             'capital-role', 'geometry-association', 'source-code-alias'}
+             'capital-role', 'source-capital-classification', 'geometry-association', 'source-code-alias'}
 STATUSES = {'unreviewed', 'accepted', 'rejected', 'deferred'}
 
 
@@ -89,6 +89,10 @@ def validate(catalog):
             require('qualifiers' in assertion and set(assertion['qualifiers']) == {'ADM0CAP', 'CAPALT'}, 'capital source flags')
             require(any(assertion['qualifiers'].get(k) == '1' for k in ('ADM0CAP', 'CAPALT')), 'capital source flags')
             require(any(all(records[e]['fields'].get(k) == v for k, v in assertion['qualifiers'].items()) for e in assertion['evidence']), 'capital flags differ from evidence')
+        if assertion['relation'] == 'source-capital-classification':
+            qualifiers = assertion.get('qualifiers', {})
+            require(set(qualifiers) == {'FEATURECLA'} and qualifiers['FEATURECLA'].startswith('Admin-0'), 'capital source classification')
+            require(any(records[e]['fields'].get('FEATURECLA') == qualifiers['FEATURECLA'] for e in assertion['evidence']), 'capital classification differs from evidence')
         if assertion['relation'] == 'unresolved-candidate':
             require(assertion['review']['status'] != 'accepted', 'candidate cannot be accepted as equality')
     for name in tables['names'].values():

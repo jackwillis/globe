@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "checkpoint_acceptance": {
+    "reviewer": "Jack Willis",
+    "decided_on": "2026-11-08",
+    "checkpoint": "3e2057a",
+    "scope": "Research checkpoint accepted; further atlas catalog and independent memory primitive work authorized. This does not adjudicate individual geographic assertions or approve a runtime format migration."
+  },
+  "decisions": []
+}
