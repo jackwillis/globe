@@ -56,3 +56,39 @@ a general GIS library, topology validator or hardened parser for arbitrary untru
 For this session, verified archives and the generated edition outputs are also retained in the
 owner's ignored `build-atlas-research/sources/` and `build-atlas-research/editions/` directories.
 These are local research artifacts, not published releases or installed runtime resources.
+
+## Further semantic research
+
+The [follow-up findings](reports/semantic-followup.md) add targeted revision-pinned Wikidata
+concordances, reference-only M49 comparisons, independent geometry/delta checks, per-edition name
+fallback profiles, and fresh source reproduction of the raster packs.
+
+```sh
+python3 atlas/research/concordance.py /tmp/globe-atlas-sources /tmp/globe-atlas-references --download
+python3 atlas/research/concordance.py /tmp/globe-atlas-sources /tmp/globe-atlas-references /tmp/concordance.json
+python3 atlas/research/name_profiles.py /tmp/globe-atlas-sources /tmp/name-profiles /tmp/name-profiles.json
+python3 atlas/research/test_concordance.py -v
+python3 -m venv /tmp/globe-atlas-gis-env
+/tmp/globe-atlas-gis-env/bin/python -m pip install --require-hashes -r atlas/research/requirements-research.lock.txt
+/tmp/globe-atlas-gis-env/bin/python atlas/research/test_geometry_qa.py -v
+/tmp/globe-atlas-gis-env/bin/python atlas/research/geometry_qa.py /tmp/globe-atlas-sources /tmp/geometry-qa.json
+/tmp/globe-atlas-gis-env/bin/python atlas/research/river_components.py /tmp/globe-atlas-sources /tmp/river-components.json
+```
+
+The optional requirements lock targets the observed CPython 3.14 Linux x86-64 wheel environment;
+other build hosts need separately reviewed wheel hashes. No dependency is added to CMake or the
+runtime. UN M49 HTML is a privately retained reference, not an edition input or a claimed
+public-domain redistribution. Wikidata snapshots are CC0 structured data; revision URLs and exact
+hashes are recorded in `references.lock.json`.
+
+For full raster source reproduction (eight conversions, several minutes on this host), use:
+
+```sh
+python3 atlas/research/reproduce_rasters.py /tmp/globe-atlas-rebuild \
+  --etopo /path/to/ETOPO_2022_v1_60s_N90W180_surface.nc \
+  --ecoregions /path/to/Ecoregions2017.zip --lakes /path/to/ne_50m_lakes.zip \
+  --python /tmp/globe-atlas-gis-env/bin/python --run --report /tmp/raster-reproduction.json
+```
+
+Without `--run`, the command verifies retained outputs/logs and their production matches. The
+quarter-degree file is a research output only and is deliberately absent from edition recipes.

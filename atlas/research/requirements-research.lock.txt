@@ -1,0 +1,5 @@
+# Optional build-host research environment: CPython 3.14, Linux x86-64 wheels only.
+# No dependency added to Globe runtime or normal CMake tests.
+h5py==3.16.0 --hash=sha256:e4360f15875a532bc7b98196c7592ed4fc92672a57c0a621355961cafb17a6dd
+numpy==2.5.4 --hash=sha256:d549420b8858885cea8838a727842249218b9c1da24dd517e25c9c7a948310a3
+shapely==2.1.2 --hash=sha256:21952dc00df38a2c28375659b07a3979d22641aeb104751e769c3ee825aadecf
