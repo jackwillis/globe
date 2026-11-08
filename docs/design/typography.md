@@ -148,6 +148,8 @@ still need to be chosen by the owner.
 
 ![Crisp against anti-aliased](images/labels-compare-4x.png)
 
+![Relief look with labels](images/labels-relief-crisp.png)
+
 The mock-ups used 1-bit and anti-aliased text from outline look-alikes. With system fonts the app
 does not choose between them, but the other findings still apply:
 
