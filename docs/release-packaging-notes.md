@@ -59,3 +59,10 @@ CRCs itself.
   the safer fallback) and on which artifacts ship.
 - Disk-image fallback is still `tools/package-floppy.sh` (floppy-sized); a larger layout is #51.
 - Upstream issue/PR to stuffit-rs not filed (outward-facing; needs the owner's go-ahead).
+
+## Owner check after expansion (2026-11-08)
+
+The owner launched the Expander-expanded Globe in Classic on Tiger and reported "it works great".
+That is a one-line report: it shows the expanded copy launches (so type and creator survived), but
+it does not say which menu items, Cmd keys or About were tried, so the #46 checklist in
+`docs/ux-acceptance.md` is still not recorded as passed. Bare OS 9 is untested.
