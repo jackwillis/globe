@@ -23,3 +23,24 @@ observed.
 11. A hand never stays when the pointer is over the menu bar, the title bar or the grow box.
 
 If `SetThemeCursor` fails, the program falls back to `InitCursor`, the arrow.
+
+## Looks palette (#45)
+
+Built for PowerPC and host-tested only; it has not been run on any Macintosh (maul went offline
+before it could be launched).
+
+1. Press P: a small "Looks" window appears right of the globe with Map and Relief, a check on Map.
+2. Click Relief: the globe re-renders as Relief and the check moves. Click Relief again: nothing
+   redraws and no refinement starts.
+3. Press S in the main window: the look switches and the palette check follows.
+4. Click the palette while the main window is active: the first click only activates it; the next
+   one chooses.
+5. Close box hides it; P brings it back. Dragging it by the title bar works.
+6. While the globe is refining, choose a look: input stays responsive; the old refinement is
+   replaced.
+7. Click back and forth between the palette, the info card and the globe: no stale cursor.
+8. Quit with the palette open: clean exit.
+
+## Menu bar (#46)
+
+Design only ([menu-bar.md](design/menu-bar.md)); nothing to test yet.
