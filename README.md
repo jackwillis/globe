@@ -52,7 +52,8 @@ ctest --test-dir build --output-on-failure
 ```
 
 X11 requires an authorized display; the host UI tests use private Xvfb displays. For sanitizers,
-configure a separate build with `-DGLOBE_SANITIZE=ON`. The current host suite has 47 tests.
+configure a separate build with `-DGLOBE_SANITIZE=ON`. Test availability depends on the configured dependencies; use `ctest --test-dir build -N`
+to list registered tests, then run the suite to see execution and pass results.
 
 Drag to rotate north-up; T switches to trackball mode. Wheel or +/- zooms, double-click centers
 and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits.
