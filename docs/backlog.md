@@ -38,6 +38,7 @@ No due dates or fixed feature commitments have been set.
 | Portable application architecture | Evolve Elm-style state, immutable data, mutable workspaces | [#3](https://github.com/jackwillis/globe/issues/3) |
 | Geographic discovery and visual design | Useful offline geography, search, layers and visual clarity | [#4](https://github.com/jackwillis/globe/issues/4) |
 | Offline data and acquisition | Validated packs, safe cache and optional provider ingestion | [#5](https://github.com/jackwillis/globe/issues/5) |
+| Atlas production and geographic integrity | Reproducible data pipeline, editorial rules, identity, semantic QA and edition recipes | [#52](https://github.com/jackwillis/globe/issues/52) |
 | Release engineering and verification | Reproducible CI and builds, target evidence | [#6](https://github.com/jackwillis/globe/issues/6) |
 
 Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.3 exist.
@@ -59,6 +60,7 @@ The owner approved treating Globe as **two cooperating projects in one repositor
 
 - [#52 — Atlas production, geographic integrity and edition rules](https://github.com/jackwillis/globe/issues/52) coordinates data-side decisions, alongside existing data epic #5 and discovery epic #4.
 - [#53 — Audit atlas coverage and prototype source-driven editions](https://github.com/jackwillis/globe/issues/53) is the first **research-only** assignment: source/provenance and omissions audit, microstates/capitals, rivers/lakes, three candidate edition sizes and a semantic QA plan. No production-format or runtime migration is authorized yet.
+- **Working arrangement:** Data-side work proceeds as a separate reviewable research stream, independent of the Classic Mac UI backlog. Any production pack, loader, or renderer integration follows a subsequent reviewed decision; keep source downloads and raw large datasets outside the Git repository unless their use and licensing are explicitly approved.
 - Existing [#24](https://github.com/jackwillis/globe/issues/24), [#26](https://github.com/jackwillis/globe/issues/26), [#29–#31](https://github.com/jackwillis/globe/issues/29), [#36–#39](https://github.com/jackwillis/globe/issues/36), [#48](https://github.com/jackwillis/globe/issues/48) and [#50](https://github.com/jackwillis/globe/issues/50) remain the related work; avoid duplicate implementation tickets.
 
 Source decisions, pack types, exact country definitions and release placement remain open pending actual data and memory measurements. Data work can progress independently of Classic Mac UI tasks.
@@ -90,8 +92,8 @@ Ruby scripting, fantasy cartography and a separate flat-map editor; native 68k s
 
 ## Tracker conventions
 
-1. **Milestones:** v0.1, v0.2 and v0.3, with no dates. An issue's milestone follows the **Release theme** line in its body. The six epics (#1–#6) span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
-2. **Labels in use:** priority `P0`–`P3` (`P3` is reserved and unused so far); area labels `area: classic-mac`, `area: rendering`, `area: architecture`, `area: discovery-design`, `area: data` and `area: release`, matching the six epics; `epic`. Some newer issues also carry `enhancement` or `bug`.
+1. **Milestones:** v0.1, v0.2 and v0.3, with no dates. An issue's milestone follows the **Release theme** line in its body. The original six epics (#1–#6) and the cross-cutting atlas-production epic #52 span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
+2. **Labels in use:** priority `P0`–`P3` (`P3` is reserved and unused so far); area labels `area: classic-mac`, `area: rendering`, `area: architecture`, `area: discovery-design`, `area: data` and `area: release`, used across the original six epic areas and the new data-production epic #52; `epic`. The first research issue #53 is labeled `P1` and `area: data`. Some newer issues also carry `enhancement` or `bug`.
 3. **Epics:** each epic's body lists its tracked issues. The nested epic [#35](https://github.com/jackwillis/globe/issues/35) (usability) sits under #4 and is also linked from #1 and #2.
 4. Optionally convert epic checklists into native GitHub sub-issue relationships. The issue cross-references already provide usable navigation and will remain stable.
 
