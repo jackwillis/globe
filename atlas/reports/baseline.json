@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "basis": "pack bytes measured; scene/cache payload arithmetic from source, not allocation profiling",
+  "packs": [
+    {
+      "path": "data/atlas.gatl",
+      "format": "GATL",
+      "packed_bytes": 35068,
+      "sha256": "ec2f5bde911fc131610786520a36482a98ad7312f29b953abc7ba6ccda8df773",
+      "records": 467,
+      "points": 8120,
+      "layers": {
+        "1": {
+          "parts": 134,
+          "points": 5127
+        },
+        "2": {
+          "parts": 333,
+          "points": 2993
+        }
+      },
+      "provenance": "Globe atlas, format GATL 1; quantized to 360/65536 degrees. coastline: Natural Earth 1:110m coastline 4.1.0, https://naturalearth.s3.amazonaws.com/110m_physical/ne_110m_coastline.zip, zip sha256 664449b39070027e882abb295974d182afec18ca21107273d17e9e8bf6f64817. borders: Natural Earth 1:110m admin-0 boundary lines (land) 5.1.0, https://naturalearth.s3.amazonaws.com/110m_cultural/ne_110m_admin_0_boundary_lines_land.zip, zip sha256 bb2954981570498a4b4344f8e83fa54caa5858e15e800094112407d2bd2f940d. License: public domain (https://www.naturalearthdata.com/about/terms-of-use/). Natural Earth draws de facto boundaries; borders are a cartographic reference layer, not a statement about sovereignty.",
+      "decoded_additional_bytes": 0,
+      "sources": [
+        "Natural Earth 110m coastline 4.1.0",
+        "Natural Earth 110m land boundaries 5.1.0"
+      ],
+      "license": "public domain",
+      "command": "python3 tools/atlas-builder/build_atlas.py ne_110m_coastline.zip ne_110m_admin_0_boundary_lines_land.zip OUT.gatl",
+      "selection": "all source parts; quantize to 360/65536 degree, collapse adjacent duplicate coordinates",
+      "decoder": "strict CRC/body and bounds; zero-copy; Scene derives unit vectors, caps and chunks",
+      "source_hash_ledger": "data/SOURCES.md and source hash constants in the cited builder; not reacquired for NOAA/RESOLVE in this audit",
+      "persistent_payload_lower_bound_bytes": 35068,
+      "temporary_load_basis": "Embedded views allocate no input copy; file imports retain a full input buffer. Scene allocations coexist with source bytes; allocator/object overhead excluded."
+    },
+    {
+      "path": "data/cities.gplc",
+      "format": "GPLC",
+      "packed_bytes": 9641,
+      "sha256": "89b154930fa6017cf31c765f038dbcb8fdfd8e66ffadbfc16356c0dcebc95089",
+      "records": 304,
+      "decoded_additional_bytes": 0,
+      "scene_vector_payload_bytes": 7296,
+      "sources": [
+        "Wikidata retained response 2026-11-02"
+      ],
+      "license": "CC0-1.0 structured data",
+      "command": "python3 tools/places-builder/build_places.py --large data/wikidata-cities-large-20261102.json OUT.gplc",
+      "selection": "largest population >=1000000; maximum 30 per country; lower QID tie; direct P31 query limits; Q3139 excluded",
+      "decoder": "strict bounds/CRC/QID order/ASCII; zero-copy; PlaceScene derives unit vectors",
+      "source_hash_ledger": "data/SOURCES.md and source hash constants in the cited builder; not reacquired for NOAA/RESOLVE in this audit",
+      "persistent_payload_lower_bound_bytes": 16937,
+      "temporary_load_basis": "Embedded views allocate no input copy; file imports retain a full input buffer. Scene allocations coexist with source bytes; allocator/object overhead excluded."
+    },
+    {
+      "path": "data/countries.gpol",
+      "format": "GPOL",
+      "packed_bytes": 91928,
+      "sha256": "80c580fa759fc0325ae0d68129af7b6bca437d8ef8dbf5da38d9a0fdb7627c7d",
+      "records": 177,
+      "rings": 289,
+      "points": 10360,
+      "decoded_additional_bytes": 0,
+      "scene_vector_payload_bytes": 248640,
+      "sources": [
+        "Natural Earth 110m admin0 countries 5.1.1"
+      ],
+      "license": "public domain",
+      "command": "python3 tools/country-builder/build_countries.py ne_110m_admin_0_countries.zip OUT.gpol",
+      "selection": "all source country records; multipart rings/holes, microdegree coordinates; ASCII ADMIN names",
+      "decoder": "strict bounds/CRC; zero-copy; CountryScene derives unit vectors",
+      "source_hash_ledger": "data/SOURCES.md and source hash constants in the cited builder; not reacquired for NOAA/RESOLVE in this audit",
+      "persistent_payload_lower_bound_bytes": 340568,
+      "temporary_load_basis": "Embedded views allocate no input copy; file imports retain a full input buffer. Scene allocations coexist with source bytes; allocator/object overhead excluded."
+    },
+    {
+      "path": "data/elevation-0.5deg.gelv",
+      "format": "GELV",
+      "packed_bytes": 259752,
+      "sha256": "b51499b5c0a4dc09dd5ac62d27b6a520033b2411c858b71728e5e5df0f5e7906",
+      "width": 720,
+      "height": 360,
+      "cells": 259200,
+      "decoded_additional_bytes": 0,
+      "terrain_payload_estimate_bytes": 14312041,
+      "terrain_estimate_assumptions": "sizeof(Vec3)=24, CellBands=4, Rgb565=2; excludes object/allocator overhead",
+      "sources": [
+        "NOAA ETOPO 2022 v1 60s ice surface",
+        "Natural Earth 50m lakes 5.0.0"
+      ],
+      "license": "CC0-1.0 NOAA and public domain Natural Earth",
+      "command": "python3 tools/elevation-builder/build_elevation.py ETOPO.nc OUT.gelv --lakes ne_50m_lakes.zip --cell-degrees 0.5",
+      "selection": "float64 mean of source-aligned cells; 256-height quantizer; lake-center nonnegative heights replaced by -1m water-color proxy",
+      "decoder": "strict bounds/header+body CRC/LUT/extents; zero-copy; TerrainScene allocates geometry and workspaces",
+      "source_hash_ledger": "data/SOURCES.md and source hash constants in the cited builder; not reacquired for NOAA/RESOLVE in this audit",
+      "persistent_payload_lower_bound_bytes": 14571793,
+      "temporary_load_basis": "Embedded views allocate no input copy; file imports retain a full input buffer. Scene allocations coexist with source bytes; allocator/object overhead excluded."
+    },
+    {
+      "path": "data/elevation-1deg.gelv",
+      "format": "GELV",
+      "packed_bytes": 65352,
+      "sha256": "8d0fd2e6777f24dc13ac47e0f73aa459e503c70116d66a61bb2b339b618766a6",
+      "width": 360,
+      "height": 180,
+      "cells": 64800,
+      "decoded_additional_bytes": 0,
+      "terrain_payload_estimate_bytes": 3593581,
+      "terrain_estimate_assumptions": "sizeof(Vec3)=24, CellBands=4, Rgb565=2; excludes object/allocator overhead",
+      "sources": [
+        "NOAA ETOPO 2022 v1 60s ice surface",
+        "Natural Earth 50m lakes 5.0.0"
+      ],
+      "license": "CC0-1.0 NOAA and public domain Natural Earth",
+      "command": "python3 tools/elevation-builder/build_elevation.py ETOPO.nc OUT.gelv --lakes ne_50m_lakes.zip --cell-degrees 1",
+      "selection": "float64 mean of source-aligned cells; 256-height quantizer; lake-center nonnegative heights replaced by -1m water-color proxy",
+      "decoder": "strict bounds/header+body CRC/LUT/extents; zero-copy; TerrainScene allocates geometry and workspaces",
+      "source_hash_ledger": "data/SOURCES.md and source hash constants in the cited builder; not reacquired for NOAA/RESOLVE in this audit",
+      "persistent_payload_lower_bound_bytes": 3658933,
+      "temporary_load_basis": "Embedded views allocate no input copy; file imports retain a full input buffer. Scene allocations coexist with source bytes; allocator/object overhead excluded."
+    },
+    {
+      "path": "data/landclasses-1deg.ggrd",
+      "format": "GGRD",
+      "packed_bytes": 3607,
+      "sha256": "52f39e0b1623ccde92462c591da8335649064ff3d6e892b671cf02f3519070cc",
+      "width": 360,
+      "height": 180,
+      "decoded_additional_bytes": 64800,
+      "dimensions_basis": "typed landclasses v1 contract; C++ decoder validates",
+      "sources": [
+        "RESOLVE Ecoregions 2017"
+      ],
+      "license": "CC-BY-4.0; data/LANDCLASS-NOTICE.txt required",
+      "command": "python3 tools/landclass-builder/build_landclasses.py Ecoregions2017.zip OUT.ggrd",
+      "selection": "cell-center even-odd fill; smallest ECO_ID overlap wins; 14 biomes collapsed to four classes plus unknown",
+      "decoder": "strict stored/decoded CRCs, bounded grid decode; typed contract 360x180 and classes 0..4",
+      "source_hash_ledger": "data/SOURCES.md and source hash constants in the cited builder; not reacquired for NOAA/RESOLVE in this audit",
+      "persistent_payload_lower_bound_bytes": 68407,
+      "temporary_load_basis": "Embedded views allocate no input copy; file imports retain a full input buffer. Scene allocations coexist with source bytes; allocator/object overhead excluded."
+    }
+  ]
+}
