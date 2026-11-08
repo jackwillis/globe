@@ -1,5 +1,9 @@
 # Proposed first memory-ledger slice (#55/#59/#17)
 
+**Continuation:** Jack accepted the research checkpoint and authorized both follow-ups. The first
+primitive is now implemented and independently tested; see [the standalone ledger project](../research/ledger/README.md).
+The original proposal below remains the basis; allocation-site integration and guards are unchanged.
+
 Research design, not an implemented ledger or budget decision. Based on committed runtime
 `52ccb33`, inspected on Linux x86-64. Atlas catalog/selection work changes no allocation path.
 The owner's main worktree has unfinished renderer phase work; this session deliberately avoids
