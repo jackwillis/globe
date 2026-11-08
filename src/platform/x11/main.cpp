@@ -171,7 +171,7 @@ class App {
         XSetWMProtocols(dpy_, toolbar_, &wm_delete_, 1);
         XSelectInput(dpy_, toolbar_, ExposureMask | ButtonPressMask | KeyPressMask);
         cursors_ = {XCreateFontCursor(dpy_, XC_left_ptr), XCreateFontCursor(dpy_, XC_hand2),
-                    XCreateFontCursor(dpy_, XC_fleur)};
+                    XCreateFontCursor(dpy_, XC_fleur), XCreateFontCursor(dpy_, XC_hand2)};
         XDefineCursor(dpy_, win_, cursors_[0]);
         XMapWindow(dpy_, win_);
         XMapWindow(dpy_, toolbar_);
@@ -680,9 +680,11 @@ class App {
         shown_.end(); // the frame is as it was rendered
     }
 
-    // Returns true when the application should quit.
+    CursorTarget cursor_target() const {
+        return {overlays_.focused().has_value(), overlays_.clickable_at(model_.camera, pointer_)};
+    }
     void update_cursor() {
-        const auto intent = cursor_for(model_, pointer_);
+        const auto intent = cursor_for(model_, pointer_, cursor_target());
         if (intent != cursor_) {
             cursor_ = intent;
             XDefineCursor(dpy_, win_, cursors_[static_cast<unsigned>(intent)]);
@@ -895,7 +897,7 @@ class App {
     Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
-    std::array<Cursor, 3> cursors_{};
+    std::array<Cursor, 4> cursors_{};
     CursorIntent cursor_ = CursorIntent::Arrow;
     ScreenPoint pointer_{-1e20, -1e20};
     ToolbarState toolbar_cache_{};

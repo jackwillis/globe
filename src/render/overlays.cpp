@@ -134,6 +134,15 @@ bool Overlays::click(const Camera& camera, ScreenPoint at) {
     }
     return focused_ != before;
 }
+bool Overlays::clickable_at(const Camera& camera, ScreenPoint at) const {
+    const double x = (at.x - camera.center_x) / camera.radius_px;
+    const double y = (at.y - camera.center_y) / camera.radius_px;
+    if (!(x * x + y * y <= 1))
+        return false;
+    if (measuring_)
+        return true;
+    return place_scene_ != nullptr && place_scene_->pick(camera, at).has_value();
+}
 std::optional<InfoCard> Overlays::take_card() {
     if (!card_ready_)
         return std::nullopt;

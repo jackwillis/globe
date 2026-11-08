@@ -177,8 +177,18 @@ constexpr std::size_t kCommandCount = static_cast<std::size_t>(Command::CycleSty
 using ToolbarState = std::array<CommandState, kCommandCount>;
 ToolbarState toolbar_state(const Model& model);
 
-enum class CursorIntent : std::uint8_t { Arrow, OpenHand, ClosedHand };
-CursorIntent cursor_for(const Model& model, ScreenPoint pointer);
+enum class CursorIntent : std::uint8_t { Arrow, OpenHand, ClosedHand, PointingHand };
+// What a click at the pointer would act on, reported by the front end from the picking data. Both
+// flags are cheap to know: `selection` is whether a country is focused (a click on the sea then
+// clears it, so the whole globe is clickable); `object` is whether a place is under the pointer.
+struct CursorTarget {
+    bool selection = false;
+    bool object = false;
+    bool operator==(const CursorTarget&) const = default;
+};
+// Closed hand while dragging; off the globe an arrow; on it a pointing hand where a click does
+// something and the open hand where it only starts a drag.
+CursorIntent cursor_for(const Model& model, ScreenPoint pointer, CursorTarget target = {});
 struct ButtonRect {
     int x, y, width, height;
 };

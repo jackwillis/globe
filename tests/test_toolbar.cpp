@@ -15,6 +15,19 @@ int main() {
         m.dragging = true;
         CHECK(cursor_for(m, {0, 0}) == CursorIntent::ClosedHand);
         m.dragging = false;
+        // A place under the pointer, or a selected country (a click on the sea clears it), makes
+        // the globe clickable: the pointing hand. Off the globe it is still the arrow, and a
+        // drag in progress keeps the closed hand whatever is underneath.
+        const CursorTarget place{false, true}, selected{true, false};
+        for (const auto target : {place, selected, CursorTarget{true, true}}) {
+            CHECK(cursor_for(m, {320, 240}, target) == CursorIntent::PointingHand);
+            CHECK(cursor_for(m, {0, 0}, target) == CursorIntent::Arrow);
+            CHECK(cursor_for(m, {NAN, 0}, target) == CursorIntent::Arrow);
+            m.dragging = true;
+            CHECK(cursor_for(m, {320, 240}, target) == CursorIntent::ClosedHand);
+            m.dragging = false;
+        }
+        CHECK(cursor_for(m, {320, 240}, CursorTarget{}) == CursorIntent::OpenHand);
     }
     for (std::size_t i = 0; i < kCommandCount; ++i) {
         auto r = toolbar_button(static_cast<Command>(i));

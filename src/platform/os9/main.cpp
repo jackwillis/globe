@@ -30,7 +30,9 @@
 #include <optional>
 #include <vector>
 // These Appearance Manager declarations are absent from the installed Multiversal interfaces.
-// AppearanceLib exports the function; OS 9 provides arrow=0, closed hand=8, open hand=9.
+// AppearanceLib exports the function (checked with nm on libAppearanceLib.a); OS 9 provides
+// arrow=0, closed hand=8, open hand=9, pointing hand=10 (Appearance Manager reference, not in the
+// headers).
 extern "C" std::int32_t SetThemeCursor(std::uint32_t cursor);
 using namespace globe;
 static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Relief);
@@ -252,13 +254,25 @@ class Application {
             if (foreground_ && model_.dragging &&
                 (position.x != model_.drag_last.x || position.y != model_.drag_last.y))
                 apply(PointerMove{time, position.x, position.y});
-            const auto intent =
-                FrontWindow() == window_ ? cursor_for(model_, position) : CursorIntent::Arrow;
+            // Only the cheap hover test runs, and only when the pointer, view or selection moved:
+            // the country pick that follows a click is the expensive one.
+            const bool selected = overlays_.focused().has_value();
+            if (!hover_valid_ || position.x != hover_at_.x || position.y != hover_at_.y ||
+                selected != hover_.selection || generation_seen_ != model_.generation) {
+                hover_ = {selected, overlays_.clickable_at(model_.camera, position)};
+                hover_at_ = position;
+                generation_seen_ = model_.generation;
+                hover_valid_ = true;
+            }
+            const auto target = hover_;
+            const auto intent = FrontWindow() == window_ ? cursor_for(model_, position, target)
+                                                         : CursorIntent::Arrow;
             if (foreground_ && intent != cursor_) {
                 cursor_ = intent;
-                const auto native = intent == CursorIntent::OpenHand     ? 9U
-                                    : intent == CursorIntent::ClosedHand ? 8U
-                                                                         : 0U;
+                const auto native = intent == CursorIntent::OpenHand       ? 9U
+                                    : intent == CursorIntent::ClosedHand   ? 8U
+                                    : intent == CursorIntent::PointingHand ? 10U
+                                                                           : 0U;
                 if (SetThemeCursor(native) != 0)
                     InitCursor();
             }
@@ -492,6 +506,7 @@ class Application {
             reshow();
         } else if (binding.overlay == KeyBinding::Overlay::Measure) {
             overlays_.toggle_measure();
+            hover_valid_ = false; // measuring makes the whole globe clickable
             reshow();
         }
         return false;
@@ -524,6 +539,10 @@ class Application {
     std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;
     bool redraw_ = true;
     CursorIntent cursor_ = CursorIntent::Arrow;
+    CursorTarget hover_;
+    ScreenPoint hover_at_{};
+    std::uint64_t generation_seen_ = 0;
+    bool hover_valid_ = false;
 };
 } // namespace
 int main() {
