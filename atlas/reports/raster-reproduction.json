@@ -1,0 +1,193 @@
+{
+  "basis": "New host source conversions; GNU time process RSS includes Python/build tools and is not runtime/G4 allocation evidence.",
+  "no_production_files_written": true,
+  "quarter_degree_status": "Additional research candidate only; not added to edition recipes or installed in Globe.",
+  "results": [
+    {
+      "builds": [
+        {
+          "bytes": 3607,
+          "host_elapsed_hms": "0:13.15",
+          "host_peak_process_rss_kib": 154760,
+          "iteration": "a",
+          "sha256": "52f39e0b1623ccde92462c591da8335649064ff3d6e892b671cf02f3519070cc"
+        },
+        {
+          "bytes": 3607,
+          "host_elapsed_hms": "0:13.32",
+          "host_peak_process_rss_kib": 154812,
+          "iteration": "b",
+          "sha256": "52f39e0b1623ccde92462c591da8335649064ff3d6e892b671cf02f3519070cc"
+        }
+      ],
+      "candidate": "landclasses",
+      "commands": [
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/landclass-builder/build_landclasses.py",
+          "/tmp/globe-landclass-source/Ecoregions2017.zip",
+          "/tmp/globe-atlas-rebuild/landclasses-a.ggrd"
+        ],
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/landclass-builder/build_landclasses.py",
+          "/tmp/globe-landclass-source/Ecoregions2017.zip",
+          "/tmp/globe-atlas-rebuild/landclasses-b.ggrd"
+        ]
+      ],
+      "independent_runs_identical": true,
+      "matches_production": true,
+      "production_file": "landclasses-1deg.ggrd"
+    },
+    {
+      "builds": [
+        {
+          "bytes": 65352,
+          "host_elapsed_hms": "0:36.07",
+          "host_peak_process_rss_kib": 202308,
+          "iteration": "a",
+          "sha256": "8d0fd2e6777f24dc13ac47e0f73aa459e503c70116d66a61bb2b339b618766a6"
+        },
+        {
+          "bytes": 65352,
+          "host_elapsed_hms": "0:35.91",
+          "host_peak_process_rss_kib": 202528,
+          "iteration": "b",
+          "sha256": "8d0fd2e6777f24dc13ac47e0f73aa459e503c70116d66a61bb2b339b618766a6"
+        }
+      ],
+      "candidate": "elevation-1deg",
+      "commands": [
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
+          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "/tmp/globe-atlas-rebuild/elevation-1deg-a.gelv",
+          "--cell-degrees",
+          "1",
+          "--lakes",
+          "/tmp/globe-atlas-sources/ne_50m_lakes.zip"
+        ],
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
+          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "/tmp/globe-atlas-rebuild/elevation-1deg-b.gelv",
+          "--cell-degrees",
+          "1",
+          "--lakes",
+          "/tmp/globe-atlas-sources/ne_50m_lakes.zip"
+        ]
+      ],
+      "independent_runs_identical": true,
+      "matches_production": true,
+      "production_file": "elevation-1deg.gelv"
+    },
+    {
+      "builds": [
+        {
+          "bytes": 259752,
+          "host_elapsed_hms": "1:12.61",
+          "host_peak_process_rss_kib": 197968,
+          "iteration": "a",
+          "sha256": "b51499b5c0a4dc09dd5ac62d27b6a520033b2411c858b71728e5e5df0f5e7906"
+        },
+        {
+          "bytes": 259752,
+          "host_elapsed_hms": "1:12.41",
+          "host_peak_process_rss_kib": 197772,
+          "iteration": "b",
+          "sha256": "b51499b5c0a4dc09dd5ac62d27b6a520033b2411c858b71728e5e5df0f5e7906"
+        }
+      ],
+      "candidate": "elevation-05deg",
+      "commands": [
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
+          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "/tmp/globe-atlas-rebuild/elevation-05deg-a.gelv",
+          "--cell-degrees",
+          "0.5",
+          "--lakes",
+          "/tmp/globe-atlas-sources/ne_50m_lakes.zip"
+        ],
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
+          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "/tmp/globe-atlas-rebuild/elevation-05deg-b.gelv",
+          "--cell-degrees",
+          "0.5",
+          "--lakes",
+          "/tmp/globe-atlas-sources/ne_50m_lakes.zip"
+        ]
+      ],
+      "independent_runs_identical": true,
+      "matches_production": true,
+      "production_file": "elevation-0.5deg.gelv"
+    },
+    {
+      "builds": [
+        {
+          "bytes": 1037352,
+          "host_elapsed_hms": "2:30.79",
+          "host_peak_process_rss_kib": 184120,
+          "iteration": "a",
+          "sha256": "d162426b67cfd417b176b45b6fa8c6a20b9b15f0b02fc0c06322d2e4a0905e34"
+        },
+        {
+          "bytes": 1037352,
+          "host_elapsed_hms": "2:31.01",
+          "host_peak_process_rss_kib": 184616,
+          "iteration": "b",
+          "sha256": "d162426b67cfd417b176b45b6fa8c6a20b9b15f0b02fc0c06322d2e4a0905e34"
+        }
+      ],
+      "candidate": "elevation-025deg",
+      "commands": [
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
+          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "/tmp/globe-atlas-rebuild/elevation-025deg-a.gelv",
+          "--cell-degrees",
+          "0.25",
+          "--lakes",
+          "/tmp/globe-atlas-sources/ne_50m_lakes.zip"
+        ],
+        [
+          "/tmp/globe-atlas-gis-env/bin/python",
+          "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
+          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "/tmp/globe-atlas-rebuild/elevation-025deg-b.gelv",
+          "--cell-degrees",
+          "0.25",
+          "--lakes",
+          "/tmp/globe-atlas-sources/ne_50m_lakes.zip"
+        ]
+      ],
+      "independent_runs_identical": true,
+      "matches_production": null,
+      "production_file": null
+    }
+  ],
+  "schema": 1,
+  "sources": [
+    {
+      "bytes": 478290125,
+      "role": "etopo",
+      "sha256": "74bbc5c23e85188d93f0beba8116babf69e1a8f160e8dc9f053bf8df01b197b6"
+    },
+    {
+      "bytes": 149248653,
+      "role": "ecoregions",
+      "sha256": "be36d6209e443038d02e309f0447c6e7f2a62f5fe60c605ffe90d064952f2a60"
+    },
+    {
+      "bytes": 252615,
+      "role": "lakes",
+      "sha256": "f28d42c286d96b57a17aac2cbeb432f8c65532c20063495711fbc64e24666df3"
+    }
+  ]
+}

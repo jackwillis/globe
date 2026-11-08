@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "packages": [
+    {
+      "name": "shapely",
+      "version": "2.1.2",
+      "url": "https://files.pythonhosted.org/packages/8a/cb/4948be52ee1da6927831ab59e10d4c29baa2a714f599f1f0d1bc747f5777/shapely-2.1.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "21952dc00df38a2c28375659b07a3979d22641aeb104751e769c3ee825aadecf",
+      "license": "BSD-3-Clause; wheel bundles LGPL-2.1 GEOS"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.4",
+      "url": "https://files.pythonhosted.org/packages/16/d5/928078d2b28f26829b138b4a6c3980045022fb409f570657a224ae60ef4e/numpy-2.5.4-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "d549420b8858885cea8838a727842249218b9c1da24dd517e25c9c7a948310a3",
+      "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0"
+    },
+    {
+      "name": "h5py",
+      "version": "3.16.0",
+      "url": "https://files.pythonhosted.org/packages/f1/16/d905e7f53e661ce2c24686c38048d8e2b750ffc4350009d41c4e6c6c9826/h5py-3.16.0-cp314-cp314-manylinux_2_28_x86_64.whl",
+      "sha256": "e4360f15875a532bc7b98196c7592ed4fc92672a57c0a621355961cafb17a6dd",
+      "license": "BSD-3-Clause"
+    }
+  ],
+  "purpose": "Optional independent geometry QA and source conversion; no bundled runtime libraries"
+}

@@ -1,0 +1,1440 @@
+{
+  "geos": "3.13.1",
+  "limits": [
+    "Not a hydrological routing model, flow-direction solution or verified river-mouth graph. FEATURECLA Canal records are excluded, but named canals tagged River/Lake Centerline remain and are reported.",
+    "Planar intersections can connect cartographic crossings; microdegree keys can merge near endpoints. No claim of surveyed connectivity.",
+    "Only degree-one nodes are tested as shore candidates; closed loops and coast-touching internal nodes are not outlets in this diagnostic.",
+    "A named main stem stopping inland is not an omission if separately named distributaries connect to the coast; inspect component names before drawing conclusions."
+  ],
+  "method": "GEOS planar noding of selected river/centerline parts, excluding canals; endpoint node keys rounded to microdegrees; undirected components include tributaries; full-source and recipe rank-filtered profiles are compared.",
+  "scales": {
+    "compact-recipe": {
+      "canal_name_hints_retained": [],
+      "components": 42,
+      "featurecla_canal_records_excluded": true,
+      "graph_nodes": 183,
+      "maximum_scalerank": 2,
+      "noded_line_parts": 146,
+      "null_geometry_records_selected": 0,
+      "source_geometry_records_selected": 62,
+      "source_records_selected_including_null": 62,
+      "source_scale": "50m",
+      "systems": {
+        "Amazon": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -52.66417,
+                  -1.551791
+                ],
+                "nearest_shore": [
+                  -52.66416015624999,
+                  -1.5517578125
+                ],
+                "planar_distance_degrees": 3.4616608303636854e-05,
+                "spherical_distance_to_planar_nearest_km": 0.004
+              },
+              "component_id": 17,
+              "degree_one_nodes": 2,
+              "nodes": 3,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Amazonas",
+                "Ucayali"
+              ],
+              "source_records": 2
+            }
+          ],
+          "seed_endpoints": 2,
+          "source_qid": "Q3783",
+          "unresolved_seed_endpoints": []
+        },
+        "Congo": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  13.068174,
+                  -5.864861
+                ],
+                "nearest_shore": [
+                  13.06816230710323,
+                  -5.864845035725413
+                ],
+                "planar_distance_degrees": 1.978842838688071e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 24,
+              "degree_one_nodes": 2,
+              "nodes": 3,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Congo",
+                "Lualaba"
+              ],
+              "source_records": 2
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  26.249282,
+                  -11.7429
+                ],
+                "nearest_shore": [
+                  34.6494140625,
+                  -19.70136718750001
+                ],
+                "planar_distance_degrees": 11.571491634268886,
+                "spherical_distance_to_planar_nearest_km": 1260.873
+              },
+              "component_id": 25,
+              "degree_one_nodes": 2,
+              "nodes": 4,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Congo",
+                "Lualaba"
+              ],
+              "source_records": 3
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3503",
+          "unresolved_seed_endpoints": []
+        },
+        "Danube": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  12.506555,
+                  48.923836
+                ],
+                "nearest_shore": [
+                  13.206347656250017,
+                  45.771386718749994
+                ],
+                "planar_distance_degrees": 3.229186620899316,
+                "spherical_distance_to_planar_nearest_km": 354.475
+              },
+              "component_id": 22,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Donau"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  29.605459,
+                  44.915476
+                ],
+                "nearest_shore": [
+                  29.605464598297313,
+                  44.91547227538756
+                ],
+                "planar_distance_degrees": 6.72411114172091e-06,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 23,
+              "degree_one_nodes": 5,
+              "nodes": 11,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Borcea",
+                "Bratul Chillia",
+                "Bratul Sfântu Gheorghe",
+                "Bratul Sulina",
+                "Danube",
+                "Donau"
+              ],
+              "source_records": 6
+            }
+          ],
+          "seed_endpoints": 5,
+          "source_qid": "Q1653",
+          "unresolved_seed_endpoints": []
+        },
+        "Mekong": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  105.830988,
+                  10.000734
+                ],
+                "nearest_shore": [
+                  105.83098295305217,
+                  10.000721745833804
+                ],
+                "planar_distance_degrees": 1.3252783541050486e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 36,
+              "degree_one_nodes": 5,
+              "nodes": 9,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Lancang",
+                "Mekong",
+                "Za"
+              ],
+              "source_records": 3
+            }
+          ],
+          "seed_endpoints": 8,
+          "source_qid": "Q41179",
+          "unresolved_seed_endpoints": []
+        },
+        "Mississippi": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -94.63706,
+                  47.439999
+                ],
+                "nearest_shore": [
+                  -92.79814453124999,
+                  56.92197265625
+                ],
+                "planar_distance_degrees": 9.65864558408823,
+                "spherical_distance_to_planar_nearest_km": 1061.676
+              },
+              "component_id": 12,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -94.50774,
+                  47.456535
+                ],
+                "nearest_shore": [
+                  -92.79814453124999,
+                  56.92197265625
+                ],
+                "planar_distance_degrees": 9.618587562169717,
+                "spherical_distance_to_planar_nearest_km": 1058.855
+              },
+              "component_id": 13,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.180778,
+                  29.335703
+                ],
+                "nearest_shore": [
+                  -89.1807776069598,
+                  29.33569275012786
+                ],
+                "planar_distance_degrees": 1.025740510562439e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 14,
+              "degree_one_nodes": 3,
+              "nodes": 4,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.01575,
+                  29.202869
+                ],
+                "nearest_shore": [
+                  -89.01574429298063,
+                  29.202887525021346
+                ],
+                "planar_distance_degrees": 1.938418133319265e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 15,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            }
+          ],
+          "seed_endpoints": 10,
+          "source_qid": "Q1497",
+          "unresolved_seed_endpoints": []
+        },
+        "Nile": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  31.839225,
+                  31.526319
+                ],
+                "nearest_shore": [
+                  31.83922794020342,
+                  31.526309302415576
+                ],
+                "planar_distance_degrees": 1.0133505800821758e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 27,
+              "degree_one_nodes": 3,
+              "nodes": 11,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Albert Nile",
+                "Bahr el Jebel",
+                "Damietta Branch",
+                "El Bahr el Abyad",
+                "Nile",
+                "Rosetta Branch"
+              ],
+              "source_records": 8
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3392",
+          "unresolved_seed_endpoints": []
+        }
+      }
+    },
+    "full-10m": {
+      "canal_name_hints_retained": [
+        "Caledonian Canal",
+        "Casiquiare",
+        "Gharraf Canal",
+        "Ismailiya Canal",
+        "Moscow Canal",
+        "Panama Canal",
+        "Suez Canal",
+        "Volga-Don Canal",
+        "White Sea Canal"
+      ],
+      "components": 1056,
+      "featurecla_canal_records_excluded": true,
+      "graph_nodes": 4126,
+      "maximum_scalerank": null,
+      "noded_line_parts": 3139,
+      "null_geometry_records_selected": 0,
+      "source_geometry_records_selected": 1471,
+      "source_records_selected_including_null": 1471,
+      "source_scale": "10m",
+      "systems": {
+        "Amazon": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -52.711768,
+                  -1.583819
+                ],
+                "nearest_shore": [
+                  -52.71106849591778,
+                  -1.5838168802439343
+                ],
+                "planar_distance_degrees": 0.0006995072940354539,
+                "spherical_distance_to_planar_nearest_km": 0.078
+              },
+              "component_id": 281,
+              "degree_one_nodes": 16,
+              "nodes": 30,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Amazonas",
+                "Coari",
+                "Jamanxim",
+                "Juruena",
+                "Jutaí",
+                "Nhamundá",
+                "Putumayo",
+                "Rio Negro",
+                "Tapajós",
+                "Teles Pires",
+                "Trombetas",
+                "Ucayali",
+                "Unini"
+              ],
+              "source_records": 14
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -53.789722,
+                  -1.923175
+                ],
+                "nearest_shore": [
+                  -52.70848696800878,
+                  -1.5988045457612834
+                ],
+                "planar_distance_degrees": 1.1288424983088143,
+                "spherical_distance_to_planar_nearest_km": 125.467
+              },
+              "component_id": 389,
+              "degree_one_nodes": 4,
+              "nodes": 7,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Amazonas",
+                "Maicuru"
+              ],
+              "source_records": 3
+            }
+          ],
+          "seed_endpoints": 6,
+          "source_qid": "Q3783",
+          "unresolved_seed_endpoints": []
+        },
+        "Congo": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  13.184326,
+                  -5.85628
+                ],
+                "nearest_shore": [
+                  13.184302197775148,
+                  -5.8562323956477975
+                ],
+                "planar_distance_degrees": 5.3223305576946995e-05,
+                "spherical_distance_to_planar_nearest_km": 0.006
+              },
+              "component_id": 521,
+              "degree_one_nodes": 4,
+              "nodes": 7,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Aruwimi",
+                "Congo",
+                "Ituri",
+                "Lualaba"
+              ],
+              "source_records": 4
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  28.886816,
+                  -8.483575
+                ],
+                "nearest_shore": [
+                  38.77906334700003,
+                  -6.054864190999922
+                ],
+                "planar_distance_degrees": 10.186029342584039,
+                "spherical_distance_to_planar_nearest_km": 1123.948
+              },
+              "component_id": 599,
+              "degree_one_nodes": 4,
+              "nodes": 7,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Congo",
+                "Lualaba",
+                "Luvua"
+              ],
+              "source_records": 4
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3503",
+          "unresolved_seed_endpoints": []
+        },
+        "Danube": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  29.682129,
+                  45.148798
+                ],
+                "nearest_shore": [
+                  29.682134091205654,
+                  45.14879118765386
+                ],
+                "planar_distance_degrees": 8.504612565731763e-06,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 495,
+              "degree_one_nodes": 20,
+              "nodes": 38,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Borcea",
+                "Bratul Chillia",
+                "Bratul Sfântu Gheorghe",
+                "Bratul Sulina",
+                "Danube",
+                "Donau",
+                "Drau",
+                "Drina",
+                "Ferenc Csatorna",
+                "Inn",
+                "Morava",
+                "Mur",
+                "Prut",
+                "Sava",
+                "Sió",
+                "Soroksari Duna"
+              ],
+              "source_records": 16
+            }
+          ],
+          "seed_endpoints": 5,
+          "source_qid": "Q1653",
+          "unresolved_seed_endpoints": []
+        },
+        "Mekong": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  103.092285,
+                  18.141425
+                ],
+                "nearest_shore": [
+                  105.62964928500003,
+                  18.922308661000045
+                ],
+                "planar_distance_degrees": 2.654806359569472,
+                "spherical_distance_to_planar_nearest_km": 281.247
+              },
+              "component_id": 841,
+              "degree_one_nodes": 2,
+              "nodes": 4,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Lancang",
+                "Mekong",
+                "Za"
+              ],
+              "source_records": 3
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  105.766699,
+                  15.132929
+                ],
+                "nearest_shore": [
+                  107.14177493600005,
+                  16.867743231000077
+                ],
+                "planar_distance_degrees": 2.213687928739456,
+                "spherical_distance_to_planar_nearest_km": 242.512
+              },
+              "component_id": 880,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mekong"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  106.422363,
+                  10.316962
+                ],
+                "nearest_shore": [
+                  106.42237389400003,
+                  10.316961981000077
+                ],
+                "planar_distance_degrees": 1.0894016596013263e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 888,
+              "degree_one_nodes": 8,
+              "nodes": 12,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "",
+                "Mekong",
+                "Tonle Sap"
+              ],
+              "source_records": 3
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  104.952393,
+                  11.594989
+                ],
+                "nearest_shore": [
+                  104.25660241000003,
+                  10.565822658000059
+                ],
+                "planar_distance_degrees": 1.2422994424204055,
+                "spherical_distance_to_planar_nearest_km": 137.334
+              },
+              "component_id": 889,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mekong"
+              ],
+              "source_records": 1
+            }
+          ],
+          "seed_endpoints": 11,
+          "source_qid": "Q41179",
+          "unresolved_seed_endpoints": []
+        },
+        "Mississippi": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.413574,
+                  28.935175
+                ],
+                "nearest_shore": [
+                  -89.41290301182937,
+                  28.93510101925385
+                ],
+                "planar_distance_degrees": 0.0006750542762776679,
+                "spherical_distance_to_planar_nearest_km": 0.066
+              },
+              "component_id": 179,
+              "degree_one_nodes": 23,
+              "nodes": 55,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Allegheny",
+                "Cedar",
+                "Cumberland",
+                "Des Moines",
+                "Illinois",
+                "Kankakee",
+                "Kentucky",
+                "Minnesota",
+                "Mississippi",
+                "Muskingum",
+                "Namekagon",
+                "Ohio",
+                "Red",
+                "St. Croix",
+                "Tuscarawas",
+                "Wabash",
+                "Wisconsin"
+              ],
+              "source_records": 21
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.188232,
+                  29.318793
+                ],
+                "nearest_shore": [
+                  -89.18824791925054,
+                  29.318832102621258
+                ],
+                "planar_distance_degrees": 4.2218923803635444e-05,
+                "spherical_distance_to_planar_nearest_km": 0.005
+              },
+              "component_id": 211,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.030566,
+                  29.195868
+                ],
+                "nearest_shore": [
+                  -89.030566,
+                  29.195868231000077
+                ],
+                "planar_distance_degrees": 2.3100007595644456e-07,
+                "spherical_distance_to_planar_nearest_km": 0.0
+              },
+              "component_id": 212,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            }
+          ],
+          "seed_endpoints": 15,
+          "source_qid": "Q1497",
+          "unresolved_seed_endpoints": []
+        },
+        "Nile": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  30.398535,
+                  31.443378
+                ],
+                "nearest_shore": [
+                  30.398542762770546,
+                  31.443389894846195
+                ],
+                "planar_distance_degrees": 1.4203801343169965e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 624,
+              "degree_one_nodes": 10,
+              "nodes": 26,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "",
+                "Abay",
+                "Albert Nile",
+                "Bahr el Jebel",
+                "Damietta Branch",
+                "El Bahr el Abyad",
+                "El Bahr el Azraq",
+                "Nile",
+                "Rosetta Branch"
+              ],
+              "source_records": 14
+            }
+          ],
+          "seed_endpoints": 6,
+          "source_qid": "Q3392",
+          "unresolved_seed_endpoints": []
+        }
+      }
+    },
+    "full-50m": {
+      "canal_name_hints_retained": [
+        "Gharraf Canal",
+        "Ismailiya Canal",
+        "Panama Canal",
+        "Suez Canal",
+        "Volga-Don Canal",
+        "White Sea Canal"
+      ],
+      "components": 346,
+      "featurecla_canal_records_excluded": true,
+      "graph_nodes": 1370,
+      "maximum_scalerank": null,
+      "noded_line_parts": 1035,
+      "null_geometry_records_selected": 1,
+      "source_geometry_records_selected": 473,
+      "source_records_selected_including_null": 474,
+      "source_scale": "50m",
+      "systems": {
+        "Amazon": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -52.66417,
+                  -1.551791
+                ],
+                "nearest_shore": [
+                  -52.66416015624999,
+                  -1.5517578125
+                ],
+                "planar_distance_degrees": 3.4616608303636854e-05,
+                "spherical_distance_to_planar_nearest_km": 0.004
+              },
+              "component_id": 134,
+              "degree_one_nodes": 10,
+              "nodes": 22,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Amazonas",
+                "Branco",
+                "Caquetá",
+                "Grande",
+                "Guaporé",
+                "Japurá",
+                "Juruena",
+                "Madeira",
+                "Madre de Dios",
+                "Mamoré",
+                "Marañón",
+                "Negro",
+                "Purús",
+                "Tapajós",
+                "Ucayali"
+              ],
+              "source_records": 15
+            }
+          ],
+          "seed_endpoints": 2,
+          "source_qid": "Q3783",
+          "unresolved_seed_endpoints": []
+        },
+        "Congo": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  13.068174,
+                  -5.864861
+                ],
+                "nearest_shore": [
+                  13.06816230710323,
+                  -5.864845035725413
+                ],
+                "planar_distance_degrees": 1.978842838688071e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 208,
+              "degree_one_nodes": 7,
+              "nodes": 18,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Busira",
+                "Congo",
+                "Kadéï",
+                "Kasai",
+                "Kibali",
+                "Kwango",
+                "Lualaba",
+                "Ruki",
+                "Sangha",
+                "Tshuapa",
+                "Ubangi",
+                "Uele"
+              ],
+              "source_records": 12
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  26.249282,
+                  -11.7429
+                ],
+                "nearest_shore": [
+                  34.6494140625,
+                  -19.70136718750001
+                ],
+                "planar_distance_degrees": 11.571491634268886,
+                "spherical_distance_to_planar_nearest_km": 1260.873
+              },
+              "component_id": 228,
+              "degree_one_nodes": 2,
+              "nodes": 4,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Congo",
+                "Lualaba"
+              ],
+              "source_records": 3
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3503",
+          "unresolved_seed_endpoints": []
+        },
+        "Danube": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  12.506555,
+                  48.923836
+                ],
+                "nearest_shore": [
+                  13.206347656250017,
+                  45.771386718749994
+                ],
+                "planar_distance_degrees": 3.229186620899316,
+                "spherical_distance_to_planar_nearest_km": 354.475
+              },
+              "component_id": 199,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Donau"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  29.605459,
+                  44.915476
+                ],
+                "nearest_shore": [
+                  29.605464598297313,
+                  44.91547227538756
+                ],
+                "planar_distance_degrees": 6.72411114172091e-06,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 207,
+              "degree_one_nodes": 8,
+              "nodes": 20,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Borcea",
+                "Bratul Chillia",
+                "Bratul Sfântu Gheorghe",
+                "Bratul Sulina",
+                "Danube",
+                "Donau",
+                "Ferenc Csatorna",
+                "Mur",
+                "Soroksari Duna",
+                "Tisa",
+                "Tisza"
+              ],
+              "source_records": 11
+            }
+          ],
+          "seed_endpoints": 5,
+          "source_qid": "Q1653",
+          "unresolved_seed_endpoints": []
+        },
+        "Mekong": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  105.830988,
+                  10.000734
+                ],
+                "nearest_shore": [
+                  105.83098295305217,
+                  10.000721745833804
+                ],
+                "planar_distance_degrees": 1.3252783541050486e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 300,
+              "degree_one_nodes": 7,
+              "nodes": 13,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "",
+                "Lancang",
+                "Mekong",
+                "Za"
+              ],
+              "source_records": 4
+            }
+          ],
+          "seed_endpoints": 8,
+          "source_qid": "Q41179",
+          "unresolved_seed_endpoints": []
+        },
+        "Mississippi": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.180778,
+                  29.335703
+                ],
+                "nearest_shore": [
+                  -89.1807776069598,
+                  29.33569275012786
+                ],
+                "planar_distance_degrees": 1.025740510562439e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 55,
+              "degree_one_nodes": 9,
+              "nodes": 23,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Arkansas",
+                "Holston",
+                "Mississippi",
+                "Ohio",
+                "Tennessee",
+                "Wabash"
+              ],
+              "source_records": 8
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.01575,
+                  29.202869
+                ],
+                "nearest_shore": [
+                  -89.01574429298063,
+                  29.202887525021346
+                ],
+                "planar_distance_degrees": 1.938418133319265e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 103,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            }
+          ],
+          "seed_endpoints": 11,
+          "source_qid": "Q1497",
+          "unresolved_seed_endpoints": []
+        },
+        "Nile": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  32.565692,
+                  29.973959
+                ],
+                "nearest_shore": [
+                  32.565692183129386,
+                  29.97395865032236
+                ],
+                "planar_distance_degrees": 3.947287998503358e-07,
+                "spherical_distance_to_planar_nearest_km": 0.0
+              },
+              "component_id": 235,
+              "degree_one_nodes": 15,
+              "nodes": 32,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Abay",
+                "Albert Nile",
+                "Atbara",
+                "Bahr el Jebel",
+                "Damietta Branch",
+                "El Bahr el Abyad",
+                "El Bahr el Azraq",
+                "Ismailiya Canal",
+                "Nile",
+                "Rosetta Branch",
+                "Suez Canal"
+              ],
+              "source_records": 17
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3392",
+          "unresolved_seed_endpoints": []
+        }
+      }
+    },
+    "standard-recipe": {
+      "canal_name_hints_retained": [
+        "Gharraf Canal"
+      ],
+      "components": 193,
+      "featurecla_canal_records_excluded": true,
+      "graph_nodes": 803,
+      "maximum_scalerank": 5,
+      "noded_line_parts": 618,
+      "null_geometry_records_selected": 1,
+      "source_geometry_records_selected": 255,
+      "source_records_selected_including_null": 256,
+      "source_scale": "50m",
+      "systems": {
+        "Amazon": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -52.66417,
+                  -1.551791
+                ],
+                "nearest_shore": [
+                  -52.66416015624999,
+                  -1.5517578125
+                ],
+                "planar_distance_degrees": 3.4616608303636854e-05,
+                "spherical_distance_to_planar_nearest_km": 0.004
+              },
+              "component_id": 71,
+              "degree_one_nodes": 7,
+              "nodes": 17,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Amazonas",
+                "Caquetá",
+                "Grande",
+                "Guaporé",
+                "Japurá",
+                "Juruena",
+                "Madeira",
+                "Mamoré",
+                "Marañón",
+                "Negro",
+                "Tapajós",
+                "Ucayali"
+              ],
+              "source_records": 12
+            }
+          ],
+          "seed_endpoints": 2,
+          "source_qid": "Q3783",
+          "unresolved_seed_endpoints": []
+        },
+        "Congo": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  13.068174,
+                  -5.864861
+                ],
+                "nearest_shore": [
+                  13.06816230710323,
+                  -5.864845035725413
+                ],
+                "planar_distance_degrees": 1.978842838688071e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 117,
+              "degree_one_nodes": 4,
+              "nodes": 9,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Congo",
+                "Kasai",
+                "Kibali",
+                "Lualaba",
+                "Ubangi",
+                "Uele"
+              ],
+              "source_records": 6
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  26.249282,
+                  -11.7429
+                ],
+                "nearest_shore": [
+                  34.6494140625,
+                  -19.70136718750001
+                ],
+                "planar_distance_degrees": 11.571491634268886,
+                "spherical_distance_to_planar_nearest_km": 1260.873
+              },
+              "component_id": 127,
+              "degree_one_nodes": 2,
+              "nodes": 4,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Congo",
+                "Lualaba"
+              ],
+              "source_records": 3
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3503",
+          "unresolved_seed_endpoints": []
+        },
+        "Danube": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  12.506555,
+                  48.923836
+                ],
+                "nearest_shore": [
+                  13.206347656250017,
+                  45.771386718749994
+                ],
+                "planar_distance_degrees": 3.229186620899316,
+                "spherical_distance_to_planar_nearest_km": 354.475
+              },
+              "component_id": 113,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Donau"
+              ],
+              "source_records": 1
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  29.605459,
+                  44.915476
+                ],
+                "nearest_shore": [
+                  29.605464598297313,
+                  44.91547227538756
+                ],
+                "planar_distance_degrees": 6.72411114172091e-06,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 116,
+              "degree_one_nodes": 5,
+              "nodes": 11,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Borcea",
+                "Bratul Chillia",
+                "Bratul Sfântu Gheorghe",
+                "Bratul Sulina",
+                "Danube",
+                "Donau"
+              ],
+              "source_records": 6
+            }
+          ],
+          "seed_endpoints": 5,
+          "source_qid": "Q1653",
+          "unresolved_seed_endpoints": []
+        },
+        "Mekong": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  105.830988,
+                  10.000734
+                ],
+                "nearest_shore": [
+                  105.83098295305217,
+                  10.000721745833804
+                ],
+                "planar_distance_degrees": 1.3252783541050486e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 173,
+              "degree_one_nodes": 7,
+              "nodes": 13,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "",
+                "Lancang",
+                "Mekong",
+                "Za"
+              ],
+              "source_records": 4
+            }
+          ],
+          "seed_endpoints": 8,
+          "source_qid": "Q41179",
+          "unresolved_seed_endpoints": []
+        },
+        "Mississippi": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.180778,
+                  29.335703
+                ],
+                "nearest_shore": [
+                  -89.1807776069598,
+                  29.33569275012786
+                ],
+                "planar_distance_degrees": 1.025740510562439e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 41,
+              "degree_one_nodes": 8,
+              "nodes": 21,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Arkansas",
+                "Holston",
+                "Mississippi",
+                "Ohio",
+                "Tennessee"
+              ],
+              "source_records": 7
+            },
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  -89.01575,
+                  29.202869
+                ],
+                "nearest_shore": [
+                  -89.01574429298063,
+                  29.202887525021346
+                ],
+                "planar_distance_degrees": 1.938418133319265e-05,
+                "spherical_distance_to_planar_nearest_km": 0.002
+              },
+              "component_id": 64,
+              "degree_one_nodes": 2,
+              "nodes": 2,
+              "source_classes": [
+                "River"
+              ],
+              "source_names": [
+                "Mississippi"
+              ],
+              "source_records": 1
+            }
+          ],
+          "seed_endpoints": 11,
+          "source_qid": "Q1497",
+          "unresolved_seed_endpoints": []
+        },
+        "Nile": {
+          "connected_components": [
+            {
+              "closest_degree_one_shore_endpoint": {
+                "endpoint": [
+                  31.839225,
+                  31.526319
+                ],
+                "nearest_shore": [
+                  31.83922794020342,
+                  31.526309302415576
+                ],
+                "planar_distance_degrees": 1.0133505800821758e-05,
+                "spherical_distance_to_planar_nearest_km": 0.001
+              },
+              "component_id": 132,
+              "degree_one_nodes": 8,
+              "nodes": 21,
+              "source_classes": [
+                "Lake Centerline",
+                "River"
+              ],
+              "source_names": [
+                "Abay",
+                "Albert Nile",
+                "Bahr el Jebel",
+                "Damietta Branch",
+                "El Bahr el Abyad",
+                "El Bahr el Azraq",
+                "Nile",
+                "Rosetta Branch"
+              ],
+              "source_records": 13
+            }
+          ],
+          "seed_endpoints": 4,
+          "source_qid": "Q3392",
+          "unresolved_seed_endpoints": []
+        }
+      }
+    }
+  },
+  "schema": 1,
+  "shapely": "2.1.2"
+}

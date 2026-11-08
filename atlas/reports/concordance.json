@@ -1,0 +1,2181 @@
+{
+  "limitations": [
+    "Targeted sample, not a full Wikidata crosswalk.",
+    "Wikidata coordinates are claims, not a survey oracle; a 25km review flag is heuristic and does not authorize replacement.",
+    "Map-unit label points are not entity centroids; point distance alone does not establish identity mismatch.",
+    "Best-rank population statements retain dates/qualifier property IDs; definitions and current capital/country roles need editorial review.",
+    "UN webpage snapshot is a research reference; no redistribution permission for its full table is asserted."
+  ],
+  "m49": {
+    "distinct_reference_codes_represented": 237,
+    "iso_joined_ne_records": 243,
+    "join_policy": "Natural Earth ISO_A3_EH when a valid three-letter code, else ISO_A3; sentinel codes are never guessed from names.",
+    "m49_reference_records": 248,
+    "ne_multiple_records_for_iso": {
+      "AUS": [
+        "AUS",
+        "IOA",
+        "CSI",
+        "ATC"
+      ],
+      "BRA": [
+        "BRA",
+        "BRI"
+      ],
+      "FRA": [
+        "FRA",
+        "CLP"
+      ],
+      "KAZ": [
+        "KAZ",
+        "KAB"
+      ]
+    },
+    "ne_records": 258,
+    "ne_un_code_conflicts": [],
+    "ne_un_code_missing": [
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "NOR",
+        "ne_feature_code": "NOR",
+        "ne_iso_a3": "NOR",
+        "ne_name": "Norway",
+        "ne_un_a3": "-99",
+        "reference_m49": "578"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BRI",
+        "ne_feature_code": "BRI",
+        "ne_iso_a3": "BRA",
+        "ne_name": "Brazilian I.",
+        "ne_un_a3": "-99",
+        "reference_m49": "076"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "KAB",
+        "ne_feature_code": "KAB",
+        "ne_iso_a3": "KAZ",
+        "ne_name": "Baikonur",
+        "ne_un_a3": "-099",
+        "reference_m49": "398"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "UMI",
+        "ne_iso_a3": "UMI",
+        "ne_name": "U.S. Minor Outlying Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "581"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "HMD",
+        "ne_feature_code": "HMD",
+        "ne_iso_a3": "HMD",
+        "ne_name": "Heard I. and McDonald Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "334"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "IOA",
+        "ne_feature_code": "IOA",
+        "ne_iso_a3": "AUS",
+        "ne_name": "Indian Ocean Ter.",
+        "ne_un_a3": "-099",
+        "reference_m49": "036"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "IOT",
+        "ne_feature_code": "IOT",
+        "ne_iso_a3": "IOT",
+        "ne_name": "Br. Indian Ocean Ter.",
+        "ne_un_a3": "-099",
+        "reference_m49": "086"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SGS",
+        "ne_feature_code": "SGS",
+        "ne_iso_a3": "SGS",
+        "ne_name": "S. Geo. and the Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "239"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "CSI",
+        "ne_feature_code": "CSI",
+        "ne_iso_a3": "AUS",
+        "ne_name": "Coral Sea Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "036"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "CLP",
+        "ne_feature_code": "CLP",
+        "ne_iso_a3": "FRA",
+        "ne_name": "Clipperton I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "250"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "ATC",
+        "ne_feature_code": "ATC",
+        "ne_iso_a3": "AUS",
+        "ne_name": "Ashmore and Cartier Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "036"
+      }
+    ],
+    "ne_unjoined_records": [
+      {
+        "ne_adm0_a3": "ESB",
+        "ne_feature_code": "ESB",
+        "ne_iso_a3": "-99",
+        "ne_name": "Dhekelia",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SOL",
+        "ne_feature_code": "SOL",
+        "ne_iso_a3": "-99",
+        "ne_name": "Somaliland",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "KOS",
+        "ne_feature_code": "KOS",
+        "ne_iso_a3": "-99",
+        "ne_name": "Kosovo",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "USG",
+        "ne_feature_code": "USG",
+        "ne_iso_a3": "-99",
+        "ne_name": "USNB Guantanamo Bay",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "CYN",
+        "ne_feature_code": "CYN",
+        "ne_iso_a3": "-99",
+        "ne_name": "N. Cyprus",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "CNM",
+        "ne_feature_code": "CNM",
+        "ne_iso_a3": "-99",
+        "ne_name": "Cyprus U.N. Buffer Zone",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "KAS",
+        "ne_feature_code": "KAS",
+        "ne_iso_a3": "-99",
+        "ne_name": "Siachen Glacier",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "WSB",
+        "ne_feature_code": "WSB",
+        "ne_iso_a3": "-99",
+        "ne_name": "Akrotiri",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SPI",
+        "ne_feature_code": "SPI",
+        "ne_iso_a3": "-99",
+        "ne_name": "Southern Patagonian Ice Field",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "BRT",
+        "ne_feature_code": "BRT",
+        "ne_iso_a3": "-99",
+        "ne_name": "Bir Tawil",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "TWN",
+        "ne_feature_code": "TWN",
+        "ne_iso_a3": "TWN",
+        "ne_name": "Taiwan",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "PGA",
+        "ne_feature_code": "PGA",
+        "ne_iso_a3": "-99",
+        "ne_name": "Spratly Is.",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "BJN",
+        "ne_feature_code": "BJN",
+        "ne_iso_a3": "-99",
+        "ne_name": "Bajo Nuevo Bank",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SER",
+        "ne_feature_code": "SER",
+        "ne_iso_a3": "-99",
+        "ne_name": "Serranilla Bank",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SCR",
+        "ne_feature_code": "SCR",
+        "ne_iso_a3": "-99",
+        "ne_name": "Scarborough Reef",
+        "ne_un_a3": "-099"
+      }
+    ],
+    "scope": "Reference-only ISO code comparison, not a sovereignty/recognition decision; no M49 table or region labels emitted into editions.",
+    "unrepresented_reference_iso_codes": [
+      "BES",
+      "BVT",
+      "CCK",
+      "CXR",
+      "GLP",
+      "GUF",
+      "MTQ",
+      "MYT",
+      "REU",
+      "SJM",
+      "TKL"
+    ]
+  },
+  "m49_country_map_unit_union": {
+    "reference_iso_codes_covered_by_country_or_map_unit": 248,
+    "uncovered_reference_iso_codes": [],
+    "warning": "Coverage of a code is not a one-to-one identity join. Layers and aggregates remain source-scoped."
+  },
+  "m49_map_units": {
+    "distinct_reference_codes_represented": 247,
+    "iso_joined_ne_records": 280,
+    "join_policy": "Natural Earth ISO_A3_EH when a valid three-letter code, else ISO_A3; sentinel codes are never guessed from names.",
+    "m49_reference_records": 248,
+    "ne_multiple_records_for_iso": {
+      "ATG": [
+        "ACA",
+        "ACB"
+      ],
+      "AUS": [
+        "AUS",
+        "CSI",
+        "ATC"
+      ],
+      "BEL": [
+        "BFR",
+        "BWR",
+        "BCR"
+      ],
+      "BIH": [
+        "BHF",
+        "BIS",
+        "BHB"
+      ],
+      "BRA": [
+        "BRA",
+        "BRI"
+      ],
+      "FRA": [
+        "FXX",
+        "CLP"
+      ],
+      "GBR": [
+        "NIR",
+        "WLS",
+        "ENG",
+        "SCT"
+      ],
+      "GEO": [
+        "GEG",
+        "GEA"
+      ],
+      "IRQ": [
+        "IRK",
+        "IRR"
+      ],
+      "KAZ": [
+        "KAZ",
+        "KAB"
+      ],
+      "NOR": [
+        "NOW",
+        "NJM"
+      ],
+      "PNG": [
+        "PNX",
+        "PNB"
+      ],
+      "PRT": [
+        "PRX",
+        "PMD",
+        "PAZ"
+      ],
+      "PSE": [
+        "GAZ",
+        "WEB"
+      ],
+      "SOM": [
+        "SOP",
+        "SOX"
+      ],
+      "SRB": [
+        "SRV",
+        "SRS"
+      ],
+      "SYR": [
+        "SYU",
+        "SYX"
+      ],
+      "TZA": [
+        "TZA",
+        "TZZ"
+      ],
+      "USA": [
+        "USA",
+        "JQI",
+        "DQI",
+        "FQI",
+        "HQI",
+        "WQI",
+        "MQI",
+        "BQI",
+        "LQI",
+        "KQI"
+      ]
+    },
+    "ne_records": 298,
+    "ne_un_code_conflicts": [],
+    "ne_un_code_missing": [
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PSX",
+        "ne_feature_code": "GAZ",
+        "ne_iso_a3": "PSE",
+        "ne_name": "Gaza",
+        "ne_un_a3": "-099",
+        "reference_m49": "275"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PSX",
+        "ne_feature_code": "WEB",
+        "ne_iso_a3": "PSE",
+        "ne_name": "West Bank",
+        "ne_un_a3": "-099",
+        "reference_m49": "275"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SOM",
+        "ne_feature_code": "SOP",
+        "ne_iso_a3": "SOM",
+        "ne_name": "Puntland",
+        "ne_un_a3": "-099",
+        "reference_m49": "706"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SOM",
+        "ne_feature_code": "SOX",
+        "ne_iso_a3": "SOM",
+        "ne_name": "Somalia",
+        "ne_un_a3": "-099",
+        "reference_m49": "706"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SYR",
+        "ne_feature_code": "SYU",
+        "ne_iso_a3": "SYR",
+        "ne_name": "UNDOF Zone",
+        "ne_un_a3": "-099",
+        "reference_m49": "760"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "FRA",
+        "ne_feature_code": "FXX",
+        "ne_iso_a3": "FRA",
+        "ne_name": "France",
+        "ne_un_a3": "-099",
+        "reference_m49": "250"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BEL",
+        "ne_feature_code": "BFR",
+        "ne_iso_a3": "BEL",
+        "ne_name": "Flemish",
+        "ne_un_a3": "-099",
+        "reference_m49": "056"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BEL",
+        "ne_feature_code": "BWR",
+        "ne_iso_a3": "BEL",
+        "ne_name": "Walloon",
+        "ne_un_a3": "-099",
+        "reference_m49": "056"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "GEO",
+        "ne_feature_code": "GEG",
+        "ne_iso_a3": "GEO",
+        "ne_name": "Georgia",
+        "ne_un_a3": "-099",
+        "reference_m49": "268"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "GEO",
+        "ne_feature_code": "GEA",
+        "ne_iso_a3": "GEO",
+        "ne_name": "Adjara",
+        "ne_un_a3": "-099",
+        "reference_m49": "268"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "GBR",
+        "ne_feature_code": "NIR",
+        "ne_iso_a3": "GBR",
+        "ne_name": "N. Ireland",
+        "ne_un_a3": "-099",
+        "reference_m49": "826"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "IRQ",
+        "ne_feature_code": "IRK",
+        "ne_iso_a3": "IRQ",
+        "ne_name": "Iraqi Kurdistan",
+        "ne_un_a3": "-099",
+        "reference_m49": "368"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "NLD",
+        "ne_feature_code": "NLX",
+        "ne_iso_a3": "NLD",
+        "ne_name": "Netherlands",
+        "ne_un_a3": "-099",
+        "reference_m49": "528"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SRB",
+        "ne_feature_code": "SRV",
+        "ne_iso_a3": "SRB",
+        "ne_name": "Vojvodina",
+        "ne_un_a3": "-099",
+        "reference_m49": "688"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "IRQ",
+        "ne_feature_code": "IRR",
+        "ne_iso_a3": "IRQ",
+        "ne_name": "Iraq",
+        "ne_un_a3": "-099",
+        "reference_m49": "368"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SRB",
+        "ne_feature_code": "SRS",
+        "ne_iso_a3": "SRB",
+        "ne_name": "Serbia",
+        "ne_un_a3": "-099",
+        "reference_m49": "688"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BIH",
+        "ne_feature_code": "BHF",
+        "ne_iso_a3": "BIH",
+        "ne_name": "Fed. of Bos. & Herz.",
+        "ne_un_a3": "-099",
+        "reference_m49": "070"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BIH",
+        "ne_feature_code": "BIS",
+        "ne_iso_a3": "BIH",
+        "ne_name": "Rep. Srpska",
+        "ne_un_a3": "-099",
+        "reference_m49": "070"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BRI",
+        "ne_feature_code": "BRI",
+        "ne_iso_a3": "BRA",
+        "ne_name": "Brazilian I.",
+        "ne_un_a3": "-99",
+        "reference_m49": "076"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PRT",
+        "ne_feature_code": "PRX",
+        "ne_iso_a3": "PRT",
+        "ne_name": "Portugal",
+        "ne_un_a3": "-099",
+        "reference_m49": "620"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BIH",
+        "ne_feature_code": "BHB",
+        "ne_iso_a3": "BIH",
+        "ne_name": "Brcko District",
+        "ne_un_a3": "-099",
+        "reference_m49": "070"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PNG",
+        "ne_feature_code": "PNX",
+        "ne_iso_a3": "PNG",
+        "ne_name": "Papua New Guinea",
+        "ne_un_a3": "-099",
+        "reference_m49": "598"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "KAB",
+        "ne_feature_code": "KAB",
+        "ne_iso_a3": "KAZ",
+        "ne_name": "Baikonur",
+        "ne_un_a3": "-099",
+        "reference_m49": "398"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "GBR",
+        "ne_feature_code": "WLS",
+        "ne_iso_a3": "GBR",
+        "ne_name": "Wales",
+        "ne_un_a3": "-099",
+        "reference_m49": "826"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "GBR",
+        "ne_feature_code": "ENG",
+        "ne_iso_a3": "GBR",
+        "ne_name": "England",
+        "ne_un_a3": "-099",
+        "reference_m49": "826"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "GBR",
+        "ne_feature_code": "SCT",
+        "ne_iso_a3": "GBR",
+        "ne_name": "Scotland",
+        "ne_un_a3": "-099",
+        "reference_m49": "826"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "BEL",
+        "ne_feature_code": "BCR",
+        "ne_iso_a3": "BEL",
+        "ne_name": "Brussels",
+        "ne_un_a3": "-099",
+        "reference_m49": "056"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "NLD",
+        "ne_feature_code": "NLY",
+        "ne_iso_a3": "BES",
+        "ne_name": "Caribbean Netherlands",
+        "ne_un_a3": "-099",
+        "reference_m49": "535"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "JQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Johnston Atoll",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "ATG",
+        "ne_feature_code": "ACA",
+        "ne_iso_a3": "ATG",
+        "ne_name": "Antigua",
+        "ne_un_a3": "-099",
+        "reference_m49": "028"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "ATG",
+        "ne_feature_code": "ACB",
+        "ne_iso_a3": "ATG",
+        "ne_name": "Barbuda",
+        "ne_un_a3": "-099",
+        "reference_m49": "028"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "HMD",
+        "ne_feature_code": "HMD",
+        "ne_iso_a3": "HMD",
+        "ne_name": "Heard I. and McDonald Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "334"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "TZA",
+        "ne_feature_code": "TZZ",
+        "ne_iso_a3": "TZA",
+        "ne_name": "Zanzibar",
+        "ne_un_a3": "-099",
+        "reference_m49": "834"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PRT",
+        "ne_feature_code": "PMD",
+        "ne_iso_a3": "PRT",
+        "ne_name": "Madeira",
+        "ne_un_a3": "-099",
+        "reference_m49": "620"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PRT",
+        "ne_feature_code": "PAZ",
+        "ne_iso_a3": "PRT",
+        "ne_name": "Azores",
+        "ne_un_a3": "-099",
+        "reference_m49": "620"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "IOT",
+        "ne_feature_code": "IOT",
+        "ne_iso_a3": "IOT",
+        "ne_name": "Br. Indian Ocean Ter.",
+        "ne_un_a3": "-099",
+        "reference_m49": "086"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "NOR",
+        "ne_feature_code": "NJM",
+        "ne_iso_a3": "NOR",
+        "ne_name": "Jan Mayen I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "578"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "PNG",
+        "ne_feature_code": "PNB",
+        "ne_iso_a3": "PNG",
+        "ne_name": "Bougainville",
+        "ne_un_a3": "-099",
+        "reference_m49": "598"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "SGS",
+        "ne_feature_code": "SGS",
+        "ne_iso_a3": "SGS",
+        "ne_name": "S. Geo. and the Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "239"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "CSI",
+        "ne_feature_code": "CSI",
+        "ne_iso_a3": "AUS",
+        "ne_name": "Coral Sea Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "036"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "DQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Jarvis I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "FQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Baker I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "HQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Howland I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "WQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Wake Atoll",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "MQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Midway Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "CLP",
+        "ne_feature_code": "CLP",
+        "ne_iso_a3": "FRA",
+        "ne_name": "Clipperton I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "250"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "BQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Navassa I.",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "ATC",
+        "ne_feature_code": "ATC",
+        "ne_iso_a3": "AUS",
+        "ne_name": "Ashmore and Cartier Is.",
+        "ne_un_a3": "-099",
+        "reference_m49": "036"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "LQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Palmyra Atoll",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      },
+      {
+        "code_agrees": false,
+        "ne_adm0_a3": "UMI",
+        "ne_feature_code": "KQI",
+        "ne_iso_a3": "USA",
+        "ne_name": "Kingman Reef",
+        "ne_un_a3": "-099",
+        "reference_m49": "840"
+      }
+    ],
+    "ne_unjoined_records": [
+      {
+        "ne_adm0_a3": "ESB",
+        "ne_feature_code": "ESB",
+        "ne_iso_a3": "-99",
+        "ne_name": "Dhekelia",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SOL",
+        "ne_feature_code": "SOL",
+        "ne_iso_a3": "-99",
+        "ne_name": "Somaliland",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "KOR",
+        "ne_feature_code": "KNX",
+        "ne_iso_a3": "-99",
+        "ne_name": "Korean DMZ (south)",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "PRK",
+        "ne_feature_code": "KNZ",
+        "ne_iso_a3": "-99",
+        "ne_name": "Korean DMZ (north)",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "KOS",
+        "ne_feature_code": "KOS",
+        "ne_iso_a3": "-99",
+        "ne_name": "Kosovo",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "USG",
+        "ne_feature_code": "USG",
+        "ne_iso_a3": "-99",
+        "ne_name": "USNB Guantanamo Bay",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "CYN",
+        "ne_feature_code": "CYN",
+        "ne_iso_a3": "-99",
+        "ne_name": "N. Cyprus",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "CNM",
+        "ne_feature_code": "CNM",
+        "ne_iso_a3": "-99",
+        "ne_name": "Cyprus U.N. Buffer Zone",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "KAS",
+        "ne_feature_code": "KAS",
+        "ne_iso_a3": "-99",
+        "ne_name": "Siachen Glacier",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "WSB",
+        "ne_feature_code": "WSB",
+        "ne_iso_a3": "-99",
+        "ne_name": "Akrotiri",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SPI",
+        "ne_feature_code": "SPI",
+        "ne_iso_a3": "-99",
+        "ne_name": "Southern Patagonian Ice Field",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "BRT",
+        "ne_feature_code": "BRT",
+        "ne_iso_a3": "-99",
+        "ne_name": "Bir Tawil",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "TWN",
+        "ne_feature_code": "TWN",
+        "ne_iso_a3": "TWN",
+        "ne_name": "Taiwan",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "CHN",
+        "ne_feature_code": "PFA",
+        "ne_iso_a3": "-99",
+        "ne_name": "Paracel Is.",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "PGA",
+        "ne_feature_code": "PGA",
+        "ne_iso_a3": "-99",
+        "ne_name": "Spratly Is.",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "BJN",
+        "ne_feature_code": "BJN",
+        "ne_iso_a3": "-99",
+        "ne_name": "Bajo Nuevo Bank",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SER",
+        "ne_feature_code": "SER",
+        "ne_iso_a3": "-99",
+        "ne_name": "Serranilla Bank",
+        "ne_un_a3": "-099"
+      },
+      {
+        "ne_adm0_a3": "SCR",
+        "ne_feature_code": "SCR",
+        "ne_iso_a3": "-99",
+        "ne_name": "Scarborough Reef",
+        "ne_un_a3": "-099"
+      }
+    ],
+    "scope": "Reference-only ISO code comparison, not a sovereignty/recognition decision; no M49 table or region labels emitted into editions.",
+    "unrepresented_reference_iso_codes": [
+      "UMI"
+    ]
+  },
+  "reference_lock_sha256": "94bb3c4591040663b42b8a08d87f9a52b1e84319f1aad82f285b4c4b5b690441",
+  "schema": 1,
+  "summary": {
+    "coordinate_flags_over_25km": [
+      {
+        "coordinate": [
+          126.3866418,
+          38.3366897
+        ],
+        "coordinate_review_flag": true,
+        "layer": "place",
+        "minimum_reference_coordinate_distance_km": 93.782,
+        "ne_adm0_a3": "PRK",
+        "ne_capital_flag": false,
+        "ne_id": "1159139161",
+        "ne_name": "Pyongsan",
+        "qid": "Q18808"
+      },
+      {
+        "coordinate": [
+          -63.0799846,
+          -15.6995727
+        ],
+        "coordinate_review_flag": true,
+        "layer": "place",
+        "minimum_reference_coordinate_distance_km": 7076.259,
+        "ne_adm0_a3": "BOL",
+        "ne_capital_flag": false,
+        "ne_id": "1159144877",
+        "ne_name": "Ascension",
+        "qid": "Q2450325"
+      },
+      {
+        "coordinate": [
+          113.1580614,
+          30.6519988
+        ],
+        "coordinate_review_flag": true,
+        "layer": "place",
+        "minimum_reference_coordinate_distance_km": 100.053,
+        "ne_adm0_a3": "CHN",
+        "ne_capital_flag": false,
+        "ne_id": "1159146993",
+        "ne_name": "Jianmen",
+        "qid": "Q71323"
+      },
+      {
+        "coordinate": [
+          106.6133268,
+          23.8997156
+        ],
+        "coordinate_review_flag": true,
+        "layer": "place",
+        "minimum_reference_coordinate_distance_km": 2820.648,
+        "ne_adm0_a3": "CHN",
+        "ne_capital_flag": false,
+        "ne_id": "1159149783",
+        "ne_name": "Bose",
+        "qid": "Q92381"
+      },
+      {
+        "coordinate": [
+          115.81956,
+          10.72954
+        ],
+        "coordinate_review_flag": true,
+        "layer": "map-unit",
+        "minimum_reference_coordinate_distance_km": 5520.952,
+        "ne_adm0_a3": "PGA",
+        "ne_capital_flag": null,
+        "ne_id": "1159321165",
+        "ne_name": "Spratly Is.",
+        "qid": "Q43296"
+      },
+      {
+        "coordinate": [
+          55.480175,
+          -4.676659
+        ],
+        "coordinate_review_flag": true,
+        "layer": "map-unit",
+        "minimum_reference_coordinate_distance_km": 403.334,
+        "ne_adm0_a3": "SYC",
+        "ne_capital_flag": null,
+        "ne_id": "1159321291",
+        "ne_name": "Seychelles",
+        "qid": "Q1042"
+      }
+    ],
+    "entity_snapshots": 18,
+    "matched_ne_records": 28
+  },
+  "wikidata_cases": [
+    {
+      "capital_of_claims": [
+        "Q3125978"
+      ],
+      "country_claims": [
+        "Q252"
+      ],
+      "earth_coordinates": [
+        [
+          115.23388888888888,
+          -8.671666666666667,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Denpasar",
+      "instance_claims": [
+        "Q3199141"
+      ],
+      "modified": "2026-10-30T16:31:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            115.1841208,
+            -8.7151125
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 7.298,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159139827",
+          "ne_name": "Kuta"
+        },
+        {
+          "coordinate": [
+            115.2199849,
+            -8.6500289
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2.85,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159146905",
+          "ne_name": "Denpasar"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2024-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+670210"
+        }
+      ],
+      "qid": "Q11506",
+      "revision": 2562620865
+    },
+    {
+      "capital_of_claims": [
+        "Q3945164",
+        "Q83069"
+      ],
+      "country_claims": [
+        "Q43"
+      ],
+      "earth_coordinates": [
+        [
+          30.40256,
+          40.77625,
+          1e-05
+        ]
+      ],
+      "english_label": "Adapazarı",
+      "instance_claims": [
+        "Q1147395",
+        "Q1549591"
+      ],
+      "modified": "2026-08-17T13:00:09Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            30.4000025,
+            40.7666611
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.088,
+          "ne_adm0_a3": "TUR",
+          "ne_capital_flag": false,
+          "ne_id": "1159113425",
+          "ne_name": "Sakarya"
+        },
+        {
+          "coordinate": [
+            30.4150321,
+            40.799976
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2.839,
+          "ne_adm0_a3": "TUR",
+          "ne_capital_flag": false,
+          "ne_id": "1159146375",
+          "ne_name": "Adapazarı"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2022-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 0,
+          "value": "+281489"
+        }
+      ],
+      "qid": "Q175323",
+      "revision": 2532330249
+    },
+    {
+      "capital_of_claims": [
+        "Q28370",
+        "Q423",
+        "Q705044"
+      ],
+      "country_claims": [
+        "Q423"
+      ],
+      "earth_coordinates": [
+        [
+          125.7475,
+          39.016666666666666,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Pyongyang",
+      "instance_claims": [
+        "Q10864048",
+        "Q1549591",
+        "Q499073",
+        "Q515",
+        "Q51929311"
+      ],
+      "modified": "2026-11-07T20:18:32Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            126.3866418,
+            38.3366897
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 93.782,
+          "ne_adm0_a3": "PRK",
+          "ne_capital_flag": false,
+          "ne_id": "1159139161",
+          "ne_name": "Pyongsan"
+        },
+        {
+          "coordinate": [
+            125.7527449,
+            39.0213846
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.693,
+          "ne_adm0_a3": "PRK",
+          "ne_capital_flag": true,
+          "ne_id": "1159151303",
+          "ne_name": "Pyongyang"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2015-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+2863000"
+        }
+      ],
+      "qid": "Q18808",
+      "revision": 2566053566
+    },
+    {
+      "capital_of_claims": [
+        "Q238931"
+      ],
+      "country_claims": [
+        "Q232"
+      ],
+      "earth_coordinates": [
+        [
+          51.1575,
+          43.6525,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Aktau",
+      "instance_claims": [
+        "Q129725870",
+        "Q1549591",
+        "Q515"
+      ],
+      "modified": "2026-10-04T16:14:57Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            51.1417356,
+            43.6904551
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 4.407,
+          "ne_adm0_a3": "KAZ",
+          "ne_capital_flag": false,
+          "ne_id": "1159122651",
+          "ne_name": "Mangyshlak"
+        },
+        {
+          "coordinate": [
+            51.2365002,
+            43.6231887
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 7.144,
+          "ne_adm0_a3": "KAZ",
+          "ne_capital_flag": false,
+          "ne_id": "1159148679",
+          "ne_name": "Aqtau"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2017-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+183350"
+        }
+      ],
+      "qid": "Q198989",
+      "revision": 2553101216
+    },
+    {
+      "capital_of_claims": [
+        "Q2990967"
+      ],
+      "country_claims": [
+        "Q96"
+      ],
+      "earth_coordinates": [
+        [
+          -107.99638888889,
+          31.092777777778,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Ascensión",
+      "instance_claims": [
+        "Q20202352"
+      ],
+      "modified": "2026-09-08T14:22:12Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            -107.979983,
+            31.1000255
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.758,
+          "ne_adm0_a3": "MEX",
+          "ne_capital_flag": false,
+          "ne_id": "1159129147",
+          "ne_name": "Ascensión"
+        },
+        {
+          "coordinate": [
+            -63.0799846,
+            -15.6995727
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 7076.259,
+          "ne_adm0_a3": "BOL",
+          "ne_capital_flag": false,
+          "ne_id": "1159144877",
+          "ne_name": "Ascension"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2010-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+13456"
+        },
+        {
+          "dates": [
+            "+2020-03-15T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 0,
+          "value": "+15054"
+        }
+      ],
+      "qid": "Q2450325",
+      "revision": 2542293975
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q148"
+      ],
+      "earth_coordinates": [
+        [
+          112.21138888889,
+          31.038055555556,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Jingmen",
+      "instance_claims": [
+        "Q1549591",
+        "Q748149"
+      ],
+      "modified": "2026-11-06T07:14:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            112.2010339823121,
+            31.031409824168122
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.233,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159140765",
+          "ne_name": "Jingmen"
+        },
+        {
+          "coordinate": [
+            113.1580614,
+            30.6519988
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 100.053,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159146993",
+          "ne_name": "Jianmen"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2019-12-31T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+2897500"
+        },
+        {
+          "dates": [
+            "+2020-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P1539",
+            "P1540",
+            "P459",
+            "P518",
+            "P585",
+            "P6343",
+            "P6344"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+2596927"
+        }
+      ],
+      "qid": "Q71323",
+      "revision": 2565260326
+    },
+    {
+      "capital_of_claims": [
+        "Q2110"
+      ],
+      "country_claims": [
+        "Q252"
+      ],
+      "earth_coordinates": [
+        [
+          105.2625,
+          -5.4294444444444,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Bandar Lampung",
+      "instance_claims": [
+        "Q3199141"
+      ],
+      "modified": "2026-10-11T13:42:08Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            105.3000219,
+            -5.4496041
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 4.72,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159139819",
+          "ne_name": "Bandar Lampung"
+        },
+        {
+          "coordinate": [
+            105.2680521,
+            -5.4280728
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.633,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159149817",
+          "ne_name": "Bandar Lampung"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2015-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+1166761"
+        }
+      ],
+      "qid": "Q8156",
+      "revision": 2555888141
+    },
+    {
+      "capital_of_claims": [
+        "Q3193749",
+        "Q3193752",
+        "Q388047"
+      ],
+      "country_claims": [
+        "Q948"
+      ],
+      "earth_coordinates": [
+        [
+          8.8333333333333,
+          35.166666666667,
+          0.016666666666667
+        ]
+      ],
+      "english_label": "Kasserine",
+      "instance_claims": [
+        "Q41067667"
+      ],
+      "modified": "2026-08-23T05:52:44Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            8.7166985,
+            35.2167031
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 11.97,
+          "ne_adm0_a3": "TUN",
+          "ne_capital_flag": false,
+          "ne_id": "1159112827",
+          "ne_name": "Kasserine"
+        },
+        {
+          "coordinate": [
+            8.829993,
+            35.1803965
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.557,
+          "ne_adm0_a3": "TUN",
+          "ne_capital_flag": false,
+          "ne_id": "1159133873",
+          "ne_name": "Qasserine"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [],
+          "qualifier_properties": [],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+108794"
+        }
+      ],
+      "qid": "Q852735",
+      "revision": 2535255158
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q148"
+      ],
+      "earth_coordinates": [
+        [
+          122.832,
+          45.6148,
+          null
+        ]
+      ],
+      "english_label": "Baicheng",
+      "instance_claims": [
+        "Q748149"
+      ],
+      "modified": "2026-11-06T09:10:00Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            122.8200378,
+            45.6200177
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.096,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159147121",
+          "ne_name": "Baicheng"
+        },
+        {
+          "coordinate": [
+            106.6133268,
+            23.8997156
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2820.648,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159149783",
+          "ne_name": "Bose"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2010-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+2032356"
+        },
+        {
+          "dates": [
+            "+2020-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P1539",
+            "P1540",
+            "P459",
+            "P518",
+            "P585",
+            "P6343",
+            "P6344"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+1551378"
+        }
+      ],
+      "qid": "Q92381",
+      "revision": 2565298738
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q30"
+      ],
+      "earth_coordinates": [
+        [
+          166.63333333333,
+          19.3,
+          null
+        ]
+      ],
+      "english_label": "Wake Island",
+      "instance_claims": [
+        "Q139595919",
+        "Q42523",
+        "Q462778",
+        "Q56061",
+        "Q783733"
+      ],
+      "modified": "2026-11-06T10:22:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            115.81956,
+            10.72954
+          ],
+          "coordinate_review_flag": true,
+          "layer": "map-unit",
+          "minimum_reference_coordinate_distance_km": 5520.952,
+          "ne_adm0_a3": "PGA",
+          "ne_capital_flag": null,
+          "ne_id": "1159321165",
+          "ne_name": "Spratly Is."
+        },
+        {
+          "coordinate": [
+            166.644535,
+            19.285663
+          ],
+          "coordinate_review_flag": false,
+          "layer": "map-unit",
+          "minimum_reference_coordinate_distance_km": 1.981,
+          "ne_adm0_a3": "UMI",
+          "ne_capital_flag": null,
+          "ne_id": "1159321391",
+          "ne_name": "Wake Atoll"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2017-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P1013",
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 0,
+          "value": "+100"
+        }
+      ],
+      "qid": "Q43296",
+      "revision": 2565329657
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q1042"
+      ],
+      "earth_coordinates": [
+        [
+          52.766667,
+          -7.1,
+          1e-05
+        ]
+      ],
+      "english_label": "Seychelles",
+      "instance_claims": [
+        "Q112099",
+        "Q11815167",
+        "Q3624078",
+        "Q6256",
+        "Q7270"
+      ],
+      "modified": "2026-11-03T10:30:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            55.480175,
+            -4.676659
+          ],
+          "coordinate_review_flag": true,
+          "layer": "map-unit",
+          "minimum_reference_coordinate_distance_km": 403.334,
+          "ne_adm0_a3": "SYC",
+          "ne_capital_flag": null,
+          "ne_id": "1159321291",
+          "ne_name": "Seychelles"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2023-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+119773"
+        }
+      ],
+      "qid": "Q1042",
+      "revision": 2564284983
+    },
+    {
+      "capital_of_claims": [
+        "Q1675663",
+        "Q189",
+        "Q203304",
+        "Q62567"
+      ],
+      "country_claims": [
+        "Q189"
+      ],
+      "earth_coordinates": [
+        [
+          -21.935,
+          64.1475,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Reykjavík",
+      "instance_claims": [
+        "Q108178728",
+        "Q1549591",
+        "Q2264924",
+        "Q5119",
+        "Q515",
+        "Q51929311"
+      ],
+      "modified": "2026-11-02T04:26:17Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            -21.936546009025054,
+            64.14345946317033
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.455,
+          "ne_adm0_a3": "ISL",
+          "ne_capital_flag": true,
+          "ne_id": "1159150587",
+          "ne_name": "Reykjavík"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2025-01-01T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585",
+            "P7452"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+138772"
+        }
+      ],
+      "qid": "Q1764",
+      "revision": 2563723679
+    },
+    {
+      "capital_of_claims": [
+        "Q11911",
+        "Q39"
+      ],
+      "country_claims": [
+        "Q39"
+      ],
+      "earth_coordinates": [
+        [
+          7.44743,
+          46.94798,
+          1e-05
+        ]
+      ],
+      "english_label": "Bern",
+      "instance_claims": [
+        "Q1187811",
+        "Q14770218",
+        "Q1549591",
+        "Q257391",
+        "Q515",
+        "Q537250",
+        "Q54935504",
+        "Q56061",
+        "Q70208"
+      ],
+      "modified": "2026-11-06T19:50:32Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            7.4669755,
+            46.9166828
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 3.783,
+          "ne_adm0_a3": "CHE",
+          "ne_capital_flag": true,
+          "ne_id": "1159149737",
+          "ne_name": "Bern"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2023-12-31T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+136988"
+        }
+      ],
+      "qid": "Q70",
+      "revision": 2565559859
+    },
+    {
+      "capital_of_claims": [
+        "Q17511516",
+        "Q223",
+        "Q617630",
+        "Q695387"
+      ],
+      "country_claims": [
+        "Q223"
+      ],
+      "earth_coordinates": [
+        [
+          -51.733333333333,
+          64.175,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Nuuk",
+      "instance_claims": [
+        "Q515",
+        "Q51929311"
+      ],
+      "modified": "2026-11-02T03:47:37Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            -51.7326588,
+            64.1982815
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2.589,
+          "ne_adm0_a3": "GRL",
+          "ne_capital_flag": false,
+          "ne_id": "1159150939",
+          "ne_name": "Nuuk"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2020-01-01T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+18326"
+        }
+      ],
+      "qid": "Q226",
+      "revision": 2563712486
+    },
+    {
+      "capital_of_claims": [
+        "Q2719360",
+        "Q32",
+        "Q378004",
+        "Q5177890",
+        "Q691741"
+      ],
+      "country_claims": [
+        "Q32"
+      ],
+      "earth_coordinates": [
+        [
+          6.13,
+          49.61138888888889,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Luxembourg",
+      "instance_claims": [
+        "Q1549591",
+        "Q2919801",
+        "Q5119",
+        "Q515",
+        "Q51929311"
+      ],
+      "modified": "2026-11-02T02:59:18Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            6.1300028,
+            49.6116604
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.03,
+          "ne_adm0_a3": "LUX",
+          "ne_capital_flag": true,
+          "ne_id": "1159146437",
+          "ne_name": "Luxembourg"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2026-01-01T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+137678"
+        }
+      ],
+      "qid": "Q1842",
+      "revision": 2563700042
+    },
+    {
+      "capital_of_claims": [
+        "Q347",
+        "Q49655"
+      ],
+      "country_claims": [
+        "Q347"
+      ],
+      "earth_coordinates": [
+        [
+          9.522222222222222,
+          47.14055555555556,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Vaduz",
+      "instance_claims": [
+        "Q108178728",
+        "Q11183787",
+        "Q203300",
+        "Q902814"
+      ],
+      "modified": "2026-11-04T20:31:09Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            9.5166695,
+            47.1337238
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.868,
+          "ne_adm0_a3": "LIE",
+          "ne_capital_flag": true,
+          "ne_id": "1159146061",
+          "ne_name": "Vaduz"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2019-06-30T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+5668"
+        }
+      ],
+      "qid": "Q1844",
+      "revision": 2564807501
+    },
+    {
+      "capital_of_claims": [
+        "Q215"
+      ],
+      "country_claims": [
+        "Q215"
+      ],
+      "earth_coordinates": [
+        [
+          14.50611111111111,
+          46.05138888888889,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Ljubljana",
+      "instance_claims": [
+        "Q108178728",
+        "Q1549591",
+        "Q515",
+        "Q51929311"
+      ],
+      "modified": "2026-10-30T15:25:46Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            14.514969,
+            46.0552883
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.809,
+          "ne_adm0_a3": "SVN",
+          "ne_capital_flag": true,
+          "ne_id": "1159149461",
+          "ne_name": "Ljubljana"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2022-01-01T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+284293"
+        }
+      ],
+      "qid": "Q437",
+      "revision": 2562593999
+    },
+    {
+      "capital_of_claims": [
+        "Q1027",
+        "Q12053604",
+        "Q12060804",
+        "Q14759030",
+        "Q960645"
+      ],
+      "country_claims": [
+        "Q1027"
+      ],
+      "earth_coordinates": [
+        [
+          57.498888888889,
+          -20.161944444444,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Port Louis",
+      "instance_claims": [
+        "Q10864048",
+        "Q1549591",
+        "Q2264924",
+        "Q515"
+      ],
+      "modified": "2026-10-30T16:15:59Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            57.4999939,
+            -20.1666386
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.535,
+          "ne_adm0_a3": "MUS",
+          "ne_capital_flag": true,
+          "ne_id": "1159150443",
+          "ne_name": "Port Louis"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2012-01-01T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 2,
+          "value": "+149194"
+        }
+      ],
+      "qid": "Q3929",
+      "revision": 2562614002
+    }
+  ]
+}

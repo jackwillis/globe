@@ -1,0 +1,297 @@
+{
+  "schema": 1,
+  "basis_commit": "39e46f1",
+  "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "host_suite": {
+    "registered": 50,
+    "executed": 50,
+    "passed": 50,
+    "command": "ctest --test-dir build --output-on-failure -j 1",
+    "serial_seconds": 61.37
+  },
+  "research_tests": {
+    "baseline": 8,
+    "concordance_names": 9,
+    "optional_geometry": 4,
+    "passed": 21
+  },
+  "cross_report_checks": {
+    "checks": [
+      {
+        "check": "reference snapshot digest",
+        "pass": true
+      },
+      {
+        "check": "compact ascii retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "compact ascii lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "compact iso8859-1 retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "compact iso8859-1 lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "compact mac_roman retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "compact mac_roman lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "compact utf-8 retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "compact utf-8 lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "standard ascii retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "standard ascii lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "standard iso8859-1 retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "standard iso8859-1 lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "standard mac_roman retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "standard mac_roman lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "standard utf-8 retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "standard utf-8 lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "expanded ascii retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "expanded ascii lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "expanded iso8859-1 retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "expanded iso8859-1 lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "expanded mac_roman retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "expanded mac_roman lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "expanded utf-8 retains all selected identities",
+        "pass": true
+      },
+      {
+        "check": "expanded utf-8 lossy candidates explicitly marked",
+        "pass": true
+      },
+      {
+        "check": "compact river geometry count matches recipe",
+        "pass": true
+      },
+      {
+        "check": "standard river geometry count matches recipe",
+        "pass": true
+      },
+      {
+        "check": "compact-recipe Amazon has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "compact-recipe Congo has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "compact-recipe Danube has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "compact-recipe Mekong has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "compact-recipe Mississippi has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "compact-recipe Nile has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-10m Amazon has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-10m Congo has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-10m Danube has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-10m Mekong has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-10m Mississippi has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-10m Nile has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-50m Amazon has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-50m Congo has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-50m Danube has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-50m Mekong has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-50m Mississippi has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "full-50m Nile has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "standard-recipe Amazon has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "standard-recipe Congo has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "standard-recipe Danube has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "standard-recipe Mekong has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "standard-recipe Mississippi has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "standard-recipe Nile has a cartographic near-shore component",
+        "pass": true
+      },
+      {
+        "check": "landclasses independent conversion equality",
+        "pass": true
+      },
+      {
+        "check": "landclasses matches production bytes",
+        "pass": true
+      },
+      {
+        "check": "elevation-1deg independent conversion equality",
+        "pass": true
+      },
+      {
+        "check": "elevation-1deg matches production bytes",
+        "pass": true
+      },
+      {
+        "check": "elevation-05deg independent conversion equality",
+        "pass": true
+      },
+      {
+        "check": "elevation-05deg matches production bytes",
+        "pass": true
+      },
+      {
+        "check": "elevation-025deg independent conversion equality",
+        "pass": true
+      }
+    ],
+    "failures": [],
+    "interpretation": "Internal consistency and scoped cartographic checks, not certification of source identities, global topology or hydrological routing."
+  },
+  "reproducibility": {
+    "concordance_reports_identical": true,
+    "geometry_reports_identical": true,
+    "river_component_reports_identical": true,
+    "name_reports_and_full_outputs_identical": true,
+    "wikidata_revision_replays_verified": 18,
+    "raster_source_conversions": 8,
+    "raster_pairs_identical": 4
+  },
+  "updated_issue_descriptions_read": {
+    "issues": [
+      36,
+      38,
+      61
+    ],
+    "read_utc": "2026-11-08 06:20:41 UTC"
+  },
+  "tools": {
+    "audit.py": "5193f6370819414d24f3070609ced272bf1b50aa7af5d2de7769ac62ed3af77c",
+    "baseline.py": "cfe320be34efdbcb2fabaaf6016da12af61ce6b5dafcfaed6b75e3ab07dc836c",
+    "budget_probe.cpp": "73f239234114e025054ab26209d9d5cdd644ca77c8718548569394c78d5dff4a",
+    "concordance.py": "9ad96cfd8bd5e63847682ae2e6ce8a0058a0ad8ecfbb39d1e93ed9d65cc075b3",
+    "geometry_qa.py": "fdc1c12032aa7ad462f175599f2a17a0fbd40691a3bbf319bccfaac251b1472a",
+    "hydro_qa.py": "e0a3c37b7a2b460ba880cecf1147ea0bc58ea958e69e86b978eea6127b542c62",
+    "memory_probe.cpp": "b2b0a628c8c6091b36146d93c9d3064261c9c2a06c3d0605ec1e49b5f8e826ae",
+    "name_profiles.py": "eda70e7ce634e7abee2aa7586c9adcd3c02c7fd4028dbe19eead8cc816f5fcce",
+    "reproduce_rasters.py": "7be4c110313328479d83f25c0fed12281d164eb17d89c744d2f6949589a77b71",
+    "requirements-research.lock.txt": "d9704023e7372d56dd69102508cffa10d66b0479a45287ac9bc6ffadd8a044a1",
+    "river_components.py": "e7a6ac7652aec0ce62f81a585125e537f7d1143b3a3db4437e194bf6d846b667",
+    "sources.py": "c6ecfdbf28db4378f347845ea1ccf895bf449ff3103b9af01e71c7de4c14968c",
+    "test_audit.py": "ae693d26346419cd6b3df4bca1705166f3cfb66a147c536f9559d13210a74969",
+    "test_concordance.py": "021fa63a1adc4acf77ec462ab517da4c20e9852079a8374ca03ba3aac0f41a6f",
+    "test_geometry_qa.py": "fc8eae257d59472a3dec69fa1b1417e421a7e1751a6a37d50e10ccd798f3416a",
+    "verify_followup.py": "4992f0be52da68c528bf6fe1f61057bb8dc3d97d5d7c40fecd9295c4a18e0ba4"
+  },
+  "limits": [
+    "Host only; no G4 access",
+    "Planar geometry warnings remain unresolved",
+    "Name fallback candidates require editorial and installed-glyph review",
+    "No runtime, production pack, font or layout changes"
+  ]
+}

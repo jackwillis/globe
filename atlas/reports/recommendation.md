@@ -5,6 +5,10 @@ cartographic source, keep a Unicode-rich build-time catalog, select places by ge
 cartographic importance, and investigate independently loadable typed layers with a manifest.
 The evidence supports further work, not a production migration or an approved release matrix.
 
+The [semantic follow-up](semantic-followup.md) records later reference checks, edition name
+profiles, independent geometry/network diagnostics and fresh raster source conversions. The
+initial observations below remain dated evidence; the follow-up identifies which gaps were narrowed.
+
 ## Scope and evidence
 
 The [baseline](baseline.md) covers fetched main `886d126`. Subsequent integration includes the
