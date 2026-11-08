@@ -38,6 +38,7 @@ No due dates or fixed feature commitments have been set.
 | Portable application architecture | Evolve Elm-style state, immutable data, mutable workspaces | [#3](https://github.com/jackwillis/globe/issues/3) |
 | Geographic discovery and visual design | Useful offline geography, search, layers and visual clarity | [#4](https://github.com/jackwillis/globe/issues/4) |
 | Offline data and acquisition | Validated packs, safe cache and optional provider ingestion | [#5](https://github.com/jackwillis/globe/issues/5) |
+| Memory budgets and runtime resource management | One memory ledger and budget, a tested degradation ladder, honest metrics, Classic Mac Memory Manager handling | [#54](https://github.com/jackwillis/globe/issues/54) |
 | Atlas production and geographic integrity | Reproducible data pipeline, editorial rules, identity, semantic QA and edition recipes | [#52](https://github.com/jackwillis/globe/issues/52) |
 | Release engineering and verification | Reproducible CI and builds, target evidence | [#6](https://github.com/jackwillis/globe/issues/6) |
 
