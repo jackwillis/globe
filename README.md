@@ -35,6 +35,7 @@ checks pass on host and G4. The OS 9 application is built and packaged, and has 
 (2026-11-02) and on **bare Mac OS 9 on the G4** (2026-11-07: about one second to settle, input
 checked every 20 ms; [numbers](docs/os9-proof.md)). It still lacks a menu bar, a looks palette and
 settled cursors (see the usability epic, issue #35). Real-display timing on X11 remains open.
+CI runs on GitHub Actions; check the Actions tab for the current result.
 
 - [Current handoff](docs/handoff.md) and [prioritized backlog](docs/backlog.md)
 - [Architecture](docs/architecture.md), [design and ADR](docs/adr/0001-m2-to-m5-decisions.md)
@@ -66,8 +67,12 @@ toolbar. Exposing or moving a window resends cached pixels. The graticule hides 
   and places; local optional elevation packs. [Import](docs/elevation-import.md),
   [toolbar](docs/toolbar.md), [countries](docs/country-format.md), [places](docs/place-format.md).
 - `tools/build-edition.sh floppy`: classic PowerPC OS 9 application with atlas and one-degree
-  elevation, countries and cities; no toolbar, palette or menu bar yet. It emits a MacBinary application,
-  a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md).
+elevation, countries and cities; no toolbar, palette or menu bar yet. It emits a MacBinary application,
+  a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md). **Paused since
+  2026-11-07:** it still builds and is checked in CI, but releases are digital first (a StuffIt
+  archive, a MacBinary file and a disk image), and the next edition is an application plus a data
+  folder of packs ([#47](https://github.com/jackwillis/globe/issues/47),
+  [#48](https://github.com/jackwillis/globe/issues/48)).
 
 Both use the same portable core and strict pack formats. Terrain is currently raw embedded v1
 data; [compression has been measured](docs/perf/compression.md), with runtime adoption still open.
