@@ -53,6 +53,16 @@ help overlay (#40), and the atlas features: text foundation (#36), pointer reado
 (#43); existing #24 (find places), #23 and #25 stay linked. Decisions and evidence:
 [ADR 0002](adr/0002-rendering-shared-code-and-usability.md).
 
+## Atlas production as a parallel project (2026-11-07)
+
+The owner approved treating Globe as **two cooperating projects in one repository**: the portable interactive runtime and a reproducible, transparent atlas-production pipeline whose source selection, editorial rules, geographic QA and edition recipes can evolve separately. The interface is versioned, strictly bounded atlas packs; no new runtime GIS dependency or infrastructure is implied. See [ADR 0003](adr/0003-atlas-production-boundary.md).
+
+- [#52 — Atlas production, geographic integrity and edition rules](https://github.com/jackwillis/globe/issues/52) coordinates data-side decisions, alongside existing data epic #5 and discovery epic #4.
+- [#53 — Audit atlas coverage and prototype source-driven editions](https://github.com/jackwillis/globe/issues/53) is the first **research-only** assignment: source/provenance and omissions audit, microstates/capitals, rivers/lakes, three candidate edition sizes and a semantic QA plan. No production-format or runtime migration is authorized yet.
+- Existing [#24](https://github.com/jackwillis/globe/issues/24), [#26](https://github.com/jackwillis/globe/issues/26), [#29–#31](https://github.com/jackwillis/globe/issues/29), [#36–#39](https://github.com/jackwillis/globe/issues/36), [#48](https://github.com/jackwillis/globe/issues/48) and [#50](https://github.com/jackwillis/globe/issues/50) remain the related work; avoid duplicate implementation tickets.
+
+Source decisions, pack types, exact country definitions and release placement remain open pending actual data and memory measurements. Data work can progress independently of Classic Mac UI tasks.
+
 ## First release: recommended order
 
 1. [#7 — Verify complete green CI](https://github.com/jackwillis/globe/issues/7): closed 2026-11-06 after a full successful workflow run. Check the Actions tab for the current result before relying on it.
