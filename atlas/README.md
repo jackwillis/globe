@@ -92,3 +92,52 @@ python3 atlas/research/reproduce_rasters.py /tmp/globe-atlas-rebuild \
 
 Without `--run`, the command verifies retained outputs/logs and their production matches. The
 quarter-degree file is a research output only and is deliberately absent from edition recipes.
+
+## Identity contract and geographic selection checkpoint
+
+The [small canonical catalog prototype](catalog/README.md) keeps project entity IDs, locked source
+records, attributed/time-qualified assertions, names and representative points separate. Every
+geographic assertion in the fixture is unreviewed. See the [checkpoint and acceptance gaps](reports/identity-selection-checkpoint.md)
+and the separate [proposed memory-ledger interface](reports/memory-ledger-design.md).
+
+```sh
+python3 atlas/research/build_catalog_fixture.py CACHE /tmp/catalog.json
+cmp atlas/catalog/fixture.json /tmp/catalog.json
+python3 atlas/research/catalog.py atlas/catalog/fixture.json --cache CACHE
+python3 atlas/research/test_catalog.py -v
+python3 atlas/research/test_selection.py -v
+python3 atlas/research/selection.py CACHE /tmp/selection-a /tmp/selection-a.json
+python3 atlas/research/selection.py CACHE /tmp/selection-b /tmp/selection-b.json
+diff -q /tmp/selection-a.json /tmp/selection-b.json
+diff -qr /tmp/selection-a /tmp/selection-b
+```
+
+`selection.py` compares equal-angle, equal-area and an equal-count distance-supplemented candidate
+using actual selected rosters. The committed summary includes differences and measured payloads;
+full generated catalogs stay outside Git. No production or experimental edition recipe is changed.
+
+### Expanded inventory and role evidence
+
+The expanded [catalog instructions](catalog/README.md) cover all country/map-unit source records,
+a broader capital-role review roster, persistent allocation IDs and evidence-bound review decisions.
+Full generated catalogs stay outside Git. The report is `reports/catalog-inventory.json`.
+
+```sh
+python3 atlas/research/inventory.py CACHE /tmp/inventory.json /tmp/inventory-report.json \
+  --review-queue /tmp/review-queue.jsonl
+python3 atlas/research/catalog.py /tmp/inventory.json --cache CACHE
+python3 atlas/research/test_inventory.py -v
+python3 atlas/research/test_reviews.py -v
+python3 atlas/research/role_selection.py CACHE /tmp/role-selection /tmp/role-selection.json
+python3 atlas/research/test_role_selection.py -v
+```
+
+The additive source-role experiment includes class-only candidates without changing their capital
+flags or adopting a current-capital policy. See `reports/role-selection.json`. No recipe changes.
+The [standalone ledger test project](research/ledger/README.md) implements the independently scoped
+memory primitive and optional framebuffer accounting. The root build registers both accounting
+tests; frontend wiring and guards are unchanged.
+
+The [accepted-checkpoint continuation](reports/continuation-2026-11-08.md) records local commits,
+recovery state, tests and the next scoped atlas/memory tasks. `reports/continuation-verification.json`
+contains the exact host measurements, output/tool hashes and test limits.

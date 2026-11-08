@@ -1,0 +1,366 @@
+{
+  "acceptance_scope": "User accepted the research checkpoint and authorized both expanded atlas inventory and standalone memory primitive; individual geographic claims remain unreviewed.",
+  "basis_commit": "3e2057a",
+  "catalog": {
+    "all_source_fields_and_points_verified": true,
+    "full_catalog_bytes": 11885212,
+    "full_catalog_sha256": "fae1dd7d69ffc9b1388592ed955e98786e918f449d4ddd6981cecaa4ebcc892b",
+    "host_builder_measurements": [
+      {
+        "elapsed": "0:02.93",
+        "peak_rss_kib": 344772
+      },
+      {
+        "elapsed": "0:02.40",
+        "peak_rss_kib": 346560
+      }
+    ],
+    "repeat_catalog_identical": true,
+    "repeat_summary_identical": true,
+    "review_queue_entries": 1869,
+    "source_records": {
+      "ne_10m_admin_0_countries": 258,
+      "ne_10m_admin_0_map_units": 298,
+      "ne_10m_populated_places": 252
+    },
+    "tables": {
+      "assertions": 1059,
+      "entities": 808,
+      "names": 21818,
+      "points": 808,
+      "records": 808,
+      "sources": 3
+    },
+    "unreviewed_rows": 23685
+  },
+  "catalog_commit": "7a6652f",
+  "checks": {
+    "clang_format_22_1_8": true,
+    "fonts_or_glyph_packs_added": false,
+    "git_diff_check": true,
+    "new_source_downloads": 0,
+    "policy_check": true,
+    "production_pack_changes": false,
+    "publication_or_merge_by_this_session": false
+  },
+  "classic_cross_build": {
+    "automatic_cmake_wrapper_outputs": "Standard .bin/.APPL/.dsk/AppleDouble outputs were generated only in the private build directories. None was installed, committed or published.",
+    "baseline_link_passed": true,
+    "baseline_revision": "52ccb33",
+    "compiler": "Retro68 powerpc-apple-macos-g++ GCC 16.1.0",
+    "compiler_image_digest": "ghcr.io/autc04/retro68@sha256:2c2ec5ca764c98b7460522be7327426e3b4d039a317c22d6ccdcc64e5247f21a",
+    "compiler_image_id": "7522dbcdad1710344aa46742003095fcf1d370c19d843706a2d5346bbcc73800",
+    "configuration": "os9/CMakeLists.txt, existing -Os options, retroppc.toolchain.cmake",
+    "current_link_passed": true,
+    "current_revision": "1eeb070",
+    "files": {
+      ".rsrc/GlobeFloppy.APPL": {
+        "baseline_bytes": 432,
+        "baseline_sha256": "60f046b7ace64d5f11b9aa2de49a4caeb437b9d541a26acd9d5e8b015ec88043",
+        "current_bytes": 432,
+        "current_sha256": "60f046b7ace64d5f11b9aa2de49a4caeb437b9d541a26acd9d5e8b015ec88043",
+        "delta_bytes": 0
+      },
+      "GlobeFloppy.APPL": {
+        "baseline_bytes": 541674,
+        "baseline_sha256": "abfe0478b645a1df35297f793f869870013b205afc95cd563000f7d5a44866c6",
+        "current_bytes": 545770,
+        "current_sha256": "94ee0214cf4b13ca8e148ea831e5d9b7f835b2cb2298174844f8177792dbca14",
+        "delta_bytes": 4096
+      },
+      "GlobeFloppy.bin": {
+        "baseline_bytes": 542336,
+        "baseline_sha256": "678de938a7fba5f13ffca07aef58b94b2d4e965a0ea04084956b2352ceb7fe91",
+        "current_bytes": 546432,
+        "current_sha256": "3d964f235a65e1c16496da4257297d98f5f9880b6436d8b218fb7a6beb24fdba",
+        "delta_bytes": 4096
+      },
+      "GlobeFloppy.pef": {
+        "baseline_bytes": 541674,
+        "baseline_sha256": "abfe0478b645a1df35297f793f869870013b205afc95cd563000f7d5a44866c6",
+        "current_bytes": 545770,
+        "current_sha256": "94ee0214cf4b13ca8e148ea831e5d9b7f835b2cb2298174844f8177792dbca14",
+        "delta_bytes": 4096
+      },
+      "GlobeFloppy.xcoff": {
+        "baseline_bytes": 2457719,
+        "baseline_sha256": "fd5c1b84c3bd52a7eecb91f49d508f134693ff9c049d4f3af7f6dbc62dfeec5f",
+        "current_bytes": 2462631,
+        "current_sha256": "0321aaff3f3a655eb6735077c8ee8e570ec0aa754de7910a8b9661f983779cde",
+        "delta_bytes": 4912
+      },
+      "globe.r.rsrc.bin": {
+        "baseline_bytes": 512,
+        "baseline_sha256": "01dece8bdc272e606a146897e9c73323a10bd59eae878d8136eb8f7fb66c8e62",
+        "current_bytes": 512,
+        "current_sha256": "64c7835b87101c20e03a8905f86ae04d9f234ca4e66d9e6adb318180b1b85545",
+        "delta_bytes": 0
+      }
+    },
+    "limits": "Linked section/file sizes are cross-build measurements, not target RSS, partition headroom, responsiveness or native acceptance.",
+    "network": "disabled",
+    "release_packager_invoked": false,
+    "source_copies": "private git-archive snapshots under /tmp/globe-accounting-os9",
+    "target_execution": false,
+    "text_section_delta_bytes": 4096,
+    "xcoff_sections": [
+      {
+        "bss_bytes": 35040,
+        "data_bytes": 33328,
+        "file": "/work/baseline-build/GlobeFloppy.xcoff",
+        "text_bytes": 499712,
+        "total_section_bytes": 568080
+      },
+      {
+        "bss_bytes": 35040,
+        "data_bytes": 33328,
+        "file": "/work/current-build/GlobeFloppy.xcoff",
+        "text_bytes": 503808,
+        "total_section_bytes": 572176
+      }
+    ]
+  },
+  "configuration_only": [
+    {
+      "executed": 0,
+      "options": [
+        "-DGLOBE_BUILD_TESTS=OFF"
+      ],
+      "registered": 0
+    },
+    {
+      "executed": 0,
+      "options": [
+        "-DCMAKE_DISABLE_FIND_PACKAGE_X11=TRUE"
+      ],
+      "registered": 42
+    }
+  ],
+  "existing_runtime_suite": {
+    "build_log": "/tmp/globe-framebuffer-account-build.log",
+    "code_scope": "Base 52ccb33 plus optional framebuffer accounting; Claude menu/packaging commits are not included in this branch.",
+    "commands": [
+      "cmake --build /tmp/globe-contract-build -j 4",
+      "ctest --test-dir /tmp/globe-contract-build --output-on-failure -j 1",
+      "ctest --test-dir /tmp/globe-contract-build --rerun-failed --output-on-failure -j 1",
+      "cmake -S . -B /tmp/globe-contract-build -G Ninja",
+      "cmake --build /tmp/globe-contract-build -j 4",
+      "ctest --test-dir /tmp/globe-contract-build -R 'memory_ledger_primitive|framebuffer_ledger' --output-on-failure"
+    ],
+    "execution_phases": "Existing 50 runtime tests passed (40 sandbox + 10 private-display retry), then both newly registered accounting tests passed in the root build with unchanged runtime binaries.",
+    "new_accounting_tests_passed_after_registration": 2,
+    "passed_in_sandbox": 42,
+    "passed_private_display_retry": 10,
+    "private_display_retry_log": "/tmp/globe-framebuffer-account-x11.log",
+    "registered": 52,
+    "root_accounting_test_log": "/tmp/globe-accounting-root-tests.log",
+    "sandbox_test_log": "/tmp/globe-framebuffer-account-runtime.log",
+    "sandbox_x11_display_failures": 10,
+    "total_passed": 52
+  },
+  "existing_semantic_crosschecks_passed": 58,
+  "framebuffer_commit": "1eeb070",
+  "limits": [
+    "Source concepts are not a sovereign-state count or approved canonical crosswalk.",
+    "244 capital candidates include uncertain/historical/regional source classifications.",
+    "Catalog inclusion does not imply marker or text visibility.",
+    "Builder RSS is host process memory; no G4 timing/RAM or installed glyph measurements.",
+    "Optional framebuffer instrumentation is only a first allocation-site slice; no frontend wiring, total-app coverage, budget enforcement, diagnostics serialization, eviction or CI memory gate.",
+    "No source-policy adjudication or individual geographic decision is fabricated.",
+    "Framebuffer tickets add inline bytes to each framebuffer (host +48, Retro68 PowerPC +32, m68k +28); enclosing allocations can grow accordingly. Full application heap and G4 runtime headroom remain unmeasured."
+  ],
+  "memory_commit": "c419f5c",
+  "memory_primitive": {
+    "allocation_calls_during_tested_operations": 0,
+    "clang_version": "clang version 22.1.8 (Fedora 22.1.8-4.fc44)",
+    "compiler_abi_inline_object_bytes": {
+      "linux_x86_64_executed_sizeof": {
+        "framebuffer_baseline": 40,
+        "framebuffer_current": 88,
+        "ledger": 248,
+        "pointer": 8,
+        "ticket": 24
+      },
+      "retro68_m68k_assembly_constants": {
+        "framebuffer_baseline": 26,
+        "framebuffer_current": 54,
+        "ledger": 242,
+        "pointer": 4,
+        "ticket": 14
+      },
+      "retro68_powerpc_assembly_constants": {
+        "framebuffer_baseline": 28,
+        "framebuffer_current": 60,
+        "ledger": 244,
+        "pointer": 4,
+        "ticket": 16
+      }
+    },
+    "frontend_ledger_wiring_changed": false,
+    "gcc_version": "c++ (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)",
+    "leak_detection_exclusion": "Sandbox ptrace prevents LeakSanitizer; ASan/UBSan rerun with ASAN_OPTIONS=detect_leaks=0.",
+    "linux_x86_64_inline_object_bytes": {
+      "ledger": 248,
+      "pointer": 8,
+      "ticket": 24
+    },
+    "normal_ci_test_registration": true,
+    "optional_framebuffer_accounting": {
+      "allocation_failure_points_injected": 2,
+      "category_and_cross_ledger_move_tests_passed": true,
+      "default_callers_remain_uninstrumented": true,
+      "drawing_measurement_iterations_without_additional_allocation": 10000,
+      "instrumented_uninstrumented_pixels_identical": true,
+      "old_buffer_retained_on_candidate_failure": true,
+      "scope": "requested pixel and coverage array payload, not inline object or allocator overhead",
+      "successful_allocations_per_buffer": 2
+    },
+    "reference_model_operations": 10000,
+    "retro68_compile_only": [
+      "Using multiversal interfaces",
+      "powerpc-apple-macos-g++ (GCC) 16.1.0",
+      "compile-only ledger: passed",
+      "m68k-apple-macos-g++ (GCC) 16.1.0",
+      "compile-only ledger: passed"
+    ],
+    "retro68_final_test_and_abi_probe": [
+      "Using multiversal interfaces",
+      "powerpc-apple-macos-g++ (GCC) 16.1.0",
+      "final framebuffer test: compile-only passed",
+      "current compiler ABI constants",
+      "ledger_size:",
+      "\t.long\t244",
+      "\t.globl charge_size",
+      "--",
+      "charge_size:",
+      "\t.long\t16",
+      "\t.globl framebuffer_size",
+      "--",
+      "framebuffer_size:",
+      "\t.long\t60",
+      "\t.globl pointer_size",
+      "--",
+      "pointer_size:",
+      "\t.long\t4",
+      "\t.csect .text[PR],5",
+      "baseline compiler ABI constants",
+      "ledger_size:",
+      "\t.long\t244",
+      "\t.globl charge_size",
+      "--",
+      "charge_size:",
+      "\t.long\t16",
+      "\t.globl framebuffer_size",
+      "--",
+      "framebuffer_size:",
+      "\t.long\t28",
+      "\t.globl pointer_size",
+      "--",
+      "pointer_size:",
+      "\t.long\t4",
+      "\t.csect .text[PR],5",
+      "m68k-apple-macos-g++ (GCC) 16.1.0",
+      "final framebuffer test: compile-only passed",
+      "current compiler ABI constants",
+      "ledger_size:",
+      "\t.long\t242",
+      "\t.globl\tcharge_size",
+      "--",
+      "charge_size:",
+      "\t.long\t14",
+      "\t.globl\tframebuffer_size",
+      "--",
+      "framebuffer_size:",
+      "\t.long\t54",
+      "\t.globl\tpointer_size",
+      "--",
+      "pointer_size:",
+      "\t.long\t4",
+      "\t.ident\t\"GCC: (GNU) 16.1.0\"",
+      "baseline compiler ABI constants",
+      "ledger_size:",
+      "\t.long\t242",
+      "\t.globl\tcharge_size",
+      "--",
+      "charge_size:",
+      "\t.long\t14",
+      "\t.globl\tframebuffer_size",
+      "--",
+      "framebuffer_size:",
+      "\t.long\t26",
+      "\t.globl\tpointer_size",
+      "--",
+      "pointer_size:",
+      "\t.long\t4",
+      "\t.ident\t\"GCC: (GNU) 16.1.0\""
+    ],
+    "retro68_framebuffer_compile_only": [
+      "Using multiversal interfaces",
+      "powerpc-apple-macos-g++ (GCC) 16.1.0",
+      "compile-only tests/test_memory_ledger.cpp: passed",
+      "compile-only tests/test_framebuffer_ledger.cpp: passed",
+      "compile-only src/render/framebuffer.cpp: passed",
+      "m68k-apple-macos-g++ (GCC) 16.1.0",
+      "compile-only tests/test_memory_ledger.cpp: passed",
+      "compile-only tests/test_framebuffer_ledger.cpp: passed",
+      "compile-only src/render/framebuffer.cpp: passed"
+    ],
+    "root_cmake_changed": true,
+    "root_sanitizer_flag_inherited_and_tests_passed": 2,
+    "runtime_allocation_sites_changed": true,
+    "sanitizer_leak_detection": false,
+    "standalone_ctest_asan_ubsan_passed": 2,
+    "standalone_ctest_clang_passed": 2,
+    "standalone_ctest_gcc_passed": 2,
+    "standalone_warning_scope": "Primitive uses strict conversion warnings; framebuffer target suppresses existing sign-conversion warnings in drawing code.",
+    "target_hardware_execution": false
+  },
+  "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "python": "3.14.8 (main, Oct  1 2026, 00:00:00) [GCC 16.2.1 20260819 (Red Hat 16.2.1-2)]",
+  "python_tests": {
+    "audit": 8,
+    "catalog": 24,
+    "concordance": 9,
+    "inventory": 13,
+    "reviews": 12,
+    "role_selection": 4,
+    "selection": 9,
+    "total_passed": 79
+  },
+  "role_selection": {
+    "compared_files": 8,
+    "host_builder_measurements": [
+      {
+        "elapsed": "0:02.29",
+        "peak_rss_kib": 200616
+      },
+      {
+        "elapsed": "0:01.98",
+        "peak_rss_kib": 200996
+      }
+    ],
+    "recipes_changed": false,
+    "repeat_full_files_identical": true,
+    "repeat_summary_identical": true
+  },
+  "schema": 1,
+  "sha256": {
+    "CMakeLists.txt": "44a0112988f814f88845eb12753409116882e3777578caaffb787c778a7b3520",
+    "atlas/catalog/allocations.json": "ce6ee618ea9973d8f266dcf48fa86f4014b589bc8504f07b1c680852fb06ab8d",
+    "atlas/catalog/review-decisions.json": "c610333f9e7b04e2ef106252f0d9cbadc6c535c9ac8bcb8fd5d73c7ecf7f1a1e",
+    "atlas/reports/catalog-inventory.json": "b3f9ccd53cc29dee256bf663bcc9ad40643ce52aad79eea2219c84920d3070bb",
+    "atlas/reports/role-selection.json": "fed27520b5c425322e527e6a0a057a5464329c12c6ed42c49102674296684642",
+    "atlas/research/catalog.py": "1b7f5647879c2957ab5daa925b20469c9b7237752c483253d68403d6c25a38a2",
+    "atlas/research/inventory.py": "a785a2071a04b90f748bb30ebf0bfee8dee8c3043cc7387e4197ff3c8ccb4109",
+    "atlas/research/ledger/CMakeLists.txt": "401b658522858b8a1af8b6ba13d7ef84849624991f46085a12c4b159c846d1ae",
+    "atlas/research/ledger/abi_probe.cpp": "d60cc659463df73438d3d1b84737556dff3c358e214e1e7c83d31f4b6fa9bf79",
+    "atlas/research/reviews.py": "2dcebb8acd28c6ce76573e84b63fc02b108e4807da6f0e29e9dec411d62de671",
+    "atlas/research/role_selection.py": "32761de14d8f15adedde0ef43d8cbe8bea00b232a096c3402e8e3d509deb0236",
+    "include/globe/framebuffer.hpp": "f06703ab6bb182ff7e32172d0cc516087497062ef22bbb47a4a07890786ae5a5",
+    "include/globe/memory_ledger.hpp": "75e52cb94958f87e76f8df6e80dda99e070772555adf42612c95ca44a2eaf751",
+    "src/render/framebuffer.cpp": "07d45e6e5d975b2a730b64600a92dfeb0e5dc94c40f8dfcf78e527dd6d178454",
+    "tests/test_framebuffer_ledger.cpp": "b89c0fae3877577d571aded5f1cf76d574ba1627d048bf1b356de3ab23903736",
+    "tests/test_memory_ledger.cpp": "ad049273fe9018756f9d9b3ab4a60772c2785245f5d4bc7fc0f0ae2c4dab0639"
+  },
+  "test_registration_commit": "dfb3b3c"
+}

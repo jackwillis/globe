@@ -1,0 +1,4860 @@
+{
+  "allocations": [
+    {
+      "entity_id": "gcat:000001",
+      "ne_id": "1159321255",
+      "ordinal": 112,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000002",
+      "ne_id": "1159321407",
+      "ordinal": 168,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000003",
+      "ne_id": "1159321043",
+      "ordinal": 121,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000004",
+      "ne_id": "1159320327",
+      "ordinal": 129,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000005",
+      "ne_id": "1159321021",
+      "ordinal": 95,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000006",
+      "ne_id": "1159320981",
+      "ordinal": 197,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000007",
+      "ne_id": "1159321333",
+      "ordinal": 238,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000008",
+      "ne_id": "1159321053",
+      "ordinal": 239,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000009",
+      "ne_id": "1159320551",
+      "ordinal": 178,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000010",
+      "ne_id": "1159320547",
+      "ordinal": 71,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000011",
+      "ne_id": "1159320899",
+      "ordinal": 12,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000012",
+      "ne_id": "1159320895",
+      "ordinal": 11,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000013",
+      "ne_id": "1159321259",
+      "ordinal": 21,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000014",
+      "ne_id": "1159321007",
+      "ordinal": 65,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000015",
+      "ne_id": "1159321223",
+      "ordinal": 28,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000016",
+      "ne_id": "1159321335",
+      "ordinal": 189,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000017",
+      "ne_id": "1159320801",
+      "ordinal": 165,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000018",
+      "ne_id": "1159321235",
+      "ordinal": 15,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:000101",
+      "ne_id": "1159139161",
+      "ordinal": 3295,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000102",
+      "ne_id": "1159151303",
+      "ordinal": 7141,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000103",
+      "ne_id": "1159149783",
+      "ordinal": 6466,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000104",
+      "ne_id": "1159147121",
+      "ordinal": 5283,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000105",
+      "ne_id": "1159139827",
+      "ordinal": 3440,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000106",
+      "ne_id": "1159146905",
+      "ordinal": 5187,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000107",
+      "ne_id": "1159146993",
+      "ordinal": 5226,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000108",
+      "ne_id": "1159144877",
+      "ordinal": 4544,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000109",
+      "ne_id": "1159150587",
+      "ordinal": 6823,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000110",
+      "ne_id": "1159148225",
+      "ordinal": 5773,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000111",
+      "ne_id": "1159150939",
+      "ordinal": 6980,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000112",
+      "ne_id": "1159146061",
+      "ordinal": 4812,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000113",
+      "ne_id": "1159149449",
+      "ordinal": 6317,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:000201",
+      "ne_id": "1159321165",
+      "ordinal": 287,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:000202",
+      "ne_id": "1159321391",
+      "ordinal": 288,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:000203",
+      "ne_id": "1159320655",
+      "ordinal": 24,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:000204",
+      "ne_id": "1159321137",
+      "ordinal": 283,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001000",
+      "ne_id": "1159320319",
+      "ordinal": 130,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001001",
+      "ne_id": "1159320323",
+      "ordinal": 102,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001002",
+      "ne_id": "1159320325",
+      "ordinal": 63,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001003",
+      "ne_id": "1159320329",
+      "ordinal": 59,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001004",
+      "ne_id": "1159320331",
+      "ordinal": 6,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001005",
+      "ne_id": "1159320333",
+      "ordinal": 70,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001006",
+      "ne_id": "1159320335",
+      "ordinal": 176,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001007",
+      "ne_id": "1159320345",
+      "ordinal": 207,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001008",
+      "ne_id": "1159320353",
+      "ordinal": 255,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001009",
+      "ne_id": "1159320355",
+      "ordinal": 177,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001010",
+      "ne_id": "1159320359",
+      "ordinal": 251,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001011",
+      "ne_id": "1159320361",
+      "ordinal": 217,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001012",
+      "ne_id": "1159320363",
+      "ordinal": 229,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001013",
+      "ne_id": "1159320365",
+      "ordinal": 232,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001014",
+      "ne_id": "1159320379",
+      "ordinal": 89,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001015",
+      "ne_id": "1159320381",
+      "ordinal": 64,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001016",
+      "ne_id": "1159320387",
+      "ordinal": 125,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001017",
+      "ne_id": "1159320389",
+      "ordinal": 60,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001018",
+      "ne_id": "1159320399",
+      "ordinal": 101,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001019",
+      "ne_id": "1159320405",
+      "ordinal": 150,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001020",
+      "ne_id": "1159320407",
+      "ordinal": 128,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001021",
+      "ne_id": "1159320409",
+      "ordinal": 110,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001022",
+      "ne_id": "1159320413",
+      "ordinal": 250,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001023",
+      "ne_id": "1159320415",
+      "ordinal": 187,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001024",
+      "ne_id": "1159320417",
+      "ordinal": 132,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001025",
+      "ne_id": "1159320425",
+      "ordinal": 256,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001026",
+      "ne_id": "1159320427",
+      "ordinal": 35,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001027",
+      "ne_id": "1159320431",
+      "ordinal": 158,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001028",
+      "ne_id": "1159320439",
+      "ordinal": 4,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001029",
+      "ne_id": "1159320441",
+      "ordinal": 45,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001030",
+      "ne_id": "1159320449",
+      "ordinal": 202,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001031",
+      "ne_id": "1159320451",
+      "ordinal": 120,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001032",
+      "ne_id": "1159320453",
+      "ordinal": 33,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001033",
+      "ne_id": "1159320461",
+      "ordinal": 107,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001034",
+      "ne_id": "1159320463",
+      "ordinal": 85,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001035",
+      "ne_id": "1159320467",
+      "ordinal": 156,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001036",
+      "ne_id": "1159320471",
+      "ordinal": 10,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001037",
+      "ne_id": "1159320473",
+      "ordinal": 167,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001038",
+      "ne_id": "1159320475",
+      "ordinal": 254,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001039",
+      "ne_id": "1159320491",
+      "ordinal": 92,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001040",
+      "ne_id": "1159320493",
+      "ordinal": 3,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001041",
+      "ne_id": "1159320507",
+      "ordinal": 96,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001042",
+      "ne_id": "1159320509",
+      "ordinal": 147,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001043",
+      "ne_id": "1159320511",
+      "ordinal": 170,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001044",
+      "ne_id": "1159320513",
+      "ordinal": 32,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001045",
+      "ne_id": "1159320515",
+      "ordinal": 31,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001046",
+      "ne_id": "1159320517",
+      "ordinal": 138,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001047",
+      "ne_id": "1159320521",
+      "ordinal": 220,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001048",
+      "ne_id": "1159320523",
+      "ordinal": 222,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001049",
+      "ne_id": "1159320525",
+      "ordinal": 29,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001050",
+      "ne_id": "1159320527",
+      "ordinal": 135,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001051",
+      "ne_id": "1159320529",
+      "ordinal": 134,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001052",
+      "ne_id": "1159320531",
+      "ordinal": 169,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001053",
+      "ne_id": "1159320533",
+      "ordinal": 8,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001054",
+      "ne_id": "1159320535",
+      "ordinal": 49,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001055",
+      "ne_id": "1159320539",
+      "ordinal": 50,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001056",
+      "ne_id": "1159320541",
+      "ordinal": 87,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001057",
+      "ne_id": "1159320543",
+      "ordinal": 204,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001058",
+      "ne_id": "1159320549",
+      "ordinal": 228,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001059",
+      "ne_id": "1159320563",
+      "ordinal": 114,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001060",
+      "ne_id": "1159320565",
+      "ordinal": 122,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001061",
+      "ne_id": "1159320567",
+      "ordinal": 137,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001062",
+      "ne_id": "1159320575",
+      "ordinal": 162,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001063",
+      "ne_id": "1159320581",
+      "ordinal": 88,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001064",
+      "ne_id": "1159320587",
+      "ordinal": 67,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001065",
+      "ne_id": "1159320615",
+      "ordinal": 51,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001066",
+      "ne_id": "1159320617",
+      "ordinal": 14,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001067",
+      "ne_id": "1159320621",
+      "ordinal": 227,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001068",
+      "ne_id": "1159320623",
+      "ordinal": 55,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001069",
+      "ne_id": "1159320625",
+      "ordinal": 179,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001070",
+      "ne_id": "1159320631",
+      "ordinal": 195,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001071",
+      "ne_id": "1159320633",
+      "ordinal": 210,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001072",
+      "ne_id": "1159320635",
+      "ordinal": 253,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001073",
+      "ne_id": "1159320637",
+      "ordinal": 22,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001074",
+      "ne_id": "1159320639",
+      "ordinal": 38,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001075",
+      "ne_id": "1159320641",
+      "ordinal": 181,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001076",
+      "ne_id": "1159320643",
+      "ordinal": 194,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001077",
+      "ne_id": "1159320647",
+      "ordinal": 191,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001078",
+      "ne_id": "1159320649",
+      "ordinal": 235,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001079",
+      "ne_id": "1159320691",
+      "ordinal": 241,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001080",
+      "ne_id": "1159320693",
+      "ordinal": 148,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001081",
+      "ne_id": "1159320703",
+      "ordinal": 212,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001082",
+      "ne_id": "1159320705",
+      "ordinal": 216,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001083",
+      "ne_id": "1159320707",
+      "ordinal": 215,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001084",
+      "ne_id": "1159320709",
+      "ordinal": 7,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001085",
+      "ne_id": "1159320711",
+      "ordinal": 243,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001086",
+      "ne_id": "1159320713",
+      "ordinal": 79,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001087",
+      "ne_id": "1159320715",
+      "ordinal": 225,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001088",
+      "ne_id": "1159320719",
+      "ordinal": 154,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001089",
+      "ne_id": "1159320721",
+      "ordinal": 226,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001090",
+      "ne_id": "1159320723",
+      "ordinal": 230,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001091",
+      "ne_id": "1159320725",
+      "ordinal": 224,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001092",
+      "ne_id": "1159320727",
+      "ordinal": 206,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001093",
+      "ne_id": "1159320729",
+      "ordinal": 193,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001094",
+      "ne_id": "1159320731",
+      "ordinal": 242,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001095",
+      "ne_id": "1159320733",
+      "ordinal": 218,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001096",
+      "ne_id": "1159320737",
+      "ordinal": 188,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001097",
+      "ne_id": "1159320739",
+      "ordinal": 213,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001098",
+      "ne_id": "1159320741",
+      "ordinal": 173,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001099",
+      "ne_id": "1159320779",
+      "ordinal": 61,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001100",
+      "ne_id": "1159320793",
+      "ordinal": 152,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001101",
+      "ne_id": "1159320795",
+      "ordinal": 83,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001102",
+      "ne_id": "1159320797",
+      "ordinal": 166,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001103",
+      "ne_id": "1159320799",
+      "ordinal": 153,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001104",
+      "ne_id": "1159320811",
+      "ordinal": 80,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001105",
+      "ne_id": "1159320813",
+      "ordinal": 200,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001106",
+      "ne_id": "1159320815",
+      "ordinal": 118,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001107",
+      "ne_id": "1159320817",
+      "ordinal": 24,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001108",
+      "ne_id": "1159320827",
+      "ordinal": 136,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001109",
+      "ne_id": "1159320833",
+      "ordinal": 103,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001110",
+      "ne_id": "1159320839",
+      "ordinal": 113,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001111",
+      "ne_id": "1159320841",
+      "ordinal": 75,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001112",
+      "ne_id": "1159320845",
+      "ordinal": 1,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001113",
+      "ne_id": "1159320847",
+      "ordinal": 9,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001114",
+      "ne_id": "1159320877",
+      "ordinal": 78,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001115",
+      "ne_id": "1159320881",
+      "ordinal": 93,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001116",
+      "ne_id": "1159320887",
+      "ordinal": 90,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001117",
+      "ne_id": "1159320917",
+      "ordinal": 192,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001118",
+      "ne_id": "1159320919",
+      "ordinal": 91,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001119",
+      "ne_id": "1159320931",
+      "ordinal": 214,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001120",
+      "ne_id": "1159320935",
+      "ordinal": 144,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001121",
+      "ne_id": "1159320937",
+      "ordinal": 190,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001122",
+      "ne_id": "1159320963",
+      "ordinal": 171,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001123",
+      "ne_id": "1159320965",
+      "ordinal": 172,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001124",
+      "ne_id": "1159320967",
+      "ordinal": 42,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001125",
+      "ne_id": "1159320971",
+      "ordinal": 17,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001126",
+      "ne_id": "1159320977",
+      "ordinal": 69,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001127",
+      "ne_id": "1159320979",
+      "ordinal": 57,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001128",
+      "ne_id": "1159320983",
+      "ordinal": 208,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001129",
+      "ne_id": "1159320985",
+      "ordinal": 25,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001130",
+      "ne_id": "1159321009",
+      "ordinal": 116,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001131",
+      "ne_id": "1159321011",
+      "ordinal": 68,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001132",
+      "ne_id": "1159321013",
+      "ordinal": 13,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001133",
+      "ne_id": "1159321015",
+      "ordinal": 84,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001134",
+      "ne_id": "1159321017",
+      "ordinal": 72,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001135",
+      "ne_id": "1159321019",
+      "ordinal": 203,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001136",
+      "ne_id": "1159321025",
+      "ordinal": 184,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001137",
+      "ne_id": "1159321027",
+      "ordinal": 146,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001138",
+      "ne_id": "1159321029",
+      "ordinal": 44,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001139",
+      "ne_id": "1159321031",
+      "ordinal": 58,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001140",
+      "ne_id": "1159321033",
+      "ordinal": 52,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001141",
+      "ne_id": "1159321035",
+      "ordinal": 27,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001142",
+      "ne_id": "1159321045",
+      "ordinal": 142,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001143",
+      "ne_id": "1159321051",
+      "ordinal": 182,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001144",
+      "ne_id": "1159321055",
+      "ordinal": 157,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001145",
+      "ne_id": "1159321057",
+      "ordinal": 198,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001146",
+      "ne_id": "1159321061",
+      "ordinal": 62,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001147",
+      "ne_id": "1159321063",
+      "ordinal": 98,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001148",
+      "ne_id": "1159321065",
+      "ordinal": 223,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001149",
+      "ne_id": "1159321067",
+      "ordinal": 127,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001150",
+      "ne_id": "1159321069",
+      "ordinal": 131,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001151",
+      "ne_id": "1159321071",
+      "ordinal": 47,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001152",
+      "ne_id": "1159321073",
+      "ordinal": 123,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001153",
+      "ne_id": "1159321075",
+      "ordinal": 164,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001154",
+      "ne_id": "1159321079",
+      "ordinal": 219,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001155",
+      "ne_id": "1159321081",
+      "ordinal": 18,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001156",
+      "ne_id": "1159321083",
+      "ordinal": 2,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001157",
+      "ne_id": "1159321085",
+      "ordinal": 36,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001158",
+      "ne_id": "1159321087",
+      "ordinal": 149,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001159",
+      "ne_id": "1159321089",
+      "ordinal": 100,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001160",
+      "ne_id": "1159321091",
+      "ordinal": 30,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001161",
+      "ne_id": "1159321097",
+      "ordinal": 186,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001162",
+      "ne_id": "1159321099",
+      "ordinal": 185,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001163",
+      "ne_id": "1159321101",
+      "ordinal": 94,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001164",
+      "ne_id": "1159321103",
+      "ordinal": 39,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001165",
+      "ne_id": "1159321109",
+      "ordinal": 53,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001166",
+      "ne_id": "1159321121",
+      "ordinal": 145,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001167",
+      "ne_id": "1159321123",
+      "ordinal": 240,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001168",
+      "ne_id": "1159321129",
+      "ordinal": 233,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001169",
+      "ne_id": "1159321133",
+      "ordinal": 245,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001170",
+      "ne_id": "1159321135",
+      "ordinal": 180,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001171",
+      "ne_id": "1159321151",
+      "ordinal": 40,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001172",
+      "ne_id": "1159321153",
+      "ordinal": 109,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001173",
+      "ne_id": "1159321161",
+      "ordinal": 159,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001174",
+      "ne_id": "1159321163",
+      "ordinal": 5,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001175",
+      "ne_id": "1159321165",
+      "ordinal": 252,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001176",
+      "ne_id": "1159321169",
+      "ordinal": 183,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001177",
+      "ne_id": "1159321171",
+      "ordinal": 247,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001178",
+      "ne_id": "1159321173",
+      "ordinal": 161,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001179",
+      "ne_id": "1159321179",
+      "ordinal": 77,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001180",
+      "ne_id": "1159321181",
+      "ordinal": 26,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001181",
+      "ne_id": "1159321187",
+      "ordinal": 141,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001182",
+      "ne_id": "1159321195",
+      "ordinal": 139,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001183",
+      "ne_id": "1159321197",
+      "ordinal": 105,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001184",
+      "ne_id": "1159321199",
+      "ordinal": 74,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001185",
+      "ne_id": "1159321201",
+      "ordinal": 48,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001186",
+      "ne_id": "1159321219",
+      "ordinal": 126,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001187",
+      "ne_id": "1159321225",
+      "ordinal": 106,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001188",
+      "ne_id": "1159321227",
+      "ordinal": 258,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001189",
+      "ne_id": "1159321229",
+      "ordinal": 86,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001190",
+      "ne_id": "1159321243",
+      "ordinal": 99,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001191",
+      "ne_id": "1159321245",
+      "ordinal": 257,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001192",
+      "ne_id": "1159321247",
+      "ordinal": 231,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001193",
+      "ne_id": "1159321249",
+      "ordinal": 237,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001194",
+      "ne_id": "1159321251",
+      "ordinal": 82,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001195",
+      "ne_id": "1159321253",
+      "ordinal": 117,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001196",
+      "ne_id": "1159321261",
+      "ordinal": 16,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001197",
+      "ne_id": "1159321267",
+      "ordinal": 97,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001198",
+      "ne_id": "1159321273",
+      "ordinal": 221,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001199",
+      "ne_id": "1159321281",
+      "ordinal": 23,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001200",
+      "ne_id": "1159321283",
+      "ordinal": 76,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001201",
+      "ne_id": "1159321285",
+      "ordinal": 104,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001202",
+      "ne_id": "1159321287",
+      "ordinal": 54,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001203",
+      "ne_id": "1159321289",
+      "ordinal": 124,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001204",
+      "ne_id": "1159321291",
+      "ordinal": 196,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001205",
+      "ne_id": "1159321295",
+      "ordinal": 20,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001206",
+      "ne_id": "1159321301",
+      "ordinal": 115,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001207",
+      "ne_id": "1159321303",
+      "ordinal": 151,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001208",
+      "ne_id": "1159321305",
+      "ordinal": 111,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001209",
+      "ne_id": "1159321307",
+      "ordinal": 43,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001210",
+      "ne_id": "1159321309",
+      "ordinal": 143,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001211",
+      "ne_id": "1159321313",
+      "ordinal": 119,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001212",
+      "ne_id": "1159321319",
+      "ordinal": 234,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001213",
+      "ne_id": "1159321321",
+      "ordinal": 199,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001214",
+      "ne_id": "1159321327",
+      "ordinal": 73,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001215",
+      "ne_id": "1159321331",
+      "ordinal": 66,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001216",
+      "ne_id": "1159321337",
+      "ordinal": 19,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001217",
+      "ne_id": "1159321343",
+      "ordinal": 133,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001218",
+      "ne_id": "1159321345",
+      "ordinal": 34,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001219",
+      "ne_id": "1159321353",
+      "ordinal": 46,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001220",
+      "ne_id": "1159321357",
+      "ordinal": 246,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001221",
+      "ne_id": "1159321359",
+      "ordinal": 248,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001222",
+      "ne_id": "1159321361",
+      "ordinal": 249,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001223",
+      "ne_id": "1159321363",
+      "ordinal": 211,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001224",
+      "ne_id": "1159321367",
+      "ordinal": 205,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001225",
+      "ne_id": "1159321369",
+      "ordinal": 155,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001226",
+      "ne_id": "1159321371",
+      "ordinal": 209,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001227",
+      "ne_id": "1159321405",
+      "ordinal": 41,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001228",
+      "ne_id": "1159321409",
+      "ordinal": 201,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001229",
+      "ne_id": "1159321411",
+      "ordinal": 160,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001230",
+      "ne_id": "1159321417",
+      "ordinal": 56,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001231",
+      "ne_id": "1159321421",
+      "ordinal": 244,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001232",
+      "ne_id": "1159321423",
+      "ordinal": 236,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001233",
+      "ne_id": "1159321425",
+      "ordinal": 163,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001234",
+      "ne_id": "1159321431",
+      "ordinal": 37,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001235",
+      "ne_id": "1159321439",
+      "ordinal": 81,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001236",
+      "ne_id": "1159321441",
+      "ordinal": 108,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001237",
+      "ne_id": "1729632181",
+      "ordinal": 140,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001238",
+      "ne_id": "1729635091",
+      "ordinal": 175,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001239",
+      "ne_id": "1729635141",
+      "ordinal": 174,
+      "source": "ne_10m_admin_0_countries"
+    },
+    {
+      "entity_id": "gcat:001240",
+      "ne_id": "1159320319",
+      "ordinal": 137,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001241",
+      "ne_id": "1159320323",
+      "ordinal": 108,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001242",
+      "ne_id": "1159320325",
+      "ordinal": 68,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001243",
+      "ne_id": "1159320327",
+      "ordinal": 136,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001244",
+      "ne_id": "1159320329",
+      "ordinal": 62,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001245",
+      "ne_id": "1159320331",
+      "ordinal": 6,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001246",
+      "ne_id": "1159320333",
+      "ordinal": 76,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001247",
+      "ne_id": "1159320335",
+      "ordinal": 192,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001248",
+      "ne_id": "1159320347",
+      "ordinal": 226,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001249",
+      "ne_id": "1159320349",
+      "ordinal": 228,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001250",
+      "ne_id": "1159320353",
+      "ordinal": 293,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001251",
+      "ne_id": "1159320355",
+      "ordinal": 193,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001252",
+      "ne_id": "1159320359",
+      "ordinal": 281,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001253",
+      "ne_id": "1159320361",
+      "ordinal": 237,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001254",
+      "ne_id": "1159320365",
+      "ordinal": 259,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001255",
+      "ne_id": "1159320367",
+      "ordinal": 254,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001256",
+      "ne_id": "1159320369",
+      "ordinal": 282,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001257",
+      "ne_id": "1159320379",
+      "ordinal": 95,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001258",
+      "ne_id": "1159320381",
+      "ordinal": 69,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001259",
+      "ne_id": "1159320387",
+      "ordinal": 132,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001260",
+      "ne_id": "1159320391",
+      "ordinal": 191,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001261",
+      "ne_id": "1159320395",
+      "ordinal": 64,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001262",
+      "ne_id": "1159320397",
+      "ordinal": 65,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001263",
+      "ne_id": "1159320399",
+      "ordinal": 107,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001264",
+      "ne_id": "1159320405",
+      "ordinal": 161,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001265",
+      "ne_id": "1159320407",
+      "ordinal": 135,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001266",
+      "ne_id": "1159320409",
+      "ordinal": 116,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001267",
+      "ne_id": "1159320413",
+      "ordinal": 280,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001268",
+      "ne_id": "1159320415",
+      "ordinal": 203,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001269",
+      "ne_id": "1159320419",
+      "ordinal": 151,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001270",
+      "ne_id": "1159320421",
+      "ordinal": 140,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001271",
+      "ne_id": "1159320423",
+      "ordinal": 141,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001272",
+      "ne_id": "1159320425",
+      "ordinal": 296,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001273",
+      "ne_id": "1159320427",
+      "ordinal": 37,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001274",
+      "ne_id": "1159320431",
+      "ordinal": 169,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001275",
+      "ne_id": "1159320439",
+      "ordinal": 4,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001276",
+      "ne_id": "1159320441",
+      "ordinal": 48,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001277",
+      "ne_id": "1159320449",
+      "ordinal": 219,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001278",
+      "ne_id": "1159320451",
+      "ordinal": 127,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001279",
+      "ne_id": "1159320453",
+      "ordinal": 35,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001280",
+      "ne_id": "1159320461",
+      "ordinal": 113,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001281",
+      "ne_id": "1159320463",
+      "ordinal": 91,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001282",
+      "ne_id": "1159320467",
+      "ordinal": 167,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001283",
+      "ne_id": "1159320471",
+      "ordinal": 10,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001284",
+      "ne_id": "1159320473",
+      "ordinal": 178,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001285",
+      "ne_id": "1159320475",
+      "ordinal": 292,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001286",
+      "ne_id": "1159320477",
+      "ordinal": 279,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001287",
+      "ne_id": "1159320491",
+      "ordinal": 98,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001288",
+      "ne_id": "1159320493",
+      "ordinal": 3,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001289",
+      "ne_id": "1159320507",
+      "ordinal": 102,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001290",
+      "ne_id": "1159320509",
+      "ordinal": 158,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001291",
+      "ne_id": "1159320511",
+      "ordinal": 181,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001292",
+      "ne_id": "1159320513",
+      "ordinal": 34,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001293",
+      "ne_id": "1159320515",
+      "ordinal": 33,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001294",
+      "ne_id": "1159320517",
+      "ordinal": 147,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001295",
+      "ne_id": "1159320521",
+      "ordinal": 242,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001296",
+      "ne_id": "1159320523",
+      "ordinal": 245,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001297",
+      "ne_id": "1159320525",
+      "ordinal": 31,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001298",
+      "ne_id": "1159320527",
+      "ordinal": 144,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001299",
+      "ne_id": "1159320529",
+      "ordinal": 143,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001300",
+      "ne_id": "1159320531",
+      "ordinal": 180,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001301",
+      "ne_id": "1159320533",
+      "ordinal": 8,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001302",
+      "ne_id": "1159320535",
+      "ordinal": 52,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001303",
+      "ne_id": "1159320539",
+      "ordinal": 53,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001304",
+      "ne_id": "1159320541",
+      "ordinal": 93,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001305",
+      "ne_id": "1159320543",
+      "ordinal": 222,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001306",
+      "ne_id": "1159320547",
+      "ordinal": 77,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001307",
+      "ne_id": "1159320549",
+      "ordinal": 253,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001308",
+      "ne_id": "1159320551",
+      "ordinal": 194,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001309",
+      "ne_id": "1159320563",
+      "ordinal": 120,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001310",
+      "ne_id": "1159320565",
+      "ordinal": 129,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001311",
+      "ne_id": "1159320567",
+      "ordinal": 146,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001312",
+      "ne_id": "1159320575",
+      "ordinal": 173,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001313",
+      "ne_id": "1159320581",
+      "ordinal": 94,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001314",
+      "ne_id": "1159320587",
+      "ordinal": 73,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001315",
+      "ne_id": "1159320615",
+      "ordinal": 54,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001316",
+      "ne_id": "1159320617",
+      "ordinal": 15,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001317",
+      "ne_id": "1159320621",
+      "ordinal": 252,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001318",
+      "ne_id": "1159320623",
+      "ordinal": 58,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001319",
+      "ne_id": "1159320625",
+      "ordinal": 195,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001320",
+      "ne_id": "1159320631",
+      "ordinal": 211,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001321",
+      "ne_id": "1159320633",
+      "ordinal": 230,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001322",
+      "ne_id": "1159320635",
+      "ordinal": 290,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001323",
+      "ne_id": "1159320639",
+      "ordinal": 41,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001324",
+      "ne_id": "1159320641",
+      "ordinal": 197,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001325",
+      "ne_id": "1159320643",
+      "ordinal": 210,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001326",
+      "ne_id": "1159320647",
+      "ordinal": 207,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001327",
+      "ne_id": "1159320649",
+      "ordinal": 262,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001328",
+      "ne_id": "1159320651",
+      "ordinal": 63,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001329",
+      "ne_id": "1159320653",
+      "ordinal": 223,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001330",
+      "ne_id": "1159320657",
+      "ordinal": 221,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001331",
+      "ne_id": "1159320659",
+      "ordinal": 241,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001332",
+      "ne_id": "1159320661",
+      "ordinal": 239,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001333",
+      "ne_id": "1159320691",
+      "ordinal": 269,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001334",
+      "ne_id": "1159320693",
+      "ordinal": 159,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001335",
+      "ne_id": "1159320703",
+      "ordinal": 232,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001336",
+      "ne_id": "1159320705",
+      "ordinal": 236,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001337",
+      "ne_id": "1159320707",
+      "ordinal": 235,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001338",
+      "ne_id": "1159320709",
+      "ordinal": 7,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001339",
+      "ne_id": "1159320711",
+      "ordinal": 272,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001340",
+      "ne_id": "1159320715",
+      "ordinal": 250,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001341",
+      "ne_id": "1159320719",
+      "ordinal": 165,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001342",
+      "ne_id": "1159320721",
+      "ordinal": 251,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001343",
+      "ne_id": "1159320723",
+      "ordinal": 255,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001344",
+      "ne_id": "1159320725",
+      "ordinal": 249,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001345",
+      "ne_id": "1159320727",
+      "ordinal": 225,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001346",
+      "ne_id": "1159320729",
+      "ordinal": 209,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001347",
+      "ne_id": "1159320731",
+      "ordinal": 270,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001348",
+      "ne_id": "1159320733",
+      "ordinal": 238,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001349",
+      "ne_id": "1159320737",
+      "ordinal": 204,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001350",
+      "ne_id": "1159320739",
+      "ordinal": 233,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001351",
+      "ne_id": "1159320741",
+      "ordinal": 185,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001352",
+      "ne_id": "1159320743",
+      "ordinal": 189,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001353",
+      "ne_id": "1159320745",
+      "ordinal": 85,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001354",
+      "ne_id": "1159320747",
+      "ordinal": 190,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001355",
+      "ne_id": "1159320749",
+      "ordinal": 188,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001356",
+      "ne_id": "1159320781",
+      "ordinal": 72,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001357",
+      "ne_id": "1159320783",
+      "ordinal": 66,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001358",
+      "ne_id": "1159320793",
+      "ordinal": 163,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001359",
+      "ne_id": "1159320795",
+      "ordinal": 89,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001360",
+      "ne_id": "1159320797",
+      "ordinal": 177,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001361",
+      "ne_id": "1159320799",
+      "ordinal": 164,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001362",
+      "ne_id": "1159320801",
+      "ordinal": 176,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001363",
+      "ne_id": "1159320811",
+      "ordinal": 86,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001364",
+      "ne_id": "1159320813",
+      "ordinal": 216,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001365",
+      "ne_id": "1159320815",
+      "ordinal": 125,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001366",
+      "ne_id": "1159320817",
+      "ordinal": 26,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001367",
+      "ne_id": "1159320827",
+      "ordinal": 145,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001368",
+      "ne_id": "1159320833",
+      "ordinal": 109,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001369",
+      "ne_id": "1159320839",
+      "ordinal": 119,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001370",
+      "ne_id": "1159320841",
+      "ordinal": 81,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001371",
+      "ne_id": "1159320845",
+      "ordinal": 1,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001372",
+      "ne_id": "1159320847",
+      "ordinal": 9,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001373",
+      "ne_id": "1159320877",
+      "ordinal": 84,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001374",
+      "ne_id": "1159320881",
+      "ordinal": 99,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001375",
+      "ne_id": "1159320889",
+      "ordinal": 96,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001376",
+      "ne_id": "1159320891",
+      "ordinal": 123,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001377",
+      "ne_id": "1159320895",
+      "ordinal": 11,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001378",
+      "ne_id": "1159320901",
+      "ordinal": 12,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001379",
+      "ne_id": "1159320903",
+      "ordinal": 13,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001380",
+      "ne_id": "1159320917",
+      "ordinal": 208,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001381",
+      "ne_id": "1159320919",
+      "ordinal": 97,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001382",
+      "ne_id": "1159320931",
+      "ordinal": 234,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001383",
+      "ne_id": "1159320935",
+      "ordinal": 155,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001384",
+      "ne_id": "1159320937",
+      "ordinal": 206,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001385",
+      "ne_id": "1159320963",
+      "ordinal": 182,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001386",
+      "ne_id": "1159320965",
+      "ordinal": 184,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001387",
+      "ne_id": "1159320967",
+      "ordinal": 45,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001388",
+      "ne_id": "1159320971",
+      "ordinal": 19,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001389",
+      "ne_id": "1159320977",
+      "ordinal": 75,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001390",
+      "ne_id": "1159320979",
+      "ordinal": 60,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001391",
+      "ne_id": "1159320981",
+      "ordinal": 213,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001392",
+      "ne_id": "1159320983",
+      "ordinal": 227,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001393",
+      "ne_id": "1159320985",
+      "ordinal": 183,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001394",
+      "ne_id": "1159320991",
+      "ordinal": 27,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001395",
+      "ne_id": "1159321007",
+      "ordinal": 70,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001396",
+      "ne_id": "1159321009",
+      "ordinal": 122,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001397",
+      "ne_id": "1159321011",
+      "ordinal": 74,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001398",
+      "ne_id": "1159321013",
+      "ordinal": 14,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001399",
+      "ne_id": "1159321015",
+      "ordinal": 90,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001400",
+      "ne_id": "1159321017",
+      "ordinal": 78,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001401",
+      "ne_id": "1159321019",
+      "ordinal": 220,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001402",
+      "ne_id": "1159321021",
+      "ordinal": 101,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001403",
+      "ne_id": "1159321025",
+      "ordinal": 200,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001404",
+      "ne_id": "1159321027",
+      "ordinal": 157,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001405",
+      "ne_id": "1159321029",
+      "ordinal": 47,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001406",
+      "ne_id": "1159321031",
+      "ordinal": 61,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001407",
+      "ne_id": "1159321033",
+      "ordinal": 55,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001408",
+      "ne_id": "1159321035",
+      "ordinal": 29,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001409",
+      "ne_id": "1159321043",
+      "ordinal": 128,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001410",
+      "ne_id": "1159321045",
+      "ordinal": 152,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001411",
+      "ne_id": "1159321051",
+      "ordinal": 198,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001412",
+      "ne_id": "1159321053",
+      "ordinal": 267,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001413",
+      "ne_id": "1159321055",
+      "ordinal": 168,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001414",
+      "ne_id": "1159321057",
+      "ordinal": 214,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001415",
+      "ne_id": "1159321061",
+      "ordinal": 67,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001416",
+      "ne_id": "1159321063",
+      "ordinal": 104,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001417",
+      "ne_id": "1159321065",
+      "ordinal": 247,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001418",
+      "ne_id": "1159321067",
+      "ordinal": 134,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001419",
+      "ne_id": "1159321069",
+      "ordinal": 139,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001420",
+      "ne_id": "1159321071",
+      "ordinal": 50,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001421",
+      "ne_id": "1159321073",
+      "ordinal": 130,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001422",
+      "ne_id": "1159321075",
+      "ordinal": 175,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001423",
+      "ne_id": "1159321079",
+      "ordinal": 240,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001424",
+      "ne_id": "1159321081",
+      "ordinal": 20,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001425",
+      "ne_id": "1159321083",
+      "ordinal": 2,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001426",
+      "ne_id": "1159321085",
+      "ordinal": 38,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001427",
+      "ne_id": "1159321087",
+      "ordinal": 160,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001428",
+      "ne_id": "1159321089",
+      "ordinal": 106,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001429",
+      "ne_id": "1159321091",
+      "ordinal": 32,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001430",
+      "ne_id": "1159321097",
+      "ordinal": 202,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001431",
+      "ne_id": "1159321099",
+      "ordinal": 201,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001432",
+      "ne_id": "1159321103",
+      "ordinal": 42,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001433",
+      "ne_id": "1159321105",
+      "ordinal": 100,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001434",
+      "ne_id": "1159321107",
+      "ordinal": 217,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001435",
+      "ne_id": "1159321111",
+      "ordinal": 271,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001436",
+      "ne_id": "1159321115",
+      "ordinal": 257,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001437",
+      "ne_id": "1159321117",
+      "ordinal": 56,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001438",
+      "ne_id": "1159321119",
+      "ordinal": 258,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001439",
+      "ne_id": "1159321121",
+      "ordinal": 156,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001440",
+      "ne_id": "1159321123",
+      "ordinal": 268,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001441",
+      "ne_id": "1159321129",
+      "ordinal": 260,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001442",
+      "ne_id": "1159321133",
+      "ordinal": 274,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001443",
+      "ne_id": "1159321135",
+      "ordinal": 196,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001444",
+      "ne_id": "1159321151",
+      "ordinal": 43,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001445",
+      "ne_id": "1159321153",
+      "ordinal": 115,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001446",
+      "ne_id": "1159321161",
+      "ordinal": 170,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001447",
+      "ne_id": "1159321163",
+      "ordinal": 5,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001448",
+      "ne_id": "1159321169",
+      "ordinal": 199,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001449",
+      "ne_id": "1159321171",
+      "ordinal": 276,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001450",
+      "ne_id": "1159321175",
+      "ordinal": 266,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001451",
+      "ne_id": "1159321177",
+      "ordinal": 172,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001452",
+      "ne_id": "1159321179",
+      "ordinal": 83,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001453",
+      "ne_id": "1159321181",
+      "ordinal": 153,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001454",
+      "ne_id": "1159321183",
+      "ordinal": 28,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001455",
+      "ne_id": "1159321189",
+      "ordinal": 248,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001456",
+      "ne_id": "1159321191",
+      "ordinal": 246,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001457",
+      "ne_id": "1159321193",
+      "ordinal": 150,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001458",
+      "ne_id": "1159321195",
+      "ordinal": 148,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001459",
+      "ne_id": "1159321197",
+      "ordinal": 111,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001460",
+      "ne_id": "1159321199",
+      "ordinal": 80,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001461",
+      "ne_id": "1159321201",
+      "ordinal": 51,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001462",
+      "ne_id": "1159321219",
+      "ordinal": 133,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001463",
+      "ne_id": "1159321223",
+      "ordinal": 30,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001464",
+      "ne_id": "1159321225",
+      "ordinal": 112,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001465",
+      "ne_id": "1159321227",
+      "ordinal": 298,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001466",
+      "ne_id": "1159321229",
+      "ordinal": 92,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001467",
+      "ne_id": "1159321235",
+      "ordinal": 16,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001468",
+      "ne_id": "1159321243",
+      "ordinal": 105,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001469",
+      "ne_id": "1159321245",
+      "ordinal": 297,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001470",
+      "ne_id": "1159321247",
+      "ordinal": 256,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001471",
+      "ne_id": "1159321249",
+      "ordinal": 264,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001472",
+      "ne_id": "1159321251",
+      "ordinal": 88,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001473",
+      "ne_id": "1159321253",
+      "ordinal": 124,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001474",
+      "ne_id": "1159321255",
+      "ordinal": 118,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001475",
+      "ne_id": "1159321259",
+      "ordinal": 23,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001476",
+      "ne_id": "1159321263",
+      "ordinal": 17,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001477",
+      "ne_id": "1159321265",
+      "ordinal": 18,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001478",
+      "ne_id": "1159321269",
+      "ordinal": 138,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001479",
+      "ne_id": "1159321271",
+      "ordinal": 103,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001480",
+      "ne_id": "1159321273",
+      "ordinal": 244,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001481",
+      "ne_id": "1159321281",
+      "ordinal": 25,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001482",
+      "ne_id": "1159321283",
+      "ordinal": 82,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001483",
+      "ne_id": "1159321285",
+      "ordinal": 110,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001484",
+      "ne_id": "1159321287",
+      "ordinal": 57,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001485",
+      "ne_id": "1159321289",
+      "ordinal": 131,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001486",
+      "ne_id": "1159321291",
+      "ordinal": 212,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001487",
+      "ne_id": "1159321297",
+      "ordinal": 22,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001488",
+      "ne_id": "1159321299",
+      "ordinal": 40,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001489",
+      "ne_id": "1159321301",
+      "ordinal": 121,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001490",
+      "ne_id": "1159321303",
+      "ordinal": 162,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001491",
+      "ne_id": "1159321305",
+      "ordinal": 117,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001492",
+      "ne_id": "1159321307",
+      "ordinal": 46,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001493",
+      "ne_id": "1159321309",
+      "ordinal": 154,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001494",
+      "ne_id": "1159321313",
+      "ordinal": 126,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001495",
+      "ne_id": "1159321319",
+      "ordinal": 261,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001496",
+      "ne_id": "1159321321",
+      "ordinal": 215,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001497",
+      "ne_id": "1159321327",
+      "ordinal": 79,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001498",
+      "ne_id": "1159321331",
+      "ordinal": 71,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001499",
+      "ne_id": "1159321333",
+      "ordinal": 265,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001500",
+      "ne_id": "1159321335",
+      "ordinal": 205,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001501",
+      "ne_id": "1159321337",
+      "ordinal": 21,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001502",
+      "ne_id": "1159321341",
+      "ordinal": 243,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001503",
+      "ne_id": "1159321343",
+      "ordinal": 142,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001504",
+      "ne_id": "1159321345",
+      "ordinal": 36,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001505",
+      "ne_id": "1159321353",
+      "ordinal": 49,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001506",
+      "ne_id": "1159321357",
+      "ordinal": 275,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001507",
+      "ne_id": "1159321359",
+      "ordinal": 277,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001508",
+      "ne_id": "1159321361",
+      "ordinal": 278,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001509",
+      "ne_id": "1159321363",
+      "ordinal": 231,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001510",
+      "ne_id": "1159321369",
+      "ordinal": 166,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001511",
+      "ne_id": "1159321371",
+      "ordinal": 229,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001512",
+      "ne_id": "1159321373",
+      "ordinal": 291,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001513",
+      "ne_id": "1159321375",
+      "ordinal": 284,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001514",
+      "ne_id": "1159321377",
+      "ordinal": 285,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001515",
+      "ne_id": "1159321379",
+      "ordinal": 286,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001516",
+      "ne_id": "1159321381",
+      "ordinal": 224,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001517",
+      "ne_id": "1159321385",
+      "ordinal": 295,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001518",
+      "ne_id": "1159321387",
+      "ordinal": 294,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001519",
+      "ne_id": "1159321389",
+      "ordinal": 289,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001520",
+      "ne_id": "1159321405",
+      "ordinal": 44,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001521",
+      "ne_id": "1159321407",
+      "ordinal": 179,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001522",
+      "ne_id": "1159321409",
+      "ordinal": 218,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001523",
+      "ne_id": "1159321411",
+      "ordinal": 171,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001524",
+      "ne_id": "1159321417",
+      "ordinal": 59,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001525",
+      "ne_id": "1159321421",
+      "ordinal": 273,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001526",
+      "ne_id": "1159321423",
+      "ordinal": 263,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001527",
+      "ne_id": "1159321425",
+      "ordinal": 174,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001528",
+      "ne_id": "1159321431",
+      "ordinal": 39,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001529",
+      "ne_id": "1159321439",
+      "ordinal": 87,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001530",
+      "ne_id": "1159321441",
+      "ordinal": 114,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001531",
+      "ne_id": "1729632181",
+      "ordinal": 149,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001532",
+      "ne_id": "1729635091",
+      "ordinal": 187,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001533",
+      "ne_id": "1729635141",
+      "ordinal": 186,
+      "source": "ne_10m_admin_0_map_units"
+    },
+    {
+      "entity_id": "gcat:001534",
+      "ne_id": "1159127243",
+      "ordinal": 880,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001535",
+      "ne_id": "1159137967",
+      "ordinal": 3030,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001536",
+      "ne_id": "1159146051",
+      "ordinal": 4807,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001537",
+      "ne_id": "1159146343",
+      "ordinal": 4937,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001538",
+      "ne_id": "1159146437",
+      "ordinal": 4979,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001539",
+      "ne_id": "1159149061",
+      "ordinal": 6145,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001540",
+      "ne_id": "1159149063",
+      "ordinal": 6146,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001541",
+      "ne_id": "1159149071",
+      "ordinal": 6149,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001542",
+      "ne_id": "1159149073",
+      "ordinal": 6150,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001543",
+      "ne_id": "1159149075",
+      "ordinal": 6151,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001544",
+      "ne_id": "1159149077",
+      "ordinal": 6152,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001545",
+      "ne_id": "1159149079",
+      "ordinal": 6153,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001546",
+      "ne_id": "1159149083",
+      "ordinal": 6155,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001547",
+      "ne_id": "1159149089",
+      "ordinal": 6157,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001548",
+      "ne_id": "1159149307",
+      "ordinal": 6254,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001549",
+      "ne_id": "1159149385",
+      "ordinal": 6289,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001550",
+      "ne_id": "1159149413",
+      "ordinal": 6301,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001551",
+      "ne_id": "1159149457",
+      "ordinal": 6321,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001552",
+      "ne_id": "1159149461",
+      "ordinal": 6323,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001553",
+      "ne_id": "1159149463",
+      "ordinal": 6324,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001554",
+      "ne_id": "1159149469",
+      "ordinal": 6326,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001555",
+      "ne_id": "1159149511",
+      "ordinal": 6345,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001556",
+      "ne_id": "1159149593",
+      "ordinal": 6381,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001557",
+      "ne_id": "1159149605",
+      "ordinal": 6387,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001558",
+      "ne_id": "1159149731",
+      "ordinal": 6443,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001559",
+      "ne_id": "1159149737",
+      "ordinal": 6445,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001560",
+      "ne_id": "1159149741",
+      "ordinal": 6447,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001561",
+      "ne_id": "1159149757",
+      "ordinal": 6454,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001562",
+      "ne_id": "1159149847",
+      "ordinal": 6494,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001563",
+      "ne_id": "1159149869",
+      "ordinal": 6504,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001564",
+      "ne_id": "1159149883",
+      "ordinal": 6510,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001565",
+      "ne_id": "1159149967",
+      "ordinal": 6548,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001566",
+      "ne_id": "1159149997",
+      "ordinal": 6561,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001567",
+      "ne_id": "1159150073",
+      "ordinal": 6595,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001568",
+      "ne_id": "1159150339",
+      "ordinal": 6713,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001569",
+      "ne_id": "1159150345",
+      "ordinal": 6716,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001570",
+      "ne_id": "1159150427",
+      "ordinal": 6752,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001571",
+      "ne_id": "1159150431",
+      "ordinal": 6754,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001572",
+      "ne_id": "1159150433",
+      "ordinal": 6755,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001573",
+      "ne_id": "1159150435",
+      "ordinal": 6756,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001574",
+      "ne_id": "1159150443",
+      "ordinal": 6759,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001575",
+      "ne_id": "1159150447",
+      "ordinal": 6761,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001576",
+      "ne_id": "1159150451",
+      "ordinal": 6763,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001577",
+      "ne_id": "1159150457",
+      "ordinal": 6765,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001578",
+      "ne_id": "1159150469",
+      "ordinal": 6771,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001579",
+      "ne_id": "1159150535",
+      "ordinal": 6800,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001580",
+      "ne_id": "1159150537",
+      "ordinal": 6801,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001581",
+      "ne_id": "1159150565",
+      "ordinal": 6813,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001582",
+      "ne_id": "1159150567",
+      "ordinal": 6814,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001583",
+      "ne_id": "1159150571",
+      "ordinal": 6816,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001584",
+      "ne_id": "1159150573",
+      "ordinal": 6817,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001585",
+      "ne_id": "1159150577",
+      "ordinal": 6819,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001586",
+      "ne_id": "1159150579",
+      "ordinal": 6820,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001587",
+      "ne_id": "1159150583",
+      "ordinal": 6821,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001588",
+      "ne_id": "1159150585",
+      "ordinal": 6822,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001589",
+      "ne_id": "1159150589",
+      "ordinal": 6824,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001590",
+      "ne_id": "1159150593",
+      "ordinal": 6826,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001591",
+      "ne_id": "1159150597",
+      "ordinal": 6828,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001592",
+      "ne_id": "1159150605",
+      "ordinal": 6831,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001593",
+      "ne_id": "1159150609",
+      "ordinal": 6833,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001594",
+      "ne_id": "1159150621",
+      "ordinal": 6838,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001595",
+      "ne_id": "1159150623",
+      "ordinal": 6839,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001596",
+      "ne_id": "1159150625",
+      "ordinal": 6840,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001597",
+      "ne_id": "1159150645",
+      "ordinal": 6849,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001598",
+      "ne_id": "1159150655",
+      "ordinal": 6853,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001599",
+      "ne_id": "1159150659",
+      "ordinal": 6855,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001600",
+      "ne_id": "1159150661",
+      "ordinal": 6856,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001601",
+      "ne_id": "1159150663",
+      "ordinal": 6857,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001602",
+      "ne_id": "1159150665",
+      "ordinal": 6858,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001603",
+      "ne_id": "1159150667",
+      "ordinal": 6859,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001604",
+      "ne_id": "1159150673",
+      "ordinal": 6861,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001605",
+      "ne_id": "1159150677",
+      "ordinal": 6863,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001606",
+      "ne_id": "1159150683",
+      "ordinal": 6866,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001607",
+      "ne_id": "1159150715",
+      "ordinal": 6880,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001608",
+      "ne_id": "1159150717",
+      "ordinal": 6881,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001609",
+      "ne_id": "1159150719",
+      "ordinal": 6882,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001610",
+      "ne_id": "1159150781",
+      "ordinal": 6909,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001611",
+      "ne_id": "1159150785",
+      "ordinal": 6911,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001612",
+      "ne_id": "1159150799",
+      "ordinal": 6917,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001613",
+      "ne_id": "1159150803",
+      "ordinal": 6919,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001614",
+      "ne_id": "1159150807",
+      "ordinal": 6921,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001615",
+      "ne_id": "1159150809",
+      "ordinal": 6922,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001616",
+      "ne_id": "1159150811",
+      "ordinal": 6923,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001617",
+      "ne_id": "1159150813",
+      "ordinal": 6924,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001618",
+      "ne_id": "1159150831",
+      "ordinal": 6932,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001619",
+      "ne_id": "1159150835",
+      "ordinal": 6933,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001620",
+      "ne_id": "1159150847",
+      "ordinal": 6939,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001621",
+      "ne_id": "1159150849",
+      "ordinal": 6940,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001622",
+      "ne_id": "1159150853",
+      "ordinal": 6941,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001623",
+      "ne_id": "1159150855",
+      "ordinal": 6942,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001624",
+      "ne_id": "1159150863",
+      "ordinal": 6946,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001625",
+      "ne_id": "1159150867",
+      "ordinal": 6948,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001626",
+      "ne_id": "1159150873",
+      "ordinal": 6950,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001627",
+      "ne_id": "1159150875",
+      "ordinal": 6951,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001628",
+      "ne_id": "1159150877",
+      "ordinal": 6952,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001629",
+      "ne_id": "1159150907",
+      "ordinal": 6965,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001630",
+      "ne_id": "1159150909",
+      "ordinal": 6966,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001631",
+      "ne_id": "1159150913",
+      "ordinal": 6968,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001632",
+      "ne_id": "1159150917",
+      "ordinal": 6970,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001633",
+      "ne_id": "1159150931",
+      "ordinal": 6976,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001634",
+      "ne_id": "1159150943",
+      "ordinal": 6981,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001635",
+      "ne_id": "1159150945",
+      "ordinal": 6982,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001636",
+      "ne_id": "1159150957",
+      "ordinal": 6988,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001637",
+      "ne_id": "1159150961",
+      "ordinal": 6989,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001638",
+      "ne_id": "1159150965",
+      "ordinal": 6991,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001639",
+      "ne_id": "1159150991",
+      "ordinal": 7003,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001640",
+      "ne_id": "1159150993",
+      "ordinal": 7004,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001641",
+      "ne_id": "1159150997",
+      "ordinal": 7005,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001642",
+      "ne_id": "1159150999",
+      "ordinal": 7006,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001643",
+      "ne_id": "1159151059",
+      "ordinal": 7033,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001644",
+      "ne_id": "1159151079",
+      "ordinal": 7042,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001645",
+      "ne_id": "1159151083",
+      "ordinal": 7044,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001646",
+      "ne_id": "1159151095",
+      "ordinal": 7049,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001647",
+      "ne_id": "1159151109",
+      "ordinal": 7055,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001648",
+      "ne_id": "1159151111",
+      "ordinal": 7056,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001649",
+      "ne_id": "1159151115",
+      "ordinal": 7058,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001650",
+      "ne_id": "1159151117",
+      "ordinal": 7059,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001651",
+      "ne_id": "1159151119",
+      "ordinal": 7060,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001652",
+      "ne_id": "1159151123",
+      "ordinal": 7061,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001653",
+      "ne_id": "1159151127",
+      "ordinal": 7063,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001654",
+      "ne_id": "1159151133",
+      "ordinal": 7066,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001655",
+      "ne_id": "1159151141",
+      "ordinal": 7069,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001656",
+      "ne_id": "1159151147",
+      "ordinal": 7072,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001657",
+      "ne_id": "1159151149",
+      "ordinal": 7073,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001658",
+      "ne_id": "1159151151",
+      "ordinal": 7074,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001659",
+      "ne_id": "1159151153",
+      "ordinal": 7075,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001660",
+      "ne_id": "1159151161",
+      "ordinal": 7078,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001661",
+      "ne_id": "1159151173",
+      "ordinal": 7084,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001662",
+      "ne_id": "1159151177",
+      "ordinal": 7085,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001663",
+      "ne_id": "1159151179",
+      "ordinal": 7086,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001664",
+      "ne_id": "1159151185",
+      "ordinal": 7089,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001665",
+      "ne_id": "1159151187",
+      "ordinal": 7090,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001666",
+      "ne_id": "1159151189",
+      "ordinal": 7091,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001667",
+      "ne_id": "1159151191",
+      "ordinal": 7092,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001668",
+      "ne_id": "1159151195",
+      "ordinal": 7093,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001669",
+      "ne_id": "1159151197",
+      "ordinal": 7094,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001670",
+      "ne_id": "1159151199",
+      "ordinal": 7095,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001671",
+      "ne_id": "1159151201",
+      "ordinal": 7096,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001672",
+      "ne_id": "1159151203",
+      "ordinal": 7097,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001673",
+      "ne_id": "1159151205",
+      "ordinal": 7098,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001674",
+      "ne_id": "1159151207",
+      "ordinal": 7099,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001675",
+      "ne_id": "1159151209",
+      "ordinal": 7100,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001676",
+      "ne_id": "1159151251",
+      "ordinal": 7118,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001677",
+      "ne_id": "1159151255",
+      "ordinal": 7120,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001678",
+      "ne_id": "1159151257",
+      "ordinal": 7121,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001679",
+      "ne_id": "1159151259",
+      "ordinal": 7122,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001680",
+      "ne_id": "1159151263",
+      "ordinal": 7124,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001681",
+      "ne_id": "1159151269",
+      "ordinal": 7126,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001682",
+      "ne_id": "1159151273",
+      "ordinal": 7128,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001683",
+      "ne_id": "1159151275",
+      "ordinal": 7129,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001684",
+      "ne_id": "1159151281",
+      "ordinal": 7132,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001685",
+      "ne_id": "1159151299",
+      "ordinal": 7140,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001686",
+      "ne_id": "1159151305",
+      "ordinal": 7142,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001687",
+      "ne_id": "1159151309",
+      "ordinal": 7144,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001688",
+      "ne_id": "1159151311",
+      "ordinal": 7145,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001689",
+      "ne_id": "1159151317",
+      "ordinal": 7148,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001690",
+      "ne_id": "1159151347",
+      "ordinal": 7161,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001691",
+      "ne_id": "1159151359",
+      "ordinal": 7166,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001692",
+      "ne_id": "1159151361",
+      "ordinal": 7167,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001693",
+      "ne_id": "1159151401",
+      "ordinal": 7185,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001694",
+      "ne_id": "1159151403",
+      "ordinal": 7186,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001695",
+      "ne_id": "1159151415",
+      "ordinal": 7191,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001696",
+      "ne_id": "1159151417",
+      "ordinal": 7192,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001697",
+      "ne_id": "1159151419",
+      "ordinal": 7193,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001698",
+      "ne_id": "1159151437",
+      "ordinal": 7201,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001699",
+      "ne_id": "1159151439",
+      "ordinal": 7202,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001700",
+      "ne_id": "1159151443",
+      "ordinal": 7204,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001701",
+      "ne_id": "1159151465",
+      "ordinal": 7213,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001702",
+      "ne_id": "1159151467",
+      "ordinal": 7214,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001703",
+      "ne_id": "1159151469",
+      "ordinal": 7215,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001704",
+      "ne_id": "1159151471",
+      "ordinal": 7216,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001705",
+      "ne_id": "1159151493",
+      "ordinal": 7226,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001706",
+      "ne_id": "1159151495",
+      "ordinal": 7227,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001707",
+      "ne_id": "1159151501",
+      "ordinal": 7229,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001708",
+      "ne_id": "1159151503",
+      "ordinal": 7230,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001709",
+      "ne_id": "1159151507",
+      "ordinal": 7232,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001710",
+      "ne_id": "1159151509",
+      "ordinal": 7233,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001711",
+      "ne_id": "1159151511",
+      "ordinal": 7234,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001712",
+      "ne_id": "1159151513",
+      "ordinal": 7235,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001713",
+      "ne_id": "1159151519",
+      "ordinal": 7237,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001714",
+      "ne_id": "1159151523",
+      "ordinal": 7239,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001715",
+      "ne_id": "1159151525",
+      "ordinal": 7240,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001716",
+      "ne_id": "1159151529",
+      "ordinal": 7242,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001717",
+      "ne_id": "1159151539",
+      "ordinal": 7246,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001718",
+      "ne_id": "1159151541",
+      "ordinal": 7247,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001719",
+      "ne_id": "1159151545",
+      "ordinal": 7249,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001720",
+      "ne_id": "1159151547",
+      "ordinal": 7250,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001721",
+      "ne_id": "1159151549",
+      "ordinal": 7251,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001722",
+      "ne_id": "1159151551",
+      "ordinal": 7252,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001723",
+      "ne_id": "1159151559",
+      "ordinal": 7255,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001724",
+      "ne_id": "1159151561",
+      "ordinal": 7256,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001725",
+      "ne_id": "1159151563",
+      "ordinal": 7257,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001726",
+      "ne_id": "1159151567",
+      "ordinal": 7259,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001727",
+      "ne_id": "1159151573",
+      "ordinal": 7261,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001728",
+      "ne_id": "1159151577",
+      "ordinal": 7263,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001729",
+      "ne_id": "1159151581",
+      "ordinal": 7265,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001730",
+      "ne_id": "1159151583",
+      "ordinal": 7266,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001731",
+      "ne_id": "1159151585",
+      "ordinal": 7267,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001732",
+      "ne_id": "1159151587",
+      "ordinal": 7268,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001733",
+      "ne_id": "1159151591",
+      "ordinal": 7269,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001734",
+      "ne_id": "1159151593",
+      "ordinal": 7270,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001735",
+      "ne_id": "1159151595",
+      "ordinal": 7271,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001736",
+      "ne_id": "1159151597",
+      "ordinal": 7272,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001737",
+      "ne_id": "1159151599",
+      "ordinal": 7273,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001738",
+      "ne_id": "1159151601",
+      "ordinal": 7274,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001739",
+      "ne_id": "1159151603",
+      "ordinal": 7275,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001740",
+      "ne_id": "1159151609",
+      "ordinal": 7277,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001741",
+      "ne_id": "1159151613",
+      "ordinal": 7279,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001742",
+      "ne_id": "1159151615",
+      "ordinal": 7280,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001743",
+      "ne_id": "1159151627",
+      "ordinal": 7285,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001744",
+      "ne_id": "1159151699",
+      "ordinal": 7317,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001745",
+      "ne_id": "1159119239",
+      "ordinal": 358,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001746",
+      "ne_id": "1159121947",
+      "ordinal": 513,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001747",
+      "ne_id": "1159144059",
+      "ordinal": 4361,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001748",
+      "ne_id": "1159145889",
+      "ordinal": 4761,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001749",
+      "ne_id": "1159146033",
+      "ordinal": 4799,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001750",
+      "ne_id": "1159146035",
+      "ordinal": 4800,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001751",
+      "ne_id": "1159146037",
+      "ordinal": 4801,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001752",
+      "ne_id": "1159146055",
+      "ordinal": 4809,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001753",
+      "ne_id": "1159146057",
+      "ordinal": 4810,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001754",
+      "ne_id": "1159146301",
+      "ordinal": 4918,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001755",
+      "ne_id": "1159146365",
+      "ordinal": 4947,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001756",
+      "ne_id": "1159146373",
+      "ordinal": 4950,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001757",
+      "ne_id": "1159146433",
+      "ordinal": 4977,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001758",
+      "ne_id": "1159146907",
+      "ordinal": 5188,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001759",
+      "ne_id": "1159147265",
+      "ordinal": 5347,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001760",
+      "ne_id": "1159147945",
+      "ordinal": 5649,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001761",
+      "ne_id": "1159148621",
+      "ordinal": 5949,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001762",
+      "ne_id": "1159149065",
+      "ordinal": 6147,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001763",
+      "ne_id": "1159149085",
+      "ordinal": 6156,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001764",
+      "ne_id": "1159149369",
+      "ordinal": 6282,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001765",
+      "ne_id": "1159149431",
+      "ordinal": 6309,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001766",
+      "ne_id": "1159150429",
+      "ordinal": 6753,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001767",
+      "ne_id": "1159150445",
+      "ordinal": 6760,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001768",
+      "ne_id": "1159150449",
+      "ordinal": 6762,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001769",
+      "ne_id": "1159151183",
+      "ordinal": 7088,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001770",
+      "ne_id": "1159151477",
+      "ordinal": 7219,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001771",
+      "ne_id": "1159151515",
+      "ordinal": 7236,
+      "source": "ne_10m_populated_places"
+    },
+    {
+      "entity_id": "gcat:001772",
+      "ne_id": "1159151629",
+      "ordinal": 7286,
+      "source": "ne_10m_populated_places"
+    }
+  ],
+  "next_numeric_id": 1773,
+  "schema": 1,
+  "sources": {
+    "ne_10m_admin_0_countries": "ce1ac7036499a0edd641fbc093cd209a98f96a49d2eca8480aaacad35138a7f6",
+    "ne_10m_admin_0_map_units": "45bebe2aaf8bf42b9daf4428594925bcb11eabd32fe9dc6e0acf681438053eb5",
+    "ne_10m_populated_places": "cd149186f03d2603e0410da399b980a4357d0ac32d3a2305a49ed3dffcc41d7b"
+  },
+  "status": "proposed source concepts; not approved entity concordances"
+}

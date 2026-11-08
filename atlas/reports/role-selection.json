@@ -1,0 +1,1178 @@
+{
+  "editions": {
+    "compact": {
+      "actual_jsonl": {
+        "gzip_bytes": 106987,
+        "gzip_sha256": "6894e4915e6077224931dcdcff189ccf62e6f82dbf165b06f9e99b326dd2f9c6",
+        "jsonl_bytes": 1250747,
+        "path": "compact-role-review.jsonl",
+        "records": 384,
+        "sha256": "413664595edff5802ad09440f7faf1e428f28e7d9794af24e488038db79dc170"
+      },
+      "added_source_role_candidates": [
+        {
+          "coordinate": [
+            35.2062094,
+            31.9029448
+          ],
+          "country_source_code": "PSX",
+          "name": "Ramallah",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159121947"
+        },
+        {
+          "coordinate": [
+            19.8499406,
+            45.2503762
+          ],
+          "country_source_code": "SRB",
+          "name": "Novi Sad",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159144059"
+        },
+        {
+          "coordinate": [
+            17.1799743,
+            44.7804049
+          ],
+          "country_source_code": "BIH",
+          "name": "Banja Luka",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159145889"
+        },
+        {
+          "coordinate": [
+            -3.2190906,
+            55.9483279
+          ],
+          "country_source_code": "GBR",
+          "name": "Edinburgh",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159146365"
+        },
+        {
+          "coordinate": [
+            -3.1675981955277295,
+            51.48261904913091
+          ],
+          "country_source_code": "GBR",
+          "name": "Cardiff",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159146373"
+        },
+        {
+          "coordinate": [
+            41.6300065,
+            41.6000047
+          ],
+          "country_source_code": "GEO",
+          "name": "Batumi",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159147265"
+        },
+        {
+          "coordinate": [
+            -16.8800397,
+            32.6499825
+          ],
+          "country_source_code": "PRT",
+          "name": "Funchal",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159147945"
+        },
+        {
+          "coordinate": [
+            41.0200179,
+            43.0200214
+          ],
+          "country_source_code": "GEO",
+          "name": "Sukhumi",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159148621"
+        },
+        {
+          "coordinate": [
+            -5.928177644913072,
+            54.594245156841886
+          ],
+          "country_source_code": "GBR",
+          "name": "Belfast",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159149369"
+        },
+        {
+          "coordinate": [
+            -25.6665835,
+            37.7483018
+          ],
+          "country_source_code": "PRT",
+          "name": "Ponta Delgada",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159149431"
+        },
+        {
+          "coordinate": [
+            31.5800256,
+            4.8299752
+          ],
+          "country_source_code": "SSD",
+          "name": "Juba",
+          "source_classification": "Admin-0 capital",
+          "source_id": "1159149449"
+        }
+      ],
+      "adm0_source_codes": 225,
+      "base_actual_jsonl": {
+        "gzip_bytes": 103753,
+        "gzip_sha256": "ca42e58089c28af41c082350162dde4f72d9b3e7e6e29384acae2d187e862813",
+        "jsonl_bytes": 1208740,
+        "path": "compact-base-role-schema.jsonl",
+        "records": 373,
+        "sha256": "244651322a4c755420002451c359733aebe7acc01f01a46a5afffdc7794f82de"
+      },
+      "base_retained_records": 373,
+      "base_selected_records": 373,
+      "broader_role_roster_records": 244,
+      "country_distribution": {
+        "ABW": 1,
+        "AFG": 1,
+        "AGO": 1,
+        "ALB": 1,
+        "ALD": 1,
+        "AND": 1,
+        "ARE": 2,
+        "ARG": 2,
+        "ARM": 1,
+        "ASM": 1,
+        "ATA": 11,
+        "ATG": 1,
+        "AUS": 7,
+        "AUT": 1,
+        "AZE": 1,
+        "BDI": 1,
+        "BEL": 1,
+        "BEN": 2,
+        "BFA": 1,
+        "BGD": 2,
+        "BGR": 1,
+        "BHR": 1,
+        "BHS": 1,
+        "BIH": 2,
+        "BLR": 1,
+        "BLZ": 1,
+        "BMU": 1,
+        "BOL": 2,
+        "BRA": 10,
+        "BRB": 1,
+        "BRN": 1,
+        "BTN": 1,
+        "BWA": 1,
+        "CAF": 1,
+        "CAN": 11,
+        "CHE": 2,
+        "CHL": 5,
+        "CHN": 21,
+        "CIV": 2,
+        "CMR": 1,
+        "COD": 1,
+        "COG": 1,
+        "COK": 1,
+        "COL": 3,
+        "COM": 1,
+        "CPV": 1,
+        "CRI": 1,
+        "CUB": 1,
+        "CUW": 1,
+        "CYM": 1,
+        "CYN": 1,
+        "CYP": 1,
+        "CZE": 1,
+        "DEU": 1,
+        "DJI": 1,
+        "DMA": 1,
+        "DNK": 1,
+        "DOM": 1,
+        "DZA": 1,
+        "ECU": 2,
+        "EGY": 1,
+        "ERI": 1,
+        "ESP": 2,
+        "EST": 1,
+        "ETH": 1,
+        "FIN": 1,
+        "FJI": 1,
+        "FLK": 1,
+        "FRA": 2,
+        "FRO": 1,
+        "FSM": 1,
+        "GAB": 1,
+        "GBR": 4,
+        "GEO": 3,
+        "GHA": 1,
+        "GIB": 1,
+        "GIN": 1,
+        "GMB": 1,
+        "GNB": 1,
+        "GNQ": 1,
+        "GRC": 1,
+        "GRD": 1,
+        "GRL": 1,
+        "GTM": 1,
+        "GUM": 1,
+        "GUY": 1,
+        "HKG": 1,
+        "HND": 1,
+        "HRV": 1,
+        "HTI": 1,
+        "HUN": 1,
+        "IDN": 3,
+        "IMN": 1,
+        "IND": 7,
+        "IRL": 1,
+        "IRN": 2,
+        "IRQ": 1,
+        "ISL": 1,
+        "ISR": 2,
+        "ITA": 1,
+        "JAM": 1,
+        "JOR": 1,
+        "JPN": 5,
+        "KAZ": 1,
+        "KEN": 1,
+        "KGZ": 1,
+        "KHM": 1,
+        "KIR": 1,
+        "KNA": 1,
+        "KOR": 1,
+        "KOS": 1,
+        "KWT": 1,
+        "LAO": 1,
+        "LBN": 1,
+        "LBR": 1,
+        "LBY": 1,
+        "LCA": 1,
+        "LIE": 1,
+        "LKA": 2,
+        "LSO": 1,
+        "LTU": 1,
+        "LUX": 1,
+        "LVA": 1,
+        "MAC": 1,
+        "MAR": 3,
+        "MCO": 1,
+        "MDA": 1,
+        "MDG": 1,
+        "MDV": 1,
+        "MEX": 5,
+        "MHL": 1,
+        "MKD": 1,
+        "MLI": 1,
+        "MLT": 1,
+        "MMR": 2,
+        "MNE": 1,
+        "MNG": 1,
+        "MNP": 1,
+        "MOZ": 1,
+        "MRT": 1,
+        "MUS": 1,
+        "MWI": 1,
+        "MYS": 2,
+        "NAM": 1,
+        "NCL": 1,
+        "NER": 1,
+        "NGA": 2,
+        "NIC": 1,
+        "NIU": 1,
+        "NLD": 2,
+        "NOR": 3,
+        "NPL": 1,
+        "NZL": 4,
+        "OMN": 1,
+        "PAK": 3,
+        "PAN": 1,
+        "PER": 3,
+        "PHL": 3,
+        "PLW": 1,
+        "PNG": 1,
+        "POL": 1,
+        "PRI": 1,
+        "PRK": 1,
+        "PRT": 3,
+        "PRY": 1,
+        "PSX": 2,
+        "PYF": 1,
+        "QAT": 1,
+        "ROU": 1,
+        "RUS": 16,
+        "RWA": 1,
+        "SAH": 1,
+        "SAU": 1,
+        "SDN": 1,
+        "SEN": 1,
+        "SGP": 1,
+        "SGS": 1,
+        "SJM": 1,
+        "SLB": 1,
+        "SLE": 1,
+        "SLV": 1,
+        "SMR": 1,
+        "SOL": 1,
+        "SOM": 1,
+        "SRB": 2,
+        "SSD": 2,
+        "STP": 1,
+        "SUR": 1,
+        "SVK": 1,
+        "SVN": 1,
+        "SWE": 1,
+        "SWZ": 2,
+        "SYC": 1,
+        "SYR": 2,
+        "TCA": 1,
+        "TCD": 1,
+        "TGO": 1,
+        "THA": 1,
+        "TJK": 1,
+        "TKL": 1,
+        "TKM": 1,
+        "TLS": 1,
+        "TON": 1,
+        "TTO": 1,
+        "TUN": 1,
+        "TUR": 2,
+        "TUV": 1,
+        "TWN": 1,
+        "TZA": 2,
+        "UGA": 1,
+        "UKR": 1,
+        "URY": 1,
+        "USA": 17,
+        "UZB": 1,
+        "VAT": 1,
+        "VCT": 1,
+        "VEN": 2,
+        "VIR": 1,
+        "VNM": 2,
+        "VUT": 1,
+        "WSM": 1,
+        "YEM": 1,
+        "ZAF": 5,
+        "ZMB": 1,
+        "ZWE": 1
+      },
+      "gzip_delta_bytes": 3234,
+      "jsonl_delta_bytes": 42007,
+      "latitude_band_distribution": {
+        "30N-to-60N": 143,
+        "30S-to-equator": 60,
+        "60S-to-30S": 21,
+        "equator-to-30N": 130,
+        "north-of-60N": 19,
+        "south-of-60S": 11
+      },
+      "missing_capital_source_ids": [],
+      "missing_reference_cells": [
+        [
+          0,
+          10
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          5,
+          11
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          9,
+          0
+        ],
+        [
+          9,
+          11
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          8
+        ],
+        [
+          12,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          8
+        ],
+        [
+          13,
+          8
+        ],
+        [
+          14,
+          8
+        ],
+        [
+          15,
+          7
+        ],
+        [
+          16,
+          0
+        ],
+        [
+          17,
+          9
+        ],
+        [
+          18,
+          5
+        ],
+        [
+          18,
+          11
+        ],
+        [
+          19,
+          3
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          20,
+          2
+        ],
+        [
+          20,
+          3
+        ],
+        [
+          21,
+          1
+        ],
+        [
+          21,
+          3
+        ],
+        [
+          21,
+          4
+        ],
+        [
+          21,
+          11
+        ],
+        [
+          22,
+          0
+        ],
+        [
+          22,
+          4
+        ],
+        [
+          22,
+          10
+        ]
+      ],
+      "missing_role_source_ids": [],
+      "payload_comparison_note": "Both emitted sets include source_role_review metadata; delta includes added records and additional provenance reasons for existing source-role candidates.",
+      "raw_country_layer_codes_without_selected_settlement": [
+        "AIA",
+        "ATC",
+        "ATF",
+        "BJN",
+        "BLM",
+        "BRI",
+        "BRT",
+        "CLP",
+        "CNM",
+        "CSI",
+        "ESB",
+        "GGY",
+        "HMD",
+        "IOA",
+        "IOT",
+        "JEY",
+        "KAB",
+        "KAS",
+        "MAF",
+        "MSR",
+        "NFK",
+        "NRU",
+        "PCN",
+        "PGA",
+        "SCR",
+        "SDS",
+        "SER",
+        "SHN",
+        "SPI",
+        "SPM",
+        "SXM",
+        "UMI",
+        "USG",
+        "VGB",
+        "WLF",
+        "WSB"
+      ],
+      "raw_source_codes_without_any_settlement": [
+        "AIA",
+        "ATC",
+        "ATF",
+        "BJN",
+        "BLM",
+        "BRI",
+        "BRT",
+        "CLP",
+        "CNM",
+        "CSI",
+        "ESB",
+        "GGY",
+        "HMD",
+        "IOA",
+        "IOT",
+        "JEY",
+        "KAB",
+        "KAS",
+        "MAF",
+        "MSR",
+        "NFK",
+        "NRU",
+        "PCN",
+        "PGA",
+        "SCR",
+        "SDS",
+        "SER",
+        "SHN",
+        "SPI",
+        "SPM",
+        "SXM",
+        "UMI",
+        "USG",
+        "VGB",
+        "WLF",
+        "WSB"
+      ],
+      "records": 384,
+      "reference_15deg_equal_area_occupied_cells": 183,
+      "represented_reference_cells": 154,
+      "required_small_country_codes": {
+        "AND": 1,
+        "KIR": 1,
+        "LIE": 1,
+        "MCO": 1,
+        "MDV": 1,
+        "SMR": 1,
+        "TUV": 1,
+        "VAT": 1
+      },
+      "resident_payload_scenario": {
+        "basis": "Illustrative 32-byte fixed record plus NUL-terminated exact default UTF-8 name; not a decoder, allocator measurement, approved format or total runtime RAM.",
+        "default_utf8_name_bytes": 3492,
+        "record_bytes": 12288,
+        "total_bytes": 15780
+      },
+      "selected_alternate_capital_flag_records": 16,
+      "selected_national_capital_flag_records": 200,
+      "source_capital_records": 214,
+      "source_settlement_distance": {
+        "basis": "Nearest selected settlement for every source settlement; not land/ocean coverage.",
+        "largest_gaps": [
+          {
+            "km": 1721.481,
+            "name": "Chelyuskin",
+            "source_id": "1159138091"
+          },
+          {
+            "km": 1627.67,
+            "name": "Mikhaylova",
+            "source_id": "1159146653"
+          },
+          {
+            "km": 1509.364,
+            "name": "Zemlya Bunge",
+            "source_id": "1159129049"
+          },
+          {
+            "km": 1458.556,
+            "name": "Atka",
+            "source_id": "1159133975"
+          },
+          {
+            "km": 1394.496,
+            "name": "Alert",
+            "source_id": "1159148877"
+          },
+          {
+            "km": 1393.072,
+            "name": "Dikson",
+            "source_id": "1159150735"
+          },
+          {
+            "km": 1379.084,
+            "name": "Cloncurry",
+            "source_id": "1159147825"
+          },
+          {
+            "km": 1370.513,
+            "name": "Kaltukatjara",
+            "source_id": "1159145327"
+          },
+          {
+            "km": 1364.11,
+            "name": "Amundsen–Scott South Pole Station",
+            "source_id": "1159146123"
+          },
+          {
+            "km": 1360.294,
+            "name": "Shalaurova",
+            "source_id": "1159138137"
+          }
+        ],
+        "median_km": 238.356,
+        "p95_km": 711.862
+      }
+    },
+    "standard": {
+      "actual_jsonl": {
+        "gzip_bytes": 372449,
+        "gzip_sha256": "e8cb8048e69baa855aee107adbf97b7540f9c136219391f208db2352c4860e92",
+        "jsonl_bytes": 4442747,
+        "path": "standard-role-review.jsonl",
+        "records": 1371,
+        "sha256": "77ff78398444e58cae95c86dc722e7bf424829d3cf4d5a9cc2748aca92c13e80"
+      },
+      "added_source_role_candidates": [
+        {
+          "coordinate": [
+            35.2062094,
+            31.9029448
+          ],
+          "country_source_code": "PSX",
+          "name": "Ramallah",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159121947"
+        },
+        {
+          "coordinate": [
+            19.8499406,
+            45.2503762
+          ],
+          "country_source_code": "SRB",
+          "name": "Novi Sad",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159144059"
+        },
+        {
+          "coordinate": [
+            17.1799743,
+            44.7804049
+          ],
+          "country_source_code": "BIH",
+          "name": "Banja Luka",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159145889"
+        },
+        {
+          "coordinate": [
+            -3.2190906,
+            55.9483279
+          ],
+          "country_source_code": "GBR",
+          "name": "Edinburgh",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159146365"
+        },
+        {
+          "coordinate": [
+            -3.1675981955277295,
+            51.48261904913091
+          ],
+          "country_source_code": "GBR",
+          "name": "Cardiff",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159146373"
+        },
+        {
+          "coordinate": [
+            41.6300065,
+            41.6000047
+          ],
+          "country_source_code": "GEO",
+          "name": "Batumi",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159147265"
+        },
+        {
+          "coordinate": [
+            -16.8800397,
+            32.6499825
+          ],
+          "country_source_code": "PRT",
+          "name": "Funchal",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159147945"
+        },
+        {
+          "coordinate": [
+            41.0200179,
+            43.0200214
+          ],
+          "country_source_code": "GEO",
+          "name": "Sukhumi",
+          "source_classification": "Admin-0 region capital",
+          "source_id": "1159148621"
+        },
+        {
+          "coordinate": [
+            31.5800256,
+            4.8299752
+          ],
+          "country_source_code": "SSD",
+          "name": "Juba",
+          "source_classification": "Admin-0 capital",
+          "source_id": "1159149449"
+        }
+      ],
+      "adm0_source_codes": 225,
+      "base_actual_jsonl": {
+        "gzip_bytes": 369373,
+        "gzip_sha256": "ac79b92402d6832cd2c64e5f24bca57950d00f129cfe54f9a0f3fb39c61d1273",
+        "jsonl_bytes": 4407348,
+        "path": "standard-base-role-schema.jsonl",
+        "records": 1362,
+        "sha256": "2595d9660a05737a4d2207318a313dbd11c98a87f1fa78a17fba84790606f2ea"
+      },
+      "base_retained_records": 1362,
+      "base_selected_records": 1362,
+      "broader_role_roster_records": 244,
+      "country_distribution": {
+        "ABW": 1,
+        "AFG": 7,
+        "AGO": 11,
+        "ALB": 1,
+        "ALD": 1,
+        "AND": 1,
+        "ARE": 2,
+        "ARG": 25,
+        "ARM": 1,
+        "ASM": 1,
+        "ATA": 24,
+        "ATG": 1,
+        "AUS": 22,
+        "AUT": 1,
+        "AZE": 1,
+        "BDI": 1,
+        "BEL": 2,
+        "BEN": 3,
+        "BFA": 2,
+        "BGD": 4,
+        "BGR": 2,
+        "BHR": 1,
+        "BHS": 1,
+        "BIH": 2,
+        "BLR": 4,
+        "BLZ": 1,
+        "BMU": 1,
+        "BOL": 9,
+        "BRA": 34,
+        "BRB": 1,
+        "BRN": 1,
+        "BTN": 1,
+        "BWA": 4,
+        "CAF": 7,
+        "CAN": 29,
+        "CHE": 3,
+        "CHL": 16,
+        "CHN": 50,
+        "CIV": 5,
+        "CMR": 6,
+        "COD": 16,
+        "COG": 3,
+        "COK": 1,
+        "COL": 16,
+        "COM": 1,
+        "CPV": 1,
+        "CRI": 2,
+        "CUB": 7,
+        "CUW": 1,
+        "CYM": 1,
+        "CYN": 1,
+        "CYP": 1,
+        "CZE": 2,
+        "DEU": 11,
+        "DJI": 1,
+        "DMA": 1,
+        "DNK": 1,
+        "DOM": 3,
+        "DZA": 14,
+        "ECU": 8,
+        "EGY": 10,
+        "ERI": 2,
+        "ESP": 13,
+        "EST": 3,
+        "ETH": 9,
+        "FIN": 5,
+        "FJI": 1,
+        "FLK": 1,
+        "FRA": 17,
+        "FRO": 1,
+        "FSM": 1,
+        "GAB": 4,
+        "GBR": 7,
+        "GEO": 3,
+        "GHA": 3,
+        "GIB": 1,
+        "GIN": 6,
+        "GMB": 1,
+        "GNB": 1,
+        "GNQ": 2,
+        "GRC": 6,
+        "GRD": 1,
+        "GRL": 4,
+        "GTM": 3,
+        "GUM": 1,
+        "GUY": 1,
+        "HKG": 1,
+        "HND": 3,
+        "HRV": 1,
+        "HTI": 2,
+        "HUN": 2,
+        "IDN": 25,
+        "IMN": 1,
+        "IND": 36,
+        "IRL": 3,
+        "IRN": 21,
+        "IRQ": 7,
+        "ISL": 4,
+        "ISR": 2,
+        "ITA": 9,
+        "JAM": 2,
+        "JOR": 1,
+        "JPN": 22,
+        "KAZ": 17,
+        "KEN": 4,
+        "KGZ": 2,
+        "KHM": 3,
+        "KIR": 1,
+        "KNA": 1,
+        "KOR": 8,
+        "KOS": 1,
+        "KWT": 1,
+        "LAO": 2,
+        "LBN": 2,
+        "LBR": 4,
+        "LBY": 9,
+        "LCA": 1,
+        "LIE": 1,
+        "LKA": 5,
+        "LSO": 2,
+        "LTU": 1,
+        "LUX": 1,
+        "LVA": 1,
+        "MAC": 1,
+        "MAR": 11,
+        "MCO": 1,
+        "MDA": 1,
+        "MDG": 6,
+        "MDV": 1,
+        "MEX": 29,
+        "MHL": 1,
+        "MKD": 1,
+        "MLI": 8,
+        "MLT": 1,
+        "MMR": 7,
+        "MNE": 1,
+        "MNG": 16,
+        "MNP": 1,
+        "MOZ": 11,
+        "MRT": 8,
+        "MUS": 1,
+        "MWI": 4,
+        "MYS": 11,
+        "NAM": 7,
+        "NCL": 1,
+        "NER": 6,
+        "NGA": 15,
+        "NIC": 4,
+        "NIU": 1,
+        "NLD": 3,
+        "NOR": 11,
+        "NPL": 1,
+        "NZL": 15,
+        "OMN": 1,
+        "PAK": 7,
+        "PAN": 3,
+        "PER": 20,
+        "PHL": 6,
+        "PLW": 1,
+        "PNG": 8,
+        "POL": 5,
+        "PRI": 1,
+        "PRK": 6,
+        "PRT": 4,
+        "PRY": 4,
+        "PSX": 2,
+        "PYF": 1,
+        "QAT": 1,
+        "ROU": 7,
+        "RUS": 89,
+        "RWA": 1,
+        "SAH": 1,
+        "SAU": 7,
+        "SDN": 14,
+        "SEN": 4,
+        "SGP": 1,
+        "SGS": 1,
+        "SJM": 1,
+        "SLB": 1,
+        "SLE": 2,
+        "SLV": 1,
+        "SMR": 1,
+        "SOL": 1,
+        "SOM": 8,
+        "SRB": 2,
+        "SSD": 7,
+        "STP": 1,
+        "SUR": 1,
+        "SVK": 1,
+        "SVN": 1,
+        "SWE": 11,
+        "SWZ": 2,
+        "SYC": 1,
+        "SYR": 4,
+        "TCA": 1,
+        "TCD": 8,
+        "TGO": 2,
+        "THA": 10,
+        "TJK": 3,
+        "TKL": 1,
+        "TKM": 5,
+        "TLS": 1,
+        "TON": 1,
+        "TTO": 1,
+        "TUN": 2,
+        "TUR": 17,
+        "TUV": 1,
+        "TWN": 10,
+        "TZA": 11,
+        "UGA": 3,
+        "UKR": 9,
+        "URY": 6,
+        "USA": 87,
+        "UZB": 9,
+        "VAT": 1,
+        "VCT": 1,
+        "VEN": 13,
+        "VIR": 1,
+        "VNM": 14,
+        "VUT": 1,
+        "WSM": 1,
+        "YEM": 6,
+        "ZAF": 12,
+        "ZMB": 5,
+        "ZWE": 4
+      },
+      "gzip_delta_bytes": 3076,
+      "jsonl_delta_bytes": 35399,
+      "latitude_band_distribution": {
+        "30N-to-60N": 536,
+        "30S-to-equator": 240,
+        "60S-to-30S": 68,
+        "equator-to-30N": 441,
+        "north-of-60N": 62,
+        "south-of-60S": 24
+      },
+      "missing_capital_source_ids": [],
+      "missing_reference_cells": [
+        [
+          22,
+          4
+        ]
+      ],
+      "missing_role_source_ids": [],
+      "payload_comparison_note": "Both emitted sets include source_role_review metadata; delta includes added records and additional provenance reasons for existing source-role candidates.",
+      "raw_country_layer_codes_without_selected_settlement": [
+        "AIA",
+        "ATC",
+        "ATF",
+        "BJN",
+        "BLM",
+        "BRI",
+        "BRT",
+        "CLP",
+        "CNM",
+        "CSI",
+        "ESB",
+        "GGY",
+        "HMD",
+        "IOA",
+        "IOT",
+        "JEY",
+        "KAB",
+        "KAS",
+        "MAF",
+        "MSR",
+        "NFK",
+        "NRU",
+        "PCN",
+        "PGA",
+        "SCR",
+        "SDS",
+        "SER",
+        "SHN",
+        "SPI",
+        "SPM",
+        "SXM",
+        "UMI",
+        "USG",
+        "VGB",
+        "WLF",
+        "WSB"
+      ],
+      "raw_source_codes_without_any_settlement": [
+        "AIA",
+        "ATC",
+        "ATF",
+        "BJN",
+        "BLM",
+        "BRI",
+        "BRT",
+        "CLP",
+        "CNM",
+        "CSI",
+        "ESB",
+        "GGY",
+        "HMD",
+        "IOA",
+        "IOT",
+        "JEY",
+        "KAB",
+        "KAS",
+        "MAF",
+        "MSR",
+        "NFK",
+        "NRU",
+        "PCN",
+        "PGA",
+        "SCR",
+        "SDS",
+        "SER",
+        "SHN",
+        "SPI",
+        "SPM",
+        "SXM",
+        "UMI",
+        "USG",
+        "VGB",
+        "WLF",
+        "WSB"
+      ],
+      "records": 1371,
+      "reference_15deg_equal_area_occupied_cells": 183,
+      "represented_reference_cells": 182,
+      "required_small_country_codes": {
+        "AND": 1,
+        "KIR": 1,
+        "LIE": 1,
+        "MCO": 1,
+        "MDV": 1,
+        "SMR": 1,
+        "TUV": 1,
+        "VAT": 1
+      },
+      "resident_payload_scenario": {
+        "basis": "Illustrative 32-byte fixed record plus NUL-terminated exact default UTF-8 name; not a decoder, allocator measurement, approved format or total runtime RAM.",
+        "default_utf8_name_bytes": 12413,
+        "record_bytes": 43872,
+        "total_bytes": 56285
+      },
+      "selected_alternate_capital_flag_records": 16,
+      "selected_national_capital_flag_records": 200,
+      "source_capital_records": 214,
+      "source_settlement_distance": {
+        "basis": "Nearest selected settlement for every source settlement; not land/ocean coverage.",
+        "largest_gaps": [
+          {
+            "km": 941.671,
+            "name": "Raoul Island Station",
+            "source_id": "1159151743"
+          },
+          {
+            "km": 792.062,
+            "name": "Onslow",
+            "source_id": "1159147741"
+          },
+          {
+            "km": 761.582,
+            "name": "Exmouth",
+            "source_id": "1159147743"
+          },
+          {
+            "km": 740.616,
+            "name": "Pannawonica",
+            "source_id": "1159145263"
+          },
+          {
+            "km": 725.958,
+            "name": "Eastmain",
+            "source_id": "1159131543"
+          },
+          {
+            "km": 725.312,
+            "name": "Nyukzha",
+            "source_id": "1159138117"
+          },
+          {
+            "km": 724.759,
+            "name": "Manokwari",
+            "source_id": "1159148503"
+          },
+          {
+            "km": 720.371,
+            "name": "Uummannaq",
+            "source_id": "1159149095"
+          },
+          {
+            "km": 708.913,
+            "name": "Cambridge Bay",
+            "source_id": "1159150243"
+          },
+          {
+            "km": 700.913,
+            "name": "Tukchi",
+            "source_id": "1159138191"
+          }
+        ],
+        "median_km": 97.734,
+        "p95_km": 351.98
+      }
+    }
+  },
+  "limits": [
+    "Class-only candidates include Juba, Yangon and Johannesburg. Inclusion does not resolve their current/historical/misclassified roles.",
+    "Regional/territory Admin-0 roles remain source-attributed; they are not promoted to sovereign-state capitals.",
+    "No source field or capital flag is repaired and no existing candidate is dropped.",
+    "Catalog inclusion is distinct from visible symbols, labels, font choice and current-capital editorial decisions."
+  ],
+  "schema": 1,
+  "source_sha256": {
+    "ne_10m_admin_0_countries": "ce1ac7036499a0edd641fbc093cd209a98f96a49d2eca8480aaacad35138a7f6",
+    "ne_10m_populated_places": "cd149186f03d2603e0410da399b980a4357d0ac32d3a2305a49ed3dffcc41d7b"
+  },
+  "status": "additive inclusion experiment; no approved recipe/visibility/capital-policy change"
+}
