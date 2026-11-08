@@ -101,3 +101,11 @@ The repeated memory probe on the integrated code records atlas scene heap **241,
 two allocations rather than baseline 249,697 in four; Claude's committed rendering simplification
 removed the old line-chunk workspace. Other measured layer figures are unchanged. Both snapshots
 are retained with their distinct bases; atlas research did not make that runtime change.
+
+The final integration through local main **db07dab** includes Claude's new looks-palette test:
+**50 registered, 50 executed, 50 passed**, serial host run 60.54 seconds. The final no-X11
+configuration registers **40**, and tests-disabled remains **0**; configuration-only cases were
+not executed. `verification.json` records this final result rather than overwriting the initial
+49-test baseline evidence. The eight isolated research tests, 75 full-source semantic diagnostics
+(69 pass, six geometry-ID-reuse warnings, no failures), policy check and two byte-identical complete
+edition builds also pass. No test was disabled to obtain the result.

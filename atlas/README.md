@@ -52,3 +52,7 @@ diff -qr /tmp/globe-atlas-output /tmp/globe-atlas-output-repeat
 `reports/*.json` are reviewable snapshots from these commands. Generated full catalogs and geometry
 are deliberately outside Git. The source reader handles only the pinned SHP/DBF subset; it is not
 a general GIS library, topology validator or hardened parser for arbitrary untrusted archives.
+
+For this session, verified archives and the generated edition outputs are also retained in the
+owner's ignored `build-atlas-research/sources/` and `build-atlas-research/editions/` directories.
+These are local research artifacts, not published releases or installed runtime resources.

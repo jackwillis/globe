@@ -195,9 +195,9 @@ with the same existing relief levels. **No finer raster was generated.**
 
 | Candidate | Country geometries | Rivers / lakes | JSONL layer bytes | Independent gzip bytes | Estimated resident payload |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Compact | 177 | 62 / 44 | 2,700,988 | 462,178 | 4,779,162 |
-| Standard | 242 | 255 / 308 | 9,866,286 | 2,272,812 | 25,373,551 |
-| Expanded | 258 | 1,473 / 1,355 | 54,977,435 | 13,747,570 | 65,864,849 |
+| Compact | 177 | 62 / 44 | 2,700,988 | 462,178 | 4,782,769 |
+| Standard | 242 | 255 / 308 | 9,866,286 | 2,272,812 | 25,377,158 |
+| Expanded | 258 | 1,473 / 1,355 | 54,977,435 | 13,747,570 | 65,868,456 |
 
 JSONL/gzip sizes are measured generated **research outputs**, including rich multilingual build-time
 metadata, and exclude existing raster bytes. They are not proposed shipping pack sizes or memory

@@ -162,7 +162,7 @@
       }
     },
     "memory_estimate": {
-      "atlas_resident_payload_bytes": 4779162,
+      "atlas_resident_payload_bytes": 4782769,
       "basis": "analytical fixed-width typed payload plus current terrain formula; NOT memory of JSON parser or measured G4 allocations",
       "excludes": "framebuffers, scene caps/indexes, per-job geometry, label layout, glyphs, allocator/container overhead, Python/JSON objects and OS memory",
       "mandatory_identity_point_payload_bytes": 30997,
@@ -424,9 +424,9 @@
     "schema": 1,
     "source_lock_sha256": "a54340daf6c2927a56ffd8c382197536a599df708942b41d6cd5f50bcd4bd903",
     "tool_sha256": {
-      "audit.py": "ecab2f15310a9d00564b0ba7d82e7ffe9d396c0a9177b636a4f913c10bae31e1",
+      "audit.py": "5193f6370819414d24f3070609ced272bf1b50aa7af5d2de7769ac62ed3af77c",
       "baseline.py": "cfe320be34efdbcb2fabaaf6016da12af61ce6b5dafcfaed6b75e3ab07dc836c",
-      "sources.py": "8ec23fb330057612c8f4e836a518f75cd0e045b85a00ecbc96f182006f762406"
+      "sources.py": "c6ecfdbf28db4378f347845ea1ccf895bf449ff3103b9af01e71c7de4c14968c"
     }
   },
   "expanded": {
@@ -615,7 +615,7 @@
       }
     },
     "memory_estimate": {
-      "atlas_resident_payload_bytes": 65864849,
+      "atlas_resident_payload_bytes": 65868456,
       "basis": "analytical fixed-width typed payload plus current terrain formula; NOT memory of JSON parser or measured G4 allocations",
       "excludes": "framebuffers, scene caps/indexes, per-job geometry, label layout, glyphs, allocator/container overhead, Python/JSON objects and OS memory",
       "mandatory_identity_point_payload_bytes": 366443,
@@ -888,9 +888,9 @@
     "schema": 1,
     "source_lock_sha256": "a54340daf6c2927a56ffd8c382197536a599df708942b41d6cd5f50bcd4bd903",
     "tool_sha256": {
-      "audit.py": "ecab2f15310a9d00564b0ba7d82e7ffe9d396c0a9177b636a4f913c10bae31e1",
+      "audit.py": "5193f6370819414d24f3070609ced272bf1b50aa7af5d2de7769ac62ed3af77c",
       "baseline.py": "cfe320be34efdbcb2fabaaf6016da12af61ce6b5dafcfaed6b75e3ab07dc836c",
-      "sources.py": "8ec23fb330057612c8f4e836a518f75cd0e045b85a00ecbc96f182006f762406"
+      "sources.py": "c6ecfdbf28db4378f347845ea1ccf895bf449ff3103b9af01e71c7de4c14968c"
     }
   },
   "standard": {
@@ -1079,7 +1079,7 @@
       }
     },
     "memory_estimate": {
-      "atlas_resident_payload_bytes": 25373551,
+      "atlas_resident_payload_bytes": 25377158,
       "basis": "analytical fixed-width typed payload plus current terrain formula; NOT memory of JSON parser or measured G4 allocations",
       "excludes": "framebuffers, scene caps/indexes, per-job geometry, label layout, glyphs, allocator/container overhead, Python/JSON objects and OS memory",
       "mandatory_identity_point_payload_bytes": 78393,
@@ -1342,9 +1342,9 @@
     "schema": 1,
     "source_lock_sha256": "a54340daf6c2927a56ffd8c382197536a599df708942b41d6cd5f50bcd4bd903",
     "tool_sha256": {
-      "audit.py": "ecab2f15310a9d00564b0ba7d82e7ffe9d396c0a9177b636a4f913c10bae31e1",
+      "audit.py": "5193f6370819414d24f3070609ced272bf1b50aa7af5d2de7769ac62ed3af77c",
       "baseline.py": "cfe320be34efdbcb2fabaaf6016da12af61ce6b5dafcfaed6b75e3ab07dc836c",
-      "sources.py": "8ec23fb330057612c8f4e836a518f75cd0e045b85a00ecbc96f182006f762406"
+      "sources.py": "c6ecfdbf28db4378f347845ea1ccf895bf449ff3103b9af01e71c7de4c14968c"
     }
   }
 }

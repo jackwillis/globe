@@ -254,7 +254,7 @@ def main(cache, output):
         point_estimate=40*len(place_records)+sum(len((r.get('source_ascii_name') or r['names'][0]['value']).encode('utf-8')) for r in place_records)
         identity_estimate=40*len(political)+sum(len(r['name'].encode('utf-8')) for r in political)
         vector_resident=sum(layer.get('memory_estimate',{}).get('persistent_with_unit_vectors_bytes',0) for layer in layers.values())
-        total=vector_resident+terrain+terrain_packed+64800+point_estimate+identity_estimate
+        total=vector_resident+terrain+terrain_packed+baseline['landclasses-1deg.ggrd']['packed_bytes']+64800+point_estimate+identity_estimate
         flat_records=[{'layer':name,'record':json.loads(line)} for name in sorted(layers) for line in (folder/(name+'.jsonl')).read_bytes().splitlines()]
         mono=emit_layer(folder,'monolithic',flat_records)
         manifest={'schema':1,'edition':edition,'recipe':recipe,'source_lock_sha256':hashlib.sha256((ATLAS/'sources.lock.json').read_bytes()).hexdigest(),

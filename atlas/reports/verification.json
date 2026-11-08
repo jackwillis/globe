@@ -5,14 +5,14 @@
   "zlib_runtime": "1.3.1.zlib-ng",
   "compiler": "c++ (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)",
   "audit_original_base": "886d126",
-  "integrated_main_base": "ce54d39",
+  "integrated_main_base": "db07dab",
   "sanitizers": false,
   "host_suite": {
-    "registered": 49,
-    "executed": 49,
-    "passed": 49,
+    "registered": 50,
+    "executed": 50,
+    "passed": 50,
     "failed": 0,
-    "serial_seconds": 60.24,
+    "serial_seconds": 60.54,
     "command": "ctest --test-dir build --output-on-failure -j 1",
     "test_names": [
       "line_layer",
@@ -43,6 +43,7 @@
       "daynight",
       "measure",
       "overlays",
+      "looks",
       "pixel_format",
       "frame_stats",
       "cli",
@@ -71,7 +72,7 @@
       "options": [
         "-DCMAKE_DISABLE_FIND_PACKAGE_X11=TRUE"
       ],
-      "registered": 39,
+      "registered": 40,
       "executed": 0
     },
     {
@@ -102,5 +103,9 @@
     "host only; no G4 access",
     "allocation probe counts requested heap payload, not RSS or allocator overhead",
     "candidate edition resident/peak figures are estimates, not actual JSON decoder allocations"
-  ]
+  ],
+  "policy_check": {
+    "command": "sh tools/check-policy.sh",
+    "result": "pass"
+  }
 }
