@@ -160,6 +160,62 @@ does not choose between them, but the other findings still apply:
 - **Capital weight is not enough.** 10 px bold against 9 px regular is barely different. Use a marker.
 - **Rough 1-bit text** from an outline at 9 to 11 px is why installed bitmap sizes (E1) matter.
 
+## Technical comparison (host-side experiment)
+
+Option fonts are not Globe's decision: **system fonts stay primary** (owner, 2026-11-07). This section
+measures the alternatives so the fallback is known. Code is in `tools/typography-experiments/`
+(host-only, not in CMake; it downloads libschrift and FreeType and commits neither).
+
+**Method and limits.** x86-64 Linux host, gcc `-Os`, stripped, one run each, 200 repeats over seven
+labels (81 glyphs, with diacritics). Stand-in fonts are URW P052 and Nimbus Sans, not Helvetica or
+Palatino. **These are not PowerPC figures and say nothing about G4 speed.** Treat them as relative
+cost and as memory and size shape only.
+
+| Option | Binary added (stripped) | Library heap peak (11 px) | Allocs per pass | us per label (host) | Font data shipped |
+| --- | --- | --- | --- | --- | --- |
+| Base (empty program) | 14,336 B | - | - | - | - |
+| QuickDraw system fonts | none | none in Globe | none | not measured (needs G4) | none |
+| A. libschrift runtime | +8.4 KB | about 45 KB (265,606 to 280,230 B including the 220 KB font file the test loads) | 304 | 22 to 37 | the font file |
+| B. FreeType runtime, TrueType + smooth + mono, hinted | +209 KB | about 40 KB (40,069 B hinted; about 10 KB unhinted) | 161 hinted, 80 unhinted | 16 to 69 | the font file |
+| B'. as B plus autofit | +287 KB | about 29 KB (hint-less light mode) | 334 | 38 to 62 | the font file |
+| C. build-time glyph pack, 1 bpp, 319 glyphs at 11 px | tiny reader | about 5.9 KB (2,716 B bitmaps + 3,190 B index) | 0 | not measured | the pack |
+
+Pack size per face and size: 1 bpp 2.2 to 3.8 KB, 8 bpp 9.5 to 20.6 KB, plus a 3.2 KB metrics index
+(repertoire: ASCII, Latin-1, Latin Extended-A). Two faces at three sizes would be roughly 35 KB at
+1 bpp or 150 KB at 8 bpp.
+
+![Renderer comparison](images/labels-renderers-3x.png)
+
+*P052 at 11 px: libschrift, FreeType hinted, light, 1-bit hinted and unhinted. Mono hinting gives
+uneven letter spacing; unhinted and light are the most even.*
+
+What this shows:
+- libschrift is far smaller than FreeType in code and similar in speed on the host, but it has no
+  hinting, and it has no 1-bit mode.
+- Neither runtime option avoids shipping font data. That is the licensing problem, not the code size.
+- FreeType hinting costs about 2x on the host and helps little at 9 to 13 px in these samples.
+- A pack is the cheapest at run time but is derived font data, so it needs the licence for the source
+  font. With an open source font only, it would not be Helvetica or Palatino.
+
+## Licensing of the options (from licence texts, not legal advice)
+
+- libschrift: ISC. FreeType: FreeType Licence (BSD-like with a credit clause, compatible with GPLv3
+  but not GPLv2) or GPLv2-or-later. Both are compatible with a GPL-3.0-or-later program.
+- Fonts: see Licensing above. Apple's own licence was not read; URW and GUST compatibility with
+  GPL-3.0-or-later is not verified.
+- Any runtime or pack that shipped Apple Helvetica or Palatino data is ruled out; nothing here does.
+
+## Recommendation
+
+1. **System fonts first** on both platforms. No bundled font data, no renderer dependency.
+2. **Do not add libschrift or FreeType now.** If the owner later wants identical pixels, libschrift is
+   the smaller step, and only with an open font (URW or TeX Gyre) after the licence check.
+3. **Smallest useful #36 experiment:** a placement function with a text-measure interface, tested
+   with fake widths and a layout golden, plus one QuickDraw label drawn over the shown frame on the G4
+   for E1/E3/E6. Needs the owner's authorization for the hardware part.
+4. Open questions: Mac Roman coverage of the names; real Helvetica/Palatino sizes on bare OS 9;
+   draw path; whether the Unix stack should match.
+
 ## Practical constraints
 
 - Turn budget: labels must fit the per-turn budget (under 20 ms on bare OS 9).
