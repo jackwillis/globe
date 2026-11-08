@@ -6,7 +6,7 @@
 
 - **Keep Elm-style `Model / Msg / update / Effects`.** Application decisions remain deterministic; small Model state changes in `update()`. Published geographic input and per-job view plans are logically immutable, while framebuffers and rendering workspaces remain mutable.
 - **Offline-first, no maintainer-operated services.** A bundled atlas remains fully usable without downloads. Optional fetching awaits vetted hosts, provenance, resource safety and consent.
-- **v0.1 does not wait for speculative architecture work.** Hardware acceptance, complete CI verification, requirements, attribution and floppy packaging are release priorities.
+- **v0.1 does not wait for speculative architecture work.** Hardware acceptance, complete CI verification, requirements, attribution and release packaging (StuffIt archive, MacBinary, disk image) are release priorities.
 - **Progressive computation is a core technique; presentation is a UX hypothesis.** Compare current expressive reveal, minimal-delay and adaptive variants with representative users and on the real G4. Do not impose theatrical delays or weaken accessibility.
 - **Evidence before optimization:** match view/style/hardware; measure input responsiveness, worst continuation, first useful frame, total completion, copy/upload cost and pixel correctness.
 - **Safety:** honor [agent handoff](handoff.md) for protected machines, worktrees and release authorization. The tracker authorizes planning, not unattended device access or publication.
@@ -17,11 +17,17 @@ These are the three GitHub milestones (v0.1, v0.2, v0.3), created without due da
 
 | Planned milestone | Outcome | Practical gate |
 | --- | --- | --- |
-| **v0.1 — The Floppy Atlas** | A functioning, documented offline Classic Mac application | Native OS 9 acceptance, CI, verified minimum memory, essential Mac polish, fork-preserving release |
+| **v0.1 — The Classic Atlas** | A functioning, documented offline Classic Mac application | Native OS 9 acceptance, CI, verified minimum memory, essential Mac polish, fork-preserving release |
 | **v0.2 — The Expressive Atlas** | Polished exploration and maintainable rendering | Persona-informed progressive UX, visual stability, accessible settings if justified, smaller coordinator/phase refactors, useful layers/search |
 | **v0.3 — The Expandable Atlas** | Safe optional richer geographic data | Resource lifecycle, bounded imports/cache, supported third-party acquisition, conditional regional LOD |
 
 No due dates or fixed feature commitments have been set.
+
+### Editions and distribution (owner decision, 2026-11-07)
+
+- **The 1.44 MB floppy edition is paused.** It stays buildable and its build target stays in CI, but it is no longer a release target and size squeezing stops. Its first bare OS 9 run (2026-11-07) remains the performance baseline.
+- **Distribution is digital first:** a StuffIt archive as the headline download, with the MacBinary file and a raw HFS disk image as fallbacks ([#47](https://github.com/jackwillis/globe/issues/47), [#12](https://github.com/jackwillis/globe/issues/12)). Physical media (CD-R, floppy) come later and are optional.
+- **A larger edition ships as an application plus a data folder**, laid out like a CD and published as a disk image first: external data packs on Classic Mac OS ([#48](https://github.com/jackwillis/globe/issues/48)), running from a read-only volume ([#49](https://github.com/jackwillis/globe/issues/49)), the full-edition data ([#50](https://github.com/jackwillis/globe/issues/50)) and the volume layout ([#51](https://github.com/jackwillis/globe/issues/51)).
 
 ## Epics (parent tracking issues)
 
@@ -53,7 +59,7 @@ help overlay (#40), and the atlas features: text foundation (#36), pointer reado
 2. [#8 — Native OS 9 hardware acceptance](https://github.com/jackwillis/globe/issues/8): the first run on real OS 9 was recorded on 2026-11-07 ([os9-proof.md](os9-proof.md)); cursors, resizing, exposure and idle behaviour are still unchecked.
 3. [#9 — Real G4 X11 and 0.5° benchmarks](https://github.com/jackwillis/globe/issues/9) and [#10 — OS 9 memory requirements](https://github.com/jackwillis/globe/issues/10).
 4. [#13 — Precise invalidation](https://github.com/jackwillis/globe/issues/13) and [#14 — Presentation lifecycle regression tests](https://github.com/jackwillis/globe/issues/14) as narrowly scoped v0.1 improvements if warranted.
-5. [#11 — Classic Mac UI polish](https://github.com/jackwillis/globe/issues/11), then [#12 — v0.1 floppy release](https://github.com/jackwillis/globe/issues/12) after verification gates.
+5. [#11 — Classic Mac UI polish](https://github.com/jackwillis/globe/issues/11), [#47 — Release packaging](https://github.com/jackwillis/globe/issues/47), then [#12 — v0.1 release](https://github.com/jackwillis/globe/issues/12) after verification gates.
 
 ## UX and architecture after the initial release
 

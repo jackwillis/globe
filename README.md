@@ -67,7 +67,11 @@ toolbar. Exposing or moving a window resends cached pixels. The graticule hides 
   [toolbar](docs/toolbar.md), [countries](docs/country-format.md), [places](docs/place-format.md).
 - `tools/build-edition.sh floppy`: classic PowerPC OS 9 application with atlas and one-degree
   elevation; no toolbar or place cards in this proof of life. It emits a MacBinary application,
-  a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md).
+  a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md). **Paused since
+  2026-11-07:** it still builds and is checked in CI, but releases are digital first (a StuffIt
+  archive, a MacBinary file and a disk image), and the next edition is an application plus a data
+  folder of packs ([#47](https://github.com/jackwillis/globe/issues/47),
+  [#48](https://github.com/jackwillis/globe/issues/48)).
 
 Both use the same portable core and strict pack formats. Terrain is currently raw embedded v1
 data; [compression has been measured](docs/perf/compression.md), with runtime adoption still open.
