@@ -18,8 +18,14 @@ acquisition are outside this D7 proof-of-life application.
 An offscreen 16-bit GWorld receives big-endian RGB555 via `pixel_format`; locked PixMap rowBytes
 are masked to their actual stride, then CopyBits submits complete bands. Microseconds supplies
 message times through a minimal ABI declaration (the installed interfaces omit it; InterfaceLib
-exports it). AppearanceLib exports SetThemeCursor; the same pure intent maps to arrow 0, closed
-hand 8 and open hand 9. The API values are documented in the archived
+exports it). AppearanceLib exports SetThemeCursor (`nm` on the Retro68 `libAppearanceLib.a` lists
+it; the Multiversal headers declare neither it nor the constants). The core's `cursor_for(model,
+pointer, target)` returns the intent, which maps to arrow 0, closed hand 8, open hand 9 and pointing
+hand 10. The pointing hand shows where a click acts: a place under the pointer, anywhere on the globe
+while measuring, and anywhere on the globe while a country is selected (a click on the sea clears
+it). Land is not counted as clickable (still an owner decision). Only a cheap hover test runs on
+motion (no country pick); the front end re-evaluates it only when the pointer, view or selection
+changes. Values 0, 8 and 9 are the ones proven on hardware; 10 is from the same reference table. The API values are documented in the archived
 [Appearance Manager reference](https://leopard-adc.pepas.com/documentation/Carbon/Reference/Appearance_Manager/index.html).
 The return type is the documented 32-bit OSStatus (checked against the archived reference).
 A failed native cursor call falls back to the system arrow. This requires OS 9 / Appearance Manager.
