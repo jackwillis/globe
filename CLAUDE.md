@@ -1,5 +1,7 @@
 # Claude handoff — Globe
 
+**Fresh-session recovery (2026-11-08):** Read [the agent restart handoff](docs/agent-restart-2026-11-08.md) before any checkout, pull, staging, merge, hardware access or new issue work. Its status is a remote observation; inspect each local worktree independently.
+
 **Refreshed 2026-11-07.** This is the concise project entry point for Claude Code / Claude sessions. For Codex-specific instructions, see [docs/handoff.md](docs/handoff.md). The previous long running handoff was archived in [docs/history/handoff-through-2026-11-07.md](docs/history/handoff-through-2026-11-07.md).
 
 ## First: orient yourself, don't assume old status
