@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
-# Standalone primitive verification; deliberately does not modify Globe's shared build integration.
+# Accounting tests, usable standalone and registered by the root build.
 cmake_minimum_required(VERSION 3.20)
 project(globe_memory_ledger_primitive LANGUAGES CXX)
 get_filename_component(GLOBE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
@@ -10,7 +10,7 @@ target_include_directories(test_memory_ledger PRIVATE "${GLOBE_ROOT}/include")
 target_compile_features(test_memory_ledger PRIVATE cxx_std_20)
 target_compile_options(test_memory_ledger PRIVATE
   -fno-exceptions -fno-rtti -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror)
-if(LEDGER_SANITIZE)
+if(LEDGER_SANITIZE OR GLOBE_SANITIZE)
   target_compile_options(test_memory_ledger PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
   target_link_options(test_memory_ledger PRIVATE -fsanitize=address,undefined)
 endif()
@@ -26,7 +26,7 @@ target_compile_features(test_framebuffer_ledger PRIVATE cxx_std_20)
 # established signedness warnings separate from this ownership/accounting change.
 target_compile_options(test_framebuffer_ledger PRIVATE
   -fno-exceptions -fno-rtti -Wall -Wextra -Wpedantic -Wconversion -Wno-sign-conversion -Wshadow -Werror)
-if(LEDGER_SANITIZE)
+if(LEDGER_SANITIZE OR GLOBE_SANITIZE)
   target_compile_options(test_framebuffer_ledger PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
   target_link_options(test_framebuffer_ledger PRIVATE -fsanitize=address,undefined)
 endif()

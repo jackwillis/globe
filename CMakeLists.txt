@@ -164,6 +164,8 @@ if(GLOBE_BUILD_TESTS)
   add_test(NAME landclasses COMMAND test_landclasses)
   set_tests_properties(landclasses PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   enable_testing()
+  # Portable accounting tests are also independently buildable without the full runtime.
+  add_subdirectory(atlas/research/ledger)
   if(Python3_FOUND)
     add_test(NAME compression_bench COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_compression_bench.py)
     add_test(NAME floppy_report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_floppy_report.py)

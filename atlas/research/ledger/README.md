@@ -9,9 +9,10 @@ outlive every ticket and remain at a stable address. One event-loop owner; no sy
 `Framebuffer::create(width, height, ledger, category)` now optionally reports its pixel and coverage
 allocations and failures. Existing two-argument callers remain uninstrumented. Charges follow the
 framebuffer's moves/lifetime, with no extra heap allocation or drawing-time allocation. No platform
-adapter, renderer algorithm, pack format, cache guard or root build file is changed. This standalone
-CMake project registers two tests without editing Claude's shared build integration; root Globe
-CTest does not yet register these new tests.
+adapter, renderer algorithm, pack format or cache guard is changed. After checking the other
+worktrees had no pending CMake edits, the root build now registers these two tests through one
+scoped `add_subdirectory` addition, separate from Claude's menu-test hunk. The project remains
+independently buildable for quick checks.
 
 ```sh
 cmake -S atlas/research/ledger -B /tmp/globe-ledger-build -G Ninja
@@ -20,7 +21,8 @@ ctest --test-dir /tmp/globe-ledger-build --output-on-failure
 ```
 
 Use `-DCMAKE_CXX_COMPILER=clang++` in a separate build directory for Clang. Use
-`-DLEDGER_SANITIZE=ON` for an isolated ASan/UBSan build. On a sandbox tracing processes,
+`-DLEDGER_SANITIZE=ON` for an isolated ASan/UBSan build. Root builds automatically
+apply `GLOBE_SANITIZE` to these tests too. On a sandbox tracing processes,
 LeakSanitizer can fail under ptrace; `ASAN_OPTIONS=detect_leaks=0 ctest ...` permits the separate
 ASan/UBSan checks, and must be reported as leak detection disabled.
 
@@ -61,7 +63,7 @@ implementation offline. No target executable or hardware was run; 68k runtime su
 The standalone framebuffer target suppresses preexisting signedness warnings in drawing code;
 the primitive retains strict conversion warnings. No unrelated drawing-loop cleanup was made.
 
-Next scoped step: coordinate root-build registration and a stable ledger owner in each frontend,
+Next scoped step: coordinate a stable ledger owner in each frontend,
 then instrument a scene constructor with owner tickets and failure injection. The framebuffer
 capability is present but no frontend passes a ledger yet. Keep current guards until
 all relevant allocations are counted and estimates reconciled. The primitive alone does not

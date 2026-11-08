@@ -10,8 +10,8 @@ Research design, not an implemented ledger or budget decision. Based on committe
 `52ccb33`, inspected on Linux x86-64. Atlas catalog/selection work changes no allocation path.
 The owner's main worktree has unfinished renderer phase work. The initial proposal avoided shared
 renderer headers, platform files and CMake integration; the continuation adds only optional
-framebuffer accounting in its isolated branch, leaving `render.hpp`/`render.cpp` WIP and root CMake
-untouched.
+framebuffer accounting in its isolated branch, leaving `render.hpp`/`render.cpp` WIP untouched. A later scoped root-CMake registration
+adds the two accounting tests after confirming no other worktree had pending CMake changes.
 
 ## Counted quantity and ownership
 
