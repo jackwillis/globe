@@ -178,5 +178,5 @@ crash boundaries, relaunch and exclusive ownership; every truncated/corrupt/over
 I/O and allocation faults at each install boundary. Assert that old scene bytes/pixels survive every
 failed candidate. Repeat big-endian parser/replay checks on the G4, then verify OT lifecycle, seed
 rotation and live certificate-verified fetch separately on native OS 9. CI tests use synthetic seeds
-and local fixtures; no private seed or maul credential belongs in an artifact. No CI, live TLS or
+and local fixtures; no private seed or shared G4 credential belongs in an artifact. No CI, live TLS or
 OS 9 runtime acceptance is claimed by this design document.
