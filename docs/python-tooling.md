@@ -6,7 +6,7 @@ Most builders and atlas audits use Python's standard library; do not add unneces
 
 ## Pinned optional scientific environment
 
-The existing [hash-pinned research lock](../atlas/research/requirements-research.lock.txt) contains NumPy 2.5.4, h5py 3.16.0 and Shapely 2.1.2. It was verified for **CPython 3.14 on Linux x86-64**. It is not a general cross-platform lock.
+The existing [hash-pinned research lock](../atlas/research/requirements-research.lock.txt) contains NumPy 2.5.4, h5py 3.16.0 and Shapely 2.1.2. It was verified for **CPython 3.14 on Linux x86-64**. It is not a general cross-platform lock. The optional `atlas/.python-version` selects `3.14` for tools that recognize per-directory Python versions (such as pyenv or uv); it does not alter the root CMake build or require 3.14 for standard-library-only tools.
 
 ```sh
 python3.14 -m venv .venv-atlas

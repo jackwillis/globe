@@ -1,3 +1,5 @@
+> **Sanitized historical record.** Private host aliases, local worktrees and access-helper commands have been generalized. Historical shell fragments referring to those placeholders are not runnable instructions. Refer to current issues and code for operational guidance.
+
 # Atlas contract session handoff — November 8, 2026
 
 ## Durable recovery state

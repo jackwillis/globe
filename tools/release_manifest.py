@@ -30,6 +30,10 @@ def digest(path: Path) -> str:
     return checksum.hexdigest()
 
 
+def is_image_digest_pinned(image: str) -> bool:
+    return bool(re.fullmatch(r".+@sha256:[0-9a-f]{64}", image))
+
+
 def make_manifest(
     *,
     revision: str,
@@ -65,7 +69,7 @@ def make_manifest(
             "rust": rust_image,
         },
         "toolchain_images_digest_pinned": all(
-            "@sha256:" in value for value in (retro68_image, rust_image)
+            is_image_digest_pinned(value) for value in (retro68_image, rust_image)
         ),
         "notes": [
             "Source archive is created from the committed revision.",

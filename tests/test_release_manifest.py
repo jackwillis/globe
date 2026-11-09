@@ -38,6 +38,11 @@ class ManifestTest(unittest.TestCase):
                 manifest["artifacts"][1]["sha256"], module.make_manifest(**kwargs)["artifacts"][1]["sha256"]
             )
 
+    def test_image_digest_validation(self):
+        self.assertFalse(module.is_image_digest_pinned('rust:slim'))
+        self.assertFalse(module.is_image_digest_pinned('rust@sha256:123'))
+        self.assertTrue(module.is_image_digest_pinned('rust@sha256:' + 'a' * 64))
+
     def test_reject_duplicates_and_missing(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "missing.bin"
