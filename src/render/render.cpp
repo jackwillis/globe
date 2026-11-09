@@ -207,13 +207,27 @@ void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, At
 
 } // namespace
 
-std::optional<Scene> Scene::create(const Atlas& atlas) {
+std::optional<Scene> Scene::create(const Atlas& atlas, MemoryLedger* ledger) {
     const std::size_t total = static_cast<std::size_t>(atlas.point_count()) + kGraticulePoints;
+    MemoryCharge storage_charge, caps_charge;
     std::unique_ptr<Vec3[]> storage(new (std::nothrow) Vec3[total]);
-    std::unique_ptr<PolylineCap[]> caps(new (std::nothrow) PolylineCap[atlas.polyline_count()]);
-    if (!storage || !caps) {
+    if (!storage) {
+        if (ledger != nullptr)
+            ledger->allocation_failed(MemoryCategory::Scene);
         return std::nullopt;
     }
+    if (ledger != nullptr)
+        storage_charge = MemoryCharge(*ledger, MemoryCategory::Scene, total * sizeof(Vec3));
+    std::unique_ptr<PolylineCap[]> caps(new (std::nothrow) PolylineCap[atlas.polyline_count()]);
+    if (!caps) {
+        if (ledger != nullptr)
+            ledger->allocation_failed(MemoryCategory::Scene);
+        return std::nullopt;
+    }
+    if (ledger != nullptr)
+        caps_charge =
+            MemoryCharge(*ledger, MemoryCategory::Scene,
+                         static_cast<std::size_t>(atlas.polyline_count()) * sizeof(PolylineCap));
     Vec3* out = storage.get();
     AtlasCursor cursor;
     AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
@@ -248,7 +262,22 @@ std::optional<Scene> Scene::create(const Atlas& atlas) {
             *out++ = meridian_point(m, s);
         }
     }
-    return Scene(atlas, std::move(storage), std::move(caps));
+    return Scene(atlas, std::move(storage), std::move(caps), std::move(storage_charge),
+                 std::move(caps_charge));
+}
+
+Scene& Scene::operator=(Scene&& other) noexcept {
+    if (this != &other) {
+        // Free replaced storage before releasing its charges, including cross-ledger moves.
+        storage_.reset();
+        caps_.reset();
+        storage_charge_ = std::move(other.storage_charge_);
+        caps_charge_ = std::move(other.caps_charge_);
+        atlas_ = other.atlas_;
+        storage_ = std::move(other.storage_);
+        caps_ = std::move(other.caps_);
+    }
+    return *this;
 }
 
 std::size_t Scene::bytes() const {
