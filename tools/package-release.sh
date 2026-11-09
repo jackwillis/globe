@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
 # Digital-release artifacts from one build (#47): a StuffIt archive, the MacBinary file and checksums
-# in <build>/release/. Needs the Classic build's GlobeFloppy.bin, podman (for the pinned Rust
-# image that builds tools/sit-pack) and unar (for the round-trip check). Publishes nothing.
+# in <build>/release/. Needs the Classic build's GlobeFloppy.bin, podman,
+# Rust build image, Python 3, git and unar (for round-trip verification). Publishes nothing.
 set -eu
 cd "$(dirname "$0")/.."
 build_dir=${1:-build-os9-floppy}
@@ -13,6 +13,11 @@ RUST_IMAGE=${RUST_IMAGE:-docker.io/library/rust:slim}
 out="$build_dir/release"
 mkdir -p "$out" "$build_dir/sit-target"
 rev=$(git rev-parse --short HEAD)
+revision=$(git rev-parse HEAD)
+# Source is always from the exact revision, not any uncommitted local workspace edits.
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo 'warning: uncommitted changes exist; release source archive is from committed HEAD only' >&2
+fi
 # One date for every entry so the same inputs give the same archive.
 epoch=${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct)}
 "$CONTAINER" run --rm -v "$PWD/tools/sit-pack":/w:Z -v "$PWD/$build_dir/sit-target":/t:Z \
@@ -30,5 +35,14 @@ unar -q -o "$check/sit" -forks visible "$sit" >/dev/null
 unar -q -o "$check/bin" -forks visible "$out/Globe-$rev.bin" >/dev/null
 cmp "$check/sit/Globe-$rev/GlobeFloppy" "$check/bin/GlobeFloppy"
 cmp "$check/sit/Globe-$rev/GlobeFloppy.rsrc" "$check/bin/GlobeFloppy.rsrc"
-(cd "$out" && sha256sum "Globe-$rev.sit" "Globe-$rev.bin" > SHA256SUMS)
-echo "round trip ok (data and resource forks); artifacts and SHA256SUMS in $out"
+# GNU tar and gzip timestamps are determined by the commit, not build wall time.
+# Include the full tracked corresponding source, not a link to an online repository.
+source_archive="$out/Globe-$rev-source.tar.gz"
+git archive --format=tar HEAD | gzip -n > "$source_archive"
+python3 tools/release_manifest.py --output "$out/RELEASE.json" \
+    --revision "$revision" --epoch "$epoch" \
+    --retro68-image "${RETRO68_IMAGE:-ghcr.io/autc04/retro68}" \
+    --rust-image "$RUST_IMAGE" \
+    "$sit" "$out/Globe-$rev.bin" "$source_archive"
+(cd "$out" && sha256sum "Globe-$rev.sit" "Globe-$rev.bin" "Globe-$rev-source.tar.gz" RELEASE.json > SHA256SUMS)
+echo "round trip ok (data and resource forks); binaries, corresponding source, manifest and checksums in $out"
