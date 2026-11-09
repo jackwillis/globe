@@ -81,7 +81,7 @@ Application (embedded base atlas)
 1. **Measure baseline** (#10/#55/#59): Classic OS 9 app partition, startup free heap/largest allocatable block, framebuffer/QuickDraw/cached geometry peaks; keep G4 bare OS9, Tiger Classic and NetBSD/X11 results labeled separately.
 2. **One optional pack end to end** (#48): from ordinary read-only file, strict validation and renderer publication, absent/corrupt/removed fallback, cross-platform output evidence; don't wait for a new general indexed format.
 3. **Storage-format comparison** (#31/#52): at least two candidate layouts on representative higher-detail geography, including source/provenance handling, spatial queries, compression, total bytes, peak RAM and safe replacement.
-4. **Optical-media benchmark** (new research issue if separated): sequential and random I/O, cold/open vs warm cache, read sizes, seeks, compression+decode, worst event-loop stall on real G4 CD and hard-drive/SSD; synthetic host figures are not target proof.
+4. **Optical-media benchmark** ([#72](https://github.com/jackwillis/globe/issues/72)): sequential and random I/O, cold/open vs warm cache, read sizes, seeks, compression+decode, worst event-loop stall on real G4 CD and hard-drive/SSD; synthetic host figures are not target proof.
 5. **Long-travel stress** (#57): navigate repeatedly across continents at constrained budgets; confirm useful base Earth, no drag-time file I/O, bounded allocations, cache eviction/pinning, no resource lifetime bugs and recovery.
 6. **Distribution proof** (#49/#51): same app+Data layout from copied disk and read-only image; verify actual G4 Finder/resource forks, packaging, licences, credits and no writes beside executable. Physical CD remains separately optional.
 
@@ -96,6 +96,7 @@ Application (embedded base atlas)
 
 - **#5 + #52:** offline-data runtime and the separate data-production/editorial stream.
 - **#31:** versioned compressed pack/index format and G4 data/decode/seek tradeoffs.
+- **#72:** historical CD-ROM atlas precedents and measured G4 optical-media retrieval research (v0.3 research only, not a release gate).
 - **#48:** Classic Mac File Manager path, first optional external pack and source-dependent I/O behavior.
 - **#49 / #51:** read-only preference/cache policy and distributable volume layout.
 - **#50:** data contents, attribution and size/RAM/latency costs of richer editions.
