@@ -99,7 +99,8 @@ Rgb565 hypsometric_color(std::int16_t meters) {
 std::size_t TerrainScene::required_bytes(const Elevation& grid) {
     return static_cast<std::size_t>(grid.width() + 1) * (grid.height() + 1) *
                (2 * sizeof(Vec3) + 1) +
-           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 2) + 3072;
+           static_cast<std::size_t>(grid.width()) * grid.height() * (sizeof(CellBands) + 2) +
+           list_bytes(static_cast<std::size_t>(grid.width()) * grid.height()) + 3072;
 }
 std::optional<TerrainScene> TerrainScene::create(const Elevation& grid,
                                                  const LandClasses* classes) {
@@ -125,7 +126,10 @@ std::optional<TerrainScene> TerrainScene::create(const Elevation& grid,
     scene.values_.reset(new (std::nothrow) std::uint8_t[corners]);
     scene.passes_.reset(new (std::nothrow) std::uint8_t[cells]);
     scene.class_cells_.reset(new (std::nothrow) std::uint8_t[cells]);
-    if (!scene.values_ || !scene.passes_ || !scene.class_cells_)
+    if (list_bytes(cells) != 0)
+        scene.order_.reset(new (std::nothrow) std::uint32_t[cells]);
+    if (!scene.values_ || !scene.passes_ || !scene.class_cells_ ||
+        (list_bytes(cells) != 0 && !scene.order_))
         return std::nullopt;
     for (unsigned i = 0; i < 256; ++i) {
         const auto height = grid.value(static_cast<std::uint8_t>(i));
@@ -213,7 +217,7 @@ PassPlan make_pass_plan(const Camera& camera, ScreenPoint focus) {
 }
 void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan) {
     if (bands_[index].first == bands_[index].end) {
-        passes_[index] = 255;
+        passes_[index] = kNoPass;
         return;
     }
     const auto x = index % grid_.width(), y = index / grid_.width();
@@ -223,7 +227,30 @@ void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan) {
     const unsigned pass = plan.pass_at(
         (projected_[a].x + projected_[b].x + projected_[c].x + projected_[d].x) * 0.25,
         (projected_[a].y + projected_[b].y + projected_[c].y + projected_[d].y) * 0.25);
-    passes_[index] = static_cast<std::uint8_t>(pass);
+    passes_[index] = static_cast<std::uint8_t>(pass | (limb_cell(index) ? kLimbBit : 0));
+    ++start_[pass + 1];
+}
+void TerrainScene::begin_lists() {
+    start_.fill(0);
+}
+void TerrainScene::finish_lists() {
+    for (unsigned k = 0; k < kRefinePasses; ++k)
+        start_[k + 1] += start_[k];
+    for (unsigned k = 0; k < kRefinePasses; ++k)
+        fill_[k] = start_[k];
+}
+void TerrainScene::place_cell(std::size_t index) {
+    const auto pass = cell_pass(index);
+    if (pass != kNoPass)
+        order_[fill_[pass]++] = static_cast<std::uint32_t>(index);
+}
+std::size_t TerrainScene::skip_to_limb(std::size_t from, std::size_t budget) const {
+    const auto count = cell_count();
+    while (from < count && budget != 0 && !is_limb(from)) {
+        ++from;
+        --budget;
+    }
+    return from;
 }
 namespace {
 // Where the edge a-b crosses the horizon plane (z = 0). Both cells sharing an edge must compute the

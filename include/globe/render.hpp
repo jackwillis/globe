@@ -160,7 +160,8 @@ class RefinementJob {
     TerrainScene* terrain_ = nullptr;
     std::uint64_t terrain_token_ = 0;
     std::size_t prepare_index_ = 0;
-    std::size_t terrain_cell_ = 0;
+    std::size_t terrain_cell_ = 0; // the limb pass: next cell to look at
+    std::size_t list_pos_ = 0;     // the ring passes: position in the pass's cell list
     Camera camera_;
     const Scene* scene_;
     Palette palette_;

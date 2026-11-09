@@ -401,12 +401,19 @@ double RefinementJob::progress() const {
     default: {
         // The ring passes and the limb pass: pass_ completed plus the sweep through the cells.
         const unsigned passes = kRefinePasses + 1;
-        const double done =
-            (static_cast<double>(pass_) + fraction(terrain_cell_, terrain_->cell_count())) / passes;
+        const bool limb = pass_ >= kRefinePasses;
+        const double within =
+            limb || !terrain_->has_lists()
+                ? fraction(terrain_cell_, terrain_->cell_count())
+                : fraction(list_pos_, std::max<std::size_t>(1, terrain_->pass_count(pass_)));
+        const double done = (static_cast<double>(pass_) + within) / passes;
         return std::clamp(0.1 + 0.88 * done, 0.0, 0.98);
     }
     }
 }
+
+// Cells the limb pass looks at per work unit while it searches for the next clipped cell.
+constexpr std::size_t kLimbScanCells = 256;
 
 RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsigned max_work_units) {
     RenderStep result;
@@ -433,11 +440,26 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             if (prepare_index_ == terrain_->corner_count()) {
                 phase_ = -1;
                 prepare_index_ = 0;
+                if (terrain_->has_lists())
+                    terrain_->begin_lists();
             }
         } else if (phase_ == -1) {
             terrain_->bound_cell(prepare_index_, fb.height(), kRefineBandRows);
             terrain_->assign_pass(prepare_index_, plan_);
             ++prepare_index_;
+            if (prepare_index_ == terrain_->cell_count()) {
+                prepare_index_ = 0;
+                if (terrain_->has_lists()) {
+                    terrain_->finish_lists();
+                    phase_ = 13;
+                } else {
+                    phase_ = line_layer_.has_value() ? 7 : 0;
+                }
+            }
+        } else if (phase_ == 13) {
+            // Group the cells by ring (index order inside each), one cell per work unit like the
+            // set-up phases, so the passes below visit only the cells they draw.
+            terrain_->place_cell(prepare_index_++);
             if (prepare_index_ == terrain_->cell_count()) {
                 phase_ = line_layer_.has_value() ? 7 : 0;
                 prepare_index_ = 0;
@@ -448,32 +470,51 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             // one more pass redraws the clipped cells in index order: the winner of every pixel is
             // then independent of the ring order (checked on 600 random views, tests/test_terrain).
             const bool last = pass_ == kRefinePasses; // the limb pass
-            const auto pass = terrain_->cell_pass(terrain_cell_);
-            const bool draw =
-                pass != 255 && (last ? terrain_->limb_cell(terrain_cell_) : pass == pass_);
+            // With lists the ring passes walk their own cell list, otherwise (a fine grid) they
+            // test every cell. The limb pass walks the clipped cells, looking at a bounded number
+            // of cells per work unit.
+            const bool lists = terrain_->has_lists();
+            std::size_t cell = terrain_cell_;
+            bool draw;
+            if (last) {
+                terrain_cell_ = terrain_->skip_to_limb(terrain_cell_, kLimbScanCells);
+                cell = terrain_cell_;
+                draw = cell < terrain_->cell_count() && terrain_->is_limb(cell);
+            } else if (lists) {
+                draw = list_pos_ < terrain_->pass_count(pass_);
+                if (draw)
+                    cell = terrain_->pass_cell(pass_, list_pos_);
+            } else {
+                draw = terrain_->cell_pass(cell) == pass_;
+            }
             if (draw) {
-                const auto bands = terrain_->cell_bands(terrain_cell_);
+                const auto bands = terrain_->cell_bands(cell);
                 if (cell_band_ < 0)
                     cell_band_ = bands.first;
                 fb.clip_rows(cell_band_ * kRefineBandRows,
                              std::min(fb.height(), (cell_band_ + 1) * kRefineBandRows));
                 if (quality_.preserve_bitmap)
                     fb.coverage(Framebuffer::Coverage::Mark);
-                terrain_->draw_cell(fb, terrain_cell_, cell_band_, kRefineBandRows,
-                                    quality_.terrain_style, quality_.smooth_terrain);
+                terrain_->draw_cell(fb, cell, cell_band_, kRefineBandRows, quality_.terrain_style,
+                                    quality_.smooth_terrain);
                 fb.coverage(Framebuffer::Coverage::Off);
                 fb.clip_rows(0, fb.height());
                 if (++cell_band_ == bands.end) {
-                    ++terrain_cell_;
                     cell_band_ = -1;
+                    if (lists && !last)
+                        ++list_pos_;
+                    else
+                        ++terrain_cell_;
                 }
                 ++stats_.terrain_slices;
                 ++fills;
-            } else {
+            } else if (!lists && !last) {
                 ++terrain_cell_;
             }
-            if (terrain_cell_ == terrain_->cell_count()) {
+            if (lists && !last ? list_pos_ >= terrain_->pass_count(pass_)
+                               : terrain_cell_ >= terrain_->cell_count()) {
                 terrain_cell_ = 0;
+                list_pos_ = 0;
                 ++pass_;
                 result.band_ready = !line_layer_.has_value(); // else shown after the stamp
                 if (line_layer_.has_value()) {
@@ -579,6 +620,7 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             if (++row_ == result.end_row) {
                 phase_ = terrain_ != nullptr ? (line_layer_.has_value() ? 11 : 7) : 1;
                 terrain_cell_ = 0;
+                list_pos_ = 0;
                 row_ = 0;
             }
         } else if (phase_ == 1 || phase_ == 2) {
