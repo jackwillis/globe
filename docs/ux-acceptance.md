@@ -5,7 +5,7 @@ for function, never speed). Record the build, the OS and the result next to each
 
 ## Cursors (#44)
 
-Smoke test so far: the build with the pointing-hand cursor launched under Tiger Classic on maul
+Smoke test so far: the build with the pointing-hand cursor launched under Tiger Classic on shared G4
 (2026-11-08), rendered the globe and did not crash. The pointer was not moved, so no cursor was
 observed.
 
@@ -26,7 +26,7 @@ If `SetThemeCursor` fails, the program falls back to `InitCursor`, the arrow.
 
 ## Looks palette (#45)
 
-Built for PowerPC and host-tested only; it has not been run on any Macintosh (maul went offline
+Built for PowerPC and host-tested only; it has not been run on any Macintosh (shared G4 went offline
 before it could be launched).
 
 1. Press P: a small "Looks" window appears right of the globe with Map and Relief, a check on Map.
@@ -67,7 +67,7 @@ bytes `.bin`); the resources are about 1 KB; no change to the SIZE partition.
 ### Tiger Classic smoke test, 2026-11-08 (not bare OS 9)
 
 Build `18b08b5` (`GlobeFloppy` 546,172 byte application, Retro68 PowerPC), pushed as
-`/tmp/globe-menubar-18b08b5.dsk` and copied to `/tmp/globe-menubar-ux/` on maul (Mac OS X 10.4.11,
+`<temporary-test-binary>` and copied to `<temporary-test-binary>/` on shared G4 (Mac OS X 10.4.11,
 Classic). It launched, rendered Map with the title-bar timing (125 bands, 2748 ms, copy 890 ms,
 turn 23 ms, step 9 ms; Classic under Tiger is much slower than bare OS 9, so these are not
 comparable), and the menu bar showed File, Edit and View (plus the Help menu Classic adds). No input

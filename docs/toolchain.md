@@ -20,7 +20,7 @@ sources; the actual Retro68 application build checks those against installed Mul
 The CI workflow is configured for GCC, clang, portability and both edition size reports, but CI has
 not run. The origin remote exists; publishing is the owner's action.
 
-Never compile on maul. Cross-build locally, push under a new name, restore its executable bit and
+Never compile on shared G4. Cross-build locally, push under a new name, restore its executable bit and
 run headless. Owner binaries tip3–tip7 and desktop display permissions are untouched. Earlier X11
 builds were owner-tried; this pass claims headless correctness/performance and private host displays,
 not real G4 submission/scanout, current GUI acceptance or OS 9 execution. See [terrain](terrain.md),

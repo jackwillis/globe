@@ -55,7 +55,7 @@ Retrieved 2026-11-01, America/Chicago. HTTP 200, `application/x-netcdf`; Last-Mo
 2022-10-04 21:55:19 UTC. The catalog's advertised byte count matched the full download.
 The SHA-256 was streamed during download and independently recomputed with `sha256sum`;
 this is our observed digest, not a claimed publisher checksum. The source is not committed. It
-was moved on 2026-11-01 from `/tmp` to `~/scratch/globe-data/etopo/` on the development laptop
+was moved on 2026-11-01 from `/tmp` to `<verified-source-cache>` on the development laptop
 so a reboot does not lose it; any copy of the file is valid if its SHA-256 matches the digest in
 the table above (re-verified after the move).
 
@@ -135,7 +135,7 @@ these files yet; they are recorded so the later builder can verify them.
   Greenland is the second (about 60 to 83 N). At 110m the layer is only 11 records, so it
   covers the two ice sheets and a few caps; 50m adds many smaller glaciers. 50m at about 217 KB
   is small enough to use as a build-time input; it never ships to the target.
-- The ZIPs are not committed. They are kept at `~/scratch/globe-data/naturalearth/` on the
+- The ZIPs are not committed. They are kept at `<verified-source-cache>` on the
   development laptop.
 
 ## Lakes source check — 2026-11-01; builder adoption 2026-11-02
@@ -168,7 +168,7 @@ layers). The elevation builder now reads the pinned 50m file when `--lakes` is s
   Superior at -87/47 is 100%, -88/47 is 98%, -89/47 is 95%.
 - Not measured: how lakes beyond the Great Lakes rasterize, the effect on the other lakes at 1
   degree, whether the elevation file already shows the Great Lakes as water, and any builder cost.
-- The ZIPs are not committed; they are kept at `~/scratch/globe-data/naturalearth/` on the
+- The ZIPs are not committed; they are kept at `<verified-source-cache>` on the
   development laptop. 50m (about 253 KB) is the likely build-time input; it never ships to the target.
 
 GL-28 re-verification, 2026-11-02: persisted 50m ZIP SHA-256 recomputed and matches the table;
@@ -220,7 +220,7 @@ No noncommercial/share-alike condition or software restriction is added. See LAN
 
 Downloaded archive: **149,248,653 bytes**, SHA-256
 `be36d6209e443038d02e309f0447c6e7f2a62f5fe60c605ffe90d064952f2a60`.
-Stored outside Git at `/tmp/globe-landclass-source/Ecoregions2017.zip` (ephemeral; retain separately
+Stored outside Git at `<temporary-test-binary>/Ecoregions2017.zip` (ephemeral; retain separately
 for later reproduction). Members: SHP 243,042,148 bytes, DBF 1,027,078, SHX 6,876, PRJ 257.
 PRJ is WGS84 / EPSG:4326 geographic longitude/latitude. DBF has 847 records: 846 named ecoregions
 plus one N/A rock/ice record, 14 numbered biomes. All license fields checked before builder work.
