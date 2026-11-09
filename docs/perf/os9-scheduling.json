@@ -5,7 +5,7 @@
   ],
   "timezone": "America/Chicago",
   "baseline_commit": "1363c43",
-  "machine": "maul, Mac OS X 10.4.11, Tiger Classic",
+  "machine": "shared G4, Mac OS X 10.4.11, Tiger Classic",
   "viewport": [
     640,
     480

@@ -2,7 +2,7 @@
   "what": "GL-29 prototype decoders: average predictor + adaptive binary range coder for one-byte grids (grid_codec), delta-varint for atlas points (point_codec)",
   "date": "2026-11-02",
   "tool": "src/platform/bench/codec_bench.cpp (globe-codec-bench), --repeat 15, median and min of the repeats; encoder tools/grid-codec/grid_codec.py",
-  "g4": "maul, PowerPC G4, NetBSD 11 macppc, cross-built (-O2, static, no exceptions/RTTI), two runs agreed",
+  "g4": "shared G4, PowerPC G4, NetBSD 11 macppc, cross-built (-O2, static, no exceptions/RTTI), two runs agreed",
   "host": "x86-64 laptop, GCC Release",
   "grid_1deg": {
     "cells": 64800, "stored_bytes": 29693, "raw_bytes": 64800,
