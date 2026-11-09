@@ -2,7 +2,7 @@
 
 **Fresh-session recovery (2026-11-08):** Read [the agent restart handoff](agent-restart-2026-11-08.md) before any checkout, pull, staging, merge, hardware access or new issue work. Its status is a remote observation; inspect each local worktree independently.
 
-**Current as of 2026-11-07.** This is the **active Codex operating guide**, not a running transcript. The former long handoff is preserved verbatim in [history/handoff-through-2026-11-07.md](history/handoff-through-2026-11-07.md); earlier archives also remain. [../CLAUDE.md](../CLAUDE.md) gives Claude the same project-wide rules. No issue is authorized solely by being listed below.
+**Current as of 2026-11-07.** This is the **active Codex operating guide**, not a running transcript. The former long handoff is archived with private local paths generalized in [history/handoff-through-2026-11-07.md](history/handoff-through-2026-11-07.md); earlier archives also remain. [../CLAUDE.md](../CLAUDE.md) gives Claude the same project-wide rules. No issue is authorized solely by being listed below.
 
 ## 0. Before any action
 

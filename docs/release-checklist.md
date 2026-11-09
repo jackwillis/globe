@@ -21,7 +21,7 @@ Prospective release checklist for issue #12. **No release is authorized or publi
 
 - [ ] Include the complete GPLv3 corresponding source and needed build scripts from **the same revision** as binaries; a GitHub URL alone isn't a substitute for physical-media source compliance.
 - [ ] Include GPL, attribution/data credit and third-party notices; no proprietary Apple ROM/OS images.
-- [ ] Produce manifest recording commit, compiler/container image, data/source version, file sizes, SHA-256 and build limitations.
+- [ ] Produce manifest recording commit, compiler/container image, data/source version, file sizes, SHA-256 and build limitations. The digital packaging script now creates a committed-source tarball, RELEASE.json and SHA256SUMS; verify that the compiled application was built from the same clean revision.
 - [ ] Validate archive names, checksums, Macintosh metadata and read-only-volume behavior.
 - [ ] Rebuild on a clean host before claiming reproducibility; record observed limits.
 - [ ] Obtain owner approval before creating tags or publishing downloads.

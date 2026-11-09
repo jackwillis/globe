@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
-# Digital-release artifacts from one build (#47): a StuffIt archive, the MacBinary file and checksums
+# Digital-release artifacts from one build (#47): StuffIt, MacBinary, committed source and checksums
 # in <build>/release/. Needs the Classic build's GlobeFloppy.bin, podman,
 # Rust build image, Python 3, git and unar (for round-trip verification). Publishes nothing.
 set -eu
@@ -16,6 +16,9 @@ rev=$(git rev-parse --short HEAD)
 revision=$(git rev-parse HEAD)
 # Source is always from the exact revision, not any uncommitted local workspace edits.
 if ! git diff --quiet || ! git diff --cached --quiet; then
+  if [ "${GLOBE_RELEASE_STRICT:-0}" = 1 ]; then
+    echo 'release: tracked tree is dirty; refuse strict packaging' >&2; exit 2
+  fi
   echo 'warning: uncommitted changes exist; release source archive is from committed HEAD only' >&2
 fi
 # One date for every entry so the same inputs give the same archive.
