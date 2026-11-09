@@ -30,6 +30,22 @@ No due dates or fixed feature commitments have been set.
 - **Distribution is digital first:** a StuffIt archive as the headline download, with the MacBinary file and a raw HFS disk image as fallbacks ([#47](https://github.com/jackwillis/globe/issues/47), [#12](https://github.com/jackwillis/globe/issues/12)). Physical media (CD-R, floppy) come later and are optional.
 - **A larger edition ships as an application plus a data folder**, laid out like a CD and published as a disk image first: external data packs on Classic Mac OS ([#48](https://github.com/jackwillis/globe/issues/48)), running from a read-only volume ([#49](https://github.com/jackwillis/globe/issues/49)), the full-edition data ([#50](https://github.com/jackwillis/globe/issues/50)) and the volume layout ([#51](https://github.com/jackwillis/globe/issues/51)).
 
+## Layered atlas and optical media — working strategy (2026-11-09)
+
+Full synthesis: [Layered atlas and CD-ROM research](research/cd-rom-atlas-architecture.md). Inspiration: 1990s CD-ROM geographic software, especially Microsoft Encarta World Atlas, approached as a **FOSS contemporary** with reproducible data, documented provenance and semantic integrity—not a reproduction of proprietary assets or code.
+
+**Agreed product direction:** an immediately usable Earth bundled into the executable, with optional external finer world/regional data. The same renderer and automatic managed-RAM policy work with standalone, copied-to-disk, read-only image or eventual CD distributions. There is **no Full/Compact startup chooser**. The embedded atlas is the reliable fallback; optional resources are validated, loaded/evicted safely, and must not block active navigation.
+
+**Research, not decided:** index design (grid/quadtree/hybrid), regional versus typed containers, chunk dimensions, compression, read-ahead, CD seeking, disc removal, installation UX and the exact atlas contents. Favor representative benchmarks before format changes. See [#31](https://github.com/jackwillis/globe/issues/31), [#48](https://github.com/jackwillis/globe/issues/48), [#50](https://github.com/jackwillis/globe/issues/50), [#51](https://github.com/jackwillis/globe/issues/51), [#57](https://github.com/jackwillis/globe/issues/57), and new [#72 — CD-ROM atlas history / G4 optical benchmarks](https://github.com/jackwillis/globe/issues/72).
+
+**Proposed progression (not new release gates):**
+- **v0.1 — Classic Atlas:** a standalone, useful embedded globe on actual Classic Mac OS, verified memory and digital distribution.
+- **v0.2 — Expressive Atlas:** usability, names/search, diagnostics, adaptive memory, and basic safe optional-pack/read-only loading proof.
+- **v0.3 — Expandable Atlas:** measured rich editions and pack format, safe resource lifecycle, regional loading/eviction, distributable read-only disk image; optical retrieval research can happen but no mandatory physical CD.
+- **Possible v0.4 — Disc Atlas:** contingent future concept for seek-aware indexed geography, CD/HDD comparison, larger curated packs, optical-media compatibility and graceful removal. **No v0.4 GitHub milestone exists or is authorized by this note.**
+
+The atlas builder (#52) owns source curation, geographic identity, editorial completeness and packaged datasets; the runtime (#5/#54) owns storage adapters, bounds, resource lifetime, responsive refinement and memory management. The same small indexed pack must not be assumed to have a good CD physical layout until measured. The Classic Mac application must not write beside itself on read-only volumes (#49). Preserve v0.1's release focus.
+
 ## Epics (parent tracking issues)
 
 | Epic | Outcome | Active issue |
