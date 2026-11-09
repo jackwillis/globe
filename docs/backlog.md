@@ -7,6 +7,7 @@
 - **Keep Elm-style `Model / Msg / update / Effects`.** Application decisions remain deterministic; small Model state changes in `update()`. Published geographic input and per-job view plans are logically immutable, while framebuffers and rendering workspaces remain mutable.
 - **Offline-first, no maintainer-operated services.** A bundled atlas remains fully usable without downloads. Optional fetching awaits vetted hosts, provenance, resource safety and consent.
 - **v0.1 does not wait for speculative architecture work.** Hardware acceptance, complete CI verification, requirements, attribution and release packaging (StuffIt archive, MacBinary, disk image) are release priorities.
+- **Adaptive by default:** Globe adapts to the computer, rather than requiring the user to configure the computer for Globe. Memory and geographic detail are managed automatically; advanced resource controls and developer diagnostics remain optional.
 - **Progressive computation is a core technique; presentation is a UX hypothesis.** Compare current expressive reveal, minimal-delay and adaptive variants with representative users and on the real G4. Do not impose theatrical delays or weaken accessibility.
 - **Evidence before optimization:** match view/style/hardware; measure input responsiveness, worst continuation, first useful frame, total completion, copy/upload cost and pixel correctness.
 - **Safety:** honor [agent handoff](handoff.md) for protected machines, worktrees and release authorization. The tracker authorizes planning, not unattended device access or publication.
@@ -54,6 +55,16 @@ help overlay (#40), and the atlas features: text foundation (#36), pointer reado
 (#38), scale bar and degree labels (#39), animated zoom (#41), remembered view (#42), image export
 (#43); existing #24 (find places), #23 and #25 stay linked. Decisions and evidence:
 [ADR 0002](adr/0002-rendering-shared-code-and-usability.md).
+
+## Adaptive memory and developer diagnostics (owner decision, 2026-11-08)
+
+The proposed **Full/Compact atlas selection screen at startup is superseded**. Globe launches directly into the embedded, offline-capable atlas; geographic resource loading, retention and eviction adapt to the actual available budget. Disk-distributed atlas editions and optional packs remain distinct from automatic *runtime* memory management.
+
+- **Minimal memory UX:** [#56](https://github.com/jackwillis/globe/issues/56) owns Automatic as the default and a single optional Advanced preference for a maximum *managed atlas memory* budget (not total app memory or the Classic Mac Finder partition). [#57](https://github.com/jackwillis/globe/issues/57) owns quality-preserving cache eviction and safe fallbacks. Routine low-memory behavior is silent; only visibly unavailable detail merits a restrained, nonmodal notice.
+- **Detailed logs:** [#62](https://github.com/jackwillis/globe/issues/62) adds a separate optional activity log window on Classic Mac OS and X11, informed by WhatItBeLike's existing diagnostics. [#59](https://github.com/jackwillis/globe/issues/59) remains the owner of underlying metrics and measurement semantics.
+- **Developer console:** [#63](https://github.com/jackwillis/globe/issues/63) explores an optional Forth REPL for observation and controlled navigation/debugging commands. It is developer tooling, not a prerequisite for the log window, normal atlas operation or a general third-party scripting API.
+
+Keep these as separate tracked changes rather than expanding the memory-management epic to own the console and log UI. No new v0.1 release gate or unapproved runtime implementation is implied.
 
 ## Atlas production as a parallel project (2026-11-07)
 
