@@ -32,6 +32,10 @@ struct RenderQuality {
     ScreenPoint focus{};
     bool preserve_bitmap = false; // subsequent resolution replaces the existing terrain
     bool terrain_only = false;    // lines belong to the final resolution only
+    // Map look, smooth terrain, a job that clears the disc itself (not preserve_bitmap): leave out
+    // the ocean cells that would only repaint the cleared ocean. The settled pixels are identical
+    // (tests/test_terrain.cpp compares random views); off only so tests can prove that.
+    bool skip_ocean = true;
     // Terrain jobs only: draw the lines first into a private layer and composite them over the
     // frame after every terrain pass, so they are visible from the first presented frame. The
     // settled pixels are identical. Replaces the paced line reveal.

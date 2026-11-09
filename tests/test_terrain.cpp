@@ -605,12 +605,130 @@ void test_scan_fallback() {
     check_job(120, 60, true);
     check_job(400, 260, false); // 104,000 cells
 }
+Bytes read_file(const char* path) {
+    Bytes b;
+    std::FILE* f = std::fopen(path, "rb");
+    CHECK(f);
+    if (!f)
+        return b;
+    int c;
+    while ((c = std::fgetc(f)) != EOF)
+        b.push_back(static_cast<std::uint8_t>(c));
+    std::fclose(f);
+    return b;
+}
+// Map look: leaving out the ocean cells that only repaint the cleared ocean disc changes no pixel.
+// Real 1 degree elevation and land classes, random views (all hemispheres, rolls, sizes, radii,
+// foci); a job with skip_ocean off is the reference. A job refining over an existing bitmap never
+// skips.
+void test_ocean_skip() {
+    auto bytes = read_file("data/elevation-1deg.gelv");
+    auto raw = read_file("data/landclasses-1deg.ggrd");
+    auto grid = Elevation::parse(bytes.data(), bytes.size());
+    auto classes = LandClasses::decode(raw.data(), raw.size());
+    auto ab = atlas_util::make_atlas({}, "ocean skip");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    CHECK(grid && classes && atlas);
+    if (!grid || !classes || !atlas)
+        return;
+    auto terrain = TerrainScene::create(*grid, &*classes);
+    auto scene = Scene::create(*atlas);
+    CHECK(terrain && scene);
+    if (!terrain || !scene)
+        return;
+    std::uint32_t state = 20261109;
+    const auto rnd = [&](double lo, double hi) {
+        state = state * 1664525U + 1013904223U;
+        return lo + (hi - lo) * ((state >> 8) / 16777216.0);
+    };
+    const auto compare = [&](TerrainScene& terrain, int trials, bool expect_skips) {
+        std::uint64_t skipped_slices = 0, all_slices = 0;
+        for (int trial = 0; trial < trials; ++trial) {
+            const int w = trial % 2 ? 160 : 100, h = trial % 2 ? 120 : 81;
+            const double lat = trial % 11 == 0 ? (trial % 2 ? 89.9 : -89.9) : rnd(-90, 90);
+            const auto camera = *make_camera(
+                {{lat, rnd(-180, 180)}, rnd(0, 360), rnd(15, trial % 5 == 0 ? 700 : 120), w, h});
+            auto fb_a = Framebuffer::create(w, h), fb_b = Framebuffer::create(w, h);
+            CHECK(fb_a && fb_b);
+            if (!fb_a || !fb_b)
+                return;
+            std::uint32_t slices[2] = {0, 0};
+            for (const bool skip : {false, true}) {
+                RenderQuality q{1.5, true, 0, TerrainStyle::Map};
+                q.skip_ocean = skip;
+                q.focus = {rnd(-20, w + 20), rnd(-20, h + 20)};
+                auto& fb = skip ? *fb_b : *fb_a;
+                fb.clear(0x4321);
+                RefinementJob job(camera, *scene, kDefaultPalette, Layers{}, q, 1, &terrain);
+                while (job.active())
+                    job.step(fb, 1, 256);
+                slices[skip] = job.stats().terrain_slices;
+            }
+            bool same_pixels = true;
+            for (int i = 0; i < w * h; ++i)
+                same_pixels = same_pixels && fb_a->data()[i] == fb_b->data()[i];
+            CHECK(same_pixels);
+            CHECK(slices[1] <= slices[0]);
+            all_slices += slices[0];
+            skipped_slices += slices[0] - slices[1];
+        }
+        CHECK(!expect_skips || skipped_slices * 5 > all_slices); // it really skips
+    };
+    compare(*terrain, 600, true);
+    // Coarse grids with large, contrasting cells: clipped cells span a visible part of the limb.
+    for (const auto& dims : {std::pair{24U, 12U}, std::pair{36U, 18U}, std::pair{60U, 30U}}) {
+        auto coarse_bytes = sized_grid(dims.first, dims.second);
+        auto coarse_grid = Elevation::parse(coarse_bytes.data(), coarse_bytes.size());
+        CHECK(coarse_grid);
+        auto coarse = coarse_grid ? TerrainScene::create(*coarse_grid) : std::nullopt;
+        CHECK(coarse);
+        if (coarse)
+            compare(*coarse, 300, false);
+    }
+    // Refining over an existing bitmap draws every cell, skip flag or not.
+    {
+        const auto camera = *make_camera({{10, 20}, 0, 40, 100, 81});
+        std::uint32_t slices[2] = {0, 0};
+        for (const bool skip : {false, true}) {
+            auto fb = Framebuffer::create(100, 81);
+            fb->clear(0x1111);
+            RenderQuality q{1.5, true, 0, TerrainStyle::Map};
+            q.preserve_bitmap = true;
+            q.skip_ocean = skip;
+            RefinementJob job(camera, *scene, kDefaultPalette, Layers{false, false, false}, q, 1,
+                              &*terrain);
+            while (job.active())
+                job.step(*fb, 1, 256);
+            slices[skip] = job.stats().terrain_slices;
+        }
+        CHECK(slices[0] == slices[1] && slices[0] > 0);
+    }
+    // The Relief look and flat shading never skip.
+    for (const auto& look :
+         {std::pair{TerrainStyle::Relief, true}, std::pair{TerrainStyle::Map, false}}) {
+        const auto camera = *make_camera({{10, 20}, 0, 40, 100, 81});
+        std::uint32_t slices[2] = {0, 0};
+        for (const bool skip : {false, true}) {
+            auto fb = Framebuffer::create(100, 81);
+            RenderQuality q{1.5, true, 0, look.first};
+            q.smooth_terrain = look.second;
+            q.skip_ocean = skip;
+            RefinementJob job(camera, *scene, kDefaultPalette, Layers{false, false, false}, q, 1,
+                              &*terrain);
+            while (job.active())
+                job.step(*fb, 1, 256);
+            slices[skip] = job.stats().terrain_slices;
+        }
+        CHECK(slices[0] == slices[1] && slices[0] > 0);
+    }
+}
 } // namespace
 int main() {
     test_resolution_replacement();
     test_orders();
     test_pass_lists();
     test_scan_fallback();
+    test_ocean_skip();
     test_landclass_looks();
     test_terrain();
     test_appearance();

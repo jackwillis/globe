@@ -104,7 +104,8 @@ The settled terrain refines circle-outward from the view center; every other ord
 [Design, measurements and limits](refinement-order.md). The cell rasterizer/smoothing is unchanged,
 and all settled pins remain unchanged. The added workspace is one byte per cell, included in the
 existing 32 MiB allocation guard. Grids of up to 100,000 cells (the 1 degree grid) also keep per-pass
-cell lists, 4 bytes per cell, so a pass visits only its own cells ([details](refinement-order.md)).
+cell lists, 4 bytes per cell, so a pass visits only its own cells ([details](refinement-order.md)). A Map-look job also skips
+ocean cells the cleared disc already shows ([ADR 0004](adr/0004-map-ocean-skip.md)).
 
 
 ## Looks: Map and Relief (GL-33 / GL-34, revised 2026-11-02)

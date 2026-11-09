@@ -18,6 +18,9 @@ constexpr std::size_t kTerrainCacheBudget = std::size_t{32} * 1024U * 1024U;
 // 4 bytes per cell. Finer grids do not: the extra megabyte each would break the aggregate budget
 // the elevation packs rely on, so they keep scanning every cell on every pass.
 constexpr std::size_t kPassListCellLimit = 100000;
+// A corner this far in front of the horizon plane (its camera-space z, a unit-sphere value) lies
+// inside the projected disc by at least radius * z^2 / 2, far more than any rounding error.
+constexpr double kDiscMargin = 1.0e-3;
 struct CellBands {
     std::int16_t first = 0, end = 0;
 };
@@ -56,7 +59,16 @@ class TerrainScene {
     std::uint64_t token() const { return token_; }
     void project_corner(std::size_t index, const Camera& camera);
     void bound_cell(std::size_t index, int height, int band_rows);
-    void assign_pass(std::size_t index, const PassPlan& plan);
+    // With skip_disc_ocean the cell is left out entirely (cell_pass() is 255) when it is a Map-look
+    // ocean cell that would only repaint what clearing the ocean disc already painted, see
+    // disc_ocean_cell(). The caller must have cleared the disc itself, draw the Map look with
+    // smooth shading, and not be refining over an existing bitmap.
+    void assign_pass(std::size_t index, const PassPlan& plan, bool skip_disc_ocean = false);
+    // True if the smooth Map-look draw of this cell paints kMapOcean and nothing else, and every
+    // pixel it can reach lies strictly inside the ocean disc (all four corners clear of the
+    // horizon by more than kDiscMargin, and a disc is convex), so it never changes a cleared frame.
+    // Land, lakes with their own color, and cells touching the horizon are never such cells.
+    bool disc_ocean_cell(std::size_t index) const;
     // The ring a cell belongs to (0..kRefinePasses-1), or 255 if it is off the visible disc.
     std::uint8_t cell_pass(std::size_t index) const {
         const auto v = passes_[index];

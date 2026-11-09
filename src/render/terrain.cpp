@@ -215,8 +215,18 @@ PassPlan make_pass_plan(const Camera& camera, ScreenPoint focus) {
     }
     return plan;
 }
-void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan) {
-    if (bands_[index].first == bands_[index].end) {
+bool TerrainScene::disc_ocean_cell(std::size_t index) const {
+    // first_land_ == 0 would make the smooth palette range empty; never skip then.
+    if (first_land_ == 0 || grid_.value(grid_.cells()[index]) >= 0)
+        return false;
+    const auto x = index % grid_.width(), y = index / grid_.width(),
+               first = y * (grid_.width() + 1) + x;
+    return projected_[first].z > kDiscMargin && projected_[first + 1].z > kDiscMargin &&
+           projected_[first + grid_.width() + 2].z > kDiscMargin &&
+           projected_[first + grid_.width() + 1].z > kDiscMargin;
+}
+void TerrainScene::assign_pass(std::size_t index, const PassPlan& plan, bool skip_disc_ocean) {
+    if (bands_[index].first == bands_[index].end || (skip_disc_ocean && disc_ocean_cell(index))) {
         passes_[index] = kNoPass;
         return;
     }
