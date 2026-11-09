@@ -147,8 +147,8 @@ cmake -S . -B build-rel -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build bui
 ./build-rel/globe-bench --convert --repeat 3 tests/data/bench_drag.txt
 ```
 
-For the G4, cross-build as described in `docs/toolchain.md`, push with `maulctl push nb`, and run
-over `maulctl nb`. Nothing is compiled on maul.
+For the G4, cross-build as described in `docs/toolchain.md`, push with `private host-control helper push nb`, and run
+over `private host-control helper nb`. Nothing is compiled on shared G4.
 
 ## One-shot stage wakes (2026-11-01)
 

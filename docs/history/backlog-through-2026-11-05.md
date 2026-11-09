@@ -10,7 +10,7 @@
 - **Two editions only:** small OS 9 floppy and full X11; no networking requirement on the v0.1 floppy. The existing HFS disk image fits; size is not evidence of runtime compatibility.
 - **Measurements before optimization.** Use matched camera/trace, view, style, edition, and platform. Preserve final-frame pins for behavior-preserving refactors; measure worst continuation, responsiveness, presentation cost and end-to-end completion.
 - **Constrained code:** portable C++20, no exceptions/RTTI or OS headers in the core, bounded allocations and operations, explicit big-endian verification, Retro68 PowerPC/68k compile probes.
-- **Approval boundaries:** follow `docs/handoff.md` for machine access, data provenance, owner binaries and agent push policy; no changes to maul or deployment implied by this backlog.
+- **Approval boundaries:** follow `docs/handoff.md` for machine access, data provenance, owner binaries and agent push policy; no changes to shared G4 or deployment implied by this backlog.
 
 **Definitions:** P0 = v0.1 blocker / verification; P1 = v0.1 release polish; P2 = focused post-v0.1 architecture and performance; P3 = later features; Parked = research only. **Status:** done, partial, open, proposed, parked. An implementation may be done on X11 and still open on OS 9.
 
