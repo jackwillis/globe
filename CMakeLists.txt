@@ -177,7 +177,7 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus)
+  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
@@ -192,6 +192,8 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
   endforeach()
   if(TARGET globe-bench AND Python3_FOUND)
+    add_test(NAME bench_memory COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_bench_memory.py
+      $<TARGET_FILE:globe-bench> ${CMAKE_SOURCE_DIR})
     add_test(NAME progressive COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_progressive.py
       $<TARGET_FILE:globe-bench> ${CMAKE_SOURCE_DIR}/data/elevation-0.5deg.gelv)
   endif()

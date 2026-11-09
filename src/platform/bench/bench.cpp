@@ -189,8 +189,9 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    MemoryLedger memory; // outlives the instrumented scene and primary framebuffer
     const std::uint64_t t_scene0 = monotonic_ns();
-    const auto scene = Scene::create(*atlas);
+    const auto scene = Scene::create(*atlas, &memory);
     const std::uint64_t t_scene1 = monotonic_ns();
     if (!scene) {
         std::fprintf(stderr, "scene allocation failed\n");
@@ -204,7 +205,7 @@ int main(int argc, char** argv) {
             std::fprintf(stderr, "globe-bench: %s\n", packs.error());
             return 2;
         }
-    auto fb = Framebuffer::create(width, height);
+    auto fb = Framebuffer::create(width, height, &memory);
     if (!fb) {
         std::fprintf(stderr, "framebuffer allocation failed\n");
         return 2;
@@ -370,6 +371,26 @@ int main(int argc, char** argv) {
     std::printf("  \"renderer\": \"%s\",\n", reference_path ? "reference" : "scene");
     std::printf("  \"scene_build_ms\": %.4f,\n  \"scene_bytes\": %zu,\n", ms(t_scene1 - t_scene0),
                 scene->bytes());
+    const auto memory_state = memory.snapshot();
+    std::printf(
+        "  \"memory_payload\": {\"scope\": \"scene_and_primary_framebuffer\", "
+        "\"units\": \"bytes\", \"excludes\": \"terrain, classes, packs, jobs, host containers, "
+        "embedded/static/inline storage, allocator overhead and RSS\", "
+        "\"accounting_error\": %s, \"total_current\": %llu, \"total_peak\": %llu,",
+        memory_state.accounting_error ? "true" : "false",
+        static_cast<unsigned long long>(memory_state.total_current),
+        static_cast<unsigned long long>(memory_state.total_peak));
+    for (const auto category : {MemoryCategory::Scene, MemoryCategory::Framebuffer}) {
+        const auto& count = memory_state.categories[static_cast<std::size_t>(category)];
+        std::printf(" \"%s\": {\"current\": %llu, \"peak\": %llu, "
+                    "\"successful_allocations\": %llu, \"failed_allocations\": %llu}%s",
+                    category == MemoryCategory::Scene ? "scene" : "framebuffer",
+                    static_cast<unsigned long long>(count.current),
+                    static_cast<unsigned long long>(count.peak),
+                    static_cast<unsigned long long>(count.successful_allocations),
+                    static_cast<unsigned long long>(count.failed_allocations),
+                    category == MemoryCategory::Scene ? "," : "},\n");
+    }
     std::printf("  \"first_frame_ms_since_main\": %.4f,\n", first_frame_ms);
     std::printf("  \"total_ms\": %.2f,\n", ms(t_end - t_start));
     std::printf("  \"timer_overhead_ns\": %llu,\n", static_cast<unsigned long long>(overhead));
