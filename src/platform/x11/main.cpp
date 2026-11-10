@@ -69,8 +69,8 @@ struct Options {
     std::array<const char*, 3> elevation_paths{};
     unsigned elevation_count = 0;
     const char* script_path = nullptr;
-    int width = 640;
-    int height = 480;
+    int width = 420;
+    int height = 440;
     bool exit_when_done = false;
     bool stats = false;
     bool verify_pixels = false;
