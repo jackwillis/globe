@@ -31,10 +31,7 @@ int main() {
     if (const auto back = looks_pick(model.terrain_style, 0))
         update(model, CommandIssued{2000, *back});
     CHECK(model.terrain_style == TerrainStyle::Map);
-    // The keyboard shortcut is the palette: P is bound, and S still cycles through the same
-    // command.
-    CHECK(binding_for_char('p').overlay == KeyBinding::Overlay::Palette);
-    CHECK(binding_for_char('P').overlay == KeyBinding::Overlay::Palette);
+    // S cycles the looks; there is no palette to open (the list is always in the sidebar).
     CHECK(binding_for_char('s').command == Command::CycleStyle);
     return TEST_MAIN_RESULT();
 }

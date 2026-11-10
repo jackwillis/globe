@@ -37,6 +37,9 @@ class Sidebar {
     // A mouse press at `local` inside the sidebar. Returns the look row clicked (-1 for none).
     int mouse_down(Point local);
 
+    // The card shown (for Copy).
+    const InfoCard& card() const { return card_; }
+
   private:
     unsigned visible_lines() const;
     void sync_scroll();

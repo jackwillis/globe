@@ -14,6 +14,7 @@ class InfoWindow {
     // Moves and resizes it with the main window; rewraps the text.
     void place(int x, int y, int width, int height);
     void show(InfoCard card);
+    const InfoCard& card() const { return card_; }
     bool handle(const XEvent& event);
     std::size_t scrolls() const { return scrolls_; }
 

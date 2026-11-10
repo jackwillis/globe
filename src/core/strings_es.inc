@@ -38,6 +38,5 @@
 "Cuadricula",
 "Fronteras",
 "Arrastre de bola",
-"Paleta de vistas",
 "Lado nocturno",
 "Medir",

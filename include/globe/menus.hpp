@@ -10,8 +10,9 @@
 #include <optional>
 namespace globe {
 constexpr short kAppleMenu = 128, kFileMenu = 129, kEditMenu = 130, kViewMenu = 131;
-constexpr short kAboutItem = 1;       // Apple; desk accessories follow the divider
-constexpr short kQuitItem = 1;        // File
+constexpr short kAboutItem = 1; // Apple; desk accessories follow the divider
+constexpr short kQuitItem = 1;  // File
+constexpr short kCopyItem = 4;  // Edit: copies the information card (or goes to a desk accessory)
 constexpr short kPreferencesItem = 8; // Edit: Undo, divider, Cut, Copy, Paste, Clear, divider
 enum ViewItem : short {
     kZoomInItem = 1,
@@ -25,7 +26,6 @@ enum ViewItem : short {
     kViewDivider2,
     kMapItem,
     kReliefItem,
-    kPaletteItem,
     kViewDivider3,
     kNightItem,
     kMeasureItem,
@@ -74,9 +74,6 @@ inline MenuChoice menu_choice(short menu, short item, TerrainStyle current) {
             break;
         case kReliefItem:
             c.command = looks_pick(current, 1);
-            break;
-        case kPaletteItem:
-            c.overlay = Overlay::Palette;
             break;
         case kNightItem:
             c.overlay = Overlay::Night;

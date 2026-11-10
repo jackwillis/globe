@@ -33,7 +33,7 @@ resource 'MENU' (131, preload) {
     { ITEM("Zoom In", "+"); ITEM("Zoom Out", "-"); ITEM("Reset View", "R");
       ITEM("Align North", "N"); DIVIDER;
       ITEM("Graticule", "G"); ITEM("Borders", "B"); ITEM("Trackball Drag", "T"); DIVIDER;
-      ITEM("Map", noKey); ITEM("Relief", noKey); ITEM("Looks Palette", "P"); DIVIDER;
+      ITEM("Map", noKey); ITEM("Relief", noKey); DIVIDER;
       ITEM("Night Side", "D"); ITEM("Measure", "M") }
 };
 resource 'MBAR' (128, preload) { { 128, 129, 130, 131 } };

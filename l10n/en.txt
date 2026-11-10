@@ -39,6 +39,5 @@ ItemAlignNorth = Align North
 ItemGraticule = Graticule
 ItemBorders = Borders
 ItemTrackball = Trackball Drag
-ItemLooksPalette = Looks Palette
 ItemNight = Night Side
 ItemMeasure = Measure
