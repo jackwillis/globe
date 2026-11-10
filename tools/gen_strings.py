@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
 """Generates the committed string tables from l10n/*.txt (no build-time Python needed by
-cross builds). `--check` verifies the committed files are current and every language is complete."""
+cross builds). `--check` verifies the committed files are current and keys are complete."""
 import sys, pathlib
 root = pathlib.Path(__file__).resolve().parent.parent
-langs = ["en", "es"]  # order of globe::Language
+langs = ["en"]  # English-only v0.1; preserve the generated string-catalog seam
 
 def load(code):
     out = {}

@@ -1,5 +1,5 @@
-# English UI text. Key = text. Keys and their order define the Str enum; every language file must
-# carry every key (tools/gen_strings.py --check, run by ctest). ASCII only until #84 settles encoding.
+# English UI text. Keys and order define Str; tools/gen_strings.py --check validates
+# committed outputs. ASCII until #84 settles Classic Mac text encoding.
 Selection = Selection
 NothingSelected = Nothing is selected.
 LookMap = Map
@@ -19,9 +19,6 @@ PrefsTitle = Preferences
 PrefsUnits = Units
 UnitsMetric = Metric (km)
 UnitsImperial = Imperial (mi)
-PrefsLanguage = Language
-LangEnglish = English
-LangSpanish = Espanol
 MenuFile = File
 MenuEdit = Edit
 MenuView = View

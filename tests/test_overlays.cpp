@@ -93,12 +93,12 @@ int main(int argc, char** argv) {
     CHECK(distance &&
           distance->lines[2].find("3336 km") != std::string_view::npos); // 30 deg of arc
     CHECK(o.compose(*fb, camera, 0) != nullptr);
-    // Preferences change the units and language of the next card.
-    o.set_preferences(Preferences{Units::Imperial, Language::Spanish});
+    // Preferences change the units of the next card.
+    o.set_preferences(Preferences{Units::Imperial});
     CHECK(o.click(camera, at(camera, 0, 10)) && !o.take_card());
     CHECK(o.click(camera, at(camera, 0, 40)));
     const auto imperial = o.take_card();
-    CHECK(imperial && imperial->title == "Distancia" &&
+    CHECK(imperial && imperial->title == "Distance" &&
           imperial->lines[2].find("2073 mi") != std::string_view::npos &&
           imperial->lines[2].find("km") == std::string_view::npos);
     o.set_preferences(Preferences{});
