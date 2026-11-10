@@ -14,13 +14,16 @@
 
 ## Release themes
 
-These are the three GitHub milestones (v0.1, v0.2, v0.3), created without due dates. The epics (#1–#6) span releases and carry no milestone.
+These are the four GitHub milestones (v0.1 to v0.4), created without due dates and restructured on 2026-11-10 (owner decision): v0.1 is the app as built on `main`, and the old v0.2 was split by theme. The epics (#1–#6) span releases and carry no milestone. Parked experiments (#15, #16, #19, #21, #22) have no milestone.
 
-| Planned milestone | Outcome | Practical gate |
+| Milestone | Outcome | Practical gate |
 | --- | --- | --- |
-| **v0.1 — The Classic Atlas** | A functioning, documented offline Classic Mac application | Native OS 9 acceptance, CI, verified minimum memory, essential Mac polish, fork-preserving release |
-| **v0.2 — The Expressive Atlas** | Polished exploration and maintainable rendering | Persona-informed progressive UX, visual stability, accessible settings if justified, smaller coordinator/phase refactors, useful layers/search |
-| **v0.3 — The Expandable Atlas** | Safe optional richer geographic data | Resource lifecycle, bounded imports/cache, supported third-party acquisition, conditional regional LOD |
+| **v0.1 — The Classic Atlas** | The application as built on `main`: single window with sidebar, menus, palette, About and Preferences | [Hardware acceptance: v0.1](https://github.com/jackwillis/globe/issues/95), CI, verified minimum memory (#10), essential Mac polish (#11), fork-preserving release (#47, #12) |
+| **v0.2 — The Atlas on the Map** | Text, labels, pointer readout, scale bar and compass, city symbols, help overlay, render performance | Placement function and label rules (#36, #38), measured cost on the G4, hardware acceptance for the release |
+| **v0.3 — Memory and Packs** | Memory ledger and budget, low-memory handling, stable resource handles, versioned packs, external packs on Classic Mac OS, Preferences handling | Memory regression gate, tested degradation ladder, safe pack lifecycle (#55, #56, #58, #26, #31, #48, #49) |
+| **v0.4 — The Expandable Atlas** | Richer optional data and editions | Full-edition data and volume layout (#50, #51), a third look (#75), optional acquisition (#28), CD-ROM research (#72) |
+
+**Hardware acceptance per release (owner decision, 2026-11-10).** Each release gets one "Hardware acceptance: vX.Y" issue with a fixed checklist, a run record (hardware, OS, build, StuffIt Expander version) and evidence per item. #8 was closed and its open items carried into the v0.1 issue. #9 and #10 stay as measurement issues that feed it. Proposal, not adopted: use the Classic Mac `vers` resource stages (for example 0.2b1) to label candidate builds, and run the acceptance issue against each candidate.
 
 No due dates or fixed feature commitments have been set.
 
@@ -40,9 +43,10 @@ Full synthesis: [Layered atlas and CD-ROM research](research/cd-rom-atlas-archit
 
 **Proposed progression (not new release gates):**
 - **v0.1 — Classic Atlas:** a standalone, useful embedded globe on actual Classic Mac OS, verified memory and digital distribution.
-- **v0.2 — Expressive Atlas:** usability, names/search, diagnostics, adaptive memory, and basic safe optional-pack/read-only loading proof.
-- **v0.3 — Expandable Atlas:** measured rich editions and pack format, safe resource lifecycle, regional loading/eviction, distributable read-only disk image; optical retrieval research can happen but no mandatory physical CD.
-- **Possible v0.4 — Disc Atlas:** contingent future concept for seek-aware indexed geography, CD/HDD comparison, larger curated packs, optical-media compatibility and graceful removal. **No v0.4 GitHub milestone exists or is authorized by this note.**
+- **v0.2 — The Atlas on the Map:** labels, readout, scale bar and compass, city symbols, help overlay and render performance (usability core).
+- **v0.3 — Memory and Packs:** the memory ledger and budget, safe resource lifecycle, versioned packs, external packs and read-only loading proof, Preferences handling.
+- **v0.4 — Expandable Atlas:** measured rich editions, regional loading/eviction, distributable read-only disk image; optical retrieval research can happen but no mandatory physical CD.
+- **Possible later — Disc Atlas:** contingent future concept for seek-aware indexed geography, CD/HDD comparison, larger curated packs, optical-media compatibility and graceful removal. **No milestone for it exists or is authorized by this note.**
 
 The atlas builder (#52) owns source curation, geographic identity, editorial completeness and packaged datasets; the runtime (#5/#54) owns storage adapters, bounds, resource lifetime, responsive refinement and memory management. The same small indexed pack must not be assumed to have a good CD physical layout until measured. The Classic Mac application must not write beside itself on read-only volumes (#49). Preserve v0.1's release focus.
 
@@ -131,7 +135,7 @@ Ruby scripting, fantasy cartography and a separate flat-map editor; native 68k s
 
 ## Tracker conventions
 
-1. **Milestones:** v0.1, v0.2 and v0.3, with no dates. An issue's milestone follows the **Release theme** line in its body. The original six epics (#1–#6) and the cross-cutting atlas-production epic #52 span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
+1. **Milestones:** v0.1 to v0.4, with no dates. An issue's milestone follows the **Release theme** line in its body. The original six epics (#1–#6) and the cross-cutting atlas-production epic #52 span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
 2. **Labels in use:** priority `P0`–`P3` (`P3` is reserved and unused so far); area labels `area: classic-mac`, `area: rendering`, `area: architecture`, `area: discovery-design`, `area: data` and `area: release`, used across the original six epic areas and the new data-production epic #52; `epic`. The first research issue #53 is labeled `P1` and `area: data`. Some newer issues also carry `enhancement` or `bug`.
 3. **Epics:** each epic's body lists its tracked issues. The nested epic [#35](https://github.com/jackwillis/globe/issues/35) (usability) sits under #4 and is also linked from #1 and #2.
 4. Optionally convert epic checklists into native GitHub sub-issue relationships. The issue cross-references already provide usable navigation and will remain stable.
