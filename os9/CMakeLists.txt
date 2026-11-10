@@ -36,6 +36,7 @@ add_application(${APP} CREATOR Glb2
   ${ROOT}/src/platform/os9/sidebar.cpp
   ${ROOT}/src/platform/os9/about_window.cpp
   ${ROOT}/src/platform/os9/prefs_window.cpp
+  ${ROOT}/src/platform/os9/menu_bar.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
   ${ROOT}/src/core/app.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp

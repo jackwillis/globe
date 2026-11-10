@@ -18,6 +18,7 @@
 #include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
+#include "menu_bar.hpp"
 #include "pixel_format.hpp"
 #include "prefs_window.hpp"
 #include "sidebar.hpp"
@@ -633,7 +634,10 @@ class Application {
     }
     // Preferences go through update() like any other state; the text and windows follow the Model.
     void set_preferences(const Preferences& next, std::uint64_t) {
+        const bool relanguage = next.language != model_.prefs.language;
         apply(SetPreferences{next});
+        if (relanguage)
+            rebuild_menu_bar(model_.prefs.language);
         overlays_.set_preferences(model_.prefs);
         sidebar_.set_language(model_.prefs.language);
         about_.set_language(model_.prefs.language);
