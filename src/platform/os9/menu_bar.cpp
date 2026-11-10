@@ -43,7 +43,7 @@ void titled(short id, const char* text, MenuHandle* out) {
     *out = make(id, title);
 }
 } // namespace
-void rebuild_menu_bar(Language lang) {
+void rebuild_menu_bar() {
     for (short id : {kAppleMenu, kFileMenu, kEditMenu, kViewMenu}) {
         if (const MenuHandle old = GetMenuHandle(id)) {
             DeleteMenu(id);
@@ -53,34 +53,34 @@ void rebuild_menu_bar(Language lang) {
     MenuHandle apple, file, edit, view;
     const unsigned char apple_title[] = {1, kApple};
     apple = make(kAppleMenu, apple_title);
-    add_item(apple, tr(lang, Str::AboutTitle), 0, true);
+    add_item(apple, tr(Str::AboutTitle), 0, true);
     add_divider(apple);
-    titled(kFileMenu, tr(lang, Str::MenuFile), &file);
-    add_item(file, tr(lang, Str::ItemQuit), 'Q');
-    titled(kEditMenu, tr(lang, Str::MenuEdit), &edit);
-    add_item(edit, tr(lang, Str::ItemUndo), 'Z');
+    titled(kFileMenu, tr(Str::MenuFile), &file);
+    add_item(file, tr(Str::ItemQuit), 'Q');
+    titled(kEditMenu, tr(Str::MenuEdit), &edit);
+    add_item(edit, tr(Str::ItemUndo), 'Z');
     add_divider(edit);
-    add_item(edit, tr(lang, Str::ItemCut), 'X');
-    add_item(edit, tr(lang, Str::ItemCopy), 'C');
-    add_item(edit, tr(lang, Str::ItemPaste), 'V');
-    add_item(edit, tr(lang, Str::ItemClear));
+    add_item(edit, tr(Str::ItemCut), 'X');
+    add_item(edit, tr(Str::ItemCopy), 'C');
+    add_item(edit, tr(Str::ItemPaste), 'V');
+    add_item(edit, tr(Str::ItemClear));
     add_divider(edit);
-    add_item(edit, tr(lang, Str::ItemPreferences), ',', true);
-    titled(kViewMenu, tr(lang, Str::MenuView), &view);
-    add_item(view, tr(lang, Str::ItemZoomIn), '+');
-    add_item(view, tr(lang, Str::ItemZoomOut), '-');
-    add_item(view, tr(lang, Str::ItemResetView), 'R');
-    add_item(view, tr(lang, Str::ItemAlignNorth), 'N');
+    add_item(edit, tr(Str::ItemPreferences), ',', true);
+    titled(kViewMenu, tr(Str::MenuView), &view);
+    add_item(view, tr(Str::ItemZoomIn), '+');
+    add_item(view, tr(Str::ItemZoomOut), '-');
+    add_item(view, tr(Str::ItemResetView), 'R');
+    add_item(view, tr(Str::ItemAlignNorth), 'N');
     add_divider(view);
-    add_item(view, tr(lang, Str::ItemGraticule), 'G');
-    add_item(view, tr(lang, Str::ItemBorders), 'B');
-    add_item(view, tr(lang, Str::ItemTrackball), 'T');
+    add_item(view, tr(Str::ItemGraticule), 'G');
+    add_item(view, tr(Str::ItemBorders), 'B');
+    add_item(view, tr(Str::ItemTrackball), 'T');
     add_divider(view);
-    add_item(view, tr(lang, Str::LookMap));
-    add_item(view, tr(lang, Str::LookRelief));
+    add_item(view, tr(Str::LookMap));
+    add_item(view, tr(Str::LookRelief));
     add_divider(view);
-    add_item(view, tr(lang, Str::ItemNight), 'D');
-    add_item(view, tr(lang, Str::ItemMeasure), 'M');
+    add_item(view, tr(Str::ItemNight), 'D');
+    add_item(view, tr(Str::ItemMeasure), 'M');
     for (MenuHandle menu : {apple, file, edit, view})
         InsertMenu(menu, 0);
     AppendResMenu(apple, 'DRVR');

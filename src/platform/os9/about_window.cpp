@@ -22,22 +22,7 @@ AboutWindow::~AboutWindow() {
     if (window_)
         DisposeWindow(window_);
 }
-void AboutWindow::set_language(Language language) {
-    if (language == language_)
-        return;
-    language_ = language;
-    if (!window_ || !shown_flag_)
-        return;
-    unsigned char title[256];
-    const std::string_view text = tr(language_, Str::AboutTitle);
-    title[0] = static_cast<unsigned char>(std::min<std::size_t>(text.size(), 255));
-    for (unsigned char i = 0; i < title[0]; ++i)
-        title[i + 1] = static_cast<unsigned char>(text[i]);
-    SetWTitle(window_, title);
-    draw();
-}
-bool AboutWindow::open(Language language) {
-    language_ = language;
+bool AboutWindow::open() {
     if (!window_) {
         Rect bounds{70, 60, static_cast<short>(70 + kHeight), static_cast<short>(60 + kWidth)};
         const unsigned char title[] = {0};
@@ -47,7 +32,7 @@ bool AboutWindow::open(Language language) {
             return false;
     }
     unsigned char title[256];
-    const std::string_view text = tr(language_, Str::AboutTitle);
+    const std::string_view text = tr(Str::AboutTitle);
     title[0] = static_cast<unsigned char>(std::min<std::size_t>(text.size(), 255));
     for (unsigned char i = 0; i < title[0]; ++i)
         title[i + 1] = static_cast<unsigned char>(text[i]);
@@ -75,13 +60,13 @@ void AboutWindow::draw() {
     TextSize(14);
     TextFace(bold);
     MoveTo(kMargin, 28);
-    pascal_draw(tr(language_, Str::AboutName));
+    pascal_draw(tr(Str::AboutName));
     TextSize(12);
     TextFace(normal);
     InfoCard card{};
-    card.lines[0] = tr(language_, Str::AboutLine1);
-    card.lines[1] = tr(language_, Str::AboutLine2);
-    card.lines[2] = tr(language_, Str::AboutLine3);
+    card.lines[0] = tr(Str::AboutLine1);
+    card.lines[1] = tr(Str::AboutLine2);
+    card.lines[2] = tr(Str::AboutLine3);
     card.line_count = 3;
     const auto rows = wrap_card(card, kWidth - 2 * kMargin, [](std::string_view text) {
         return static_cast<int>(

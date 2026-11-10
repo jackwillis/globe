@@ -7,9 +7,9 @@
 #include <string_view>
 namespace globe {
 namespace {
-constexpr short kWidth = 300, kHeight = 168, kMargin = 16, kRowHeight = 20;
-// Radio rows: y of the first row's top, then 2 rows per group. Group headings sit above.
-constexpr short kUnitsTop = 36, kLanguageTop = 100;
+constexpr short kWidth = 300, kHeight = 100, kMargin = 16, kRowHeight = 20;
+// Radio rows follow the units heading.
+constexpr short kUnitsTop = 36;
 void pascal_text(unsigned char* out, std::string_view text) {
     const auto n = static_cast<unsigned char>(std::min<std::size_t>(text.size(), 255));
     out[0] = n;
@@ -48,7 +48,7 @@ bool PrefsWindow::open(const Preferences& current) {
             return false;
     }
     unsigned char title[256];
-    pascal_text(title, tr(shown_.language, Str::PrefsTitle));
+    pascal_text(title, tr(Str::PrefsTitle));
     SetWTitle(window_, title);
     ShowWindow(window_);
     shown_flag_ = true;
@@ -64,15 +64,9 @@ void PrefsWindow::close() {
 void PrefsWindow::sync(const Preferences& current) {
     if (current == shown_)
         return;
-    const bool retitle = current.language != shown_.language;
     shown_ = current;
     if (!window_ || !shown_flag_)
         return;
-    if (retitle) {
-        unsigned char title[256];
-        pascal_text(title, tr(shown_.language, Str::PrefsTitle));
-        SetWTitle(window_, title);
-    }
     draw();
 }
 void PrefsWindow::draw() {
@@ -86,17 +80,11 @@ void PrefsWindow::draw() {
     TextSize(12);
     TextFace(bold);
     MoveTo(kMargin, static_cast<short>(kUnitsTop - 8));
-    draw_text(tr(shown_.language, Str::PrefsUnits));
-    MoveTo(kMargin, static_cast<short>(kLanguageTop - 8));
-    draw_text(tr(shown_.language, Str::PrefsLanguage));
+    draw_text(tr(Str::PrefsUnits));
     TextFace(normal);
-    const auto lang = shown_.language;
-    radio(kMargin, kUnitsTop, shown_.units == Units::Metric, tr(lang, Str::UnitsMetric));
+    radio(kMargin, kUnitsTop, shown_.units == Units::Metric, tr(Str::UnitsMetric));
     radio(kMargin, kUnitsTop + kRowHeight, shown_.units == Units::Imperial,
-          tr(lang, Str::UnitsImperial));
-    radio(kMargin, kLanguageTop, lang == Language::English, tr(lang, Str::LangEnglish));
-    radio(kMargin, kLanguageTop + kRowHeight, lang == Language::Spanish,
-          tr(lang, Str::LangSpanish));
+          tr(Str::UnitsImperial));
     SetPort(saved);
 }
 std::optional<Preferences> PrefsWindow::mouse_down(Point local) const {
@@ -108,10 +96,6 @@ std::optional<Preferences> PrefsWindow::mouse_down(Point local) const {
         next.units = Units::Metric;
     else if (row(kUnitsTop + kRowHeight))
         next.units = Units::Imperial;
-    else if (row(kLanguageTop))
-        next.language = Language::English;
-    else if (row(kLanguageTop + kRowHeight))
-        next.language = Language::Spanish;
     if (next == shown_)
         return std::nullopt;
     return next;
