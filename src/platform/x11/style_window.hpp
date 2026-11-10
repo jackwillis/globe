@@ -14,7 +14,10 @@ class StyleWindow {
     };
     explicit StyleWindow(Display* display) : display_(display) {}
     ~StyleWindow();
-    void show(Window owner, int x, int current);
+    static constexpr int kWidth = 220, kHeight = 76;
+    // A child of `owner` (the one Globe window) at (x, y).
+    void attach(Window owner, int x, int y, int current);
+    void place(int x, int y);
     void set_current(int row);
     Result handle(const XEvent& event);
 
@@ -23,7 +26,6 @@ class StyleWindow {
     Display* display_;
     Window window_ = 0;
     GC gc_ = nullptr;
-    Atom close_ = 0;
     int current_ = 0;
 };
 } // namespace globe

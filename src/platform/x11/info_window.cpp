@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "info_window.hpp"
-#include <X11/Xutil.h>
 #include "globe/wrap.hpp"
+#include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include <algorithm>
 #include <string>
@@ -10,34 +10,42 @@ namespace globe {
 InfoWindow::~InfoWindow() {
     if (gc_)
         XFreeGC(display_, gc_);
-    if (window_)
-        XDestroyWindow(display_, window_);
+    // The window is a child of the Globe window and goes with it.
 }
-void InfoWindow::show(Window owner, InfoCard card, int x) {
+void InfoWindow::attach(Window owner, int x, int y, int width, int height) {
+    if (window_)
+        return;
+    const auto screen = DefaultScreen(display_);
+    width_ = std::max(1, width);
+    height_ = std::max(1, height);
+    window_ = XCreateSimpleWindow(display_, owner, x, y, static_cast<unsigned>(width_),
+                                  static_cast<unsigned>(height_), 0, BlackPixel(display_, screen),
+                                  WhitePixel(display_, screen));
+    // No key events: keys pressed over the card reach the Globe window and its shortcuts.
+    XSelectInput(display_, window_,
+                 ExposureMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask);
+    gc_ = XCreateGC(display_, window_, 0, nullptr);
+    XStoreName(display_, window_, "Globe information");
+    XMapWindow(display_, window_);
+}
+void InfoWindow::place(int x, int y, int width, int height) {
+    if (!window_)
+        return;
+    width_ = std::max(1, width);
+    height_ = std::max(1, height);
+    XMoveResizeWindow(display_, window_, x, y, static_cast<unsigned>(width_),
+                      static_cast<unsigned>(height_));
+    rewrap();
+    scroll(0);
+    draw();
+}
+void InfoWindow::show(InfoCard card) {
     card_ = card;
     card_.line_count = std::min(card_.line_count, static_cast<unsigned>(card_.lines.size()));
     offset_ = 0;
-    if (!window_) {
-        const auto screen = DefaultScreen(display_);
-        window_ =
-            XCreateSimpleWindow(display_, RootWindow(display_, screen), x, 0, width_, height_, 1,
-                                BlackPixel(display_, screen), WhitePixel(display_, screen));
-        XSetTransientForHint(display_, window_, owner);
-        XSelectInput(display_, window_,
-                     ExposureMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask |
-                         ButtonMotionMask | KeyPressMask);
-        close_ = XInternAtom(display_, "WM_DELETE_WINDOW", False);
-        XSetWMProtocols(display_, window_, &close_, 1);
-        XSizeHints hints{};
-        hints.flags = PMinSize;
-        hints.min_width = 160;
-        hints.min_height = 100;
-        XSetWMNormalHints(display_, window_, &hints);
-        gc_ = XCreateGC(display_, window_, 0, nullptr);
-    }
-    XStoreName(display_, window_, "Globe information");
+    if (!window_)
+        return;
     rewrap();
-    XMapRaised(display_, window_);
     draw();
 }
 // Breaks the card's lines to the width left of the scroll bar, in the GC's font.
@@ -93,24 +101,6 @@ bool InfoWindow::handle(const XEvent& e) {
         return false;
     if (e.type == Expose && e.xexpose.count == 0)
         draw();
-    if (e.type == ConfigureNotify) {
-        width_ = std::clamp(e.xconfigure.width, 160, 32767);
-        height_ = std::clamp(e.xconfigure.height, 100, 32767);
-        rewrap();
-        scroll(0);
-        draw();
-    }
-    if (e.type == ClientMessage && static_cast<Atom>(e.xclient.data.l[0]) == close_)
-        XUnmapWindow(display_, window_);
-    if (e.type == KeyPress) {
-        const auto key = XLookupKeysym(const_cast<XKeyEvent*>(&e.xkey), 0);
-        if (key == XK_Down || key == XK_Page_Down)
-            scroll(key == XK_Down ? 1 : 5);
-        if (key == XK_Up || key == XK_Page_Up)
-            scroll(key == XK_Up ? -1 : -5);
-        if (key == XK_Escape)
-            XUnmapWindow(display_, window_);
-    }
     if (e.type == ButtonPress) {
         if (e.xbutton.button == Button4)
             scroll(-1);

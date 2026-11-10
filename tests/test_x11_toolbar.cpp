@@ -10,23 +10,30 @@
 #include <sys/wait.h>
 #include <unistd.h>
 using namespace globe;
-Window find(Display* d, const char* title) {
+// The window named `title` among the root's children and their children (the sidebar panes are
+// children of the one Globe window).
+static Window find_in(Display* d, Window parent_window, const char* title, int depth) {
     Window root, parent, *children = nullptr;
     unsigned count = 0;
     Window found = 0;
-    if (XQueryTree(d, DefaultRootWindow(d), &root, &parent, &children, &count)) {
-        for (unsigned i = 0; i < count; ++i) {
+    if (XQueryTree(d, parent_window, &root, &parent, &children, &count)) {
+        for (unsigned i = 0; i < count && !found; ++i) {
             char* name = nullptr;
             if (XFetchName(d, children[i], &name) && name) {
                 if (std::strcmp(name, title) == 0)
                     found = children[i];
                 XFree(name);
             }
+            if (!found && depth > 0)
+                found = find_in(d, children[i], title, depth - 1);
         }
         if (children)
             XFree(children);
     }
     return found;
+}
+Window find(Display* d, const char* title) {
+    return find_in(d, DefaultRootWindow(d), title, 1);
 }
 int main(int argc, char** argv) {
     CHECK(argc == 2 || argc == 3);

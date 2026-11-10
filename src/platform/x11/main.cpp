@@ -23,6 +23,7 @@
 #include <sys/resource.h>
 #include <sys/select.h>
 
+#include <algorithm>
 #include <array>
 #include <cerrno>
 #include <cmath>
@@ -148,9 +149,10 @@ class App {
         }
         depth_ = DefaultDepth(dpy_, screen);
         visual_ = visual;
-        win_ = XCreateSimpleWindow(
-            dpy_, RootWindow(dpy_, screen), 0, 0, static_cast<unsigned>(opt_.width),
-            static_cast<unsigned>(opt_.height), 0, 0, BlackPixel(dpy_, screen));
+        win_ =
+            XCreateSimpleWindow(dpy_, RootWindow(dpy_, screen), 0, 0,
+                                static_cast<unsigned>(opt_.width + StyleWindow::kWidth),
+                                static_cast<unsigned>(opt_.height), 0, 0, BlackPixel(dpy_, screen));
         XStoreName(dpy_, win_, "Globe");
         XSelectInput(dpy_, win_,
                      ExposureMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask |
@@ -174,6 +176,11 @@ class App {
         cursors_ = {XCreateFontCursor(dpy_, XC_left_ptr), XCreateFontCursor(dpy_, XC_hand2),
                     XCreateFontCursor(dpy_, XC_fleur), XCreateFontCursor(dpy_, XC_hand2)};
         XDefineCursor(dpy_, win_, cursors_[0]);
+        // The sidebar: looks above, information below, both children of the one window.
+        styles_.attach(win_, opt_.width, 0, looks_row(model_.terrain_style));
+        info_.attach(win_, opt_.width, StyleWindow::kHeight, StyleWindow::kWidth,
+                     std::max(48, opt_.height - StyleWindow::kHeight));
+        info_.show(nothing_selected_card());
         XMapWindow(dpy_, win_);
         XMapWindow(dpy_, toolbar_);
         return true;
@@ -344,7 +351,7 @@ class App {
     void pick_at(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
-            info_.show(win_, *card, model_.camera.width + 20);
+            info_.show(*card);
             ++info_cards_;
         }
         if (changed)
@@ -395,13 +402,20 @@ class App {
         }
         styles_.set_current(model_.terrain_style == TerrainStyle::Map ? 0 : 1);
         if (std::holds_alternative<Resize>(msg))
-            info_.move(model_.camera.width + 20);
+            layout_sidebar();
         if (toolbar_ && std::holds_alternative<Resize>(msg))
             XMoveWindow(dpy_, toolbar_, 0, model_.camera.height + 20);
         if (toolbar_ && toolbar_state(model_) != toolbar_cache_)
             draw_toolbar();
         update_cursor();
         return fx.quit;
+    }
+
+    // The sidebar sits to the right of the globe pane and follows its size.
+    void layout_sidebar() {
+        styles_.place(model_.camera.width, 0);
+        info_.place(model_.camera.width, StyleWindow::kHeight, StyleWindow::kWidth,
+                    std::max(48, model_.camera.height - StyleWindow::kHeight));
     }
 
     // One frame per redraw request, exactly as interactive use would draw them.
@@ -413,7 +427,8 @@ class App {
             if (need_redraw_) {
                 if (const auto* r = std::get_if<Resize>(&msg)) {
                     (void)r;
-                    XResizeWindow(dpy_, win_, static_cast<unsigned>(model_.camera.width),
+                    XResizeWindow(dpy_, win_,
+                                  static_cast<unsigned>(model_.camera.width + StyleWindow::kWidth),
                                   static_cast<unsigned>(model_.camera.height));
                     if (!make_buffers(model_.camera.width, model_.camera.height)) {
                         return true;
@@ -764,7 +779,7 @@ class App {
             }
             return false;
         case ConfigureNotify: {
-            const int w = ev.xconfigure.width;
+            const int w = ev.xconfigure.width - StyleWindow::kWidth;
             const int h = ev.xconfigure.height;
             if (w != model_.camera.width || h != model_.camera.height) {
                 const bool q = apply(Resize{w, h});
@@ -873,7 +888,7 @@ class App {
             reshow();
             break;
         case KeyBinding::Overlay::Palette:
-            styles_.show(win_, model_.camera.width + 20, looks_row(model_.terrain_style));
+            // The looks list is always showing in the sidebar: nothing to open.
             break;
         case KeyBinding::Overlay::Nothing:
             break;
