@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #pragma once
 #include "globe/countries.hpp"
+#include "globe/wrap.hpp"
 #include <X11/Xlib.h>
 namespace globe {
 class InfoWindow {
@@ -18,12 +19,14 @@ class InfoWindow {
 
   private:
     void draw();
+    void rewrap();
     void scroll(int lines);
     Display* display_;
     Window window_ = 0;
     GC gc_ = nullptr;
     Atom close_ = 0;
     InfoCard card_{};
+    WrappedCard wrapped_{};
     int width_ = 360, height_ = 150, offset_ = 0;
     std::size_t scrolls_ = 0;
 };

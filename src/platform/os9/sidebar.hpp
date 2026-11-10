@@ -8,6 +8,7 @@
 #pragma once
 #include "globe/countries.hpp"
 #include "globe/looks.hpp"
+#include "globe/wrap.hpp"
 #include <Windows.h>
 namespace globe {
 class Sidebar {
@@ -37,6 +38,7 @@ class Sidebar {
   private:
     unsigned visible_lines() const;
     void sync_scroll();
+    void rewrap();
     void draw_rows();
     void draw_card();
     WindowPtr window_ = nullptr;
@@ -44,6 +46,7 @@ class Sidebar {
     Rect area_{0, 0, 0, 0};
     Rect card_area_{0, 0, 0, 0};
     InfoCard card_{};
+    WrappedCard wrapped_{}; // card_ broken to the pane width; what is drawn and scrolled
     TerrainStyle shown_ = TerrainStyle::Map;
     unsigned offset_ = 0; // first card line shown
     bool active_ = true;

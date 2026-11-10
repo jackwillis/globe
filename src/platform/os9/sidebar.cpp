@@ -3,6 +3,7 @@
 #include "sidebar.hpp"
 #include <Events.h>
 #include <Quickdraw.h>
+#include "globe/wrap.hpp"
 #include <algorithm>
 #include <string_view>
 namespace globe {
@@ -32,7 +33,7 @@ unsigned Sidebar::visible_lines() const {
 // Keeps the scroll bar's range and the first line shown inside what the card needs.
 void Sidebar::sync_scroll() {
     const unsigned visible = visible_lines();
-    const unsigned most = card_.line_count > visible ? card_.line_count - visible : 0;
+    const unsigned most = wrapped_.count > visible ? wrapped_.count - visible : 0;
     offset_ = std::min(offset_, most);
     if (!scroll_)
         return;
@@ -49,12 +50,27 @@ void Sidebar::layout(short width, short height) {
         MoveControl(scroll_, static_cast<short>(width - kBar + 1), card_area_.top);
         SizeControl(scroll_, kBar, std::max<short>(bottom - card_area_.top, 16));
     }
+    rewrap();
     sync_scroll();
+}
+// Breaks the card's lines to the width between the margin and the scroll bar, in the drawing font.
+void Sidebar::rewrap() {
+    if (!window_)
+        return;
+    SetPortWindowPort(window_);
+    TextFont(0);
+    TextSize(12);
+    TextFace(normal);
+    const int room = (area_.right - area_.left) - kMargin - kBar - 4;
+    wrapped_ = wrap_card(card_, room, [](std::string_view text) {
+        return static_cast<int>(TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())));
+    });
 }
 void Sidebar::show(const InfoCard& card) {
     card_ = card;
     card_.line_count = std::min(card_.line_count, static_cast<unsigned>(card_.lines.size()));
     offset_ = 0;
+    rewrap();
     sync_scroll();
     draw();
 }
@@ -109,9 +125,9 @@ void Sidebar::draw_card() {
     MoveTo(static_cast<short>(area_.left + kMargin), static_cast<short>(card_area_.top + 16));
     DrawString(line);
     TextFace(normal);
-    const unsigned last = std::min(card_.line_count, offset_ + visible_lines());
+    const unsigned last = std::min(wrapped_.count, offset_ + visible_lines());
     for (unsigned i = offset_; i < last; ++i) {
-        to_pascal(line, card_.lines[i]);
+        to_pascal(line, wrapped_.rows[i]);
         MoveTo(static_cast<short>(area_.left + kMargin),
                static_cast<short>(card_area_.top + kHead +
                                   kLine * (static_cast<short>(i - offset_) + 1) - 2));
@@ -150,7 +166,7 @@ int Sidebar::mouse_down(Point local) {
             next -= static_cast<int>(visible);
         else if (tracked == inPageDown)
             next += static_cast<int>(visible);
-        const unsigned most = card_.line_count > visible ? card_.line_count - visible : 0;
+        const unsigned most = wrapped_.count > visible ? wrapped_.count - visible : 0;
         offset_ = static_cast<unsigned>(std::clamp(next, 0, static_cast<int>(most)));
         sync_scroll();
         draw();

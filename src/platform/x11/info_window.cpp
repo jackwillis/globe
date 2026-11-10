@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #include "info_window.hpp"
 #include <X11/Xutil.h>
+#include "globe/wrap.hpp"
 #include <X11/keysym.h>
 #include <algorithm>
 #include <string>
@@ -35,13 +36,25 @@ void InfoWindow::show(Window owner, InfoCard card, int x) {
         gc_ = XCreateGC(display_, window_, 0, nullptr);
     }
     XStoreName(display_, window_, "Globe information");
+    rewrap();
     XMapRaised(display_, window_);
     draw();
+}
+// Breaks the card's lines to the width left of the scroll bar, in the GC's font.
+void InfoWindow::rewrap() {
+    XFontStruct* font = XQueryFont(display_, XGContextFromGC(gc_));
+    if (!font)
+        return;
+    const int room = std::max(1, width_ - 28 - 8);
+    wrapped_ = wrap_card(card_, room, [&](std::string_view text) {
+        return XTextWidth(font, text.data(), static_cast<int>(text.size()));
+    });
+    XFreeFontInfo(nullptr, font, 1);
 }
 void InfoWindow::scroll(int lines) {
     const int visible = std::max(1, (height_ - 48) / 20);
     const int next =
-        std::clamp(offset_ + lines, 0, std::max(0, static_cast<int>(card_.line_count) - visible));
+        std::clamp(offset_ + lines, 0, std::max(0, static_cast<int>(wrapped_.count) - visible));
     if (next != offset_) {
         offset_ = next;
         ++scrolls_;
@@ -60,8 +73,8 @@ void InfoWindow::draw() {
     XDrawString(display_, window_, gc_, 8, 22, card_.title.data(),
                 static_cast<int>(card_.title.size()));
     const int visible = std::max(1, (height_ - 48) / 20);
-    for (int i = 0; i < visible && offset_ + i < static_cast<int>(card_.line_count); ++i) {
-        const auto line = card_.lines[static_cast<unsigned>(offset_ + i)];
+    for (int i = 0; i < visible && offset_ + i < static_cast<int>(wrapped_.count); ++i) {
+        const auto line = wrapped_.rows[static_cast<unsigned>(offset_ + i)];
         XDrawString(display_, window_, gc_, 8, 48 + 20 * i, line.data(),
                     static_cast<int>(line.size()));
     }
@@ -69,9 +82,9 @@ void InfoWindow::draw() {
     const int track = height_ - 16;
     XDrawRectangle(display_, window_, gc_, width_ - 20, 8, 12, track);
     const int thumb =
-        std::max(12, track * std::min(visible, std::max(1, static_cast<int>(card_.line_count))) /
-                         std::max(1, static_cast<int>(card_.line_count)));
-    const int max = std::max(0, static_cast<int>(card_.line_count) - visible);
+        std::max(12, track * std::min(visible, std::max(1, static_cast<int>(wrapped_.count))) /
+                         std::max(1, static_cast<int>(wrapped_.count)));
+    const int max = std::max(0, static_cast<int>(wrapped_.count) - visible);
     const int top = 8 + (max ? (track - thumb) * offset_ / max : 0);
     XFillRectangle(display_, window_, gc_, width_ - 18, top, 9, thumb);
 }
@@ -83,6 +96,7 @@ bool InfoWindow::handle(const XEvent& e) {
     if (e.type == ConfigureNotify) {
         width_ = std::clamp(e.xconfigure.width, 160, 32767);
         height_ = std::clamp(e.xconfigure.height, 100, 32767);
+        rewrap();
         scroll(0);
         draw();
     }
@@ -109,7 +123,7 @@ bool InfoWindow::handle(const XEvent& e) {
         const int y = e.type == ButtonPress ? e.xbutton.y : e.xmotion.y;
         if (x >= width_ - 24) {
             const int visible = std::max(1, (height_ - 48) / 20),
-                      max = std::max(0, static_cast<int>(card_.line_count) - visible);
+                      max = std::max(0, static_cast<int>(wrapped_.count) - visible);
             scroll((std::max(0, y - 8) * max / std::max(1, height_ - 16)) - offset_);
         }
     }
