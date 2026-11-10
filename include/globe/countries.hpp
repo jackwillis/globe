@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #pragma once
-#include "globe/strings.hpp"
 #include "globe/geometry.hpp"
+#include "globe/strings.hpp"
 #include <array>
 #include <cstddef>
 #include <cstdint>

@@ -3,7 +3,9 @@
 #include "check.hpp"
 #include "globe/wrap.hpp"
 using namespace globe;
-static int chars(std::string_view s) { return static_cast<int>(s.size()); }
+static int chars(std::string_view s) {
+    return static_cast<int>(s.size());
+}
 int main() {
     InfoCard card;
     card.lines[0] = "The quick brown fox jumps";
