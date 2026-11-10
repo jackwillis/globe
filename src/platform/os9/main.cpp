@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 // Classic PowerPC proof of life: Toolbox window, RGB555 GWorld and wake-driven input loop.
+#include "about_window.hpp"
 #include "classic_present.hpp"
 #include "classic_wait.hpp"
 #include "clock.hpp"
@@ -250,6 +251,16 @@ class Application {
                                 quit = true;
                         }
                     }
+                } else if (hit && hit == about_.window()) {
+                    if (part == inGoAway) {
+                        if (TrackGoAway(hit, event.where))
+                            about_.close();
+                    } else if (part == inDrag) {
+                        Rect limit{20, -32000, 32000, 32000};
+                        DragWindow(hit, event.where, &limit);
+                    } else if (part == inContent && FrontWindow() != hit)
+                        SelectWindow(hit);
+                    SetPortWindowPort(window_);
                 } else if (part == inSysWindow)
                     SystemClick(&event, hit);
             } else if (event.what == mouseUp) {
@@ -267,7 +278,12 @@ class Application {
             } else if (event.what == keyDown || event.what == autoKey)
                 quit = key(event.message, time);
             else if (event.what == updateEvt) {
-                if (reinterpret_cast<WindowPtr>(event.message) == window_) {
+                if (about_.window() && reinterpret_cast<WindowPtr>(event.message) == about_.window()) {
+                    BeginUpdate(about_.window());
+                    about_.draw();
+                    EndUpdate(about_.window());
+                    SetPortWindowPort(window_);
+                } else if (reinterpret_cast<WindowPtr>(event.message) == window_) {
                     BeginUpdate(window_);
                     // Background update events repaint the cached GWorld, never convert terrain.
                     copy(0, fb_->height(),
@@ -587,13 +603,7 @@ class Application {
     }
     // The program's own license and data pointers only; the data credits are #11's.
     void show_about() {
-        InfoCard card{};
-        card.title = "About Globe";
-        card.lines[0] = "An offline, software-rendered interactive Earth.";
-        card.lines[1] = "Copyright (c) 2026 Jack Willis. GPL-3.0-or-later.";
-        card.lines[2] = "Data sources and notices: see the ReadMe.";
-        card.line_count = 3;
-        sidebar_.show(card);
+        about_.open();
         SetPortWindowPort(window_);
     }
     bool key(unsigned long message, std::uint64_t time) {
@@ -635,6 +645,7 @@ class Application {
     std::optional<PlaceScene> place_scene_;
     Overlays overlays_;
     Sidebar sidebar_;
+    AboutWindow about_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
     std::uint64_t wake_ = 0;
