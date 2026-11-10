@@ -76,6 +76,11 @@ int main(int argc, char** argv) {
     CHECK(!o.click(camera, {1, 1})); // off the globe: no change
     CHECK(o.focused() == 2u);
     CHECK(o.click(camera, at(camera, 0, 60)) && !o.focused() && !o.active());
+    const auto blank = o.take_card(); // clearing the selection offers the blank card, once
+    CHECK(blank && blank->title == "Selection" && blank->line_count == 1 &&
+          blank->lines[0] == "Nothing is selected.");
+    CHECK(!o.take_card());
+    CHECK(!o.click(camera, at(camera, 0, 60)) && !o.take_card()); // nothing to clear: no card
     CHECK(o.compose(*fb, camera, 0) == nullptr);
 
     // Measure mode: the first click marks a point, the second yields the distance card.

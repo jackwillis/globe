@@ -47,4 +47,12 @@ class CountryScene {
     std::vector<Vec3> points_;
 };
 InfoCard country_card(const Countries& countries, std::uint32_t id);
+// The blank state of the information window: shown at start and when a click clears the selection.
+inline InfoCard nothing_selected_card() {
+    InfoCard card;
+    card.title = "Selection";
+    card.lines[0] = "Nothing is selected.";
+    card.line_count = 1;
+    return card;
+}
 } // namespace globe

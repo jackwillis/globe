@@ -131,6 +131,9 @@ bool Overlays::click(const Camera& camera, ScreenPoint at) {
     } else if (id) {
         card_ = country_card(*countries_, *id);
         card_ready_ = true;
+    } else if (before) {
+        card_ = nothing_selected_card(); // the click cleared a selection
+        card_ready_ = true;
     }
     return focused_ != before;
 }

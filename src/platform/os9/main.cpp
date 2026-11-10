@@ -54,6 +54,37 @@ constexpr unsigned kResumeFlag = 1;
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
 }
+// Where the three windows go, as content rectangles in global coordinates: the globe on the left,
+// taking the width the right column leaves, and the column's top (the Looks palette) over the
+// information card, which takes the rest of the column's height. Computed once, at launch.
+struct Workspace {
+    Rect globe, palette, info;
+};
+Workspace workspace_layout() {
+    constexpr short kGap = 6;      // between windows and the screen edge, frames included
+    constexpr short kTitleBar = 20; // a document window's title bar sits above its content
+    constexpr short kMinInfo = 60;
+    const Rect screen = qd.screenBits.bounds;
+    const short top = static_cast<short>(screen.top + GetMBarHeight() + kTitleBar + kGap);
+    const short bottom = static_cast<short>(screen.bottom - kGap);
+    const short left = static_cast<short>(screen.left + kGap);
+    const short right = static_cast<short>(screen.right - kGap);
+    const short column = std::clamp<short>(static_cast<short>((right - left) / 3), 180, 320);
+    // The globe stays inside the buffer sizes the grow box allows.
+    const short globe_right = static_cast<short>(
+        std::min(right - column - kGap, left + 1600));
+    const short globe_bottom = static_cast<short>(std::min(bottom, static_cast<short>(top + 1200)));
+    Workspace w{};
+    w.globe = Rect{top, left, std::max<short>(globe_bottom, top + 120),
+                   std::max<short>(globe_right, left + 160)};
+    const short column_left = static_cast<short>(w.globe.right + kGap);
+    const short column_right = std::max<short>(right, column_left + 160);
+    w.palette = Rect{top, column_left, static_cast<short>(top + LooksPalette::height()),
+                     column_right};
+    const short info_top = static_cast<short>(w.palette.bottom + kGap + kTitleBar);
+    w.info = Rect{info_top, column_left, std::max<short>(bottom, info_top + kMinInfo), column_right};
+    return w;
+}
 class Application {
   public:
     ~Application() {
@@ -92,7 +123,12 @@ class Application {
                          place_scene_ ? &*place_scene_ : nullptr);
         runner_.set_scene(*scene_);
         runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
-        Rect bounds{50, 30, 530, 670};
+        // The right column opens first and the globe last, so the globe is the frontmost, active
+        // window and keeps the keyboard and the cursor rules.
+        const Workspace workspace = workspace_layout();
+        palette_.show(model_.terrain_style, workspace.palette);
+        info_.show(nothing_selected_card(), workspace.info);
+        Rect bounds = workspace.globe;
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);
@@ -100,8 +136,11 @@ class Application {
         if (!window_ || !mouse_region_)
             return false;
         SetPortWindowPort(window_);
-        if (!buffers(640, 480))
+        const int width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
+        if (!buffers(width, height))
             return false;
+        if (width != model_.camera.width || height != model_.camera.height)
+            apply(Resize{width, height});
         apply(Tick{now_ms()});
         return true;
     }
@@ -263,8 +302,12 @@ class Application {
                     EndUpdate(info_.window());
                     SetPortWindowPort(window_);
                 }
-            } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
-                apply(PointerUp{time});
+            } else if (event.what == activateEvt) {
+                if (reinterpret_cast<WindowPtr>(event.message) == info_.window())
+                    info_.activate(event.modifiers & activeFlag);
+                else if (!(event.modifiers & activeFlag))
+                    apply(PointerUp{time});
+            }
             else if (event.what != nullEvent && event.what != activateEvt &&
                      event.what != diskEvt && event.what != osEvt) {
                 // Not an event this program knows (a scroll wheel, if the system sends one to a
@@ -492,10 +535,7 @@ class Application {
     void pick(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
-            SetPortWindowPort(window_);
-            Point corner{window_->portRect.top, window_->portRect.right};
-            LocalToGlobal(&corner);
-            info_.show(*card, corner.h);
+            info_.show(*card, Rect{}); // updates in place; it never takes the focus
             SetPortWindowPort(window_);
         }
         if (changed)
@@ -516,10 +556,7 @@ class Application {
             hover_valid_ = false; // measuring makes the whole globe clickable
             reshow();
         } else if (which == KeyBinding::Overlay::Palette) {
-            SetPortWindowPort(window_);
-            Point corner{window_->portRect.top, window_->portRect.right};
-            LocalToGlobal(&corner);
-            palette_.show(model_.terrain_style, corner.h);
+            palette_.show(model_.terrain_style, Rect{});
             SetPortWindowPort(window_);
         }
     }
@@ -581,10 +618,7 @@ class Application {
         card.lines[1] = "Copyright (c) 2026 Jack Willis. GPL-3.0-or-later.";
         card.lines[2] = "Data sources and notices: see the ReadMe.";
         card.line_count = 3;
-        SetPortWindowPort(window_);
-        Point corner{window_->portRect.top, window_->portRect.right};
-        LocalToGlobal(&corner);
-        info_.show(card, corner.h);
+        info_.show(card, Rect{});
         SetPortWindowPort(window_);
     }
     bool key(unsigned long message, std::uint64_t time) {

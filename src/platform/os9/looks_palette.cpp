@@ -14,13 +14,13 @@ LooksPalette::~LooksPalette() {
     if (window_)
         DisposeWindow(window_);
 }
-void LooksPalette::show(TerrainStyle current, short main_right) {
+short LooksPalette::height() {
+    return kRow * kLooksRows;
+}
+void LooksPalette::show(TerrainStyle current, const Rect& content) {
     shown_ = current;
     if (!window_) {
-        const short height = kRow * kLooksRows;
-        const short left = static_cast<short>(
-            std::min<int>(main_right + 12, qd.screenBits.bounds.right - kWidth - 4));
-        Rect bounds{300, left, static_cast<short>(300 + height), static_cast<short>(left + kWidth)};
+        Rect bounds = content;
         const unsigned char title[] = {5, 'L', 'o', 'o', 'k', 's'};
         window_ = NewCWindow(nullptr, &bounds, title, true, noGrowDocProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);

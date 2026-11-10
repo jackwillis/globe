@@ -12,8 +12,11 @@ class LooksPalette {
     LooksPalette(const LooksPalette&) = delete;
     LooksPalette& operator=(const LooksPalette&) = delete;
     ~LooksPalette();
-    // Shows the palette (creating it on first use) to the right of `main_right`, or brings it up.
-    void show(TerrainStyle current, short main_right);
+    // Shows the palette, creating it on first use with `content` (global coordinates); an existing
+    // window keeps its place and is brought up.
+    void show(TerrainStyle current, const Rect& content);
+    // The size of the content area, so the layout can stack the windows around it.
+    static short height();
     WindowPtr window() const { return window_; }
     bool visible() const { return visible_; }
     // The look changed elsewhere (a key, the toolbar): redraw the check mark if it is showing.
