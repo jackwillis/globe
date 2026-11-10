@@ -12,6 +12,7 @@ namespace globe {
 constexpr short kAppleMenu = 128, kFileMenu = 129, kEditMenu = 130, kViewMenu = 131;
 constexpr short kAboutItem = 1; // Apple; desk accessories follow the divider
 constexpr short kQuitItem = 1;  // File
+constexpr short kPreferencesItem = 8; // Edit: Undo, divider, Cut, Copy, Paste, Clear, divider
 enum ViewItem : short {
     kZoomInItem = 1,
     kZoomOutItem,

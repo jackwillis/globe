@@ -1,0 +1,23 @@
+# Spanish UI text (ASCII only until #84 settles the text encoding).
+Selection = Seleccion
+NothingSelected = No hay nada seleccionado.
+LookMap = Mapa
+LookRelief = Relieve
+Distance = Distancia
+GreatCircle = Circulo maximo:
+From = Desde
+To = Hasta
+InitialBearing = Rumbo inicial:
+Degrees = grados
+AboutTitle = Acerca de Globe
+AboutName = Globe
+AboutLine1 = Una Tierra interactiva, sin conexion, dibujada por software.
+AboutLine2 = Copyright (c) 2026 Jack Willis. GPL-3.0-or-later.
+AboutLine3 = Fuentes de datos y avisos: vea el ReadMe.
+PrefsTitle = Preferencias
+PrefsUnits = Unidades
+UnitsMetric = Metricas (km)
+UnitsImperial = Imperiales (mi)
+PrefsLanguage = Idioma
+LangEnglish = English
+LangSpanish = Espanol

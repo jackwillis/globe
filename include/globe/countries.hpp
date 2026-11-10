@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #pragma once
+#include "globe/strings.hpp"
 #include "globe/geometry.hpp"
 #include <array>
 #include <cstddef>
@@ -48,10 +49,10 @@ class CountryScene {
 };
 InfoCard country_card(const Countries& countries, std::uint32_t id);
 // The blank state of the information window: shown at start and when a click clears the selection.
-inline InfoCard nothing_selected_card() {
+inline InfoCard nothing_selected_card(Language language = Language::English) {
     InfoCard card;
-    card.title = "Selection";
-    card.lines[0] = "Nothing is selected.";
+    card.title = tr(language, Str::Selection);
+    card.lines[0] = tr(language, Str::NothingSelected);
     card.line_count = 1;
     return card;
 }

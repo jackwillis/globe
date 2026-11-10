@@ -28,6 +28,8 @@ class Sidebar {
     void show(const InfoCard& card);
     // The look changed elsewhere (a key, a menu): redraw the check mark.
     void sync(TerrainStyle current);
+    // The language changed: relabel the looks, and translate the card if it is the blank one.
+    void set_language(Language language);
     // The window became active or inactive: the scroll bar dims with it.
     void activate(bool active);
     // Draws the whole sidebar; clipped to its area, so safe to call at any time or in an update.
@@ -48,6 +50,7 @@ class Sidebar {
     InfoCard card_{};
     WrappedCard wrapped_{}; // card_ broken to the pane width; what is drawn and scrolled
     TerrainStyle shown_ = TerrainStyle::Map;
+    Language language_ = Language::English;
     unsigned offset_ = 0; // first card line shown
     bool active_ = true;
 };

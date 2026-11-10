@@ -26,7 +26,7 @@ resource 'MENU' (129, preload) {
 resource 'MENU' (130, preload) {
     130, textMenuProc, allEnabled, enabled, "Edit",
     { ITEM("Undo", "Z"); DIVIDER; ITEM("Cut", "X"); ITEM("Copy", "C"); ITEM("Paste", "V");
-      ITEM("Clear", noKey) }
+      ITEM("Clear", noKey); DIVIDER; ITEM("Preferences\0xC9", ",") }
 };
 resource 'MENU' (131, preload) {
     131, textMenuProc, allEnabled, enabled, "View",

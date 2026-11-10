@@ -19,6 +19,7 @@
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
 #include "pixel_format.hpp"
+#include "prefs_window.hpp"
 #include "sidebar.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
@@ -251,6 +252,25 @@ class Application {
                                 quit = true;
                         }
                     }
+                } else if (hit && hit == prefs_window_.window()) {
+                    if (part == inGoAway) {
+                        if (TrackGoAway(hit, event.where))
+                            prefs_window_.close();
+                    } else if (part == inDrag) {
+                        Rect limit{20, -32000, 32000, 32000};
+                        DragWindow(hit, event.where, &limit);
+                    } else if (part == inContent) {
+                        if (FrontWindow() != hit)
+                            SelectWindow(hit);
+                        else {
+                            SetPortWindowPort(hit);
+                            Point inside = event.where;
+                            GlobalToLocal(&inside);
+                            if (const auto next = prefs_window_.mouse_down(inside))
+                                set_preferences(*next, time);
+                        }
+                    }
+                    SetPortWindowPort(window_);
                 } else if (hit && hit == about_.window()) {
                     if (part == inGoAway) {
                         if (TrackGoAway(hit, event.where))
@@ -278,7 +298,14 @@ class Application {
             } else if (event.what == keyDown || event.what == autoKey)
                 quit = key(event.message, time);
             else if (event.what == updateEvt) {
-                if (about_.window() && reinterpret_cast<WindowPtr>(event.message) == about_.window()) {
+                if (prefs_window_.window() &&
+                    reinterpret_cast<WindowPtr>(event.message) == prefs_window_.window()) {
+                    BeginUpdate(prefs_window_.window());
+                    prefs_window_.draw();
+                    EndUpdate(prefs_window_.window());
+                    SetPortWindowPort(window_);
+                } else if (about_.window() &&
+                           reinterpret_cast<WindowPtr>(event.message) == about_.window()) {
                     BeginUpdate(about_.window());
                     about_.draw();
                     EndUpdate(about_.window());
@@ -587,6 +614,9 @@ class Application {
             GetMenuItemText(GetMenuHandle(kAppleMenu), item, name);
             OpenDeskAcc(name);
             SetPortWindowPort(window_);
+        } else if (menu == kEditMenu && item == kPreferencesItem) {
+            prefs_window_.open(model_.prefs);
+            SetPortWindowPort(window_);
         } else if (menu == kEditMenu) {
             SystemEdit(item - 1);
         } else {
@@ -601,9 +631,18 @@ class Application {
         HiliteMenu(0);
         return quit;
     }
+    // Preferences go through update() like any other state; the text and windows follow the Model.
+    void set_preferences(const Preferences& next, std::uint64_t) {
+        apply(SetPreferences{next});
+        overlays_.set_preferences(model_.prefs);
+        sidebar_.set_language(model_.prefs.language);
+        about_.set_language(model_.prefs.language);
+        prefs_window_.sync(model_.prefs);
+        SetPortWindowPort(window_);
+    }
     // The program's own license and data pointers only; the data credits are #11's.
     void show_about() {
-        about_.open();
+        about_.open(model_.prefs.language);
         SetPortWindowPort(window_);
     }
     bool key(unsigned long message, std::uint64_t time) {
@@ -646,6 +685,7 @@ class Application {
     Overlays overlays_;
     Sidebar sidebar_;
     AboutWindow about_;
+    PrefsWindow prefs_window_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
     std::uint64_t wake_ = 0;

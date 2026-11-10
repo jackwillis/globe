@@ -19,6 +19,7 @@ add_library(globe_core
   src/core/app.cpp
   src/core/countries.cpp
   src/core/places.cpp
+  src/core/strings.cpp
   src/core/trace.cpp
   src/data/grid_codec.cpp
   src/data/landclasses.cpp
@@ -177,7 +178,10 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus wrap)
+  if(Python3_Interpreter_FOUND)
+    add_test(NAME strings_generated COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_strings.py --check)
+  endif()
+  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus wrap strings)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

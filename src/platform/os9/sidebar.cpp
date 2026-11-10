@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "sidebar.hpp"
+#include "globe/wrap.hpp"
 #include <Events.h>
 #include <Quickdraw.h>
-#include "globe/wrap.hpp"
 #include <algorithm>
 #include <string_view>
 namespace globe {
 namespace {
 constexpr short kRow = 22, kLine = 14, kHead = 22, kMargin = 8, kBar = 16, kGrow = 15;
-constexpr const char* kNames[kLooksRows] = {"Map", "Relief"};
+constexpr Str kNames[kLooksRows] = {Str::LookMap, Str::LookRelief};
 constexpr unsigned char kCheckMark = 0x12; // the check in the system font
 // Pascal string (length byte first) from text, truncated to fit one line.
 void to_pascal(unsigned char* out, std::string_view text) {
@@ -63,7 +63,8 @@ void Sidebar::rewrap() {
     TextFace(normal);
     const int room = (area_.right - area_.left) - kMargin - kBar - 4;
     wrapped_ = wrap_card(card_, room, [](std::string_view text) {
-        return static_cast<int>(TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())));
+        return static_cast<int>(
+            TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())));
     });
 }
 void Sidebar::show(const InfoCard& card) {
@@ -85,6 +86,16 @@ void Sidebar::sync(TerrainStyle current) {
         ClipRect(&window_->portRect);
     }
 }
+void Sidebar::set_language(Language language) {
+    if (language == language_)
+        return;
+    const bool blank = card_.title.data() == tr(language_, Str::Selection);
+    language_ = language;
+    if (blank)
+        show(nothing_selected_card(language_));
+    else if (window_)
+        draw();
+}
 void Sidebar::activate(bool active) {
     active_ = active;
     sync_scroll();
@@ -105,7 +116,7 @@ void Sidebar::draw_rows() {
         MoveTo(static_cast<short>(area_.left + kMargin + 16), static_cast<short>(row * kRow + 15));
         unsigned char text[16];
         text[0] = 0;
-        for (const char* name = kNames[row]; *name && text[0] < 15; ++name)
+        for (const char* name = tr(language_, kNames[row]); *name && text[0] < 15; ++name)
             text[++text[0]] = static_cast<unsigned char>(*name);
         DrawString(text);
     }

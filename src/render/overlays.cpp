@@ -89,20 +89,26 @@ void Overlays::measure_click(LatLon p) {
     measure_b_ = p;
     const LatLon a = *measure_a_;
     const double km = great_circle_km(a, p);
-    place_text(text_[0], sizeof text_[0], "From", a);
-    place_text(text_[1], sizeof text_[1], "To", p);
+    place_text(text_[0], sizeof text_[0], tr(prefs_.language, Str::From), a);
+    place_text(text_[1], sizeof text_[1], tr(prefs_.language, Str::To), p);
     Text distance(text_[2], sizeof text_[2]);
-    distance.add("Great circle: ");
-    distance.add_fixed(km, 0);
-    distance.add(" km (");
-    distance.add_fixed(km * 0.621371, 0);
-    distance.add(" mi)");
+    distance.add(tr(prefs_.language, Str::GreatCircle));
+    distance.add(" ");
+    if (prefs_.units == Units::Imperial) {
+        distance.add_fixed(km * 0.621371, 0);
+        distance.add(" mi");
+    } else {
+        distance.add_fixed(km, 0);
+        distance.add(" km");
+    }
     Text bearing(text_[3], sizeof text_[3]);
-    bearing.add("Initial bearing: ");
+    bearing.add(tr(prefs_.language, Str::InitialBearing));
+    bearing.add(" ");
     bearing.add_fixed(initial_bearing_deg(a, p), 0);
-    bearing.add(" degrees");
+    bearing.add(" ");
+    bearing.add(tr(prefs_.language, Str::Degrees));
     card_ = InfoCard{};
-    card_.title = "Distance";
+    card_.title = tr(prefs_.language, Str::Distance);
     for (unsigned i = 0; i < 4; ++i)
         card_.lines[i] = text_[i];
     card_.line_count = 4;
