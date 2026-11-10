@@ -57,6 +57,7 @@
 #include "globe/zoom.hpp"
 #include "info_window.hpp"
 #include "pixel_format.hpp"
+#include "prefs_pane.hpp"
 #include "style_window.hpp"
 
 using namespace globe;
@@ -108,7 +109,7 @@ class App {
   public:
     App(Display* dpy, const Scene& scene, ElevationPacks& packs, const Options& opt)
         : dpy_(dpy), scene_(scene), packs_(packs), opt_(opt),
-          model_(initial_model(opt.width, opt.height)), info_(dpy), styles_(dpy) {
+          model_(initial_model(opt.width, opt.height)), info_(dpy), styles_(dpy), prefs_pane_(dpy) {
         packs_.register_levels(model_);
         places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
         if (places_)
@@ -178,8 +179,9 @@ class App {
         XDefineCursor(dpy_, win_, cursors_[0]);
         // The sidebar: looks above, information below, both children of the one window.
         styles_.attach(win_, opt_.width, 0, looks_row(model_.terrain_style));
-        info_.attach(win_, opt_.width, StyleWindow::kHeight, StyleWindow::kWidth,
-                     std::max(48, opt_.height - StyleWindow::kHeight));
+        prefs_pane_.attach(win_, opt_.width, StyleWindow::kHeight, model_.prefs);
+        info_.attach(win_, opt_.width, kInfoTop, StyleWindow::kWidth,
+                     std::max(48, opt_.height - kInfoTop));
         info_.show(nothing_selected_card());
         XMapWindow(dpy_, win_);
         XMapWindow(dpy_, toolbar_);
@@ -265,6 +267,9 @@ class App {
         std::printf("  \"info_cards\": %zu,\n  \"info_scrolls\": %zu,\n", info_cards_,
                     info_.scrolls());
         std::printf("  \"terrain_style\": %u,\n", static_cast<unsigned>(model_.terrain_style));
+        std::printf("  \"units\": %u,\n  \"language\": %u,\n",
+                    static_cast<unsigned>(model_.prefs.units),
+                    static_cast<unsigned>(model_.prefs.language));
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -352,6 +357,7 @@ class App {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
             info_.show(*card);
+            info_blank_ = card->title.data() == tr(model_.prefs.language, Str::Selection);
             ++info_cards_;
         }
         if (changed)
@@ -401,6 +407,7 @@ class App {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
         styles_.set_current(model_.terrain_style == TerrainStyle::Map ? 0 : 1);
+        follow_preferences();
         if (std::holds_alternative<Resize>(msg))
             layout_sidebar();
         if (toolbar_ && std::holds_alternative<Resize>(msg))
@@ -411,11 +418,24 @@ class App {
         return fx.quit;
     }
 
+    // Units and language are the Model's: the text and panes follow it, whoever changed it.
+    void follow_preferences() {
+        if (model_.prefs == shown_prefs_)
+            return;
+        const bool relanguage = model_.prefs.language != shown_prefs_.language;
+        shown_prefs_ = model_.prefs;
+        overlays_.set_preferences(model_.prefs);
+        styles_.set_language(model_.prefs.language);
+        prefs_pane_.sync(model_.prefs);
+        if (relanguage && info_blank_)
+            info_.show(nothing_selected_card(model_.prefs.language));
+    }
     // The sidebar sits to the right of the globe pane and follows its size.
     void layout_sidebar() {
         styles_.place(model_.camera.width, 0);
-        info_.place(model_.camera.width, StyleWindow::kHeight, StyleWindow::kWidth,
-                    std::max(48, model_.camera.height - StyleWindow::kHeight));
+        prefs_pane_.place(model_.camera.width, StyleWindow::kHeight);
+        info_.place(model_.camera.width, kInfoTop, StyleWindow::kWidth,
+                    std::max(48, model_.camera.height - kInfoTop));
     }
 
     // One frame per redraw request, exactly as interactive use would draw them.
@@ -735,6 +755,11 @@ class App {
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
         if (info_.handle(ev))
             return false;
+        if (const auto r = prefs_pane_.handle(ev); r.handled) {
+            if (r.next)
+                return apply(SetPreferences{*r.next});
+            return false;
+        }
         if (const auto r = styles_.handle(ev); r.handled) {
             if (const auto pick = looks_pick(model_.terrain_style, r.picked))
                 return apply(CommandIssued{now, *pick});
@@ -903,6 +928,10 @@ class App {
     Model model_;
     InfoWindow info_;
     StyleWindow styles_;
+    PrefsPane prefs_pane_;
+    Preferences shown_prefs_{};
+    bool info_blank_ = true; // the card shows "Nothing is selected."
+    static constexpr int kInfoTop = StyleWindow::kHeight + PrefsPane::kHeight;
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;

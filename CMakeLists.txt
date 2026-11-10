@@ -139,7 +139,7 @@ if(X11_FOUND AND TARGET globe_embedded_atlas)
     DEPENDS data/elevation-0.5deg.gelv tools/embed_atlas.py)
   add_library(globe_embedded_fineelevation ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp)
   target_link_libraries(globe_embedded_fineelevation PUBLIC globe_core)
-  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp)
+  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp src/platform/x11/prefs_pane.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
   target_link_libraries(globe-x11 PRIVATE globe_embedded_fineelevation globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})

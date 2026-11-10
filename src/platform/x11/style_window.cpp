@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "style_window.hpp"
+#include "globe/strings.hpp"
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include <cstring>
@@ -8,7 +9,7 @@ namespace globe {
 namespace {
 constexpr int kRowHeight = 30, kTop = 8;
 constexpr int kWidth = StyleWindow::kWidth;
-const char* const kNames[StyleWindow::kRows] = {"Map", "Relief"};
+constexpr Str kNames[StyleWindow::kRows] = {Str::LookMap, Str::LookRelief};
 // Swatches of what each look paints (land, sea), matching the palettes.
 constexpr unsigned long kSwatch[StyleWindow::kRows][2] = {{0xB0C84E, 0x5696CD},
                                                           {0x8E9E53, 0x1E6AA8}};
@@ -34,6 +35,13 @@ void StyleWindow::place(int x, int y) {
     if (window_)
         XMoveWindow(display_, window_, x, y);
 }
+void StyleWindow::set_language(Language language) {
+    if (language == language_)
+        return;
+    language_ = language;
+    if (window_)
+        draw();
+}
 void StyleWindow::set_current(int row) {
     if (row == current_)
         return;
@@ -53,8 +61,8 @@ void StyleWindow::draw() {
         XFillRectangle(display_, window_, gc_, 10, y + 4, 22, 11);
         XSetForeground(display_, gc_, BlackPixel(display_, screen));
         XDrawRectangle(display_, window_, gc_, 10, y + 4, 22, 22);
-        XDrawString(display_, window_, gc_, 42, y + 20, kNames[i],
-                    static_cast<int>(std::strlen(kNames[i])));
+        const char* name = tr(language_, kNames[i]);
+        XDrawString(display_, window_, gc_, 42, y + 20, name, static_cast<int>(std::strlen(name)));
         if (i == current_) {
             XDrawRectangle(display_, window_, gc_, 4, y, kWidth - 9, kRowHeight - 2);
             XDrawString(display_, window_, gc_, kWidth - 24, y + 20, "*", 1);

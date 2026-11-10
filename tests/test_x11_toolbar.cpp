@@ -189,6 +189,24 @@ int main(int argc, char** argv) {
         click(Command::AlignNorth); // disabled in initial north-up state
         click(Command::ToggleGraticule);
         click(Command::ToggleGraticule);
+        // Preferences pane (a child of the Globe window): Imperial, then Spanish.
+        {
+            if (const auto prefs = find(d, "Globe preferences")) {
+                for (const int y : {45, 99}) {
+                    XEvent click{};
+                    click.xbutton.type = ButtonPress;
+                    click.xbutton.display = d;
+                    click.xbutton.window = prefs;
+                    click.xbutton.button = Button1;
+                    click.xbutton.x = 40;
+                    click.xbutton.y = y;
+                    XSendEvent(d, prefs, False, ButtonPressMask, &click);
+                    XFlush(d);
+                    usleep(60000);
+                }
+            } else
+                CHECK(false);
+        }
         click(Command::Quit);
     } else {
         kill(pid, SIGTERM);
@@ -215,6 +233,8 @@ int main(int argc, char** argv) {
         CHECK(text.find("\"cursor_changes\": 11") != std::string::npos);
         CHECK(text.find("\"info_cards\": 2") != std::string::npos); // country card, then distance
         CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
+        CHECK(text.find("\"units\": 1,") != std::string::npos);        // Imperial
+        CHECK(text.find("\"language\": 1,") != std::string::npos);     // Spanish
         CHECK(text.find("\"terrain_style\": 1") != std::string::npos); // Relief, via the palette
     }
     if (test::failures())
