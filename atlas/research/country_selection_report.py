@@ -64,6 +64,7 @@ def analyze(cache, output, seed_path=None):
     for policy in ('population', 'nearest'):
         equal = replace(params, min_score=0)
         variants[policy+'-C-country-counts'] = (select(places, policy, seeds, equal, country_limits=country_counts), equal)
+    variants['nearest-400km'] = (select(places, 'nearest', seeds, replace(params, spacing_km=400)), replace(params, spacing_km=400))
     for spacing in (400, 1000):
         setting = replace(params, min_score=0, spacing_km=spacing)
         variants['nearest-'+str(spacing)+'km-C-country-counts'] = (select(places, 'nearest', seeds, setting, country_limits=country_counts), setting)
@@ -75,6 +76,7 @@ def analyze(cache, output, seed_path=None):
     variants['inverse-square-broader-roles'] = (select(places, 'inverse-square', broader, params), params)
     variants['inverse-square-cross-border'] = (select(places, 'inverse-square', seeds, replace(params, cross_border=True)), replace(params, cross_border=True))
     variants['inverse-square-32KiB-scenario'] = (select(places, 'inverse-square', seeds, params, budget_bytes=32768), params)
+    approved_capitals = {k for k, role in approved.items() if role in ('national', 'multiple-function')}
     summary = {}
     for label, (chosen, setting) in variants.items():
         chosen_rows = [(r, g, {'country-selection-research'}) for r, g in rows if r['NE_ID'] in chosen]
@@ -85,8 +87,9 @@ def analyze(cache, output, seed_path=None):
         (output/(label+'.jsonl')).write_bytes(raw)
         (output/(label+'.jsonl.gz')).write_bytes(packed)
         result.update({'parameters': asdict(setting) if setting else None,
-                       'approved_capital_recall': {'selected': len(set(chosen)&approved.keys()), 'total': len(approved),
-                                                   'fraction': len(set(chosen)&approved.keys())/len(approved) if approved else None},
+                       'approved_capital_recall': {'selected': len(set(chosen)&approved_capitals), 'total': len(approved_capitals),
+                                                   'fraction': len(set(chosen)&approved_capitals)/len(approved_capitals) if approved_capitals else None},
+                       'approved_mandatory_seed_recall': {'selected': len(set(chosen)&approved.keys()), 'total': len(approved)},
                        'provisional_flag_recall': {'selected': len(set(chosen)&provisional.keys()), 'total': len(provisional)},
                        'added_vs_baseline': [{'source_id': p.key, 'name': p.name, 'country': p.country} for p in places if p.key in chosen and p.key not in base_ids],
                        'removed_vs_baseline': [{'source_id': p.key, 'name': p.name, 'country': p.country} for p in places if p.key in base_ids and p.key not in chosen],

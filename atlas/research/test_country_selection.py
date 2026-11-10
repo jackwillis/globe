@@ -93,7 +93,7 @@ class CountrySelectionTests(unittest.TestCase):
         self.assertGreater(qa['reason_counts']['cross-country-attribution-review'], 0)
         self.assertIn('probable-alias-review', {e['classification'] for e in qa['pair_evidence']})
         self.assertIn('ambiguous-review', {e['classification'] for e in qa['pair_evidence']})
-        same = duplicate_audit([p(1), replace(p(1), ordinal=2)], 'hash')
+        same = duplicate_audit([p(1, record_sha256='exact raw digest'), replace(p(1, record_sha256='exact raw digest'), ordinal=2)], 'hash')
         self.assertEqual(same['pair_evidence'][0]['classification'], 'definite-same-record')
 
     def test_spatial_audit_dateline_poles_and_metro(self):

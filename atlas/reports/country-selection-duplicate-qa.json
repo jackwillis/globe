@@ -1,0 +1,2019 @@
+{
+  "known_anomaly_records": [
+    {
+      "aliases": [
+        "Bình Nhưỡng",
+        "Phenjan",
+        "Pionyang",
+        "Pjongjang",
+        "Pjöngjang",
+        "Pyongsan",
+        "Pyongyang",
+        "Πιονγιάνγκ",
+        "Пхеньян",
+        "פיונגיאנג",
+        "بيونغيانغ",
+        "پیانگ یانگ",
+        "پیونگیانگ",
+        "प्योंगयांग",
+        "পিয়ং ইয়াং",
+        "平壌",
+        "平壤",
+        "평양직할시"
+      ],
+      "alternate": false,
+      "country": "PRK",
+      "key": "1159139161",
+      "lat": 38.3366897,
+      "lon": 126.3866418,
+      "name": "Pyongsan",
+      "national": false,
+      "ordinal": 3295,
+      "population": 66260.0,
+      "qid": "Q18808",
+      "record_sha256": "68d3ec6c8a5f3c1412e5df070720b3505048f72d46769df7bf76fca485bbc968",
+      "role": "Populated place"
+    },
+    {
+      "aliases": [
+        "Dempassar",
+        "Denpasar",
+        "Kuta",
+        "Ντενπασάρ",
+        "Денпасар",
+        "דנפסאר",
+        "دنباسار",
+        "دنپاسار",
+        "ڈنپسار",
+        "देनपसार",
+        "ডেনপাসার",
+        "デンパサール",
+        "丹帕沙",
+        "登巴萨",
+        "덴파사르"
+      ],
+      "alternate": false,
+      "country": "IDN",
+      "key": "1159139827",
+      "lat": -8.7151125,
+      "lon": 115.1841208,
+      "name": "Kuta",
+      "national": false,
+      "ordinal": 3440,
+      "population": 30012.0,
+      "qid": "Q11506",
+      "record_sha256": "c24d53c5dee900ddee6639536c315e239a149da26899b90f2b93c893c4a46600",
+      "role": "Populated place"
+    },
+    {
+      "aliases": [
+        "Ascención",
+        "Ascension",
+        "Ascensión",
+        "Ασενσιόν",
+        "Асенсьон",
+        "Ассенсьйон",
+        "אסנסיון",
+        "آسنسیون",
+        "اسینشن",
+        "بلدية أسكينسيون",
+        "एसेंसन",
+        "আসসেনসন",
+        "アサンシオン",
+        "阿森松",
+        "어센션"
+      ],
+      "alternate": false,
+      "country": "BOL",
+      "key": "1159144877",
+      "lat": -15.6995727,
+      "lon": -63.0799846,
+      "name": "Ascension",
+      "national": false,
+      "ordinal": 4544,
+      "population": 14429.0,
+      "qid": "Q2450325",
+      "record_sha256": "3d1cd478396994b2847bc61727c551ad41a9d29570c555e8cc9974a36e3bcc5c",
+      "role": "Populated place"
+    },
+    {
+      "aliases": [
+        "Dempassar",
+        "Denpasar",
+        "Ντενπασάρ",
+        "Денпасар",
+        "דנפסאר",
+        "دنباسار",
+        "دنپاسار",
+        "ڈنپسار",
+        "देनपसार",
+        "ডেনপাসার",
+        "デンパサール",
+        "丹帕沙",
+        "登巴萨",
+        "덴파사르"
+      ],
+      "alternate": false,
+      "country": "IDN",
+      "key": "1159146905",
+      "lat": -8.6500289,
+      "lon": 115.2199849,
+      "name": "Denpasar",
+      "national": false,
+      "ordinal": 5187,
+      "population": 732344.0,
+      "qid": "Q11506",
+      "record_sha256": "3bca5cc7334011574e1f5b5caf873afde4e7bba7e63e0c380a08f758ee364c5d",
+      "role": "Admin-1 capital"
+    },
+    {
+      "aliases": [
+        "Jianmen",
+        "Jingmen",
+        "Jingmen City",
+        "Kinh Môn",
+        "Tianmen",
+        "Τζίνγκμεν",
+        "Цзинмэнь",
+        "Цзінмень",
+        "ג'יאנמן",
+        "جنگمین",
+        "جینگمن",
+        "مدينة جينغمن",
+        "जिंगमेन सिटी",
+        "চিংমেন",
+        "荆门",
+        "荊門市",
+        "징먼시"
+      ],
+      "alternate": false,
+      "country": "CHN",
+      "key": "1159146993",
+      "lat": 30.6519988,
+      "lon": 113.1580614,
+      "name": "Jianmen",
+      "national": false,
+      "ordinal": 5226,
+      "population": 1708000.0,
+      "qid": "Q71323",
+      "record_sha256": "0a793be3d2e7edd5219cfb955a86320bc309020f8ccf0f3b15a9bacb12fd4f71",
+      "role": "Populated place"
+    },
+    {
+      "aliases": [
+        "Baicheng",
+        "Bạch Thành",
+        "Μπαϊτσένγκ",
+        "Байчен",
+        "Байчэн",
+        "באיצ'נג",
+        "بائچینگ",
+        "بايتشنغ",
+        "بایچنگ",
+        "बैचेंग",
+        "বাইচেং",
+        "白城",
+        "白城市",
+        "바이청시"
+      ],
+      "alternate": false,
+      "country": "CHN",
+      "key": "1159147121",
+      "lat": 45.6200177,
+      "lon": 122.8200378,
+      "name": "Baicheng",
+      "national": false,
+      "ordinal": 5283,
+      "population": 386861.0,
+      "qid": "Q92381",
+      "record_sha256": "4593e3da46c55d503804f83e6fb6ea6bcd4ef4c8e979f7cfca6cee8fb9c84345",
+      "role": "Populated place"
+    },
+    {
+      "aliases": [
+        "Baicheng",
+        "Bose",
+        "Bạch Thành",
+        "Μπαϊτσένγκ",
+        "Байчен",
+        "Байчэн",
+        "בוס",
+        "بائچینگ",
+        "بايتشنغ",
+        "بایچنگ",
+        "बैचेंग",
+        "বাইচেং",
+        "白城",
+        "白城市",
+        "바이청시"
+      ],
+      "alternate": false,
+      "country": "CHN",
+      "key": "1159149783",
+      "lat": 23.8997156,
+      "lon": 106.6133268,
+      "name": "Bose",
+      "national": false,
+      "ordinal": 6466,
+      "population": 175282.0,
+      "qid": "Q92381",
+      "record_sha256": "82e35199a6359f439a6a3e3910a5a6a5c707211c2f8642d3746979207ffb0e6c",
+      "role": "Populated place"
+    },
+    {
+      "aliases": [
+        "Bình Nhưỡng",
+        "P'yongyang",
+        "Phenjan",
+        "Pionyang",
+        "Pjongjang",
+        "Pjöngjang",
+        "Pyongyang",
+        "Πιονγιάνγκ",
+        "Пхеньян",
+        "פיונגיאנג",
+        "بيونغيانغ",
+        "پیانگ یانگ",
+        "پیونگیانگ",
+        "प्योंगयांग",
+        "পিয়ং ইয়াং",
+        "平壌",
+        "平壤",
+        "평양직할시"
+      ],
+      "alternate": false,
+      "country": "PRK",
+      "key": "1159151303",
+      "lat": 39.0213846,
+      "lon": 125.7527449,
+      "name": "Pyongyang",
+      "national": true,
+      "ordinal": 7141,
+      "population": 3300000.0,
+      "qid": "Q18808",
+      "record_sha256": "4ac4c5a43235e5fe97e17a79723114d7a3b628d7c68b30fee0037e1914864e0c",
+      "role": "Admin-0 capital"
+    }
+  ],
+  "known_anomaly_reference": "atlas/reports/concordance.json and atlas/catalog/README.md; no QID repair",
+  "pair_evidence": [
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 11.057714,
+      "reasons": [
+        "nearby-normalized-name-or-alias",
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Al-Kasrajn",
+            "Kassarin",
+            "Kasserine",
+            "Kasszerine",
+            "Αλ Κασράυν",
+            "Касерін",
+            "Кассерин",
+            "קסרין",
+            "القصرين",
+            "القصرین",
+            "قصرین",
+            "कैसरीन",
+            "ক্যাসারাইন",
+            "カスリーヌ",
+            "卡塞林",
+            "카세린"
+          ],
+          "alternate": false,
+          "country": "TUN",
+          "key": "1159112827",
+          "lat": 35.2167031,
+          "lon": 8.7166985,
+          "name": "Kasserine",
+          "national": false,
+          "ordinal": 13,
+          "population": 76243.0,
+          "qid": "Q852735",
+          "record_sha256": "1e65466355e5bf427644dfba90fd9cdf178b6cbc098f06f995c694324a3d5b2d",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Al-Kasrajn",
+            "Kassarin",
+            "Kasserine",
+            "Kasszerine",
+            "Qasserine",
+            "Αλ Κασράυν",
+            "Касерін",
+            "Кассерин",
+            "קסרין",
+            "القصرين",
+            "القصرین",
+            "قصرین",
+            "कैसरीन",
+            "কাসসেরাইন",
+            "カスリーヌ",
+            "卡塞林",
+            "카세린"
+          ],
+          "alternate": false,
+          "country": "TUN",
+          "key": "1159133873",
+          "lat": 35.1803965,
+          "lon": 8.829993,
+          "name": "Qasserine",
+          "national": false,
+          "ordinal": 2135,
+          "population": 81987.0,
+          "qid": "Q852735",
+          "record_sha256": "d023e3aac29a172b30c10b6f6369dc8f12738995d366c4e4f89c10a5f65ca010",
+          "role": "Populated place"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 3.914622,
+      "reasons": [
+        "nearby-normalized-name-or-alias",
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Adapazarı",
+            "Sakarya",
+            "Ανταπαζαρί",
+            "Адапазари",
+            "Адапазары",
+            "אדפזרי",
+            "آدابازاري",
+            "آداپازاری",
+            "सकार्या",
+            "সাকার",
+            "アダパザル",
+            "阿达帕扎勒",
+            "阿達帕扎勒",
+            "아다파자리"
+          ],
+          "alternate": false,
+          "country": "TUR",
+          "key": "1159113425",
+          "lat": 40.7666611,
+          "lon": 30.4000025,
+          "name": "Sakarya",
+          "national": false,
+          "ordinal": 50,
+          "population": 286787.0,
+          "qid": "Q175323",
+          "record_sha256": "0cd0d3f0bbdb9877562eb0c0b747bf12123941de32b592a33205fda2d1e97604",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Adapazari",
+            "Adapazarı",
+            "Ανταπαζαρί",
+            "Адапазари",
+            "Адапазары",
+            "אדפזרי",
+            "آدابازاري",
+            "آداپازاری",
+            "अदापाज़ारी",
+            "আদাপাজারি",
+            "アダパザル",
+            "阿达帕扎勒",
+            "阿達帕扎勒",
+            "아다파자리"
+          ],
+          "alternate": false,
+          "country": "TUR",
+          "key": "1159146375",
+          "lat": 40.799976,
+          "lon": 30.4150321,
+          "name": "Adapazarı",
+          "national": false,
+          "ordinal": 4951,
+          "population": 260109.0,
+          "qid": "Q175323",
+          "record_sha256": "4539b3a0d493e748c500da7e2a1306707c1f2c50c821bc93474e7cb4a2444c7c",
+          "role": "Populated place"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 10.680158,
+      "reasons": [
+        "nearby-normalized-name-or-alias",
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Aktaou",
+            "Aktau",
+            "Aktav",
+            "Aqtau",
+            "Mangyshlak",
+            "Ακτάου",
+            "Актау",
+            "אקטאו",
+            "آقتائو",
+            "أكتاو",
+            "اقتاؤ",
+            "अक़तऊ",
+            "আকতাউ",
+            "アクタウ",
+            "阿克套",
+            "악타우"
+          ],
+          "alternate": false,
+          "country": "KAZ",
+          "key": "1159122651",
+          "lat": 43.6904551,
+          "lon": 51.1417356,
+          "name": "Mangyshlak",
+          "national": false,
+          "ordinal": 560,
+          "population": 147443.0,
+          "qid": "Q198989",
+          "record_sha256": "e153ff0ae089e81b3f656a8567214a48c41f86d4e7c6a947638851c006b905e2",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Aktaou",
+            "Aktau",
+            "Aktav",
+            "Aqtau",
+            "Ακτάου",
+            "Актау",
+            "אקטאו",
+            "آقتائو",
+            "أكتاو",
+            "اقتاؤ",
+            "अक़तऊ",
+            "আকতাউ",
+            "アクタウ",
+            "阿克套",
+            "악타우"
+          ],
+          "alternate": false,
+          "country": "KAZ",
+          "key": "1159148679",
+          "lat": 43.6231887,
+          "lon": 51.2365002,
+          "name": "Aqtau",
+          "national": false,
+          "ordinal": 5975,
+          "population": 4479.0,
+          "qid": "Q198989",
+          "record_sha256": "3683a794303f8ac094b155e515f0834d814a8aa2dbd77d745e3bcb91332fe1a2",
+          "role": "Populated place"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 6.727575,
+      "reasons": [
+        "nearby-normalized-name-or-alias"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Maldonado",
+            "Μαλντονάντο",
+            "Мальдонадо",
+            "מלדונדו",
+            "مالدونادو",
+            "माल्दोनाडो",
+            "মালডোনাডু",
+            "マルドナド",
+            "馬爾多納多",
+            "말도나도"
+          ],
+          "alternate": false,
+          "country": "URY",
+          "key": "1159123051",
+          "lat": -34.9100281,
+          "lon": -54.9599893,
+          "name": "Maldonado",
+          "national": false,
+          "ordinal": 584,
+          "population": 55478.0,
+          "qid": "Q16258",
+          "record_sha256": "4f1b62c7824bae2171775dee898a0418598a9c4de75ca3607cf3ab121107f0c6",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Maldonado",
+            "Punta del Este",
+            "Πούντα ντελ Έστε",
+            "Пунта-дель-Есте",
+            "Пунта-дель-Эсте",
+            "פונטה דל אסטה",
+            "بونتا دل إيستي",
+            "پونتا دل استه",
+            "پونتا دیل ایستے",
+            "पुंटा डेल एस्टे",
+            "পুন্টা দেল এস্তে",
+            "プンタ・デル・エステ",
+            "埃斯特角城",
+            "푼타델에스테"
+          ],
+          "alternate": false,
+          "country": "URY",
+          "key": "1159123067",
+          "lat": -34.9699727,
+          "lon": -54.9499899,
+          "name": "Punta del Este",
+          "national": false,
+          "ordinal": 585,
+          "population": 159000.0,
+          "qid": "Q56069",
+          "record_sha256": "5612b5d0d975840439c84636522d2286a824096fcd9c65ce3ce37b347e528084",
+          "role": "Admin-1 capital"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 2.14041,
+      "reasons": [
+        "nearby-normalized-name-or-alias"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Kansas City",
+            "Thành phố Kansas",
+            "Κάνσας Σίτι",
+            "Канзас-Сити",
+            "Канзас-Сіті",
+            "קנזס סיטי",
+            "كانساس سيتي",
+            "کانزاسسیتی",
+            "کنساس سٹی",
+            "कन्सास सिटी",
+            "ইসাহায়া",
+            "カンザスシティ",
+            "堪萨斯城",
+            "堪薩斯城",
+            "캔자스시티"
+          ],
+          "alternate": false,
+          "country": "USA",
+          "key": "1159123881",
+          "lat": 39.1135805,
+          "lon": -94.6301464,
+          "name": "Kansas City",
+          "national": false,
+          "ordinal": 638,
+          "population": 501577.0,
+          "qid": "Q486472",
+          "record_sha256": "420d8c6b23f86ae4840cdac60a9830fcef0042a76dff6329ad1a299ce7e9bfdb",
+          "role": "Populated place"
+        },
+        {
+          "aliases": [
+            "Kansas City",
+            "Thành phố Kansas",
+            "Κάνσας Σίτι",
+            "Канзас-Сити",
+            "Канзас-Сіті",
+            "קנזס סיטי",
+            "كانزاس سيتي",
+            "کانزاسسیتی",
+            "کنساس شہر",
+            "कन्सास सिटी",
+            "ক্যানসাস সিটি",
+            "カンザスシティ",
+            "堪萨斯城",
+            "堪薩斯城",
+            "캔자스시티"
+          ],
+          "alternate": false,
+          "country": "USA",
+          "key": "1159149245",
+          "lat": 39.1090344,
+          "lon": -94.6060401,
+          "name": "Kansas City",
+          "national": false,
+          "ordinal": 6227,
+          "population": 1469000.0,
+          "qid": "Q41819",
+          "record_sha256": "2338bb2e17d7cd4d06f7fcf2d1cd99fd13af3483f3df3691582f6e441eb0a6a4",
+          "role": "Populated place"
+        }
+      ]
+    },
+    {
+      "classification": "ambiguous-review",
+      "distance_km": 7075.598953,
+      "reasons": [
+        "cross-country-attribution-review",
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Ascención",
+            "Ascension",
+            "Ascensión",
+            "Ασενσιόν",
+            "Асенсьон",
+            "אסנסיון",
+            "آسنسیون",
+            "ایسکینشن",
+            "بلدية أسكينسيون",
+            "ऐसकेन्सन",
+            "অ্যাসসেন্সন",
+            "アサンシオン",
+            "阿森松",
+            "어센션"
+          ],
+          "alternate": false,
+          "country": "MEX",
+          "key": "1159129147",
+          "lat": 31.1000255,
+          "lon": -107.979983,
+          "name": "Ascensión",
+          "national": false,
+          "ordinal": 1119,
+          "population": 11781.0,
+          "qid": "Q2450325",
+          "record_sha256": "78ce35d13ab467fcb1a0eb4be26f09f656306f21454fca752ec36a12d13d4ba3",
+          "role": "Populated place"
+        },
+        {
+          "aliases": [
+            "Ascención",
+            "Ascension",
+            "Ascensión",
+            "Ασενσιόν",
+            "Асенсьон",
+            "Ассенсьйон",
+            "אסנסיון",
+            "آسنسیون",
+            "اسینشن",
+            "بلدية أسكينسيون",
+            "एसेंसन",
+            "আসসেনসন",
+            "アサンシオン",
+            "阿森松",
+            "어센션"
+          ],
+          "alternate": false,
+          "country": "BOL",
+          "key": "1159144877",
+          "lat": -15.6995727,
+          "lon": -63.0799846,
+          "name": "Ascension",
+          "national": false,
+          "ordinal": 4544,
+          "population": 14429.0,
+          "qid": "Q2450325",
+          "record_sha256": "3d1cd478396994b2847bc61727c551ad41a9d29570c555e8cc9974a36e3bcc5c",
+          "role": "Populated place"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 7.393078,
+      "reasons": [
+        "nearby-normalized-name-or-alias"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Teresina",
+            "Timon",
+            "Τίμον",
+            "Тимон",
+            "Тімон",
+            "טימון",
+            "تيمون",
+            "تیمون",
+            "ٹیمون",
+            "टीमों",
+            "টিমন",
+            "チモン",
+            "蒂蒙",
+            "티몬"
+          ],
+          "alternate": false,
+          "country": "BRA",
+          "key": "1159130903",
+          "lat": -5.1149992,
+          "lon": -42.8449665,
+          "name": "Timon",
+          "national": false,
+          "ordinal": 1460,
+          "population": 203157.0,
+          "qid": "Q1017101",
+          "record_sha256": "7f8c5854e0d07926cfe4a42f33625df431083530472c22ae124d26e03a286637",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Teresina",
+            "Τερεζίνα",
+            "Терезина",
+            "Терезіна",
+            "תרזינה",
+            "ترسینا",
+            "تيريسينا",
+            "تیریسینا",
+            "टेरेसीना",
+            "তেরেসিনা",
+            "テレジーナ",
+            "特雷西納",
+            "特雷西纳",
+            "테레지나"
+          ],
+          "alternate": false,
+          "country": "BRA",
+          "key": "1159150213",
+          "lat": -5.0930545,
+          "lon": -42.7819551,
+          "name": "Teresina",
+          "national": false,
+          "ordinal": 6657,
+          "population": 907000.0,
+          "qid": "Q165341",
+          "record_sha256": "337360949547b09072b93c06b4ba1ee493ed2344e3b4b742fd85dea26b096572",
+          "role": "Admin-1 capital"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 4.616607,
+      "reasons": [
+        "cross-country-attribution-review",
+        "nearby-normalized-name-or-alias"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Gisenyi",
+            "Γκισένι",
+            "Гисеньи",
+            "Гісеньї",
+            "גיסאניי",
+            "جيسايني",
+            "جیسینیی",
+            "گیسنیی",
+            "गीज़ेनिए",
+            "গিসেনি",
+            "ギセニ",
+            "吉塞尼",
+            "기세니"
+          ],
+          "alternate": false,
+          "country": "RWA",
+          "key": "1159135763",
+          "lat": -1.6846659,
+          "lon": 29.262906,
+          "name": "Gisenyi",
+          "national": false,
+          "ordinal": 2540,
+          "population": 83623.0,
+          "qid": "Q830631",
+          "record_sha256": "549da18d9f90b3357adfaf57a63ac626452c32dfcbb7c22b5ff3c8f2bffa4ff1",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Gisenyi",
+            "Goma",
+            "Γκόμα",
+            "Гома",
+            "גומה",
+            "غوما",
+            "گوما",
+            "गोमा",
+            "গুমা",
+            "ゴマ",
+            "戈馬",
+            "戈马",
+            "고마"
+          ],
+          "alternate": false,
+          "country": "COD",
+          "key": "1159149989",
+          "lat": -1.6787991,
+          "lon": 29.2217868,
+          "name": "Goma",
+          "national": false,
+          "ordinal": 6557,
+          "population": 144124.0,
+          "qid": "Q204381",
+          "record_sha256": "62daa806f4d2786590873b50ee79f305aa967788234a6c04330bc8b51bc913c0",
+          "role": "Admin-1 capital"
+        }
+      ]
+    },
+    {
+      "classification": "ambiguous-review",
+      "distance_km": 93.937236,
+      "reasons": [
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Bình Nhưỡng",
+            "Phenjan",
+            "Pionyang",
+            "Pjongjang",
+            "Pjöngjang",
+            "Pyongsan",
+            "Pyongyang",
+            "Πιονγιάνγκ",
+            "Пхеньян",
+            "פיונגיאנג",
+            "بيونغيانغ",
+            "پیانگ یانگ",
+            "پیونگیانگ",
+            "प्योंगयांग",
+            "পিয়ং ইয়াং",
+            "平壌",
+            "平壤",
+            "평양직할시"
+          ],
+          "alternate": false,
+          "country": "PRK",
+          "key": "1159139161",
+          "lat": 38.3366897,
+          "lon": 126.3866418,
+          "name": "Pyongsan",
+          "national": false,
+          "ordinal": 3295,
+          "population": 66260.0,
+          "qid": "Q18808",
+          "record_sha256": "68d3ec6c8a5f3c1412e5df070720b3505048f72d46769df7bf76fca485bbc968",
+          "role": "Populated place"
+        },
+        {
+          "aliases": [
+            "Bình Nhưỡng",
+            "P'yongyang",
+            "Phenjan",
+            "Pionyang",
+            "Pjongjang",
+            "Pjöngjang",
+            "Pyongyang",
+            "Πιονγιάνγκ",
+            "Пхеньян",
+            "פיונגיאנג",
+            "بيونغيانغ",
+            "پیانگ یانگ",
+            "پیونگیانگ",
+            "प्योंगयांग",
+            "পিয়ং ইয়াং",
+            "平壌",
+            "平壤",
+            "평양직할시"
+          ],
+          "alternate": false,
+          "country": "PRK",
+          "key": "1159151303",
+          "lat": 39.0213846,
+          "lon": 125.7527449,
+          "name": "Pyongyang",
+          "national": true,
+          "ordinal": 7141,
+          "population": 3300000.0,
+          "qid": "Q18808",
+          "record_sha256": "4ac4c5a43235e5fe97e17a79723114d7a3b628d7c68b30fee0037e1914864e0c",
+          "role": "Admin-0 capital"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 4.272674,
+      "reasons": [
+        "nearby-normalized-name-or-alias",
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Bandar Lampung",
+            "Tanjungkarang-Telukbetung",
+            "Μπαντάρ Λαμπούνγκ",
+            "Бандар-Лампунг",
+            "בנדר לומפונג",
+            "باندار لامبونج",
+            "بندر لامپونگ",
+            "बंदरलामपुंग",
+            "বান্দারলাম্পুং",
+            "バンダールランプン",
+            "班達楠榜",
+            "반다르람풍"
+          ],
+          "alternate": false,
+          "country": "IDN",
+          "key": "1159139819",
+          "lat": -5.4496041,
+          "lon": 105.3000219,
+          "name": "Bandar Lampung",
+          "national": false,
+          "ordinal": 3438,
+          "population": 881801.0,
+          "qid": "Q8156",
+          "record_sha256": "f82095edce75efffad7a5423fc5b50a17371bbe18dbe5c4c1b21f7c5cf75f08d",
+          "role": "Admin-1 capital"
+        },
+        {
+          "aliases": [
+            "Bandar Lampung",
+            "Μπαντάρ Λαμπούνγκ",
+            "Бандар-Лампунг",
+            "בנדר למפונג",
+            "باندار لامبونج",
+            "بندر لامپونگ",
+            "बंदरलामपुंग",
+            "বান্দারলাম্পুং",
+            "バンダールランプン",
+            "班達楠榜",
+            "반다르람풍"
+          ],
+          "alternate": false,
+          "country": "IDN",
+          "key": "1159149817",
+          "lat": -5.4280728,
+          "lon": 105.2680521,
+          "name": "Bandar Lampung",
+          "national": false,
+          "ordinal": 6481,
+          "population": 865000.0,
+          "qid": "Q8156",
+          "record_sha256": "fd8d57db0b3db7da3e77fa4cff5eb6f97d7ffa2c14866dc40cf73b8f8317f6f6",
+          "role": "Admin-1 capital"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 8.241046,
+      "reasons": [
+        "nearby-normalized-name-or-alias",
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Dempassar",
+            "Denpasar",
+            "Kuta",
+            "Ντενπασάρ",
+            "Денпасар",
+            "דנפסאר",
+            "دنباسار",
+            "دنپاسار",
+            "ڈنپسار",
+            "देनपसार",
+            "ডেনপাসার",
+            "デンパサール",
+            "丹帕沙",
+            "登巴萨",
+            "덴파사르"
+          ],
+          "alternate": false,
+          "country": "IDN",
+          "key": "1159139827",
+          "lat": -8.7151125,
+          "lon": 115.1841208,
+          "name": "Kuta",
+          "national": false,
+          "ordinal": 3440,
+          "population": 30012.0,
+          "qid": "Q11506",
+          "record_sha256": "c24d53c5dee900ddee6639536c315e239a149da26899b90f2b93c893c4a46600",
+          "role": "Populated place"
+        },
+        {
+          "aliases": [
+            "Dempassar",
+            "Denpasar",
+            "Ντενπασάρ",
+            "Денпасар",
+            "דנפסאר",
+            "دنباسار",
+            "دنپاسار",
+            "ڈنپسار",
+            "देनपसार",
+            "ডেনপাসার",
+            "デンパサール",
+            "丹帕沙",
+            "登巴萨",
+            "덴파사르"
+          ],
+          "alternate": false,
+          "country": "IDN",
+          "key": "1159146905",
+          "lat": -8.6500289,
+          "lon": 115.2199849,
+          "name": "Denpasar",
+          "national": false,
+          "ordinal": 5187,
+          "population": 732344.0,
+          "qid": "Q11506",
+          "record_sha256": "3bca5cc7334011574e1f5b5caf873afde4e7bba7e63e0c380a08f758ee364c5d",
+          "role": "Admin-1 capital"
+        }
+      ]
+    },
+    {
+      "classification": "ambiguous-review",
+      "distance_km": 100.637385,
+      "reasons": [
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Jingmen",
+            "Jingmen City",
+            "Kinh Môn",
+            "Τζίνγκμεν",
+            "Цзинмэнь",
+            "Цзінмень",
+            "ג'ינגמן",
+            "جنگمین",
+            "جینگمن",
+            "مدينة جينغمن",
+            "जिंगमेन सिटी",
+            "চিংমেন",
+            "荆门",
+            "荊門市",
+            "징먼시"
+          ],
+          "alternate": false,
+          "country": "CHN",
+          "key": "1159140765",
+          "lat": 31.031409824168122,
+          "lon": 112.2010339823121,
+          "name": "Jingmen",
+          "national": false,
+          "ordinal": 3649,
+          "population": 400000.0,
+          "qid": "Q71323",
+          "record_sha256": "070c5ae0af1eec8db0a96280f53108f0c81cac0c477d50e0b6db2f140f05e864",
+          "role": "Populated place"
+        },
+        {
+          "aliases": [
+            "Jianmen",
+            "Jingmen",
+            "Jingmen City",
+            "Kinh Môn",
+            "Tianmen",
+            "Τζίνγκμεν",
+            "Цзинмэнь",
+            "Цзінмень",
+            "ג'יאנמן",
+            "جنگمین",
+            "جینگمن",
+            "مدينة جينغمن",
+            "जिंगमेन सिटी",
+            "চিংমেন",
+            "荆门",
+            "荊門市",
+            "징먼시"
+          ],
+          "alternate": false,
+          "country": "CHN",
+          "key": "1159146993",
+          "lat": 30.6519988,
+          "lon": 113.1580614,
+          "name": "Jianmen",
+          "national": false,
+          "ordinal": 5226,
+          "population": 1708000.0,
+          "qid": "Q71323",
+          "record_sha256": "0a793be3d2e7edd5219cfb955a86320bc309020f8ccf0f3b15a9bacb12fd4f71",
+          "role": "Populated place"
+        }
+      ]
+    },
+    {
+      "classification": "probable-alias-review",
+      "distance_km": 2.701748,
+      "reasons": [
+        "nearby-normalized-name-or-alias"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Base Presidente Eduardo Frei Montalva",
+            "Base Presidente Montalva",
+            "Base presidente Eduardo Frei Montalva",
+            "Chile",
+            "Căn cứ Presidente Montalva",
+            "Eduardo Frei",
+            "Formerly Teniente Rodolfo Marsh Station",
+            "Pangkalan Presidente Montalva",
+            "Presidente Eduardo Frei Montalva",
+            "Presidente Eduardo Frei Montalva Station",
+            "Presidente Eduardo Frei Montalva Üssü",
+            "base Presidente Eduardo Frei Montalva",
+            "Μπέις Πρεσιδέντε Μοντάλβα",
+            "Президент Эдуардо Фрей Монталва",
+            "Фрей",
+            "בסיס פרזידנטה מונטלבה",
+            "بیس پریزیڈینٹے مونٹالوا",
+            "قاعدة الرئيس مونتالفا",
+            "پایگاه رئیسجمهور ادواردو فری مونتالوا",
+            "बेस प्रेसीडेंटे मोंटालवा",
+            "বেস প্রেসিদেন্তে মন্তালভা",
+            "エドゥアルド・フレイ・モンタルバ基地",
+            "爱德华多·弗雷·蒙塔尔瓦总统基地",
+            "에두아르도 프레이 몬탈바 기지"
+          ],
+          "alternate": false,
+          "country": "ATA",
+          "key": "1159146087",
+          "lat": -62.1827436,
+          "lon": -58.9076523,
+          "name": "Base Presidente Montalva",
+          "national": false,
+          "ordinal": 4823,
+          "population": 150.0,
+          "qid": "Q1928160",
+          "record_sha256": "8eed8fe55111f4a87cfcfdf67f945ae34f944df28fa7d6cc09566fca05f4fa2d",
+          "role": "Scientific station"
+        },
+        {
+          "aliases": [
+            "Base Profesor Julio Escudero",
+            "Base Professor Julio Escudero",
+            "Base professor Julio Escudero",
+            "Chile",
+            "Căn cứ Escudero",
+            "Escudero",
+            "Escudero Base",
+            "Escudero Üssü",
+            "Pangkalan Escudero",
+            "Profesor Julio Escudero Base",
+            "base Profesor Julio Escudero",
+            "Εσκουδέρο Μπέις",
+            "Професор Хуліо Ескудеро",
+            "Эскудеро",
+            "בסיס אסקודרו",
+            "اسکودرو بیس",
+            "ایسکوڈیرو بیس",
+            "قاعدة إسكوديرو",
+            "एस्क्विडेरो बेस",
+            "এস্কুয়েডেরো বেস",
+            "エスクデロ基地",
+            "胡里奥·埃斯库德罗教授站",
+            "胡里奧·埃斯庫德羅教授站",
+            "에스쿠데로 베이스"
+          ],
+          "alternate": false,
+          "country": "ATA",
+          "key": "1159146095",
+          "lat": -62.1949625,
+          "lon": -58.9526658,
+          "name": "Escudero Base",
+          "national": false,
+          "ordinal": 4827,
+          "population": 20.0,
+          "qid": "Q2714138",
+          "record_sha256": "5806d5cfdf3d6067d5c32dddcf785caffeda1472d0bd0052886e09a0a7401361",
+          "role": "Scientific station"
+        }
+      ]
+    },
+    {
+      "classification": "ambiguous-review",
+      "distance_km": 2820.55955,
+      "reasons": [
+        "shared-source-qid"
+      ],
+      "records": [
+        {
+          "aliases": [
+            "Baicheng",
+            "Bạch Thành",
+            "Μπαϊτσένγκ",
+            "Байчен",
+            "Байчэн",
+            "באיצ'נג",
+            "بائچینگ",
+            "بايتشنغ",
+            "بایچنگ",
+            "बैचेंग",
+            "বাইচেং",
+            "白城",
+            "白城市",
+            "바이청시"
+          ],
+          "alternate": false,
+          "country": "CHN",
+          "key": "1159147121",
+          "lat": 45.6200177,
+          "lon": 122.8200378,
+          "name": "Baicheng",
+          "national": false,
+          "ordinal": 5283,
+          "population": 386861.0,
+          "qid": "Q92381",
+          "record_sha256": "4593e3da46c55d503804f83e6fb6ea6bcd4ef4c8e979f7cfca6cee8fb9c84345",
+          "role": "Populated place"
+        },
+        {
+          "aliases": [
+            "Baicheng",
+            "Bose",
+            "Bạch Thành",
+            "Μπαϊτσένγκ",
+            "Байчен",
+            "Байчэн",
+            "בוס",
+            "بائچینگ",
+            "بايتشنغ",
+            "بایچنگ",
+            "बैचेंग",
+            "বাইচেং",
+            "白城",
+            "白城市",
+            "바이청시"
+          ],
+          "alternate": false,
+          "country": "CHN",
+          "key": "1159149783",
+          "lat": 23.8997156,
+          "lon": 106.6133268,
+          "name": "Bose",
+          "national": false,
+          "ordinal": 6466,
+          "population": 175282.0,
+          "qid": "Q92381",
+          "record_sha256": "82e35199a6359f439a6a3e3910a5a6a5c707211c2f8642d3746979207ffb0e6c",
+          "role": "Populated place"
+        }
+      ]
+    }
+  ],
+  "policy": "Pair evidence only; retain distinct identities; repeated IDs block selection. No automatic merge.",
+  "prior_concordance_cases": [
+    {
+      "capital_of_claims": [
+        "Q3125978"
+      ],
+      "country_claims": [
+        "Q252"
+      ],
+      "earth_coordinates": [
+        [
+          115.23388888888888,
+          -8.671666666666667,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Denpasar",
+      "instance_claims": [
+        "Q3199141"
+      ],
+      "modified": "2026-10-30T16:31:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            115.1841208,
+            -8.7151125
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 7.298,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159139827",
+          "ne_name": "Kuta"
+        },
+        {
+          "coordinate": [
+            115.2199849,
+            -8.6500289
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2.85,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159146905",
+          "ne_name": "Denpasar"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2024-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+670210"
+        }
+      ],
+      "qid": "Q11506",
+      "revision": 2562620865
+    },
+    {
+      "capital_of_claims": [
+        "Q3945164",
+        "Q83069"
+      ],
+      "country_claims": [
+        "Q43"
+      ],
+      "earth_coordinates": [
+        [
+          30.40256,
+          40.77625,
+          1e-05
+        ]
+      ],
+      "english_label": "Adapazarı",
+      "instance_claims": [
+        "Q1147395",
+        "Q1549591"
+      ],
+      "modified": "2026-08-17T13:00:09Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            30.4000025,
+            40.7666611
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.088,
+          "ne_adm0_a3": "TUR",
+          "ne_capital_flag": false,
+          "ne_id": "1159113425",
+          "ne_name": "Sakarya"
+        },
+        {
+          "coordinate": [
+            30.4150321,
+            40.799976
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2.839,
+          "ne_adm0_a3": "TUR",
+          "ne_capital_flag": false,
+          "ne_id": "1159146375",
+          "ne_name": "Adapazarı"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2022-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 0,
+          "value": "+281489"
+        }
+      ],
+      "qid": "Q175323",
+      "revision": 2532330249
+    },
+    {
+      "capital_of_claims": [
+        "Q28370",
+        "Q423",
+        "Q705044"
+      ],
+      "country_claims": [
+        "Q423"
+      ],
+      "earth_coordinates": [
+        [
+          125.7475,
+          39.016666666666666,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Pyongyang",
+      "instance_claims": [
+        "Q10864048",
+        "Q1549591",
+        "Q499073",
+        "Q515",
+        "Q51929311"
+      ],
+      "modified": "2026-11-07T20:18:32Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            126.3866418,
+            38.3366897
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 93.782,
+          "ne_adm0_a3": "PRK",
+          "ne_capital_flag": false,
+          "ne_id": "1159139161",
+          "ne_name": "Pyongsan"
+        },
+        {
+          "coordinate": [
+            125.7527449,
+            39.0213846
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.693,
+          "ne_adm0_a3": "PRK",
+          "ne_capital_flag": true,
+          "ne_id": "1159151303",
+          "ne_name": "Pyongyang"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2015-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+2863000"
+        }
+      ],
+      "qid": "Q18808",
+      "revision": 2566053566
+    },
+    {
+      "capital_of_claims": [
+        "Q238931"
+      ],
+      "country_claims": [
+        "Q232"
+      ],
+      "earth_coordinates": [
+        [
+          51.1575,
+          43.6525,
+          0.0002777777777777778
+        ]
+      ],
+      "english_label": "Aktau",
+      "instance_claims": [
+        "Q129725870",
+        "Q1549591",
+        "Q515"
+      ],
+      "modified": "2026-10-04T16:14:57Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            51.1417356,
+            43.6904551
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 4.407,
+          "ne_adm0_a3": "KAZ",
+          "ne_capital_flag": false,
+          "ne_id": "1159122651",
+          "ne_name": "Mangyshlak"
+        },
+        {
+          "coordinate": [
+            51.2365002,
+            43.6231887
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 7.144,
+          "ne_adm0_a3": "KAZ",
+          "ne_capital_flag": false,
+          "ne_id": "1159148679",
+          "ne_name": "Aqtau"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2017-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+183350"
+        }
+      ],
+      "qid": "Q198989",
+      "revision": 2553101216
+    },
+    {
+      "capital_of_claims": [
+        "Q2990967"
+      ],
+      "country_claims": [
+        "Q96"
+      ],
+      "earth_coordinates": [
+        [
+          -107.99638888889,
+          31.092777777778,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Ascensión",
+      "instance_claims": [
+        "Q20202352"
+      ],
+      "modified": "2026-09-08T14:22:12Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            -107.979983,
+            31.1000255
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.758,
+          "ne_adm0_a3": "MEX",
+          "ne_capital_flag": false,
+          "ne_id": "1159129147",
+          "ne_name": "Ascensión"
+        },
+        {
+          "coordinate": [
+            -63.0799846,
+            -15.6995727
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 7076.259,
+          "ne_adm0_a3": "BOL",
+          "ne_capital_flag": false,
+          "ne_id": "1159144877",
+          "ne_name": "Ascension"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2010-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+13456"
+        },
+        {
+          "dates": [
+            "+2020-03-15T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P459",
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 0,
+          "value": "+15054"
+        }
+      ],
+      "qid": "Q2450325",
+      "revision": 2542293975
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q148"
+      ],
+      "earth_coordinates": [
+        [
+          112.21138888889,
+          31.038055555556,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Jingmen",
+      "instance_claims": [
+        "Q1549591",
+        "Q748149"
+      ],
+      "modified": "2026-11-06T07:14:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            112.2010339823121,
+            31.031409824168122
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.233,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159140765",
+          "ne_name": "Jingmen"
+        },
+        {
+          "coordinate": [
+            113.1580614,
+            30.6519988
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 100.053,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159146993",
+          "ne_name": "Jianmen"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2019-12-31T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+2897500"
+        },
+        {
+          "dates": [
+            "+2020-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P1539",
+            "P1540",
+            "P459",
+            "P518",
+            "P585",
+            "P6343",
+            "P6344"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+2596927"
+        }
+      ],
+      "qid": "Q71323",
+      "revision": 2565260326
+    },
+    {
+      "capital_of_claims": [
+        "Q2110"
+      ],
+      "country_claims": [
+        "Q252"
+      ],
+      "earth_coordinates": [
+        [
+          105.2625,
+          -5.4294444444444,
+          0.00027777777777778
+        ]
+      ],
+      "english_label": "Bandar Lampung",
+      "instance_claims": [
+        "Q3199141"
+      ],
+      "modified": "2026-10-11T13:42:08Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            105.3000219,
+            -5.4496041
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 4.72,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159139819",
+          "ne_name": "Bandar Lampung"
+        },
+        {
+          "coordinate": [
+            105.2680521,
+            -5.4280728
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 0.633,
+          "ne_adm0_a3": "IDN",
+          "ne_capital_flag": false,
+          "ne_id": "1159149817",
+          "ne_name": "Bandar Lampung"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2015-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+1166761"
+        }
+      ],
+      "qid": "Q8156",
+      "revision": 2555888141
+    },
+    {
+      "capital_of_claims": [
+        "Q3193749",
+        "Q3193752",
+        "Q388047"
+      ],
+      "country_claims": [
+        "Q948"
+      ],
+      "earth_coordinates": [
+        [
+          8.8333333333333,
+          35.166666666667,
+          0.016666666666667
+        ]
+      ],
+      "english_label": "Kasserine",
+      "instance_claims": [
+        "Q41067667"
+      ],
+      "modified": "2026-08-23T05:52:44Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            8.7166985,
+            35.2167031
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 11.97,
+          "ne_adm0_a3": "TUN",
+          "ne_capital_flag": false,
+          "ne_id": "1159112827",
+          "ne_name": "Kasserine"
+        },
+        {
+          "coordinate": [
+            8.829993,
+            35.1803965
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.557,
+          "ne_adm0_a3": "TUN",
+          "ne_capital_flag": false,
+          "ne_id": "1159133873",
+          "ne_name": "Qasserine"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [],
+          "qualifier_properties": [],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+108794"
+        }
+      ],
+      "qid": "Q852735",
+      "revision": 2535255158
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q148"
+      ],
+      "earth_coordinates": [
+        [
+          122.832,
+          45.6148,
+          null
+        ]
+      ],
+      "english_label": "Baicheng",
+      "instance_claims": [
+        "Q748149"
+      ],
+      "modified": "2026-11-06T09:10:00Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            122.8200378,
+            45.6200177
+          ],
+          "coordinate_review_flag": false,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 1.096,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159147121",
+          "ne_name": "Baicheng"
+        },
+        {
+          "coordinate": [
+            106.6133268,
+            23.8997156
+          ],
+          "coordinate_review_flag": true,
+          "layer": "place",
+          "minimum_reference_coordinate_distance_km": 2820.648,
+          "ne_adm0_a3": "CHN",
+          "ne_capital_flag": false,
+          "ne_id": "1159149783",
+          "ne_name": "Bose"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2010-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+2032356"
+        },
+        {
+          "dates": [
+            "+2020-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P1539",
+            "P1540",
+            "P459",
+            "P518",
+            "P585",
+            "P6343",
+            "P6344"
+          ],
+          "rank": "normal",
+          "reference_count": 1,
+          "value": "+1551378"
+        }
+      ],
+      "qid": "Q92381",
+      "revision": 2565298738
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q30"
+      ],
+      "earth_coordinates": [
+        [
+          166.63333333333,
+          19.3,
+          null
+        ]
+      ],
+      "english_label": "Wake Island",
+      "instance_claims": [
+        "Q139595919",
+        "Q42523",
+        "Q462778",
+        "Q56061",
+        "Q783733"
+      ],
+      "modified": "2026-11-06T10:22:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            115.81956,
+            10.72954
+          ],
+          "coordinate_review_flag": true,
+          "layer": "map-unit",
+          "minimum_reference_coordinate_distance_km": 5520.952,
+          "ne_adm0_a3": "PGA",
+          "ne_capital_flag": null,
+          "ne_id": "1159321165",
+          "ne_name": "Spratly Is."
+        },
+        {
+          "coordinate": [
+            166.644535,
+            19.285663
+          ],
+          "coordinate_review_flag": false,
+          "layer": "map-unit",
+          "minimum_reference_coordinate_distance_km": 1.981,
+          "ne_adm0_a3": "UMI",
+          "ne_capital_flag": null,
+          "ne_id": "1159321391",
+          "ne_name": "Wake Atoll"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2017-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P1013",
+            "P459",
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 0,
+          "value": "+100"
+        }
+      ],
+      "qid": "Q43296",
+      "revision": 2565329657
+    },
+    {
+      "capital_of_claims": [],
+      "country_claims": [
+        "Q1042"
+      ],
+      "earth_coordinates": [
+        [
+          52.766667,
+          -7.1,
+          1e-05
+        ]
+      ],
+      "english_label": "Seychelles",
+      "instance_claims": [
+        "Q112099",
+        "Q11815167",
+        "Q3624078",
+        "Q6256",
+        "Q7270"
+      ],
+      "modified": "2026-11-03T10:30:54Z",
+      "natural_earth_records": [
+        {
+          "coordinate": [
+            55.480175,
+            -4.676659
+          ],
+          "coordinate_review_flag": true,
+          "layer": "map-unit",
+          "minimum_reference_coordinate_distance_km": 403.334,
+          "ne_adm0_a3": "SYC",
+          "ne_capital_flag": null,
+          "ne_id": "1159321291",
+          "ne_name": "Seychelles"
+        }
+      ],
+      "population_statements": [
+        {
+          "dates": [
+            "+2023-00-00T00:00:00Z"
+          ],
+          "qualifier_properties": [
+            "P585"
+          ],
+          "rank": "preferred",
+          "reference_count": 1,
+          "value": "+119773"
+        }
+      ],
+      "qid": "Q1042",
+      "revision": 2564284983
+    }
+  ],
+  "prior_concordance_report_sha256": "a744f813a110468320a07f29f542d4d629c10e028267bcfc7e401e110ee532f3",
+  "prior_evidence_limit": "Attributed existing revision-pinned research, not newly fetched verification. Includes separately scoped map-unit records absent from settlement input.",
+  "reason_counts": {
+    "cross-country-attribution-review": 2,
+    "nearby-normalized-name-or-alias": 10,
+    "shared-source-qid": 9
+  },
+  "source_sha256": "cd149186f03d2603e0410da399b980a4357d0ac32d3a2305a49ed3dffcc41d7b"
+}

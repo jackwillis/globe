@@ -1,0 +1,54 @@
+{
+  "baseline_revision": "a0e01f3be96f6556502d62d51320a0e9c1ccc75d",
+  "commands": [
+    "python3 atlas/research/sources.py /tmp/globe-atlas-sources",
+    "python3 atlas/research/test_country_selection.py -v",
+    "/tmp/globe-atlas-gis-env/bin/python -m unittest discover -s atlas/research -p test_*.py -v",
+    "cmake -S . -B /tmp/globe-country-selection-build -G Ninja",
+    "cmake --build /tmp/globe-country-selection-build -j 4",
+    "ctest --test-dir /tmp/globe-country-selection-build --output-on-failure",
+    "tools/check-policy.sh",
+    "git diff --check",
+    "python3 atlas/research/country_selection_report.py /tmp/globe-atlas-sources /tmp/country-selection-final",
+    "python3 atlas/research/country_selection_report.py /tmp/globe-atlas-sources /tmp/country-selection-repeat",
+    "diff -qr /tmp/country-selection-final /tmp/country-selection-repeat",
+    "python3 tools/places-builder/build_places.py data/wikidata-cities-large-20261102.json /tmp/country-selection-production-check.gplc --large",
+    "cmp data/cities.gplc /tmp/country-selection-production-check.gplc"
+  ],
+  "initial_failures": [
+    "System Python unittest discovery could not import optional Shapely; rerun with existing GIS venv passed.",
+    "Sandboxed CTest: eight X11 tests could not open private Xvfb displays; full unrestricted rerun passed.",
+    "Initial report computation interrupted to replace repeated scoring with incremental competition; final runs completed.",
+    "gh initially could not reach GitHub from network sandbox; authorized network access succeeded."
+  ],
+  "limits": [
+    "Python-only research; no G4/OS9/NetBSD runtime or resident memory measurements.",
+    "No production data, recipes, locks, C++ or CI changed.",
+    "No actual capital approvals supplied."
+  ],
+  "log_sha256": {
+    "country-selection-build.log": "7fda4cf2eb1b3dd1f1efbd01b9a2d7d12e9b42759392450d7f5750f20d987aa0",
+    "country-selection-configure.log": "6b0eb3944a452f665955c6c372543bfc0cd9b5282d8dd9b6fd03264f86034e42",
+    "country-selection-ctest-unrestricted.log": "020fd2d64205c8b6110d8277f8f76dd7f55d9625baa83c478ac843e23cf5cc25",
+    "country-selection-ctest.log": "9e9b4cdee5cb9fe2f96d7aa5bfffbc5d71800e400a09d136ef9f1e3e5a180e76",
+    "country-selection-research-tests-gis.log": "d1bf233f7c8d967efdcc4331197e9e2079944ff36566c33f0003a29676b0b99a",
+    "country-selection-sources.log": "d66a866b60229790d021f850348a2e9ce40d2ed0e41993dbbb20669b4126600b"
+  },
+  "machine": "x86_64",
+  "new_tests": 15,
+  "output_files": 48,
+  "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "python": "3.14.8",
+  "repository_tests": 59,
+  "research_tests": 98,
+  "results": {
+    "all_research_existing_gis_env": "pass",
+    "host_configure_build": "pass",
+    "host_ctest_with_display_access": "59/59 pass",
+    "new_tests": "pass",
+    "policy": "pass",
+    "production_builder": "304 records; 9641 bytes; byte-identical to data/cities.gplc",
+    "reproduction": "all 48 output files byte-identical across two runs"
+  },
+  "schema": 1
+}

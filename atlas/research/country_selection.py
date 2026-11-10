@@ -29,6 +29,7 @@ class Place:
     national: bool = False
     alternate: bool = False
     ordinal: int = 0
+    record_sha256: str = ''
 
 
 def population(value):
@@ -44,7 +45,8 @@ def adapt(rows):
     return [Place(r['NE_ID'], r['ADM0_A3'], r['NAME'], *p[0][0],
                   population(r.get('POP_MAX')), r.get('WIKIDATAID', ''),
                   tuple(sorted({v for k, v in r.items() if k.startswith('NAME') and v and v != '-99'})),
-                  r.get('FEATURECLA', ''), r.get('ADM0CAP') == '1', r.get('CAPALT') == '1', i)
+                  r.get('FEATURECLA', ''), r.get('ADM0CAP') == '1', r.get('CAPALT') == '1', i,
+                  hashlib.sha256(json.dumps([r, p], sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest())
             for i, (r, p) in enumerate(rows, 1)]
 
 
@@ -135,7 +137,7 @@ def duplicate_audit(places, source_sha256):
         # Ordinal is excluded when testing identical-record duplication.
         same = {k: v for k, v in asdict(pa).items() if k != 'ordinal'} == {k: v for k, v in asdict(pb).items() if k != 'ordinal'}
         evidence.append({'records': [asdict(pa), asdict(pb)], 'distance_km': round(distance(pa, pb), 6),
-                         'reasons': sorted(why), 'classification': 'definite-same-record' if same else
+                         'reasons': sorted(why), 'classification': 'definite-same-record' if same and pa.record_sha256 else
                          'probable-alias-review' if 'nearby-normalized-name-or-alias' in why else 'ambiguous-review'})
     known = {'Pyongsan', 'Pyongyang', 'Bose', 'Baicheng', 'Kuta', 'Denpasar', 'Spratly Islands', 'Wake Island', 'Jianmen', 'Ascension'}
     return {'source_sha256': source_sha256, 'pair_evidence': evidence,
