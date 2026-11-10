@@ -912,9 +912,7 @@ class App {
             overlays_.toggle_measure();
             reshow();
             break;
-        case KeyBinding::Overlay::Palette:
-            // The looks list is always showing in the sidebar: nothing to open.
-            break;
+        case KeyBinding::Overlay::Palette: // the looks list is always showing in the sidebar
         case KeyBinding::Overlay::Nothing:
             break;
         }

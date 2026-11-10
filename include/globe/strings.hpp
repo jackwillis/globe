@@ -5,7 +5,7 @@
 #pragma once
 #include "globe/prefs.hpp"
 namespace globe {
-enum class Str : unsigned {
+enum class Str : unsigned char {
 #define GLOBE_STR(name) name,
 #include "globe/strings_keys.inc"
 #undef GLOBE_STR
