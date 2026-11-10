@@ -35,13 +35,6 @@ void StyleWindow::place(int x, int y) {
     if (window_)
         XMoveWindow(display_, window_, x, y);
 }
-void StyleWindow::set_language(Language language) {
-    if (language == language_)
-        return;
-    language_ = language;
-    if (window_)
-        draw();
-}
 void StyleWindow::set_current(int row) {
     if (row == current_)
         return;
@@ -61,7 +54,7 @@ void StyleWindow::draw() {
         XFillRectangle(display_, window_, gc_, 10, y + 4, 22, 11);
         XSetForeground(display_, gc_, BlackPixel(display_, screen));
         XDrawRectangle(display_, window_, gc_, 10, y + 4, 22, 22);
-        const char* name = tr(language_, kNames[i]);
+        const char* name = tr(kNames[i]);
         XDrawString(display_, window_, gc_, 42, y + 20, name, static_cast<int>(std::strlen(name)));
         if (i == current_) {
             XDrawRectangle(display_, window_, gc_, 4, y, kWidth - 9, kRowHeight - 2);

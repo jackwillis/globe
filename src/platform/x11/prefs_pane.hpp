@@ -5,12 +5,12 @@
 #include <X11/Xlib.h>
 #include <optional>
 namespace globe {
-// The units and language radio rows, a child of the one Globe window under the looks list. It
+// Unit radio rows, a child of the one Globe window under the looks list. It
 // holds no preference of its own: it draws the Model's and reports a click as the preferences
 // asked for, which the application sends through update().
 class PrefsPane {
   public:
-    static constexpr int kWidth = 220, kHeight = 118;
+    static constexpr int kWidth = 220, kHeight = 66;
     struct Result {
         bool handled = false;
         std::optional<Preferences> next;

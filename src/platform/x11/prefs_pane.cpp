@@ -5,7 +5,7 @@
 #include <cstring>
 namespace globe {
 namespace {
-constexpr int kUnitsHead = 16, kUnitsTop = 22, kLanguageHead = 70, kLanguageTop = 76, kRow = 18;
+constexpr int kUnitsHead = 16, kUnitsTop = 22, kRow = 18;
 void text(Display* d, Window w, GC gc, int x, int y, const char* s) {
     XDrawString(d, w, gc, x, y, s, static_cast<int>(std::strlen(s)));
 }
@@ -45,21 +45,15 @@ void PrefsPane::sync(const Preferences& current) {
 }
 void PrefsPane::draw() {
     const auto screen = DefaultScreen(display_);
-    const auto lang = shown_.language;
     XSetForeground(display_, gc_, WhitePixel(display_, screen));
     XFillRectangle(display_, window_, gc_, 0, 0, kWidth, kHeight);
     XSetForeground(display_, gc_, BlackPixel(display_, screen));
     XDrawLine(display_, window_, gc_, 0, 0, kWidth, 0);
-    text(display_, window_, gc_, 10, kUnitsHead, tr(lang, Str::PrefsUnits));
+    text(display_, window_, gc_, 10, kUnitsHead, tr(Str::PrefsUnits));
     radio(display_, window_, gc_, kUnitsTop, shown_.units == Units::Metric,
-          tr(lang, Str::UnitsMetric));
+          tr(Str::UnitsMetric));
     radio(display_, window_, gc_, kUnitsTop + kRow, shown_.units == Units::Imperial,
-          tr(lang, Str::UnitsImperial));
-    text(display_, window_, gc_, 10, kLanguageHead, tr(lang, Str::PrefsLanguage));
-    radio(display_, window_, gc_, kLanguageTop, lang == Language::English,
-          tr(lang, Str::LangEnglish));
-    radio(display_, window_, gc_, kLanguageTop + kRow, lang == Language::Spanish,
-          tr(lang, Str::LangSpanish));
+          tr(Str::UnitsImperial));
 }
 PrefsPane::Result PrefsPane::handle(const XEvent& e) {
     Result r;
@@ -76,10 +70,6 @@ PrefsPane::Result PrefsPane::handle(const XEvent& e) {
             next.units = Units::Metric;
         else if (row(kUnitsTop + kRow))
             next.units = Units::Imperial;
-        else if (row(kLanguageTop))
-            next.language = Language::English;
-        else if (row(kLanguageTop + kRow))
-            next.language = Language::Spanish;
         if (!(next == shown_))
             r.next = next;
     }
