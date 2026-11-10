@@ -33,8 +33,7 @@ endforeach()
 # Floppy payload: atlas, one-degree elevation, land classes, country polygons and 304 cities.
 add_application(${APP} CREATOR Glb2
   ${ROOT}/src/platform/os9/main.cpp ${ROOT}/src/platform/os9/clock_os9.cpp
-  ${ROOT}/src/platform/os9/info_card.cpp
-  ${ROOT}/src/platform/os9/looks_palette.cpp
+  ${ROOT}/src/platform/os9/sidebar.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
   ${ROOT}/src/core/app.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp

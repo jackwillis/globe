@@ -17,9 +17,8 @@
 #include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
-#include "info_card.hpp"
-#include "looks_palette.hpp"
 #include "pixel_format.hpp"
+#include "sidebar.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
 #include <Events.h>
@@ -54,36 +53,19 @@ constexpr unsigned kResumeFlag = 1;
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
 }
-// Where the three windows go, as content rectangles in global coordinates: the globe on the left,
-// taking the width the right column leaves, and the column's top (the Looks palette) over the
-// information card, which takes the rest of the column's height. Computed once, at launch.
-struct Workspace {
-    Rect globe, palette, info;
-};
-Workspace workspace_layout() {
-    constexpr short kGap = 6;      // between windows and the screen edge, frames included
-    constexpr short kTitleBar = 20; // a document window's title bar sits above its content
-    constexpr short kMinInfo = 60;
-    const Rect screen = qd.screenBits.bounds;
+// The Globe window's content rectangle in global coordinates: the screen below the menu bar and
+// title bar, less a margin. The sidebar takes its right `Sidebar::kWidth` columns and the globe the
+// rest; both stay inside the sizes the grow box allows.
+Rect window_content() {
+    constexpr short kGap = 6, kTitleBar = 20;
+    const Rect screen = (*GetMainDevice())->gdRect; // the menu bar's screen
     const short top = static_cast<short>(screen.top + GetMBarHeight() + kTitleBar + kGap);
-    const short bottom = static_cast<short>(screen.bottom - kGap);
     const short left = static_cast<short>(screen.left + kGap);
-    const short right = static_cast<short>(screen.right - kGap);
-    const short column = std::clamp<short>(static_cast<short>((right - left) / 3), 180, 320);
-    // The globe stays inside the buffer sizes the grow box allows.
-    const short globe_right = static_cast<short>(
-        std::min(right - column - kGap, left + 1600));
-    const short globe_bottom = static_cast<short>(std::min(bottom, static_cast<short>(top + 1200)));
-    Workspace w{};
-    w.globe = Rect{top, left, std::max<short>(globe_bottom, top + 120),
-                   std::max<short>(globe_right, left + 160)};
-    const short column_left = static_cast<short>(w.globe.right + kGap);
-    const short column_right = std::max<short>(right, column_left + 160);
-    w.palette = Rect{top, column_left, static_cast<short>(top + LooksPalette::height()),
-                     column_right};
-    const short info_top = static_cast<short>(w.palette.bottom + kGap + kTitleBar);
-    w.info = Rect{info_top, column_left, std::max<short>(bottom, info_top + kMinInfo), column_right};
-    return w;
+    const short width = std::clamp<short>(static_cast<short>(screen.right - screen.left - 2 * kGap),
+                                          Sidebar::kWidth + 160, 1600);
+    const short height =
+        std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), 120, 1200);
+    return Rect{top, left, static_cast<short>(top + height), static_cast<short>(left + width)};
 }
 class Application {
   public:
@@ -123,12 +105,7 @@ class Application {
                          place_scene_ ? &*place_scene_ : nullptr);
         runner_.set_scene(*scene_);
         runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
-        // The right column opens first and the globe last, so the globe is the frontmost, active
-        // window and keeps the keyboard and the cursor rules.
-        const Workspace workspace = workspace_layout();
-        palette_.show(model_.terrain_style, workspace.palette);
-        info_.show(nothing_selected_card(), workspace.info);
-        Rect bounds = workspace.globe;
+        Rect bounds = window_content();
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);
@@ -137,10 +114,14 @@ class Application {
             return false;
         SetPortWindowPort(window_);
         const int width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
-        if (!buffers(width, height))
+        const int globe_width = width - Sidebar::kWidth;
+        if (!sidebar_.attach(window_) || !buffers(globe_width, height))
             return false;
-        if (width != model_.camera.width || height != model_.camera.height)
-            apply(Resize{width, height});
+        sidebar_.layout(static_cast<short>(width), static_cast<short>(height));
+        sidebar_.sync(model_.terrain_style);
+        sidebar_.show(nothing_selected_card());
+        if (globe_width != model_.camera.width || height != model_.camera.height)
+            apply(Resize{globe_width, height});
         apply(Tick{now_ms()});
         return true;
     }
@@ -239,7 +220,12 @@ class Application {
                     if (part == inContent) {
                         if (FrontWindow() != window_)
                             SelectWindow(window_);
-                        else
+                        else if (sidebar_.contains(local)) {
+                            const int row = sidebar_.mouse_down(local);
+                            SetPortWindowPort(window_);
+                            if (const auto pick = looks_pick(model_.terrain_style, row))
+                                quit = apply(CommandIssued{time, *pick});
+                        } else
                             quit = apply(PointerDown{time, double(local.h), double(local.v)});
                     } else if (part == inDrag) {
                         Rect limit{20, -32000, 32000, 32000};
@@ -248,26 +234,22 @@ class Application {
                     } else if (part == inGoAway)
                         quit = TrackGoAway(window_, event.where);
                     else if (part == inGrow) {
-                        Rect limit{120, 160, 1201, 1601};
+                        Rect limit{120, static_cast<short>(Sidebar::kWidth + 160), 1201, 1601};
                         const auto size = GrowWindow(window_, event.where, &limit);
                         if (size) {
                             const int width = static_cast<unsigned long>(size) & 0xffffU;
                             const int height = (static_cast<unsigned long>(size) >> 16) & 0xffffU;
-                            if (buffers(width, height)) {
+                            const int globe_width = width - Sidebar::kWidth;
+                            if (buffers(globe_width, height)) {
                                 SizeWindow(window_, width, height, true);
-                                apply(Resize{width, height});
+                                sidebar_.layout(static_cast<short>(width),
+                                                static_cast<short>(height));
+                                apply(Resize{globe_width, height});
+                                InvalRect(&window_->portRect); // the sidebar moved: redraw it
                             } else
                                 quit = true;
                         }
                     }
-                } else if (hit == info_.window())
-                    info_.mouse_down(event);
-                else if (hit == palette_.window()) {
-                    int row = -1;
-                    palette_.mouse_down(event, row);
-                    SetPortWindowPort(window_);
-                    if (const auto pick = looks_pick(model_.terrain_style, row))
-                        quit = apply(CommandIssued{time, *pick});
                 } else if (part == inSysWindow)
                     SystemClick(&event, hit);
             } else if (event.what == mouseUp) {
@@ -290,33 +272,25 @@ class Application {
                     // Background update events repaint the cached GWorld, never convert terrain.
                     copy(0, fb_->height(),
                          foreground_ && !presentation_.pending(model_.generation));
+                    sidebar_.draw();
                     EndUpdate(window_);
-                } else if (reinterpret_cast<WindowPtr>(event.message) == palette_.window()) {
-                    BeginUpdate(palette_.window());
-                    palette_.draw();
-                    EndUpdate(palette_.window());
-                    SetPortWindowPort(window_);
-                } else if (reinterpret_cast<WindowPtr>(event.message) == info_.window()) {
-                    BeginUpdate(info_.window());
-                    info_.draw();
-                    EndUpdate(info_.window());
-                    SetPortWindowPort(window_);
                 }
             } else if (event.what == activateEvt) {
-                if (reinterpret_cast<WindowPtr>(event.message) == info_.window())
-                    info_.activate(event.modifiers & activeFlag);
-                else if (!(event.modifiers & activeFlag))
+                if (reinterpret_cast<WindowPtr>(event.message) == window_) {
+                    sidebar_.activate(event.modifiers & activeFlag);
+                    sidebar_.draw();
+                }
+                if (!(event.modifiers & activeFlag))
                     apply(PointerUp{time});
-            }
-            else if (event.what != nullEvent && event.what != activateEvt &&
-                     event.what != diskEvt && event.what != osEvt) {
+            } else if (event.what != nullEvent && event.what != activateEvt &&
+                       event.what != diskEvt && event.what != osEvt) {
                 // Not an event this program knows (a scroll wheel, if the system sends one to a
                 // non-Carbon program, would show up here): remember the code for the title.
                 last_unknown_ = static_cast<unsigned>(event.what);
                 ++unknown_count_;
                 show_timing(); // refresh the title so the code is visible
             }
-            palette_.sync(model_.terrain_style); // the check follows the look, whoever changed it
+            sidebar_.sync(model_.terrain_style); // the check follows the look, whoever changed it
             SetPortWindowPort(window_);
             // A one-pixel mouse region wakes on motion, even with no button held. No periodic poll.
             Point current;
@@ -336,8 +310,10 @@ class Application {
                 hover_valid_ = true;
             }
             const auto target = hover_;
-            const auto intent = FrontWindow() == window_ ? cursor_for(model_, position, target)
-                                                         : CursorIntent::Arrow;
+            const bool over_globe = position.x < sidebar_.left();
+            const auto intent = FrontWindow() == window_ && over_globe
+                                    ? cursor_for(model_, position, target)
+                                    : CursorIntent::Arrow;
             if (foreground_ && intent != cursor_) {
                 cursor_ = intent;
                 const auto native = intent == CursorIntent::OpenHand       ? 9U
@@ -535,7 +511,7 @@ class Application {
     void pick(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
-            info_.show(*card, Rect{}); // updates in place; it never takes the focus
+            sidebar_.show(*card);
             SetPortWindowPort(window_);
         }
         if (changed)
@@ -556,8 +532,7 @@ class Application {
             hover_valid_ = false; // measuring makes the whole globe clickable
             reshow();
         } else if (which == KeyBinding::Overlay::Palette) {
-            palette_.show(model_.terrain_style, Rect{});
-            SetPortWindowPort(window_);
+            // The looks list is always showing in the sidebar: nothing to open.
         }
     }
     // Check marks and dimming for the menu about to be shown; the model is the only state.
@@ -618,7 +593,7 @@ class Application {
         card.lines[1] = "Copyright (c) 2026 Jack Willis. GPL-3.0-or-later.";
         card.lines[2] = "Data sources and notices: see the ReadMe.";
         card.line_count = 3;
-        info_.show(card, Rect{});
+        sidebar_.show(card);
         SetPortWindowPort(window_);
     }
     bool key(unsigned long message, std::uint64_t time) {
@@ -659,8 +634,7 @@ class Application {
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     Overlays overlays_;
-    InfoCardWindow info_;
-    LooksPalette palette_;
+    Sidebar sidebar_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
     std::uint64_t wake_ = 0;
