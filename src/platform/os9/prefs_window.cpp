@@ -83,8 +83,7 @@ void PrefsWindow::draw() {
     draw_text(tr(Str::PrefsUnits));
     TextFace(normal);
     radio(kMargin, kUnitsTop, shown_.units == Units::Metric, tr(Str::UnitsMetric));
-    radio(kMargin, kUnitsTop + kRowHeight, shown_.units == Units::Imperial,
-          tr(Str::UnitsImperial));
+    radio(kMargin, kUnitsTop + kRowHeight, shown_.units == Units::Imperial, tr(Str::UnitsImperial));
     SetPort(saved);
 }
 std::optional<Preferences> PrefsWindow::mouse_down(Point local) const {

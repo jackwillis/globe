@@ -50,8 +50,7 @@ void PrefsPane::draw() {
     XSetForeground(display_, gc_, BlackPixel(display_, screen));
     XDrawLine(display_, window_, gc_, 0, 0, kWidth, 0);
     text(display_, window_, gc_, 10, kUnitsHead, tr(Str::PrefsUnits));
-    radio(display_, window_, gc_, kUnitsTop, shown_.units == Units::Metric,
-          tr(Str::UnitsMetric));
+    radio(display_, window_, gc_, kUnitsTop, shown_.units == Units::Metric, tr(Str::UnitsMetric));
     radio(display_, window_, gc_, kUnitsTop + kRow, shown_.units == Units::Imperial,
           tr(Str::UnitsImperial));
 }
