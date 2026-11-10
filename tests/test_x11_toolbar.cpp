@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #include "check.hpp"
 #include "globe/app.hpp"
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <cstdio>
@@ -206,6 +207,46 @@ int main(int argc, char** argv) {
                 }
             } else
                 CHECK(false);
+        }
+        {
+            // Copy Information: Ctrl-C on the Globe window, then ask for the CLIPBOARD as text.
+            XEvent key{};
+            key.xkey.type = KeyPress;
+            key.xkey.display = d;
+            key.xkey.window = main;
+            key.xkey.state = ControlMask;
+            key.xkey.keycode = XKeysymToKeycode(d, XK_c);
+            XSendEvent(d, main, False, KeyPressMask, &key);
+            XFlush(d);
+            usleep(150000);
+            const Atom clipboard = XInternAtom(d, "CLIPBOARD", False);
+            const Atom property = XInternAtom(d, "GLOBE_TEST_COPY", False);
+            const Window me = XCreateSimpleWindow(d, DefaultRootWindow(d), 0, 0, 1, 1, 0, 0, 0);
+            XSelectInput(d, me, PropertyChangeMask);
+            XConvertSelection(d, clipboard, XA_STRING, property, me, CurrentTime);
+            XFlush(d);
+            std::string copied;
+            for (int i = 0; i < 100; ++i) {
+                XEvent ev;
+                if (XCheckTypedWindowEvent(d, me, SelectionNotify, &ev)) {
+                    if (ev.xselection.property != None) {
+                        Atom type;
+                        int format;
+                        unsigned long count, after;
+                        unsigned char* data = nullptr;
+                        if (XGetWindowProperty(d, me, property, 0, 1024, True, AnyPropertyType,
+                                               &type, &format, &count, &after, &data) == Success &&
+                            data) {
+                            copied.assign(reinterpret_cast<char*>(data), count);
+                            XFree(data);
+                        }
+                    }
+                    break;
+                }
+                usleep(20000);
+            }
+            CHECK(copied.rfind("Distance\n", 0) == 0 || copied.rfind("Distancia\n", 0) == 0);
+            XDestroyWindow(d, me);
         }
         click(Command::Quit);
     } else {

@@ -598,7 +598,7 @@ void test_key_bindings() {
     CHECK(!binding_for_char('d').command &&
           binding_for_char('D').overlay == KeyBinding::Overlay::Night);
     CHECK(binding_for_char('m').overlay == KeyBinding::Overlay::Measure);
-    CHECK(binding_for_char('P').overlay == KeyBinding::Overlay::Palette);
+    CHECK(binding_for_char('P').overlay == KeyBinding::Overlay::Nothing); // no palette to open
     for (const int other : std::initializer_list<int>{0, 32, 'x', 'Z', '1', 200}) {
         const auto b = binding_for_char(other);
         CHECK(!b.command && b.overlay == KeyBinding::Overlay::Nothing);

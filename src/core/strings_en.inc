@@ -38,6 +38,5 @@
 "Graticule",
 "Borders",
 "Trackball Drag",
-"Looks Palette",
 "Night Side",
 "Measure",

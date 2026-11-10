@@ -262,9 +262,6 @@ KeyBinding binding_for_char(int ch) {
     case 'm':
         b.overlay = KeyBinding::Overlay::Measure;
         break;
-    case 'p':
-        b.overlay = KeyBinding::Overlay::Palette;
-        break;
     default:
         break;
     }

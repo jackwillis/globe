@@ -41,6 +41,7 @@
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
+#include "globe/card_text.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -847,8 +848,17 @@ class App {
             }
             return false;
         }
+        case SelectionRequest:
+            answer_selection(ev.xselectionrequest);
+            return false;
+        case SelectionClear:
+            return false;
         case KeyPress: {
             const KeySym sym = XLookupKeysym(&ev.xkey, 0);
+            if ((ev.xkey.state & ControlMask) && (sym == XK_c || sym == XK_C)) {
+                copy_card();
+                return false;
+            }
             return on_key(sym, now);
         }
         case ClientMessage:
@@ -856,6 +866,41 @@ class App {
         default:
             return false;
         }
+    }
+
+    // Copy Information: take the CLIPBOARD and PRIMARY selections; the text is the card as it is
+    // when someone asks (it is copied here too, so a later pick does not change what was copied).
+    void copy_card() {
+        char text[1024];
+        copied_ = std::string(text, card_text(info_.card(), text, sizeof text, '\n'));
+        XSetSelectionOwner(dpy_, XInternAtom(dpy_, "CLIPBOARD", False), win_, CurrentTime);
+        XSetSelectionOwner(dpy_, XA_PRIMARY, win_, CurrentTime);
+    }
+    void answer_selection(const XSelectionRequestEvent& request) {
+        XSelectionEvent reply{};
+        reply.type = SelectionNotify;
+        reply.display = request.display;
+        reply.requestor = request.requestor;
+        reply.selection = request.selection;
+        reply.target = request.target;
+        reply.time = request.time;
+        reply.property = None;
+        const Atom property = request.property != None ? request.property : request.target;
+        const Atom utf8 = XInternAtom(dpy_, "UTF8_STRING", False);
+        const Atom targets = XInternAtom(dpy_, "TARGETS", False);
+        if (request.target == targets) {
+            const Atom list[] = {targets, XA_STRING, utf8};
+            XChangeProperty(dpy_, request.requestor, property, XA_ATOM, 32, PropModeReplace,
+                            reinterpret_cast<const unsigned char*>(list), 3);
+            reply.property = property;
+        } else if (request.target == XA_STRING || request.target == utf8) {
+            // ASCII only until #84 settles the text encoding, so both targets are the same bytes.
+            XChangeProperty(dpy_, request.requestor, property, request.target, 8, PropModeReplace,
+                            reinterpret_cast<const unsigned char*>(copied_.data()),
+                            static_cast<int>(copied_.size()));
+            reply.property = property;
+        }
+        XSendEvent(dpy_, request.requestor, False, NoEventMask, reinterpret_cast<XEvent*>(&reply));
     }
 
     bool on_key(KeySym sym, std::uint64_t now) {
@@ -912,7 +957,6 @@ class App {
             overlays_.toggle_measure();
             reshow();
             break;
-        case KeyBinding::Overlay::Palette: // the looks list is always showing in the sidebar
         case KeyBinding::Overlay::Nothing:
             break;
         }
@@ -927,6 +971,7 @@ class App {
     InfoWindow info_;
     StyleWindow styles_;
     PrefsPane prefs_pane_;
+    std::string copied_; // the text offered for the selections
     Preferences shown_prefs_{};
     bool info_blank_ = true; // the card shows "Nothing is selected."
     static constexpr int kInfoTop = StyleWindow::kHeight + PrefsPane::kHeight;

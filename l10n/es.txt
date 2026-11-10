@@ -38,6 +38,5 @@ ItemAlignNorth = Alinear al norte
 ItemGraticule = Cuadricula
 ItemBorders = Fronteras
 ItemTrackball = Arrastre de bola
-ItemLooksPalette = Paleta de vistas
 ItemNight = Lado nocturno
 ItemMeasure = Medir

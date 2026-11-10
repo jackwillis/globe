@@ -6,6 +6,7 @@
 #include "classic_wait.hpp"
 #include "clock.hpp"
 #include "globe/app.hpp"
+#include "globe/card_text.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -575,8 +576,6 @@ class Application {
             overlays_.toggle_measure();
             hover_valid_ = false; // measuring makes the whole globe clickable
             reshow();
-        } else if (which == KeyBinding::Overlay::Palette) {
-            // The looks list is always showing in the sidebar: nothing to open.
         }
     }
     // Check marks and dimming for the menu about to be shown; the model is the only state.
@@ -592,12 +591,12 @@ class Application {
                 CheckItem(view, item, s.checked);
             }
         }
-        // Edit exists for desk accessories only: live while one is in front.
+        // Edit is for desk accessories, except Copy, which copies the information card.
         const WindowPtr front = FrontWindow();
         const bool accessory = front != nullptr && GetWindowKind(front) < 0;
         if (const MenuHandle edit = GetMenuHandle(kEditMenu)) {
             for (short item = 1; item <= 6; ++item) {
-                if (accessory)
+                if (accessory || item == kCopyItem)
                     EnableItem(edit, item);
                 else
                     DisableItem(edit, item);
@@ -618,6 +617,8 @@ class Application {
         } else if (menu == kEditMenu && item == kPreferencesItem) {
             prefs_window_.open(model_.prefs);
             SetPortWindowPort(window_);
+        } else if (menu == kEditMenu && item == kCopyItem && !accessory_in_front()) {
+            copy_card();
         } else if (menu == kEditMenu) {
             SystemEdit(item - 1);
         } else {
@@ -631,6 +632,17 @@ class Application {
         }
         HiliteMenu(0);
         return quit;
+    }
+    bool accessory_in_front() const {
+        const WindowPtr front = FrontWindow();
+        return front != nullptr && GetWindowKind(front) < 0;
+    }
+    // Copy Information: the whole card shown, as TEXT on the scrap (lines separated by CR).
+    void copy_card() {
+        char text[1024];
+        const auto length = card_text(sidebar_.card(), text, sizeof text, '\r');
+        ZeroScrap();
+        PutScrap(static_cast<long>(length), 'TEXT', text);
     }
     // Preferences go through update() like any other state; the text and windows follow the Model.
     void set_preferences(const Preferences& next, std::uint64_t) {

@@ -78,7 +78,6 @@ void rebuild_menu_bar(Language lang) {
     add_divider(view);
     add_item(view, tr(lang, Str::LookMap));
     add_item(view, tr(lang, Str::LookRelief));
-    add_item(view, tr(lang, Str::ItemLooksPalette), 'P');
     add_divider(view);
     add_item(view, tr(lang, Str::ItemNight), 'D');
     add_item(view, tr(lang, Str::ItemMeasure), 'M');
