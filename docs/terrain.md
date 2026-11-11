@@ -103,7 +103,8 @@ benchmark checksum above describes the mask-on build; the default moving frames 
 The settled terrain refines circle-outward from the view center; every other order was tried and removed.
 [Design, measurements and limits](refinement-order.md). The cell rasterizer/smoothing is unchanged,
 and all settled pins remain unchanged. The added workspace is one byte per cell, included in the
-existing 32 MiB allocation guard.
+existing 32 MiB allocation guard. Grids of up to 100,000 cells (the 1 degree grid) also keep per-pass
+cell lists, 4 bytes per cell, so a pass visits only its own cells ([details](refinement-order.md)).
 
 
 ## Looks: Map and Relief (GL-33 / GL-34, revised 2026-11-02)

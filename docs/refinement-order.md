@@ -46,6 +46,16 @@ The squared distance of the cell's projected center (mean of its four corners) i
 division, clock or random generator runs per cell (the plan itself does one `sqrt` per job). The
 extra per-view state is one byte per cell, already in `required_bytes()`.
 
+**Per-pass cell lists (#66).** A job used to visit all of a grid's cells in each of the 17 sweeps (16
+rings and the limb pass) to find the ones to draw: about 135M of the 608M instructions of
+`globe-line-layer-bench` on the host. Now, for grids of at most `kPassListCellLimit` (100,000) cells,
+the set-up counts cells per ring while assigning, then groups them (one extra work unit per cell,
+phase 13), so ring k walks exactly its own cells in index order. The limb pass walks the clipped
+cells (a flag bit kept with the ring number), looking at up to 256 cells per work unit. Draw order,
+16-row slices and every pixel are unchanged. The lists cost 4 bytes per cell (260 KB for the 1 degree
+grid), counted in `required_bytes()`; 0.5 degree grids do not get them (another megabyte each would
+break the aggregate elevation-pack budget) and keep scanning.
+
 Measured on the G4 (640x480, 64 work units per step, medians of nine, two runs, headless): first
 pass about 78 ms, total 711 / 765 / 635 ms (profile 1x, 2x off-center, trace), worst step about
 25 ms. Final images are identical for every focus: `19dd1b02e4cb2a8b` (profile 1x),
