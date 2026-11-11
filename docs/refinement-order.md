@@ -56,6 +56,12 @@ cells (a flag bit kept with the ring number), looking at up to 256 cells per wor
 grid), counted in `required_bytes()`; 0.5 degree grids do not get them (another megabyte each would
 break the aggregate elevation-pack budget) and keep scanning.
 
+**Map ocean skip (#67, [ADR 0004](adr/0004-map-ocean-skip.md)).** In the Map look a job that clears the
+disc itself leaves out the ocean cells that would only repaint `kMapOcean` over the cleared ocean (all
+four corners clear of the horizon; never on a preserved bitmap, with flat shading, or in Relief). Their
+`cell_pass()` is 255, so neither the lists nor the scan visit them. About half the fills disappear and
+the settled pixels are identical.
+
 Measured on the G4 (640x480, 64 work units per step, medians of nine, two runs, headless): first
 pass about 78 ms, total 711 / 765 / 635 ms (profile 1x, 2x off-center, trace), worst step about
 25 ms. Final images are identical for every focus: `19dd1b02e4cb2a8b` (profile 1x),

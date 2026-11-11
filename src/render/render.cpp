@@ -476,7 +476,10 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             }
         } else if (phase_ == Phase::BoundCells) {
             terrain_->bound_cell(prepare_index_, fb.height(), kRefineBandRows);
-            terrain_->assign_pass(prepare_index_, plan_);
+            terrain_->assign_pass(
+                prepare_index_, plan_,
+                quality_.skip_ocean && !quality_.preserve_bitmap && quality_.smooth_terrain &&
+                    quality_.terrain_style == TerrainStyle::Map && palette_.ocean == kMapOcean);
             ++prepare_index_;
             if (prepare_index_ == terrain_->cell_count()) {
                 prepare_index_ = 0;

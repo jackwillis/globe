@@ -1,0 +1,6 @@
+{"repeat":7,"scene_bytes":241912,"job_bytes":624,"results":[
+{"radius":220,"mode":"unpaced","wall_median_ms":5.501,"first_frame_median_ms":1.866,"worst_step_ms":0.056,"checksum":"9c714394f3f2bd41"},
+{"radius":220,"mode":"layer","wall_median_ms":6.012,"first_frame_median_ms":1.330,"worst_step_ms":0.063,"checksum":"9c714394f3f2bd41"},
+{"radius":440,"mode":"unpaced","wall_median_ms":5.385,"first_frame_median_ms":1.827,"worst_step_ms":0.088,"checksum":"e1e923186a7e528d"},
+{"radius":440,"mode":"layer","wall_median_ms":6.025,"first_frame_median_ms":1.288,"worst_step_ms":0.179,"checksum":"e1e923186a7e528d"}
+]}
