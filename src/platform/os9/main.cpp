@@ -305,7 +305,11 @@ class Application {
             } else if ((event.what == keyDown || event.what == autoKey) &&
                        (event.modifiers & cmdKey)) {
                 refresh_menus();
-                const long result = MenuKey(static_cast<CharParameter>(event.message & 0xff));
+                // Command-= is Zoom In (the "+" key without Shift on a US keyboard).
+                auto key_char = static_cast<CharParameter>(event.message & 0xff);
+                if (key_char == '=')
+                    key_char = '+';
+                const long result = MenuKey(key_char);
                 if (result != 0)
                     quit = menu_selected(result, time);
                 turn_start = now_ms();
