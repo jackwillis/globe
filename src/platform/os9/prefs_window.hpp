@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
-// The Preferences window: a plain non-modal document window with radio rows for the units and the
-// language. It holds no preference of its own: it draws the Model's and reports a click as the
+// The Preferences window: a plain non-modal document window with radio rows for units.
+// It holds no preference of its own: it draws the Model's and reports a click as the
 // preferences the user asked for, which the shell sends through update().
 #pragma once
 #include "globe/prefs.hpp"

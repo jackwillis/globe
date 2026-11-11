@@ -86,16 +86,6 @@ void Sidebar::sync(TerrainStyle current) {
         ClipRect(&window_->portRect);
     }
 }
-void Sidebar::set_language(Language language) {
-    if (language == language_)
-        return;
-    const bool blank = card_.title.data() == tr(language_, Str::Selection);
-    language_ = language;
-    if (blank)
-        show(nothing_selected_card(language_));
-    else if (window_)
-        draw();
-}
 void Sidebar::activate(bool active) {
     active_ = active;
     sync_scroll();
@@ -116,7 +106,7 @@ void Sidebar::draw_rows() {
         MoveTo(static_cast<short>(area_.left + kMargin + 16), static_cast<short>(row * kRow + 15));
         unsigned char text[16];
         text[0] = 0;
-        for (const char* name = tr(language_, kNames[row]); *name && text[0] < 15; ++name)
+        for (const char* name = tr(kNames[row]); *name && text[0] < 15; ++name)
             text[++text[0]] = static_cast<unsigned char>(*name);
         DrawString(text);
     }

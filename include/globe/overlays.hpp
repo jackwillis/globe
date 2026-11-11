@@ -36,7 +36,7 @@ class Overlays {
     // True when something is drawn over the frame.
     bool active() const { return night_ || focused_.has_value() || measure_a_.has_value(); }
     void toggle_night() { night_ = !night_; }
-    // Units and language for the text of cards made from now on (the shell takes them from Model).
+    // Units for the text of cards made from now on (the shell takes them from Model).
     void set_preferences(const Preferences& prefs) { prefs_ = prefs; }
     // Leaving measure mode clears the measured points.
     void toggle_measure();

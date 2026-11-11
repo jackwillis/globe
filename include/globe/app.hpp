@@ -55,7 +55,7 @@ struct Model {
     unsigned refine_level = 0, refine_target = 0;
     bool refine_active = false, refine_first = true;
     TerrainStyle terrain_style = TerrainStyle::Map;
-    Preferences prefs; // units and language; changed by SetPreferences, never redraws the globe
+    Preferences prefs; // units; changed by SetPreferences, never redraws the globe
     Camera camera;
     Layers layers;
     DragMode drag_mode;

@@ -268,9 +268,7 @@ class App {
         std::printf("  \"info_cards\": %zu,\n  \"info_scrolls\": %zu,\n", info_cards_,
                     info_.scrolls());
         std::printf("  \"terrain_style\": %u,\n", static_cast<unsigned>(model_.terrain_style));
-        std::printf("  \"units\": %u,\n  \"language\": %u,\n",
-                    static_cast<unsigned>(model_.prefs.units),
-                    static_cast<unsigned>(model_.prefs.language));
+        std::printf("  \"units\": %u,\n", static_cast<unsigned>(model_.prefs.units));
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -358,7 +356,7 @@ class App {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
             info_.show(*card);
-            info_blank_ = card->title.data() == tr(model_.prefs.language, Str::Selection);
+            // The selected card already uses the single release UI language.
             ++info_cards_;
         }
         if (changed)
@@ -419,17 +417,13 @@ class App {
         return fx.quit;
     }
 
-    // Units and language are the Model's: the text and panes follow it, whoever changed it.
+    // Units are the Model's: the card and pane follow them.
     void follow_preferences() {
         if (model_.prefs == shown_prefs_)
             return;
-        const bool relanguage = model_.prefs.language != shown_prefs_.language;
         shown_prefs_ = model_.prefs;
         overlays_.set_preferences(model_.prefs);
-        styles_.set_language(model_.prefs.language);
         prefs_pane_.sync(model_.prefs);
-        if (relanguage && info_blank_)
-            info_.show(nothing_selected_card(model_.prefs.language));
     }
     // The sidebar sits to the right of the globe pane and follows its size.
     void layout_sidebar() {
@@ -973,7 +967,6 @@ class App {
     PrefsPane prefs_pane_;
     std::string copied_; // the text offered for the selections
     Preferences shown_prefs_{};
-    bool info_blank_ = true; // the card shows "Nothing is selected."
     static constexpr int kInfoTop = StyleWindow::kHeight + PrefsPane::kHeight;
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;

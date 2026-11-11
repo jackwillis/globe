@@ -49,10 +49,10 @@ class CountryScene {
 };
 InfoCard country_card(const Countries& countries, std::uint32_t id);
 // The blank state of the information window: shown at start and when a click clears the selection.
-inline InfoCard nothing_selected_card(Language language = Language::English) {
+inline InfoCard nothing_selected_card() {
     InfoCard card;
-    card.title = tr(language, Str::Selection);
-    card.lines[0] = tr(language, Str::NothingSelected);
+    card.title = tr(Str::Selection);
+    card.lines[0] = tr(Str::NothingSelected);
     card.line_count = 1;
     return card;
 }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #pragma once
-#include "globe/prefs.hpp"
 #include <X11/Xlib.h>
 namespace globe {
 // A small palette window listing the looks, one row each, with the current one marked. It only
@@ -20,7 +19,6 @@ class StyleWindow {
     void attach(Window owner, int x, int y, int current);
     void place(int x, int y);
     void set_current(int row);
-    void set_language(Language language);
     Result handle(const XEvent& event);
 
   private:
@@ -29,6 +27,5 @@ class StyleWindow {
     Window window_ = 0;
     GC gc_ = nullptr;
     int current_ = 0;
-    Language language_ = Language::English;
 };
 } // namespace globe
