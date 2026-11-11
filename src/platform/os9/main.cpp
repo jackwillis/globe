@@ -4,6 +4,7 @@
 #include "about_window.hpp"
 #include "classic_present.hpp"
 #include "classic_wait.hpp"
+#include "classic_window_fit.hpp"
 #include "clock.hpp"
 #include "globe/app.hpp"
 #include "globe/card_text.hpp"
@@ -74,22 +75,12 @@ Rect window_content() {
         std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), 120, 1200);
     return Rect{top, left, static_cast<short>(top + height), static_cast<short>(left + width)};
 }
-// Shrinks the initial window so the buffers it needs fit in the free heap. Per pixel: the
-// framebuffer (2 bytes plus coverage), the GWorld (2), the overlay copy (about 2) and the zoom
-// cache (about 2), rounded up to 11; the terrain scene and embedded data are already allocated when
-// this runs. The window grows back only by the user's choice (a failed grow keeps the old size).
-// Estimates from the host ledger and the code, not measured on OS 9 (#10).
+// Keep integer sizing testable without Toolbox; every actual allocation remains fallible.
 void fit_to_memory(Rect& r) {
-    constexpr long kBytesPerPixel = 11, kReserve = 1024 * 1024;
-    const long budget = std::max(0L, static_cast<long>(FreeMem()) - kReserve) / kBytesPerPixel;
-    long width = r.right - r.left, height = r.bottom - r.top;
-    const long min_width = Sidebar::kWidth + 160, min_height = 120;
-    while (width * height > budget && (width > min_width || height > min_height)) {
-        width = std::max(min_width, width * 7 / 8);
-        height = std::max(min_height, height * 7 / 8);
-    }
-    r.right = static_cast<short>(r.left + width);
-    r.bottom = static_cast<short>(r.top + height);
+    const auto size =
+        fit_classic_window_to_heap(r.right - r.left, r.bottom - r.top, Sidebar::kWidth, FreeMem());
+    r.right = static_cast<short>(r.left + size.width);
+    r.bottom = static_cast<short>(r.top + size.height);
 }
 class Application {
   public:
