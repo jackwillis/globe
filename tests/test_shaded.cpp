@@ -58,6 +58,115 @@ void tri(Framebuffer& fb, const double* p, const Rgb565* pal) {
     fill_triangle_shaded(fb, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], pal);
 }
 
+// The rasterizer as it was before the exact-equivalent validation and ceil/clamp helpers (#65),
+// kept verbatim as the reference. Final pixels must not change.
+namespace reference {
+constexpr double kBox = 1.0e6;
+constexpr double kMaxShade = 255.9999;
+struct V {
+    double x, y, v;
+};
+double edge_x(const V& a, const V& b, double cy) {
+    return a.x + (cy - a.y) * (b.x - a.x) / (b.y - a.y);
+}
+bool before(const V& a, const V& b) {
+    return a.y < b.y || (a.y == b.y && a.x < b.x);
+}
+void fill(Framebuffer& fb, double x0, double y0, double v0, double x1, double y1, double v1,
+          double x2, double y2, double v2, const Rgb565* palette) {
+    const double all[9] = {x0, y0, v0, x1, y1, v1, x2, y2, v2};
+    for (int i = 0; i < 9; ++i) {
+        if (!std::isfinite(all[i]) || (i % 3 != 2 && std::fabs(all[i]) > kBox)) {
+            return;
+        }
+    }
+    V a{x0, y0, std::clamp(v0, 0.0, kMaxShade)};
+    V b{x1, y1, std::clamp(v1, 0.0, kMaxShade)};
+    V c{x2, y2, std::clamp(v2, 0.0, kMaxShade)};
+    if (before(b, a)) {
+        std::swap(a, b);
+    }
+    if (before(c, b)) {
+        std::swap(b, c);
+        if (before(b, a)) {
+            std::swap(a, b);
+        }
+    }
+    const double det = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y);
+    if (!(std::fabs(det) > 1.0e-9)) {
+        return;
+    }
+    const double gx = ((b.v - a.v) * (c.y - a.y) - (c.v - a.v) * (b.y - a.y)) / det;
+    const double gy = ((c.v - a.v) * (b.x - a.x) - (b.v - a.v) * (c.x - a.x)) / det;
+    const double h = static_cast<double>(fb.height());
+    const double w = static_cast<double>(fb.width());
+    const int y_first =
+        std::max(fb.first_row(), static_cast<int>(std::clamp(std::ceil(a.y - 0.5), 0.0, h)));
+    const int y_end =
+        std::min(fb.end_row(), static_cast<int>(std::clamp(std::ceil(c.y - 0.5), 0.0, h)));
+    for (int y = y_first; y < y_end; ++y) {
+        const double cy = y + 0.5;
+        const double long_x = edge_x(a, c, cy);
+        const double short_x = cy < b.y ? edge_x(a, b, cy) : edge_x(b, c, cy);
+        const double left = std::min(long_x, short_x);
+        const double right = std::max(long_x, short_x);
+        const int xs = static_cast<int>(std::clamp(std::ceil(left - 0.5), 0.0, w));
+        const int xe = static_cast<int>(std::clamp(std::ceil(right - 0.5), 0.0, w)) - 1;
+        if (xs > xe) {
+            continue;
+        }
+        const double row = a.v + gy * (cy - a.y) - gx * a.x;
+        const double vs = std::clamp(row + gx * (xs + 0.5), 0.0, kMaxShade);
+        const double ve = std::clamp(row + gx * (xe + 0.5), 0.0, kMaxShade);
+        std::int32_t value = static_cast<std::int32_t>(vs * 65536.0);
+        const std::int32_t step =
+            xe > xs ? static_cast<std::int32_t>((ve - vs) / (xe - xs) * 65536.0) : 0;
+        Rgb565* out =
+            fb.data() + static_cast<std::size_t>(y) * static_cast<std::size_t>(fb.stride());
+        for (int x = xs; x <= xe; ++x) {
+            out[x] = palette[value >> 16];
+            value += step;
+        }
+    }
+}
+} // namespace reference
+
+bool same(const Framebuffer& a, const Framebuffer& b) {
+    for (int y = 0; y < a.height(); ++y) {
+        for (int x = 0; x < a.width(); ++x) {
+            if (a.pixel(x, y) != b.pixel(x, y)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// One value drawn from a list that hits the ceil/clamp boundaries: integers, half-integers,
+// signed zero, just either side of them, the box edge and beyond, and the buffer limits.
+double edgy(int w, int h) {
+    static const double base[] = {0.0,  -0.0, 0.5,  -0.5, 1.0,   1.5,    2.5,       -1.0,    3.0,
+                                  47.5, 48.0, 48.5, 49.0, 1.0e6, -1.0e6, 1.0e6 + 1, 1.0e-12, 255.0};
+    lcg_state = lcg_state * 1664525U + 1013904223U;
+    const std::size_t n = sizeof(base) / sizeof(base[0]);
+    double v = base[(lcg_state >> 8) % n];
+    lcg_state = lcg_state * 1664525U + 1013904223U;
+    switch ((lcg_state >> 8) % 6) {
+    case 0:
+        return v;
+    case 1:
+        return std::nextafter(v, 1.0e9);
+    case 2:
+        return std::nextafter(v, -1.0e9);
+    case 3:
+        return static_cast<double>(w) + (v > 0 ? 0.0 : 0.5);
+    case 4:
+        return static_cast<double>(h) - 0.5;
+    default:
+        return rnd(-5, std::max(w, h) + 5);
+    }
+}
+
 } // namespace
 
 int main() {
@@ -328,6 +437,44 @@ int main() {
             tri(fb, t, pal.data());
             CHECK(covered(fb) == 0);
         }
+    }
+
+    // The current rasterizer is pixel-identical to the reference over random triangles, edge-case
+    // coordinates (integers, half-integers, +-0, one ulp either side, the box limit), several
+    // buffer sizes and clip rows, plus invalid input that must draw nothing in both.
+    {
+        const double nan = std::numeric_limits<double>::quiet_NaN();
+        const double inf = std::numeric_limits<double>::infinity();
+        const int sizes[][2] = {{48, 48}, {31, 17}, {1, 1}, {64, 5}};
+        int drawn = 0;
+        for (int trial = 0; trial < 6000; ++trial) {
+            const int* sz = sizes[trial % 4];
+            double t[9];
+            const bool edgecase = trial % 3 != 0;
+            for (int i = 0; i < 3; ++i) {
+                t[i * 3] = edgecase ? edgy(sz[0], sz[1]) : rnd(-20, sz[0] + 20);
+                t[i * 3 + 1] = edgecase ? edgy(sz[0], sz[1]) : rnd(-20, sz[1] + 20);
+                t[i * 3 + 2] = (trial % 7 == 0) ? rnd(-1.0e3, 1.0e3) : rnd(0, 255);
+            }
+            if (trial % 97 == 0) {
+                t[trial % 9] = (trial % 2) ? nan : inf;
+            }
+            if (trial % 101 == 0) {
+                t[2] = std::numeric_limits<double>::max();
+                t[5] = -std::numeric_limits<double>::max();
+            }
+            Framebuffer got = make(sz[0], sz[1]);
+            Framebuffer want = make(sz[0], sz[1]);
+            if (trial % 5 == 0 && sz[1] > 4) {
+                got.clip_rows(1, sz[1] - 1);
+                want.clip_rows(1, sz[1] - 1);
+            }
+            tri(got, t, pal.data());
+            reference::fill(want, t[0], t[1], t[2], t[3], t[4], t[5], t[6], t[7], t[8], pal.data());
+            CHECK(same(got, want));
+            drawn += covered(got) > 0;
+        }
+        CHECK(drawn > 1500); // the comparison is not vacuous
     }
 
     return TEST_MAIN_RESULT();
