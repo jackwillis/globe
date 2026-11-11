@@ -92,5 +92,30 @@ int main() {
         big.submitted(1);
         CHECK(!big.active(1));
     }
+    // OS 9 copies [first,end), tunes from that copy's elapsed time, THEN acknowledges it.
+    // Tuning must never change which rows submitted() acknowledges (#74).
+    for (int height : {1, 31, 65, 480, 481}) {
+        for (bool fast : {false, true}) {
+            ClassicPresentation t;
+            std::array<unsigned, 481> visits{};
+            t.request(7);
+            CHECK(t.begin(7, height));
+            unsigned slices = 0;
+            while (t.active(7) && ++slices < 1000) {
+                const int first = t.first(), end = t.end();
+                for (int y = first; y < end; ++y)
+                    ++visits[static_cast<unsigned>(y)];
+                // Exercise growth, shrinkage and a partial final slice in the real call order.
+                const auto elapsed = fast ? 0U : (slices % 3 == 0 ? 1U : 20U);
+                t.tune(end - first, elapsed, 6);
+                CHECK(t.first() == first && t.end() == end);
+                t.submitted(7);
+                CHECK(t.first() == end);
+            }
+            CHECK(!t.pending(7));
+            for (int y = 0; y < height; ++y)
+                CHECK(visits[static_cast<unsigned>(y)] == 1);
+        }
+    }
     return TEST_MAIN_RESULT();
 }
