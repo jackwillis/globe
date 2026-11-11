@@ -113,6 +113,7 @@ int main() {
             q.lines_first = true;
             RefinementJob layered(*camera, *scene, kDefaultPalette, Layers{}, q, 5, &*terrain);
             const auto palette = palette_for_style(kDefaultPalette, q.terrain_style);
+            std::vector<std::pair<int, Rgb565>> first_lines;
             unsigned frames = 0;
             double last_progress = 0;
             while (layered.active()) {
@@ -129,11 +130,14 @@ int main() {
                         const auto v = fb->data()[i];
                         if (v != palette.background && v != palette.ocean) {
                             ++lines;
+                            first_lines.emplace_back(i, v);
                             CHECK(v == expected[static_cast<std::size_t>(i)]);
                         }
                     }
                     CHECK(lines > 50);
                 }
+                for (const auto& [index, color] : first_lines)
+                    CHECK(fb->data()[index] == color);
             }
             CHECK(frames == kRefinePasses + 3); // lines, 16 rings, the limb pass, the end
             CHECK(last_progress > 0.9 && layered.progress() == 1.0);
