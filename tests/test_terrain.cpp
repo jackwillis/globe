@@ -476,10 +476,141 @@ void test_resolution_replacement() {
         }
     }
 }
+// A grid of the given size with contrasting neighbours, so any draw-order change shows in pixels.
+Bytes sized_grid(unsigned width, unsigned height) {
+    auto bytes = land_grid();
+    bytes.resize(552 + width * height);
+    store_le32(bytes.data() + 8, width);
+    store_le32(bytes.data() + 12, height);
+    for (std::size_t i = 0; i < static_cast<std::size_t>(width) * height; ++i)
+        bytes[552 + i] = static_cast<std::uint8_t>((i * 73) % 256);
+    store_le32(bytes.data() + 36,
+               crc32_extend(crc32(bytes.data(), 36), bytes.data() + 40, bytes.size() - 40));
+    return bytes;
+}
+// The per-pass cell lists are an exact regrouping of what the job used to find by scanning every
+// cell: pass k holds the cells with cell_pass == k in index order, and the limb walk visits the
+// visible clipped cells in index order whatever the scan budget.
+void test_pass_lists() {
+    auto bytes = sized_grid(120, 60);
+    auto grid = Elevation::parse(bytes.data(), bytes.size());
+    CHECK(grid);
+    if (!grid)
+        return;
+    auto terrain = TerrainScene::create(*grid);
+    CHECK(terrain && terrain->has_lists());
+    if (!terrain)
+        return;
+    CHECK(terrain->bytes() == TerrainScene::required_bytes(*grid));
+    unsigned nonempty = 0;
+    for (const LatLon view : {LatLon{0, 0}, LatLon{35, 100}, LatLon{-70, -30}, LatLon{89, 0}}) {
+        for (const double radius : {25.0, 60.0, 400.0}) {
+            const auto camera = *make_camera({view, 11, radius, 100, 81});
+            for (const ScreenPoint focus : {ScreenPoint{50, 40}, ScreenPoint{3, 70}}) {
+                for (std::size_t i = 0; i < terrain->corner_count(); ++i)
+                    terrain->project_corner(i, camera);
+                const auto plan = make_pass_plan(camera, focus);
+                terrain->begin_lists();
+                for (std::size_t i = 0; i < terrain->cell_count(); ++i) {
+                    terrain->bound_cell(i, camera.height, kRefineBandRows);
+                    terrain->assign_pass(i, plan);
+                }
+                terrain->finish_lists();
+                for (std::size_t i = 0; i < terrain->cell_count(); ++i)
+                    terrain->place_cell(i);
+                std::size_t total = 0;
+                for (unsigned k = 0; k < kRefinePasses; ++k) {
+                    std::vector<std::size_t> want;
+                    for (std::size_t i = 0; i < terrain->cell_count(); ++i)
+                        if (terrain->cell_pass(i) == k)
+                            want.push_back(i);
+                    CHECK(terrain->pass_count(k) == want.size());
+                    for (std::size_t n = 0; n < want.size() && n < terrain->pass_count(k); ++n)
+                        CHECK(terrain->pass_cell(k, n) == want[n]);
+                    total += want.size();
+                    nonempty += !want.empty();
+                }
+                std::size_t visible = 0;
+                for (std::size_t i = 0; i < terrain->cell_count(); ++i)
+                    visible += terrain->cell_pass(i) != 255;
+                CHECK(total == visible);
+                std::vector<std::size_t> want_limb;
+                for (std::size_t i = 0; i < terrain->cell_count(); ++i)
+                    if (terrain->cell_pass(i) != 255 && terrain->limb_cell(i))
+                        want_limb.push_back(i);
+                for (const std::size_t budget :
+                     {std::size_t{1}, std::size_t{7}, std::size_t{256}}) {
+                    std::vector<std::size_t> got;
+                    for (std::size_t at = 0; at < terrain->cell_count();) {
+                        at = terrain->skip_to_limb(at, budget);
+                        if (at < terrain->cell_count() && terrain->is_limb(at))
+                            got.push_back(at++);
+                    }
+                    CHECK(got == want_limb);
+                }
+            }
+        }
+    }
+    CHECK(nonempty > 40);
+}
+// A whole refinement job on a grid with or without lists draws the definition of the image, with
+// monotonic progress. Grids too large for the lists keep the scan and cost no list memory.
+void check_job(unsigned width, unsigned height, bool lists) {
+    auto bytes = sized_grid(width, height);
+    auto grid = Elevation::parse(bytes.data(), bytes.size());
+    auto ab = atlas_util::make_atlas({}, "pass list job");
+    auto atlas = Atlas::parse(ab.data(), ab.size());
+    CHECK(grid && atlas);
+    if (!grid || !atlas)
+        return;
+    auto terrain = TerrainScene::create(*grid);
+    auto scene = Scene::create(*atlas);
+    CHECK(terrain && scene && terrain->has_lists() == lists);
+    if (!terrain || !scene)
+        return;
+    CHECK(terrain->bytes() == TerrainScene::required_bytes(*grid));
+    auto fb = Framebuffer::create(100, 81);
+    CHECK(fb);
+    if (!fb)
+        return;
+    for (const auto view : {LatLon{25, 40}, LatLon{-80, 5}}) {
+        const auto camera = *make_camera({view, 9, 38, 100, 81});
+        for (const unsigned budget : {13U, 97U}) {
+            RenderQuality q{1.5, true};
+            q.focus = {20, 30};
+            q.lines_first = true; // the progress bar belongs to this flow
+            fb->clear(0x1234);
+            RefinementJob job(camera, *scene, kDefaultPalette, Layers{}, q, 1, &*terrain);
+            double last = 0;
+            for (unsigned steps = 0; job.active() && steps < 4000000; ++steps) {
+                job.step(*fb, 1, budget);
+                CHECK(job.progress() >= last);
+                last = job.progress();
+            }
+            CHECK(!job.active() && job.progress() == 1.0);
+            q.lines_first = false;
+            fb->clear(0x1234);
+            RefinementJob plain(camera, *scene, kDefaultPalette, Layers{false, false, false}, q, 2,
+                                &*terrain);
+            while (plain.active())
+                plain.step(*fb, 2, budget);
+            const auto want = reference_terrain(*terrain, camera, q.focus, q);
+            CHECK(std::equal(fb->data(), fb->data() + 100 * 81, want.begin()));
+        }
+    }
+}
+void test_scan_fallback() {
+    static_assert(TerrainScene::list_bytes(kPassListCellLimit) != 0 &&
+                  TerrainScene::list_bytes(kPassListCellLimit + 1) == 0);
+    check_job(120, 60, true);
+    check_job(400, 260, false); // 104,000 cells
+}
 } // namespace
 int main() {
     test_resolution_replacement();
     test_orders();
+    test_pass_lists();
+    test_scan_fallback();
     test_landclass_looks();
     test_terrain();
     test_appearance();
