@@ -439,12 +439,14 @@ class Application {
         copy_ms_ += now_ms() - start;
         return ok;
     }
-    // The window title reports the last settle: first refine step to last, and time spent
-    // copying.
+    // With GLOBE_TIMING_TITLE (cmake -DGLOBE_TIMING_TITLE=ON, for measurement builds) the window
+    // title reports the last settle: first refine step to last, and time spent copying. Release
+    // builds keep the plain title "Globe".
     void show_timing() {
         if (!titled_)
             settled_ms_ = now_ms() - refine_t0_;
         titled_ = true;
+#ifdef GLOBE_TIMING_TITLE
         unsigned char title[128];
         unsigned n = 0;
         const auto put = [&](const char* text) {
@@ -480,6 +482,7 @@ class Application {
         }
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
+#endif
     }
     bool copy(int first, int end, bool convert = true) {
         if (!world_ || !fb_)
@@ -593,8 +596,16 @@ class Application {
                 CheckItem(view, item, s.checked);
             }
         }
-        // Edit is for desk accessories, except Copy, which copies the information card.
+        // Close is for the About and Preferences windows (or a desk accessory) in front; the globe
+        // window leaves the program through Quit.
         const WindowPtr front = FrontWindow();
+        if (const MenuHandle file = GetMenuHandle(kFileMenu)) {
+            if (front != nullptr && front != window_)
+                EnableItem(file, kCloseItem);
+            else
+                DisableItem(file, kCloseItem);
+        }
+        // Edit is for desk accessories, except Copy, which copies the information card.
         const bool accessory = front != nullptr && GetWindowKind(front) < 0;
         if (const MenuHandle edit = GetMenuHandle(kEditMenu)) {
             for (short item = 1; item <= 6; ++item) {
@@ -627,6 +638,8 @@ class Application {
             const auto choice = menu_choice(menu, item, model_.terrain_style);
             if (choice.about)
                 show_about();
+            else if (choice.close)
+                close_front();
             else if (choice.command)
                 quit = apply(CommandIssued{time, *choice.command});
             else
@@ -634,6 +647,19 @@ class Application {
         }
         HiliteMenu(0);
         return quit;
+    }
+    // File > Close: hides the About or Preferences window in front, or closes a desk accessory.
+    void close_front() {
+        const WindowPtr front = FrontWindow();
+        if (front == nullptr || front == window_)
+            return;
+        if (front == about_.window())
+            about_.close();
+        else if (front == prefs_window_.window())
+            prefs_window_.close();
+        else if (GetWindowKind(front) < 0)
+            CloseDeskAcc(GetWindowKind(front));
+        SetPortWindowPort(window_);
     }
     bool accessory_in_front() const {
         const WindowPtr front = FrontWindow();
@@ -653,12 +679,15 @@ class Application {
         prefs_window_.sync(model_.prefs);
         SetPortWindowPort(window_);
     }
-    // The program's own license and data pointers only; the data credits are #11's.
     void show_about() {
         about_.open();
         SetPortWindowPort(window_);
     }
     bool key(unsigned long message, std::uint64_t time) {
+        // The About and Preferences windows take no globe shortcuts, and a bare Q or Escape must
+        // not quit: Quit is Command-Q.
+        if (FrontWindow() != window_)
+            return false;
         const auto code = (message >> 8) & 0xff;
         const auto ch = static_cast<int>(message & 0xff);
         // Arrow and Page keys are decoded here (ADB codes); typed characters go through the shared
@@ -679,6 +708,8 @@ class Application {
         const auto binding = binding_for_char(ch);
         if (!command)
             command = binding.command;
+        if (command == Command::Quit)
+            return false;
         if (command)
             return apply(CommandIssued{time, *command});
         overlay(binding.overlay);

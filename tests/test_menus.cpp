@@ -34,7 +34,8 @@ int main() {
         const auto c = choice(kEditMenu, item);
         CHECK(!c.command && c.overlay == Overlay::Nothing && !c.about);
     }
-    CHECK(!choice(kFileMenu, 2).command && !choice(300, 1).command);
+    CHECK(choice(kFileMenu, kCloseItem).close && !choice(kFileMenu, kCloseItem).command);
+    CHECK(!choice(kFileMenu, 2).command && !choice(kFileMenu, 2).close && !choice(300, 1).command);
 
     // Every View command item agrees with the shortcut key for the same thing.
     CHECK(binding_for_char('g').command == choice(kViewMenu, kGraticuleItem).command);

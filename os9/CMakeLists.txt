@@ -52,6 +52,11 @@ add_application(${APP} CREATOR Glb2
   ${CMAKE_BINARY_DIR}/embedded_atlas.cpp ${CMAKE_BINARY_DIR}/embedded_elevation.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/globe.r)
 target_compile_definitions(${APP} PRIVATE GLOBE_FLOPPY=1)
+# Measurement builds show the settle timing in the window title; release builds keep "Globe".
+option(GLOBE_TIMING_TITLE "Show render timing in the OS 9 window title" OFF)
+if(GLOBE_TIMING_TITLE)
+  target_compile_definitions(${APP} PRIVATE GLOBE_TIMING_TITLE=1)
+endif()
 target_include_directories(${APP} PRIVATE ${ROOT}/include ${ROOT}/src/platform/common)
 target_compile_options(${APP} PRIVATE -Os -Wall -Wextra -Wpedantic -fno-exceptions -fno-rtti)
 target_link_libraries(${APP} AppearanceLib)

@@ -11,7 +11,8 @@
 namespace globe {
 constexpr short kAppleMenu = 128, kFileMenu = 129, kEditMenu = 130, kViewMenu = 131;
 constexpr short kAboutItem = 1; // Apple; desk accessories follow the divider
-constexpr short kQuitItem = 1;  // File
+constexpr short kCloseItem = 1; // File: closes the About or Preferences window in front
+constexpr short kQuitItem = 3;  // File: Close, divider, Quit
 constexpr short kCopyItem = 4;  // Edit: copies the information card (or goes to a desk accessory)
 constexpr short kPreferencesItem = 8; // Edit: Undo, divider, Cut, Copy, Paste, Clear, divider
 enum ViewItem : short {
@@ -35,6 +36,7 @@ struct MenuChoice {
     std::optional<Command> command; // sent through update()
     KeyBinding::Overlay overlay = KeyBinding::Overlay::Nothing;
     bool about = false; // the front end shows its About window
+    bool close = false; // the front end closes the window in front (not the globe window)
 };
 // What choosing the item means while `current` is the look shown. Choosing the look already shown
 // is nothing (no redraw, no new refinement), as in the palette. Edit and the desk accessories are
@@ -44,6 +46,8 @@ inline MenuChoice menu_choice(short menu, short item, TerrainStyle current) {
     using Overlay = KeyBinding::Overlay;
     if (menu == kAppleMenu && item == kAboutItem)
         c.about = true;
+    else if (menu == kFileMenu && item == kCloseItem)
+        c.close = true;
     else if (menu == kFileMenu && item == kQuitItem)
         c.command = Command::Quit;
     else if (menu == kViewMenu) {
