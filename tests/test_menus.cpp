@@ -17,7 +17,6 @@ int main() {
     CHECK(choice(kViewMenu, kGraticuleItem).command == Command::ToggleGraticule);
     CHECK(choice(kViewMenu, kBordersItem).command == Command::ToggleBorders);
     CHECK(choice(kViewMenu, kTrackballItem).command == Command::ToggleDragMode);
-    CHECK(choice(kViewMenu, kPaletteItem).overlay == Overlay::Palette);
     CHECK(choice(kViewMenu, kNightItem).overlay == Overlay::Night);
     CHECK(choice(kViewMenu, kMeasureItem).overlay == Overlay::Measure);
     // The look already shown is no command; the other look is the same switch as the palette.
@@ -35,7 +34,8 @@ int main() {
         const auto c = choice(kEditMenu, item);
         CHECK(!c.command && c.overlay == Overlay::Nothing && !c.about);
     }
-    CHECK(!choice(kFileMenu, 2).command && !choice(300, 1).command);
+    CHECK(choice(kFileMenu, kCloseItem).close && !choice(kFileMenu, kCloseItem).command);
+    CHECK(!choice(kFileMenu, 2).command && !choice(kFileMenu, 2).close && !choice(300, 1).command);
 
     // Every View command item agrees with the shortcut key for the same thing.
     CHECK(binding_for_char('g').command == choice(kViewMenu, kGraticuleItem).command);
@@ -46,7 +46,7 @@ int main() {
     CHECK(binding_for_char('q').command == choice(kFileMenu, kQuitItem).command);
     CHECK(binding_for_char('d').overlay == Overlay::Night);
     CHECK(binding_for_char('m').overlay == Overlay::Measure);
-    CHECK(binding_for_char('p').overlay == Overlay::Palette);
+    CHECK(binding_for_char('p').overlay == Overlay::Nothing); // the looks list is always showing
 
     // State follows the model, through update().
     auto model = initial_model(640, 480);

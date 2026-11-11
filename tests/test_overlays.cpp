@@ -76,6 +76,11 @@ int main(int argc, char** argv) {
     CHECK(!o.click(camera, {1, 1})); // off the globe: no change
     CHECK(o.focused() == 2u);
     CHECK(o.click(camera, at(camera, 0, 60)) && !o.focused() && !o.active());
+    const auto blank = o.take_card(); // clearing the selection offers the blank card, once
+    CHECK(blank && blank->title == "Selection" && blank->line_count == 1 &&
+          blank->lines[0] == "Nothing is selected.");
+    CHECK(!o.take_card());
+    CHECK(!o.click(camera, at(camera, 0, 60)) && !o.take_card()); // nothing to clear: no card
     CHECK(o.compose(*fb, camera, 0) == nullptr);
 
     // Measure mode: the first click marks a point, the second yields the distance card.
@@ -88,6 +93,15 @@ int main(int argc, char** argv) {
     CHECK(distance &&
           distance->lines[2].find("3336 km") != std::string_view::npos); // 30 deg of arc
     CHECK(o.compose(*fb, camera, 0) != nullptr);
+    // Preferences change the units of the next card.
+    o.set_preferences(Preferences{Units::Imperial});
+    CHECK(o.click(camera, at(camera, 0, 10)) && !o.take_card());
+    CHECK(o.click(camera, at(camera, 0, 40)));
+    const auto imperial = o.take_card();
+    CHECK(imperial && imperial->title == "Distance" &&
+          imperial->lines[2].find("2073 mi") != std::string_view::npos &&
+          imperial->lines[2].find("km") == std::string_view::npos);
+    o.set_preferences(Preferences{});
     CHECK(o.click(camera, at(camera, 0, 20)) && !o.take_card()); // a third click starts over
     o.toggle_measure();                                          // leaving clears the points
     CHECK(!o.active());

@@ -31,6 +31,8 @@ jobs:
           pipx install clang-tidy==22.1.8
       - name: Repository policy
         run: tools/check-policy.sh
+      - name: Release manifest unit tests (stdlib)
+        run: python3 -m unittest discover -s tests -p test_release_manifest.py -v
       - name: Format check (clang-format 22.1.8)
         run: |
           git ls-files '*.cpp' '*.hpp' | xargs clang-format --dry-run --Werror

@@ -45,9 +45,9 @@ The initial packaging pass did not execute the app. Subsequent Tiger Classic run
 below and in the scheduling audit. Native OS 9 hardware acceptance, drag/cursor behavior,
 resize/expose and quiet idle remain open. G4 headless NetBSD tests are not OS 9 tests.
 
-## First run, 2026-11-02 (Tiger Classic on maul)
+## First run, 2026-11-02 (Tiger Classic on the G4)
 
-Mac OS X 10.4.11 on maul, reached with `maulctl osx`. `GlobeFloppy-1440.dsk` was pushed to `/tmp`,
+Mac OS X 10.4.11 on the G4, reached with `private host-control helper osx`. `GlobeFloppy-1440.dsk` was pushed to `/tmp`,
 attached with `hdiutil attach -imagekey diskimage-class=CRawDiskImage` (the plain `.dsk` is not
 recognized; the raw-image key is), and `open /Volumes/Globe/GlobeFloppy` started Classic
 (`Classic Startup`, `TruBlueEnvironment`) and the app. A `screencapture` of the Tiger desktop shows the Globe
@@ -124,3 +124,10 @@ height now starts at 32 and adapts (`ClassicPresentation::tune`): aim each slice
 On bare OS 9 (whole frame a few ms) a frame should arrive in one or two slices. Host-tested
 (`test_classic_present`), OS 9 build and probe pass, **not run on OS 9**; the owner can read the
 effect in the title's band count (88 before) and by eye. Needs the app copied to the OS 9 volume again.
+
+## Timing title (2026-11-10)
+
+Release builds keep the window title "Globe". The settle/copy/turn/step readout described above
+now needs a measurement build: `GLOBE_TIMING_TITLE=ON tools/build-os9.sh` (or
+`cmake -S os9 -DGLOBE_TIMING_TITLE=ON`). Name such artifacts distinctly so they are not mistaken
+for a release.

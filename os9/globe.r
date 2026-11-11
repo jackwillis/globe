@@ -21,19 +21,35 @@ resource 'MENU' (128, preload) {
 };
 resource 'MENU' (129, preload) {
     129, textMenuProc, allEnabled, enabled, "File",
-    { ITEM("Quit", "Q") }
+    { ITEM("Close", "W"); DIVIDER; ITEM("Quit", "Q") }
 };
 resource 'MENU' (130, preload) {
     130, textMenuProc, allEnabled, enabled, "Edit",
     { ITEM("Undo", "Z"); DIVIDER; ITEM("Cut", "X"); ITEM("Copy", "C"); ITEM("Paste", "V");
-      ITEM("Clear", noKey) }
+      ITEM("Clear", noKey); DIVIDER; ITEM("Preferences\0xC9", ",") }
 };
 resource 'MENU' (131, preload) {
     131, textMenuProc, allEnabled, enabled, "View",
     { ITEM("Zoom In", "+"); ITEM("Zoom Out", "-"); ITEM("Reset View", "R");
       ITEM("Align North", "N"); DIVIDER;
       ITEM("Graticule", "G"); ITEM("Borders", "B"); ITEM("Trackball Drag", "T"); DIVIDER;
-      ITEM("Map", noKey); ITEM("Relief", noKey); ITEM("Looks Palette", "P"); DIVIDER;
+      ITEM("Map", noKey); ITEM("Relief", noKey); DIVIDER;
       ITEM("Night Side", "D"); ITEM("Measure", "M") }
 };
 resource 'MBAR' (128, preload) { { 128, 129, 130, 131 } };
+
+/* Startup failure: shown by main() when the application cannot be built (usually no memory). */
+resource 'ALRT' (128, purgeable) {
+    {80, 60, 215, 400}, 128,
+    { OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1 },
+    alertPositionMainScreen
+};
+resource 'DITL' (128, purgeable) {
+    {
+        {103, 262, 123, 330}, Button { enabled, "OK" };
+        {10, 70, 95, 330}, StaticText { disabled,
+            "Globe could not start. This is usually because too little memory is available. "
+            "Quit other applications, or select Globe in the Finder, choose Get Info, and raise "
+            "its Preferred size." };
+    }
+};

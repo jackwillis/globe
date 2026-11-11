@@ -63,8 +63,15 @@ implementation offline. No target executable or hardware was run; 68k runtime su
 The standalone framebuffer target suppresses preexisting signedness warnings in drawing code;
 the primitive retains strict conversion warnings. No unrelated drawing-loop cleanup was made.
 
-Next scoped step: coordinate a stable ledger owner in each frontend,
-then instrument a scene constructor with owner tickets and failure injection. The framebuffer
-capability is present but no frontend passes a ledger yet. Keep current guards until
-all relevant allocations are counted and estimates reconciled. The primitive alone does not
-complete #55/#59, and supplies no degradation (#56), eviction (#57) or CI budget (#60).
+`Scene::create(atlas, ledger)` also supports optional accounting for cached vectors and polyline
+caps. The root build registers `scene_ledger` (allocation/failure/ownership/pixel checks) and
+`bench_memory` (JSON scope/payload checks). These require the full core and are not part of the
+standalone primitive build above. `globe-bench` counts the scene and primary framebuffer together;
+its `memory_payload` report explicitly excludes remaining application storage. See
+[the scene checkpoint](../../../docs/perf/scene-memory-2026-11-09.md) for commands, measurements,
+verification caveats and ownership constraints.
+
+Next scoped step: coordinate stable frontend ledger owners, then instrument terrain and job
+workspaces with failure injection. No frontend passes a ledger yet. Keep current guards until
+all relevant allocations are counted and estimates reconciled. These increments do not complete
+#55/#59, and supply no degradation (#56), eviction (#57) or CI budget (#60).

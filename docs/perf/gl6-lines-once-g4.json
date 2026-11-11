@@ -1,5 +1,5 @@
 {
-  "note": "GL-6 row-band rejection of arcs and polyline caps in RefinementJob. G4 (maul, NetBSD/macppc, cross GCC 12.5.0 -O2 -static), 640x480, globe-refine-profile --repeat 9 (median per run) and globe-bench --refine --repeat 2 tests/data/bench_drag.txt. Base = main cd65107 sources built the same way. The owner's globe-x11-tip6 was running (idle) on maul during all runs; one base run was disturbed (marked noisy) and is not used in the summary.",
+  "note": "GL-6 row-band rejection of arcs and polyline caps in RefinementJob. G4 (the G4, NetBSD/macppc, cross GCC 12.5.0 -O2 -static), 640x480, globe-refine-profile --repeat 9 (median per run) and globe-bench --refine --repeat 2 tests/data/bench_drag.txt. Base = main cd65107 sources built the same way. The owner's globe-x11-tip6 was running (idle) on the G4 during all runs; one base run was disturbed (marked noisy) and is not used in the summary.",
   "refine_profile_zoom_1x_ms": {
     "base": {"refine_job_with_terrain": [783.027, 786.207], "refine_job_lines_only": [456.327, 456.568], "noisy_run_not_used": {"refine_job_with_terrain": 1494.917, "refine_job_lines_only": 746.464}},
     "new": {"refine_job_with_terrain": [378.133, 380.695], "refine_job_lines_only": [82.005, 81.887]},

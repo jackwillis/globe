@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #pragma once
 #include "globe/geometry.hpp"
+#include "globe/strings.hpp"
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -47,4 +48,12 @@ class CountryScene {
     std::vector<Vec3> points_;
 };
 InfoCard country_card(const Countries& countries, std::uint32_t id);
+// The blank state of the information window: shown at start and when a click clears the selection.
+inline InfoCard nothing_selected_card() {
+    InfoCard card;
+    card.title = tr(Str::Selection);
+    card.lines[0] = tr(Str::NothingSelected);
+    card.line_count = 1;
+    return card;
+}
 } // namespace globe

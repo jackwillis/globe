@@ -207,13 +207,27 @@ void draw_atlas_layer(Framebuffer& fb, const Camera& cam, const Atlas& atlas, At
 
 } // namespace
 
-std::optional<Scene> Scene::create(const Atlas& atlas) {
+std::optional<Scene> Scene::create(const Atlas& atlas, MemoryLedger* ledger) {
     const std::size_t total = static_cast<std::size_t>(atlas.point_count()) + kGraticulePoints;
+    MemoryCharge storage_charge, caps_charge;
     std::unique_ptr<Vec3[]> storage(new (std::nothrow) Vec3[total]);
-    std::unique_ptr<PolylineCap[]> caps(new (std::nothrow) PolylineCap[atlas.polyline_count()]);
-    if (!storage || !caps) {
+    if (!storage) {
+        if (ledger != nullptr)
+            ledger->allocation_failed(MemoryCategory::Scene);
         return std::nullopt;
     }
+    if (ledger != nullptr)
+        storage_charge = MemoryCharge(*ledger, MemoryCategory::Scene, total * sizeof(Vec3));
+    std::unique_ptr<PolylineCap[]> caps(new (std::nothrow) PolylineCap[atlas.polyline_count()]);
+    if (!caps) {
+        if (ledger != nullptr)
+            ledger->allocation_failed(MemoryCategory::Scene);
+        return std::nullopt;
+    }
+    if (ledger != nullptr)
+        caps_charge =
+            MemoryCharge(*ledger, MemoryCategory::Scene,
+                         static_cast<std::size_t>(atlas.polyline_count()) * sizeof(PolylineCap));
     Vec3* out = storage.get();
     AtlasCursor cursor;
     AtlasPolyline line{AtlasLayer::Coastline, 0, nullptr};
@@ -248,7 +262,22 @@ std::optional<Scene> Scene::create(const Atlas& atlas) {
             *out++ = meridian_point(m, s);
         }
     }
-    return Scene(atlas, std::move(storage), std::move(caps));
+    return Scene(atlas, std::move(storage), std::move(caps), std::move(storage_charge),
+                 std::move(caps_charge));
+}
+
+Scene& Scene::operator=(Scene&& other) noexcept {
+    if (this != &other) {
+        // Free replaced storage before releasing its charges, including cross-ledger moves.
+        storage_.reset();
+        caps_.reset();
+        storage_charge_ = std::move(other.storage_charge_);
+        caps_charge_ = std::move(other.caps_charge_);
+        atlas_ = other.atlas_;
+        storage_ = std::move(other.storage_);
+        caps_ = std::move(other.caps_);
+    }
+    return *this;
 }
 
 std::size_t Scene::bytes() const {
@@ -345,7 +374,7 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
     if (quality_.terrain && terrain != nullptr) {
         terrain_ = terrain;
         terrain_token_ = terrain_->claim();
-        phase_ = -2;
+        phase_ = Phase::ProjectCorners;
         if (quality_.terrain_style != TerrainStyle::Map)
             palette_.border = rgb565(0, 0, 0);
     }
@@ -360,7 +389,8 @@ RefinementJob::RefinementJob(const Camera& camera, const Scene& scene, const Pal
             line_list_.reset(new (std::nothrow) std::uint32_t[line_list_capacity_]);
             if (line_list_ == nullptr)
                 line_list_capacity_ = 0; // the composite scans the whole layer instead
-            phase_ = 0; // lines first: clear, draw the layer and show it before any terrain set-up
+            phase_ = Phase::Clear; // lines first: clear, draw the layer and show it before any
+                                   // terrain set-up
         }
     }
     if (terrain_ != nullptr)
@@ -380,23 +410,24 @@ double RefinementJob::progress() const {
     };
     // With the line layer the lines come first, then the terrain set-up, then the passes.
     const bool lines_first = line_layer_.has_value();
-    if (lines_first && (phase_ == 12 || (phase_ == 10 && after_stamp_ == -2)))
+    if (lines_first && (phase_ == Phase::IndexLineLayer ||
+                        (phase_ == Phase::Composite && after_stamp_ == Phase::ProjectCorners)))
         return 0.05; // listing and showing the line layer
     switch (phase_) {
-    case -2:
+    case Phase::ProjectCorners:
         return lines_first ? 0.06 + 0.02 * fraction(prepare_index_, terrain_->corner_count())
                            : 0.03 * fraction(prepare_index_, terrain_->corner_count());
-    case -1:
+    case Phase::BoundCells:
         return lines_first ? 0.08 + 0.02 * fraction(prepare_index_, terrain_->cell_count())
                            : 0.03 + 0.03 * fraction(prepare_index_, terrain_->cell_count());
-    case 0:
-    case 11:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
+    case Phase::Clear:
+    case Phase::ClearLineLayer:
+    case Phase::Parallels:
+    case Phase::Meridians:
+    case Phase::Coastlines:
+    case Phase::Borders:
         return lines_first ? 0.03 : 0.08; // clearing and the line layer: short
-    case 9:
+    case Phase::RestoreUncovered:
         return 0.98;
     default: {
         // The ring passes and the limb pass: pass_ completed plus the sweep through the cells.
@@ -435,15 +466,15 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
     unsigned fills = 0;
     while (result.work_units < max_work_units && !result.band_ready) {
         ++result.work_units;
-        if (phase_ == -2) {
+        if (phase_ == Phase::ProjectCorners) {
             terrain_->project_corner(prepare_index_++, camera_);
             if (prepare_index_ == terrain_->corner_count()) {
-                phase_ = -1;
+                phase_ = Phase::BoundCells;
                 prepare_index_ = 0;
                 if (terrain_->has_lists())
                     terrain_->begin_lists();
             }
-        } else if (phase_ == -1) {
+        } else if (phase_ == Phase::BoundCells) {
             terrain_->bound_cell(prepare_index_, fb.height(), kRefineBandRows);
             terrain_->assign_pass(
                 prepare_index_, plan_,
@@ -454,20 +485,20 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 prepare_index_ = 0;
                 if (terrain_->has_lists()) {
                     terrain_->finish_lists();
-                    phase_ = 13;
+                    phase_ = Phase::BuildPassLists;
                 } else {
-                    phase_ = line_layer_.has_value() ? 7 : 0;
+                    phase_ = line_layer_.has_value() ? Phase::RingPass : Phase::Clear;
                 }
             }
-        } else if (phase_ == 13) {
+        } else if (phase_ == Phase::BuildPassLists) {
             // Group the cells by ring (index order inside each), one cell per work unit like the
             // set-up phases, so the passes below visit only the cells they draw.
             terrain_->place_cell(prepare_index_++);
             if (prepare_index_ == terrain_->cell_count()) {
-                phase_ = line_layer_.has_value() ? 7 : 0;
+                phase_ = line_layer_.has_value() ? Phase::RingPass : Phase::Clear;
                 prepare_index_ = 0;
             }
-        } else if (phase_ == 7) {
+        } else if (phase_ == Phase::RingPass) {
             // Pass k paints the cells of ring k. A cell clipped at the horizon is a flat polygon
             // and overlaps its shaded neighbors by a pixel along shared edges, so after the rings
             // one more pass redraws the clipped cells in index order: the winner of every pixel is
@@ -522,18 +553,21 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 result.band_ready = !line_layer_.has_value(); // else shown after the stamp
                 if (line_layer_.has_value()) {
                     row_ = 0;
-                    after_stamp_ = last ? 5 : 7;
-                    phase_ = last && quality_.preserve_bitmap ? 9 : 10;
+                    after_stamp_ = last ? Phase::Done : Phase::RingPass;
+                    phase_ = last && quality_.preserve_bitmap ? Phase::RestoreUncovered
+                                                              : Phase::Composite;
                 } else if (last) {
                     row_ = 0;
-                    phase_ = quality_.preserve_bitmap ? 9 : quality_.terrain_only ? 5 : 1;
+                    phase_ = quality_.preserve_bitmap ? Phase::RestoreUncovered
+                             : quality_.terrain_only  ? Phase::Done
+                                                      : Phase::Parallels;
                 }
             }
             // Bound a fill continuation by four 16-row cell slices as well as work units. This
             // changes scheduling, not smoothing or rasterization.
             if (fills == 4)
                 break;
-        } else if (phase_ == 9) {
+        } else if (phase_ == Phase::RestoreUncovered) {
             // Only pixels untouched by the finest canonical terrain pass are restored to
             // background/ocean. This removes coarse limb chords and islands without erasing detail.
             fb.clip_rows(row_, row_ + 1);
@@ -544,10 +578,12 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             fb.clip_rows(result.first_row, result.end_row);
             if (++row_ == fb.height()) {
                 row_ = 0;
-                phase_ = line_layer_.has_value() ? 10 : quality_.terrain_only ? 5 : 1;
+                phase_ = line_layer_.has_value() ? Phase::Composite
+                         : quality_.terrain_only ? Phase::Done
+                                                 : Phase::Parallels;
                 result.band_ready = true;
             }
-        } else if (phase_ == 12) {
+        } else if (phase_ == Phase::IndexLineLayer) {
             // One row of the finished line layer: note where its lines are.
             if (line_list_ok_) {
                 const auto* lines =
@@ -566,11 +602,12 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             if (!line_list_ok_ || ++row_ == fb.height()) {
                 row_ = 0;
                 stamp_pos_ = 0;
-                phase_ = 10;
+                phase_ = Phase::Composite;
             }
-        } else if (phase_ == 10) {
-            if (stamp_pos_ == 0 && after_stamp_ == 5 && snapshot_ != nullptr && !snapshot_taken_ &&
-                snapshot_->width() == fb.width() && snapshot_->height() == fb.height()) {
+        } else if (phase_ == Phase::Composite) {
+            if (stamp_pos_ == 0 && after_stamp_ == Phase::Done && snapshot_ != nullptr &&
+                !snapshot_taken_ && snapshot_->width() == fb.width() &&
+                snapshot_->height() == fb.height()) {
                 std::memcpy(snapshot_->data(), fb.data(), fb.byte_size());
                 snapshot_taken_ = true; // the terrain alone: the lines are stamped next
             }
@@ -603,14 +640,14 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 phase_ = after_stamp_;
                 result.band_ready = true;
             }
-        } else if (phase_ == 11) {
+        } else if (phase_ == Phase::ClearLineLayer) {
             line_layer_->fill_span(row_, 0, fb.width() - 1, kLineLayerKey);
             if (++row_ == fb.height()) {
                 row_ = 0;
-                phase_ = 1;
+                phase_ = Phase::Parallels;
                 lines_drawing_ = true;
             }
-        } else if (phase_ == 0) {
+        } else if (phase_ == Phase::Clear) {
             fb.clip_rows(row_, row_ + 1);
             if (quality_.preserve_bitmap && terrain_ != nullptr) {
                 fb.reset_coverage_row(row_);
@@ -621,17 +658,19 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             }
             fb.clip_rows(result.first_row, result.end_row);
             if (++row_ == result.end_row) {
-                phase_ = terrain_ != nullptr ? (line_layer_.has_value() ? 11 : 7) : 1;
+                phase_ = terrain_ != nullptr
+                             ? (line_layer_.has_value() ? Phase::ClearLineLayer : Phase::RingPass)
+                             : Phase::Parallels;
                 terrain_cell_ = 0;
                 list_pos_ = 0;
                 row_ = 0;
             }
-        } else if (phase_ == 1 || phase_ == 2) {
-            const bool parallels = phase_ == 1;
+        } else if (phase_ == Phase::Parallels || phase_ == Phase::Meridians) {
+            const bool parallels = phase_ == Phase::Parallels;
             const int samples = parallels ? kParallelSamples : kMeridianSamples;
             const int lines = parallels ? kParallels : kMeridians;
             if (!layers_.graticule || grid_segment_ == lines * (samples - 1)) {
-                ++phase_;
+                phase_ = next(phase_);
                 grid_segment_ = 0;
                 continue;
             }
@@ -649,10 +688,10 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                          stats_, quality_.max_chord_px);
             }
             ++grid_segment_;
-        } else if (phase_ == 3 || phase_ == 4) {
-            const bool coast = phase_ == 3;
+        } else if (phase_ == Phase::Coastlines || phase_ == Phase::Borders) {
+            const bool coast = phase_ == Phase::Coastlines;
             if ((coast && !layers_.coastlines) || (!coast && !layers_.borders)) {
-                ++phase_;
+                phase_ = next(phase_);
                 cursor_ = {};
                 segment_ = 0;
                 continue;
@@ -661,7 +700,7 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
                 const auto index = cursor_.index;
                 line_first_ = cursor_.first_point;
                 if (!scene_->atlas().next(cursor_, line_)) {
-                    ++phase_;
+                    phase_ = next(phase_);
                     cursor_ = {};
                     continue;
                 }
@@ -696,8 +735,8 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             row_ = 0;
             line_list_count_ = 0;
             line_list_ok_ = line_list_ != nullptr;
-            after_stamp_ = -2; // then project the terrain corners
-            phase_ = 12;
+            after_stamp_ = Phase::ProjectCorners; // then project the terrain corners
+            phase_ = Phase::IndexLineLayer;
         } else {
             result.band_ready = true;
             if (terrain_ != nullptr) {
@@ -705,7 +744,7 @@ RenderStep RefinementJob::step(Framebuffer& fb, std::uint64_t generation, unsign
             } else {
                 band_first_ = result.end_row;
                 row_ = band_first_;
-                phase_ = 0;
+                phase_ = Phase::Clear;
                 active_ = band_first_ < fb.height();
             }
         }

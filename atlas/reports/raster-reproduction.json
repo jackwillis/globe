@@ -61,7 +61,7 @@
         [
           "/tmp/globe-atlas-gis-env/bin/python",
           "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
-          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "<verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
           "/tmp/globe-atlas-rebuild/elevation-1deg-a.gelv",
           "--cell-degrees",
           "1",
@@ -71,7 +71,7 @@
         [
           "/tmp/globe-atlas-gis-env/bin/python",
           "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
-          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "<verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
           "/tmp/globe-atlas-rebuild/elevation-1deg-b.gelv",
           "--cell-degrees",
           "1",
@@ -105,7 +105,7 @@
         [
           "/tmp/globe-atlas-gis-env/bin/python",
           "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
-          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "<verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
           "/tmp/globe-atlas-rebuild/elevation-05deg-a.gelv",
           "--cell-degrees",
           "0.5",
@@ -115,7 +115,7 @@
         [
           "/tmp/globe-atlas-gis-env/bin/python",
           "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
-          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "<verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
           "/tmp/globe-atlas-rebuild/elevation-05deg-b.gelv",
           "--cell-degrees",
           "0.5",
@@ -149,7 +149,7 @@
         [
           "/tmp/globe-atlas-gis-env/bin/python",
           "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
-          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "<verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
           "/tmp/globe-atlas-rebuild/elevation-025deg-a.gelv",
           "--cell-degrees",
           "0.25",
@@ -159,7 +159,7 @@
         [
           "/tmp/globe-atlas-gis-env/bin/python",
           "/tmp/globe-atlas-audit/tools/elevation-builder/build_elevation.py",
-          "/home/jack/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
+          "<verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc",
           "/tmp/globe-atlas-rebuild/elevation-025deg-b.gelv",
           "--cell-degrees",
           "0.25",

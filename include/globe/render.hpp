@@ -13,6 +13,7 @@
 
 #include "globe/atlas.hpp"
 #include "globe/framebuffer.hpp"
+#include "globe/memory_ledger.hpp"
 #include "globe/projection.hpp"
 #include "globe/refine_order.hpp"
 #include "globe/terrain_style.hpp"
@@ -100,10 +101,11 @@ struct PolylineCap {
 class Scene {
   public:
     // Up-front geometry and caps; nullopt on failure.
-    static std::optional<Scene> create(const Atlas& atlas);
+    // Optional payload accounting; the stable ledger must outlive this scene and its moves.
+    static std::optional<Scene> create(const Atlas& atlas, MemoryLedger* ledger = nullptr);
 
     Scene(Scene&&) noexcept = default;
-    Scene& operator=(Scene&&) noexcept = default;
+    Scene& operator=(Scene&& other) noexcept;
     Scene(const Scene&) = delete;
     Scene& operator=(const Scene&) = delete;
     ~Scene() = default;
@@ -115,10 +117,15 @@ class Scene {
     std::size_t bytes() const;
 
   private:
-    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps)
-        : atlas_(atlas), storage_(std::move(storage)), caps_(std::move(caps)) {}
+    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps,
+          MemoryCharge storage_charge, MemoryCharge caps_charge)
+        : atlas_(atlas), storage_charge_(std::move(storage_charge)),
+          caps_charge_(std::move(caps_charge)), storage_(std::move(storage)),
+          caps_(std::move(caps)) {}
 
     Atlas atlas_;
+    // Destruction frees both payloads before releasing their accounting tickets.
+    MemoryCharge storage_charge_, caps_charge_;
     std::unique_ptr<Vec3[]> storage_; // atlas vertices, then graticule samples
     std::unique_ptr<PolylineCap[]> caps_;
 };
@@ -178,7 +185,26 @@ class RefinementJob {
     int cell_band_ = -1;
     int band_first_ = 0;
     int row_ = 0;
-    int phase_ = 0;
+    // What the job is doing; the order of the numbers is the order of the work, and the line phases
+    // (Parallels to Borders) advance by one.
+    enum class Phase : std::int8_t {
+        ProjectCorners = -2, // terrain: project every cell corner, a few per step
+        BoundCells = -1,     // terrain: bound each cell's 16-row slices and give it a ring
+        Clear = 0,           // background and ocean, a row at a time
+        Parallels = 1,       // graticule, then coastlines, then borders (the lines pass)
+        Meridians = 2,
+        Coastlines = 3,
+        Borders = 4,
+        Done = 5,
+        RingPass = 7,         // the 16 ring passes and the limb pass
+        RestoreUncovered = 9, // after a preserved bitmap: coarse leftovers back to the ocean
+        Composite = 10,       // the line layer over the frame, from the pixel list
+        ClearLineLayer = 11,  // line layer: empty it
+        IndexLineLayer = 12,  // line layer: list its pixels
+        BuildPassLists = 13,  // terrain: group cells by ring, preserving index order
+    };
+    static Phase next(Phase phase) { return static_cast<Phase>(static_cast<int>(phase) + 1); }
+    Phase phase_ = Phase::Clear;
     int grid_segment_ = 0;
     std::optional<Framebuffer> line_layer_; // lines_first: key-colored except where a line is
     // Where the line layer has a line: (row << 16 | column), so each composite touches only those
@@ -191,8 +217,8 @@ class RefinementJob {
     std::size_t stamp_pos_ = 0; // entries (or rows, in the fallback) already composited this stamp
     Framebuffer* snapshot_ = nullptr;
     bool snapshot_taken_ = false;
-    bool lines_drawing_ = false; // phases 1-4 currently draw into line_layer_
-    int after_stamp_ = 7;
+    bool lines_drawing_ = false;          // phases 1-4 currently draw into line_layer_
+    Phase after_stamp_ = Phase::RingPass; // where Composite goes next
     AtlasCursor cursor_{};
     AtlasPolyline line_{AtlasLayer::Coastline, 0, nullptr};
     std::uint16_t segment_ = 0;

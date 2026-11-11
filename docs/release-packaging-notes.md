@@ -45,7 +45,7 @@ zero; all are the ARC CRC (polynomial 0xA001, no pre/post conditioning):
 against the real archive before it was applied; fixing 1 and 2 alone was not enough (Expander then
 reported "couldn't open header" for every entry), 3 made it work.
 
-Result, build `18b08b5`, StuffIt Expander 6.0 in Classic on Tiger 10.4.11 (maul, launched over
+Result, build `18b08b5`, StuffIt Expander 6.0 in Classic on Tiger 10.4.11 (the G4, launched over
 ssh `open -a`, owner at the console): both **method 0 and method 13** archives expand; GlobeFloppy's
 data fork (546,172 bytes, cksum 2756265576) and resource fork (882 bytes, cksum 1514633535) are
 identical to the MacBinary's, ReadMe/License/DataCredit match. Not yet checked: the expanded file's

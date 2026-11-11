@@ -90,7 +90,7 @@ The X11 front end already draws with X core fonts (see [toolbar.md](../toolbar.m
   I did not confirm the families in that package from a source; to my knowledge it has a Helvetica
   but no Palatino. These would be fonts the machine already has, not fonts Globe ships.
 - A serif for areas without Palatino: New Century Schoolbook, Charter or Utopia. Unverified here.
-- **To check on NetBSD:** `xlsfonts` on maul, and whether fontconfig or Type 1 URW fonts are installed (E5).
+- **To check on NetBSD:** `xlsfonts` on the G4, and whether fontconfig or Type 1 URW fonts are installed (E5).
 
 ## Surface C: map labels with system fonts
 
@@ -223,6 +223,15 @@ What this shows:
 - Text encoding: QuickDraw strings are Mac Roman, while data names are likely UTF-8. Some letters
   (Turkish, Polish and others) may lack a Mac Roman glyph. **Check the character set** before
   settling which names can be shown.
+- **Names are Latinized (owner decision, 2026-11-09).** Globe is an American atlas, so display names
+  are Latin-script and fit Mac Roman where possible; no Unicode or script fonts are bundled. Names
+  that do not fit get a reviewed Latinized or transliterated form from the atlas name profiles
+  (#52, #91), while the full-fidelity name stays in the catalog. Mac Roman covers most Western
+  European diacritics but not, as far as I know, Polish, Czech, Romanian, Hungarian, Turkish or
+  non-Latin scripts. Estimated cost of bundling glyphs instead, extrapolated from a host measurement of
+  319 glyphs at 11 px (not G4 figures): about 35 KB for Latin at 1 bpp, about 170 KB with extended
+  Latin, Cyrillic and Greek, and about 560 KB for one CJK face. Not proposed. The encoding question
+  is tracked on #84.
 - Geographic priorities come from #52/#53 (identity, selection, label priority). Typography consumes
   them and hard-codes no rankings.
 
@@ -234,7 +243,7 @@ What this shows:
 | E2 | Halo method (offset draws or other) on Relief and Map | Choice recorded; no label unreadable on the standard views |
 | E3 | Cost of a screenful of labels | Milliseconds on bare OS 9 within the turn budget |
 | E4 | Font inventory on the G4 (names, sizes) | List recorded for both OS states; fallbacks confirmed |
-| E5 | `xlsfonts` and fontconfig on maul for the Unix stack | List recorded; Unix stack chosen |
+| E5 | `xlsfonts` and fontconfig on the G4 for the Unix stack | List recorded; Unix stack chosen |
 | E6 | Draw path: offscreen copy before presenting versus on the window after | Flicker and cost recorded; choice made |
 
 E1 and E3 to E6 need the G4 and the owner's authorization.

@@ -9,6 +9,53 @@
 #include <cstdio>
 #include <vector>
 using namespace globe;
+// Bounded deterministic views around the limb, including poles, roll, odd dimensions and zoom.
+// Compare preserved/interrupted lines-first jobs to fresh lines-at-end jobs, so stale pixels,
+// uncovered repair and both compositor paths are exercised together (#74).
+void check_preserved(const Scene& scene, TerrainScene& terrain) {
+    std::uint32_t state = 0x74C0FFEEU;
+    const auto random = [&state]() {
+        state = state * 1664525U + 1013904223U;
+        return static_cast<double>(state >> 8) / 16777216.0;
+    };
+    for (int view = 0; view < 12; ++view) {
+        const int w = view % 2 ? 97 : 160, h = view % 3 ? 73 : 121;
+        const double lat = view < 2 ? (view ? -89.9 : 89.9) : random() * 180 - 90;
+        const auto camera = make_camera(
+            {{lat, random() * 360 - 180}, random() * 360 - 180, 8 + random() * w * 1.4, w, h});
+        auto expected = Framebuffer::create(w, h), got = Framebuffer::create(w, h);
+        CHECK(camera && expected && got);
+        if (!camera || !expected || !got)
+            return;
+        RenderQuality q{1.5, true, 0, view % 2 ? TerrainStyle::Map : TerrainStyle::Relief};
+        q.focus = {random() * w * 3 - w, random() * h * 3 - h};
+        RefinementJob fresh(*camera, scene, kDefaultPalette, {}, q, 1, &terrain);
+        while (fresh.active())
+            fresh.step(*expected, 1, 256);
+        q.lines_first = q.preserve_bitmap = true;
+        for (unsigned budget : {1U, 7U, 256U}) {
+            for (std::size_t limit : {std::size_t{1}, std::size_t{100000}}) {
+                q.line_list_limit = limit;
+                got->clear(0xF81F); // stale pixels must be replaced even outside the globe
+                RefinementJob interrupted(*camera, scene, kDefaultPalette, {}, q, 2, &terrain);
+                for (int step = 0; step < 37; ++step)
+                    interrupted.step(*got, 2, budget);
+                const std::vector<Rgb565> before(got->data(), got->data() + w * h);
+                RefinementJob replacement(*camera, scene, kDefaultPalette, {}, q, 3, &terrain);
+                CHECK(interrupted.step(*got, 2, budget).work_units == 0);
+                CHECK(std::equal(before.begin(), before.end(), got->data()));
+                unsigned steps = 0;
+                while (replacement.active() && ++steps < 2000000) {
+                    const auto result = replacement.step(*got, 3, budget);
+                    CHECK(result.work_units <= budget);
+                    CHECK(!got->recording_coverage());
+                }
+                CHECK(!replacement.active());
+                CHECK(std::equal(expected->data(), expected->data() + w * h, got->data()));
+            }
+        }
+    }
+}
 int main() {
     std::vector<atlas_util::Poly> polys;
     for (unsigned layer = 1; layer <= 2; ++layer) {
@@ -48,6 +95,7 @@ int main() {
     CHECK(terrain && fb);
     if (!terrain || !fb)
         return 1;
+    check_preserved(*scene, *terrain);
     for (double radius : {35., 90.}) {
         const auto camera = make_camera({{25, 10}, 13, radius, 100, 81});
         CHECK(camera);

@@ -1,8 +1,10 @@
+> **Sanitized historical record.** Private host aliases, local worktrees and access-helper commands have been generalized. Historical shell fragments referring to those placeholders are not runnable instructions. Refer to current issues and code for operational guidance.
+
 # Atlas contract session handoff — November 8, 2026
 
 ## Durable recovery state
 
-Worktree: `/tmp/globe-atlas-contract`. Branch: `codex/atlas-contract`.
+Worktree: `<temporary-test-binary>`. Branch: `codex/atlas-contract`.
 Base: `52ccb33dc6db1c8f19ccded422260e399defeae1` (fetched `origin/main`).
 Implementation/research checkpoint: `2afaebe` — source-scoped identities and equal-area selection.
 A subsequent local documentation commit records this handoff; recover its full hash with
@@ -11,14 +13,14 @@ publication, issue edits, release, production-pack change or hardware access was
 
 The implementation commit contains all code, small fixture data, reports and test results.
 Full selected settlement outputs are deliberately untracked outside the repository at
-`/tmp/globe-selection-a` and `/tmp/globe-selection-b`. Regenerate them with the commands in
+`<temporary-test-binary>` and `<temporary-test-binary>`. Regenerate them with the commands in
 `atlas/README.md`; they are not needed to recover the code or inspect the committed measurements.
 The linked worktree is in temporary storage: do not rely on that directory for long-term retention.
 The named Git branch/commits are retained in the owner's repository independently of its files.
 
 ## Workspace reconciliation
 
-At entry `/home/jack/code/globe` was on `main`, observed at `be0278d`, matching then-cached
+At entry `<local-checkout>` was on `main`, observed at `be0278d`, matching then-cached
 `origin/main`. It had no staged changes and two unstaged files:
 `include/globe/render.hpp` and `src/render/render.cpp` (typed refinement phases).
 No nonignored untracked files were present. Ignored content was source archives, edition outputs,
@@ -40,7 +42,7 @@ Initial branch heads (all ancestors of the then-current main; **zero unique comm
 | claude/os9-parity | bac789a |
 
 The only other initial worktree was
-`/home/jack/.codex/worktrees/progressive-resolution/globe`, branch
+`<isolated-agent-worktree>`, branch
 `codex/os9-cooperative-scheduling`; it was clean when inspected. The old atlas-audit branch exists
 but has no active worktree. No historical branches were deleted.
 
@@ -54,7 +56,7 @@ ahead of fetched `origin/main` at `52ccb33`: menu implementation `18b08b5`, Tige
 `4e40036`, packaging findings `e3de54a`. Their commit summaries and changed-file boundary were
 inspected. They change platform/menu/packaging files and no `atlas/` or `data/` files. No merge or
 checkout in the owner's tree was performed by this atlas session. The new
-`/home/jack/code/globe-menubar` worktree on `claude/menu-bar` at `4e40036` was clean and its work
+`<local-checkout>` worktree on `claude/menu-bar` at `4e40036` was clean and its work
 already reachable from local main. The two original renderer WIP files remain unstaged on main.
 
 At handoff the atlas worktree is clean after the handoff commit; check live status before any new
@@ -79,7 +81,7 @@ not publish those platform changes. Reinspect refs because the other session may
   verified, 58 semantic cross-report checks passed. No entire exploratory rerun or new source fetch.
 - New/retained research tests: 24 catalog + 9 selection + 8 audit + 9 concordance = **50 passed**.
   Run `python3 atlas/research/test_{catalog,selection,audit,concordance}.py -v` individually.
-- Clean Linux x86-64 CMake/Ninja build at `/tmp/globe-contract-build`; **50 existing CTest tests
+- Clean Linux x86-64 CMake/Ninja build at `<temporary-test-binary>`; **50 existing CTest tests
   passed** on base `52ccb33`. Forty passed in the sandbox; ten X11 tests could not open their
   virtual displays there, then all ten passed on an authorized unsandboxed private-Xvfb retry.
   The suite does not include Claude's later menu test; no claim is made about that newer main.
@@ -88,7 +90,7 @@ not publish those platform changes. Reinspect refs because the other session may
 - `git diff --check`, Python compile checks and `sh tools/check-policy.sh` passed.
 
 Exact environment, hashes, commands, scoped warnings, host builder RSS/time and repeat checks are
-in `contract-verification.json`. Existing test/build logs remain `/tmp/globe-contract-*.log`.
+in `contract-verification.json`. Existing test/build logs remain `<temporary-test-binary>`.
 Actual JSONL/gzip bytes and spherical distances are measurements. The 32-byte settlement record
 and name scenario is an **estimate**, not runtime RAM. Python peak RSS measures build-host process
 memory. G4 memory/timing, glyph coverage and geopolitical completeness remain unmeasured/unreviewed.

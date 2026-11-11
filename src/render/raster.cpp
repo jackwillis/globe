@@ -3,6 +3,7 @@
 #include "globe/raster.hpp"
 
 #include <algorithm>
+#include <cfloat>
 #include <cmath>
 #include <cstdint>
 
@@ -171,15 +172,31 @@ bool before(const ShadeVertex& a, const ShadeVertex& b) {
     return a.y < b.y || (a.y == b.y && a.x < b.x);
 }
 
+// static_cast<int>(std::clamp(std::ceil(v), 0.0, limit)) for finite v and an integral limit that
+// fits an int, without the libm call (slow on the G4) or the extra compare of clamp. Same value
+// for every such input, including -0.0 and exact integers. NaN gives 0 here; the old expression
+// converted a NaN to int, which is undefined, and callers have already rejected non-finite input.
+inline int clamp_ceil(double v, double limit) {
+    if (!(v > 0.0)) {
+        return 0;
+    }
+    if (v >= limit) {
+        return static_cast<int>(limit);
+    }
+    const int i = static_cast<int>(v); // 0 <= v < limit: truncation is floor
+    return i + (v > static_cast<double>(i) ? 1 : 0);
+}
+
 } // namespace
 
 void fill_triangle_shaded(Framebuffer& fb, double x0, double y0, double v0, double x1, double y1,
                           double v1, double x2, double y2, double v2, const Rgb565* palette) {
-    const double all[9] = {x0, y0, v0, x1, y1, v1, x2, y2, v2};
-    for (int i = 0; i < 9; ++i) {
-        if (!std::isfinite(all[i]) || (i % 3 != 2 && std::fabs(all[i]) > kBox)) {
-            return;
-        }
+    // Reject non-finite input and coordinates outside the supported box. The values only need to be
+    // finite (they are clamped below); fabs(v) <= DBL_MAX is false for NaN and infinity.
+    if (!(std::fabs(x0) <= kBox && std::fabs(y0) <= kBox && std::fabs(x1) <= kBox &&
+          std::fabs(y1) <= kBox && std::fabs(x2) <= kBox && std::fabs(y2) <= kBox &&
+          std::fabs(v0) <= DBL_MAX && std::fabs(v1) <= DBL_MAX && std::fabs(v2) <= DBL_MAX)) {
+        return;
     }
     ShadeVertex a{x0, y0, std::clamp(v0, 0.0, kMaxShade)};
     ShadeVertex b{x1, y1, std::clamp(v1, 0.0, kMaxShade)};
@@ -203,18 +220,16 @@ void fill_triangle_shaded(Framebuffer& fb, double x0, double y0, double v0, doub
 
     const double h = static_cast<double>(fb.height());
     const double w = static_cast<double>(fb.width());
-    const int y_first =
-        std::max(fb.first_row(), static_cast<int>(std::clamp(std::ceil(a.y - 0.5), 0.0, h)));
-    const int y_end =
-        std::min(fb.end_row(), static_cast<int>(std::clamp(std::ceil(c.y - 0.5), 0.0, h)));
+    const int y_first = std::max(fb.first_row(), clamp_ceil(a.y - 0.5, h));
+    const int y_end = std::min(fb.end_row(), clamp_ceil(c.y - 0.5, h));
     for (int y = y_first; y < y_end; ++y) {
         const double cy = y + 0.5;
         const double long_x = edge_x(a, c, cy);
         const double short_x = cy < b.y ? edge_x(a, b, cy) : edge_x(b, c, cy);
         const double left = std::min(long_x, short_x);
         const double right = std::max(long_x, short_x);
-        const int xs = static_cast<int>(std::clamp(std::ceil(left - 0.5), 0.0, w));
-        const int xe = static_cast<int>(std::clamp(std::ceil(right - 0.5), 0.0, w)) - 1;
+        const int xs = clamp_ceil(left - 0.5, w);
+        const int xe = clamp_ceil(right - 0.5, w) - 1;
         if (xs > xe) {
             continue;
         }
