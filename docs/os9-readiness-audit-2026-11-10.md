@@ -1,0 +1,87 @@
+# Classic Mac v0.1 readiness audit — 2026-11-10
+
+Base: `main` @ `a0e01f3be96f6556502d62d51320a0e9c1ccc75d` (also `origin/main`). Evidence is from code
+reading, host tests and a Retro68 cross-build. **Nothing here was run on a Mac.** Hardware items are
+listed for the owner; they are not claimed to work.
+
+## CI state
+
+The latest `Checks` run on main (`a0e01f3`) succeeded with all three jobs executed: host build with
+clang, Retro68 compile probe (PowerPC and 68k), and host build, lint and tests. Earlier main runs:
+`1c50778` and `3270724` failed the clang-format step and `13d27cc` the clang-tidy step (code
+failures, fixed by `2c3d1c1`/`6215ecb`); `d421cad` is a `failure` with **zero jobs** (the workflow
+never ran any code, so it says nothing about the code). Two PR runs were `cancelled` (superseded
+pushes), not failed.
+CI compiles the OS 9 app but cannot run it, so none of the findings below can be closed by CI.
+
+## What exists on OS 9 (code evidence)
+
+One window with globe pane and 220 px sidebar (owner confirmed on the G4, 2026-11-09, #79); looks
+list; scrolling wrapped information card; menus (Apple, File, Edit, View) with Cmd keys and
+core-driven check/dim state; About window; Preferences window (units, language); Copy Information
+(Edit > Copy, TEXT scrap); progressive render, zoom preview and cursor policy. Preferences are not
+persisted (#49).
+
+## Findings
+
+| # | Finding | Class | Issue |
+|---|---|---|---|
+| 1 | A failed window grow (no memory for the larger framebuffer + GWorld) **quit the application**. The old and new buffers coexist during a grow, so a large grow in a 24 MiB partition is plausible. | Release blocker (graceful allocation failure) | #10 — **fixed here** |
+| 2 | A failed startup only beeped and exited with no explanation; the partly built application also kept its memory while exiting. | Release blocker (first-use failure, minimum-memory story) | #10 — **fixed here** |
+| 3 | The window title is a performance readout (`Globe 12 bands, 991 ms, copy ... turn ... step ...`, plus `ev` codes) on every settle. Useful for G4 measurements, wrong for a release. Needs a build option (default off for release builds, on for proof builds), coordinated with Codex's benchmark instrumentation. | High-value polish | #11, #12 |
+| 4 | The About window says "Data sources and notices: see the ReadMe". The embedded landclass pack is **CC BY 4.0** (RESOLVE Ecoregions 2017) and the ETOPO and Natural Earth credits are only in the ReadMe/DataCredit files. The app should show the credits itself. Overlaps #93 (edits `l10n/en.txt`, `about_window.cpp`), so not done here. | High-value polish; confirm before release that the ReadMe ships in every artifact | #11 |
+| 5 | `os9/ReadMe.txt` is stale (says it has not run on OS 9; mentions S, Q/Escape, floppy-only text). #76 rewrites it. | Release blocker if #76 is not merged first | #76 |
+| 6 | File menu has only Quit: no Close (Cmd-W) for the About and Preferences windows, which are non-modal and can only be closed with the close box. Keys typed with them frontmost still drive the globe. | Polish, later | #46 |
+| 7 | No measured partition. `SIZE` is 24 MiB preferred / 12 MiB minimum, never measured with full overlays, resize to the maximum (1600x1200), or Preferences/About open. | Release blocker, needs hardware | #10 |
+| 8 | Cursor behaviour, menus, resize, idle and file packaging are unverified on bare OS 9. | Release blocker, needs hardware | #95, #44 |
+| 9 | Preferences (language, units) reset every launch. | Later milestone (#49) | #49 |
+| 10 | English-only for v0.1 (#93). Tradeoff: the Spanish table is ASCII-only (no accents, "sin conexion"), so it reads as unfinished, and every switch path doubles the surface to test on hardware; but removing it discards working, owner-visible features and a tested path, and the catalog stays either way. **Recommendation: accept #93**, keep `l10n/en.txt` and `tr(Str)`, revisit with proper Mac Roman/Unicode in #84. This is the owner's decision; nothing here depends on it. | Decision needed | #93, #84 |
+| 11 | Edit > Undo/Cut/Paste/Clear are always dim except for desk accessories. Correct on Classic Mac. | OK | — |
+| 12 | `Cmd-+` needs Shift on US keyboards (works through MenuKey because the character is shifted); `Cmd-=` does not zoom. | Later | — |
+
+## Change in this branch (findings 1 and 2)
+
+- `src/platform/os9/main.cpp`: a failed grow beeps and keeps the old window size. `buffers()` creates
+  both new buffers before cancelling work or disposing the old ones, so a failed grow leaves the
+  application state untouched (checked by reading; no allocation-failure test exists).
+- `main()`: the `Application` is scoped so its destructor runs before `StopAlert`; startup failure
+  shows an alert (`'ALRT'`/`'DITL'` 128 in `os9/globe.r`) saying that memory is usually the cause and
+  how to raise the partition. The alert is English: it appears before preferences exist.
+
+Not changed: rendering core, benchmarks, atlas selection, strings catalog, #93's files other than
+`main.cpp`.
+
+## Verification actually run
+
+- Host: `cmake -S . -B build -G Ninja`, `cmake --build build`, `ctest --test-dir build`: 59/59 pass
+  (Linux x86-64, Fedora, serial).
+- `git ls-files '*.cpp' '*.hpp' | xargs clang-format --dry-run --Werror` with clang-format 22.1.8: clean.
+  clang-tidy is not run on `src/platform/os9` by CI and was not run on it here.
+- Retro68 PowerPC: `cmake -S os9 ... retroppc.toolchain.cmake` and `cmake --build` in the
+  `ghcr.io/autc04/retro68` image: compiles, links, Rez accepts the new resources, and the alert text
+  is present in the built `GlobeFloppy.bin`. The tool image here is the same one CI and
+  `tools/build-os9.sh` use.
+- Not run: any execution on Mac OS 9 or Classic, any forced allocation failure.
+
+## Hardware checklist (add to #95)
+
+Boot bare OS 9.2.2, one build name, record RAM and the Preferred partition.
+
+1. **Low memory start:** in Finder Get Info set Preferred and Minimum to about 4 MB (below the
+   working set) and launch. Expect the alert, then a clean return to the Finder, and no crash.
+   Restore 24 MB afterwards. (Never leave the partition lowered.)
+2. **Grow failure:** with the Preferred size near the minimum, drag the grow box to the largest
+   size. Expect either a larger window or a beep and the old size, never a quit.
+3. **Partition measurement (#10):** with 24 MB, grow to maximum, open About and Preferences, select
+   a country, turn on Night and Measure; use About This Computer to read the largest unused block
+   and Globe's used memory. Repeat with 16 and 12 MB and record the lowest that survives.
+4. **Cursor (#44):** open hand over the globe, closed hand while dragging, pointing hand over a
+   clickable country, arrow in the sidebar, menu bar and over other windows; after switching to
+   another application and back, after dragging the window.
+5. **Menus (#46):** every View item and key equivalent; Look check marks follow clicking the sidebar
+   list; Copy then paste into SimpleText; About, Preferences open and close.
+6. **Window:** move, resize at both extremes, exposure after a window passes over it, scroll bar
+   active and inactive states in the sidebar when the window is in the background.
+7. **Idle:** leave it unfocused for several minutes: no CPU use in the Finder's process list, no
+   memory growth.
+8. **Title bar (finding 3):** note what the title shows after each settle.
