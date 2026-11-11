@@ -37,3 +37,19 @@ resource 'MENU' (131, preload) {
       ITEM("Night Side", "D"); ITEM("Measure", "M") }
 };
 resource 'MBAR' (128, preload) { { 128, 129, 130, 131 } };
+
+/* Startup failure: shown by main() when the application cannot be built (usually no memory). */
+resource 'ALRT' (128, purgeable) {
+    {80, 60, 215, 400}, 128,
+    { OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1 },
+    alertPositionMainScreen
+};
+resource 'DITL' (128, purgeable) {
+    {
+        {103, 262, 123, 330}, Button { enabled, "OK" };
+        {10, 70, 95, 330}, StaticText { disabled,
+            "Globe could not start. This is usually because too little memory is available. "
+            "Quit other applications, or select Globe in the Finder, choose Get Info, and raise "
+            "its Preferred size." };
+    }
+};
