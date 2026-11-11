@@ -56,6 +56,8 @@ void rebuild_menu_bar() {
     add_item(apple, tr(Str::AboutTitle), 0, true);
     add_divider(apple);
     titled(kFileMenu, tr(Str::MenuFile), &file);
+    add_item(file, tr(Str::ItemClose), 'W');
+    add_divider(file);
     add_item(file, tr(Str::ItemQuit), 'Q');
     titled(kEditMenu, tr(Str::MenuEdit), &edit);
     add_item(edit, tr(Str::ItemUndo), 'Z');

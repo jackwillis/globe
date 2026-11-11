@@ -21,7 +21,7 @@ resource 'MENU' (128, preload) {
 };
 resource 'MENU' (129, preload) {
     129, textMenuProc, allEnabled, enabled, "File",
-    { ITEM("Quit", "Q") }
+    { ITEM("Close", "W"); DIVIDER; ITEM("Quit", "Q") }
 };
 resource 'MENU' (130, preload) {
     130, textMenuProc, allEnabled, enabled, "Edit",

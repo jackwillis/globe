@@ -8,7 +8,7 @@
 #include <algorithm>
 namespace globe {
 namespace {
-constexpr short kWidth = 360, kHeight = 170, kMargin = 14, kLine = 15;
+constexpr short kWidth = 420, kHeight = 250, kMargin = 14, kLine = 15;
 void pascal_draw(std::string_view text) {
     unsigned char line[256];
     const auto n = static_cast<unsigned char>(std::min<std::size_t>(text.size(), 255));
@@ -67,7 +67,10 @@ void AboutWindow::draw() {
     card.lines[0] = tr(Str::AboutLine1);
     card.lines[1] = tr(Str::AboutLine2);
     card.lines[2] = tr(Str::AboutLine3);
-    card.line_count = 3;
+    card.lines[3] = tr(Str::AboutLine4);
+    card.lines[4] = tr(Str::AboutLine5);
+    card.lines[5] = tr(Str::AboutLine6);
+    card.line_count = 6;
     const auto rows = wrap_card(card, kWidth - 2 * kMargin, [](std::string_view text) {
         return static_cast<int>(
             TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())));
