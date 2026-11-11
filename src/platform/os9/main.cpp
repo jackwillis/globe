@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 // Classic PowerPC proof of life: Toolbox window, RGB555 GWorld and wake-driven input loop.
+#include "about_window.hpp"
 #include "classic_present.hpp"
 #include "classic_wait.hpp"
 #include "clock.hpp"
 #include "globe/app.hpp"
+#include "globe/card_text.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -17,12 +19,14 @@
 #include "globe/shown_frame.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
-#include "info_card.hpp"
-#include "looks_palette.hpp"
+#include "menu_bar.hpp"
 #include "pixel_format.hpp"
+#include "prefs_window.hpp"
+#include "sidebar.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
 #include <Events.h>
+#include <Memory.h>
 #include <Menus.h>
 #include <OSUtils.h>
 #include <Quickdraw.h>
@@ -51,8 +55,41 @@ constexpr std::uint64_t kPresentSliceMs = 6;
 // The installed Multiversal Events.h omits these two constants.
 constexpr unsigned kSuspendResumeMessage = 1;
 constexpr unsigned kResumeFlag = 1;
+// 'ALRT' id in os9/globe.r: shown when the application cannot start.
+constexpr short kStartupAlert = 128;
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
+}
+// The Globe window's content rectangle in global coordinates: the screen below the menu bar and
+// title bar, less a margin. The sidebar takes its right `Sidebar::kWidth` columns and the globe the
+// rest; both stay inside the sizes the grow box allows.
+Rect window_content() {
+    constexpr short kGap = 6, kTitleBar = 20;
+    const Rect screen = (*GetMainDevice())->gdRect; // the menu bar's screen
+    const short top = static_cast<short>(screen.top + GetMBarHeight() + kTitleBar + kGap);
+    const short left = static_cast<short>(screen.left + kGap);
+    const short width = std::clamp<short>(static_cast<short>(screen.right - screen.left - 2 * kGap),
+                                          Sidebar::kWidth + 160, 1600);
+    const short height =
+        std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), 120, 1200);
+    return Rect{top, left, static_cast<short>(top + height), static_cast<short>(left + width)};
+}
+// Shrinks the initial window so the buffers it needs fit in the free heap. Per pixel: the
+// framebuffer (2 bytes plus coverage), the GWorld (2), the overlay copy (about 2) and the zoom
+// cache (about 2), rounded up to 11; the terrain scene and embedded data are already allocated when
+// this runs. The window grows back only by the user's choice (a failed grow keeps the old size).
+// Estimates from the host ledger and the code, not measured on OS 9 (#10).
+void fit_to_memory(Rect& r) {
+    constexpr long kBytesPerPixel = 11, kReserve = 1024 * 1024;
+    const long budget = std::max(0L, static_cast<long>(FreeMem()) - kReserve) / kBytesPerPixel;
+    long width = r.right - r.left, height = r.bottom - r.top;
+    const long min_width = Sidebar::kWidth + 160, min_height = 120;
+    while (width * height > budget && (width > min_width || height > min_height)) {
+        width = std::max(min_width, width * 7 / 8);
+        height = std::max(min_height, height * 7 / 8);
+    }
+    r.right = static_cast<short>(r.left + width);
+    r.bottom = static_cast<short>(r.top + height);
 }
 class Application {
   public:
@@ -92,7 +129,8 @@ class Application {
                          place_scene_ ? &*place_scene_ : nullptr);
         runner_.set_scene(*scene_);
         runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
-        Rect bounds{50, 30, 530, 670};
+        Rect bounds = window_content();
+        fit_to_memory(bounds);
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);
@@ -100,8 +138,15 @@ class Application {
         if (!window_ || !mouse_region_)
             return false;
         SetPortWindowPort(window_);
-        if (!buffers(640, 480))
+        const int width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
+        const int globe_width = width - Sidebar::kWidth;
+        if (!sidebar_.attach(window_) || !buffers(globe_width, height))
             return false;
+        sidebar_.layout(static_cast<short>(width), static_cast<short>(height));
+        sidebar_.sync(model_.terrain_style);
+        sidebar_.show(nothing_selected_card());
+        if (globe_width != model_.camera.width || height != model_.camera.height)
+            apply(Resize{globe_width, height});
         apply(Tick{now_ms()});
         return true;
     }
@@ -200,7 +245,12 @@ class Application {
                     if (part == inContent) {
                         if (FrontWindow() != window_)
                             SelectWindow(window_);
-                        else
+                        else if (sidebar_.contains(local)) {
+                            const int row = sidebar_.mouse_down(local);
+                            SetPortWindowPort(window_);
+                            if (const auto pick = looks_pick(model_.terrain_style, row))
+                                quit = apply(CommandIssued{time, *pick});
+                        } else
                             quit = apply(PointerDown{time, double(local.h), double(local.v)});
                     } else if (part == inDrag) {
                         Rect limit{20, -32000, 32000, 32000};
@@ -209,26 +259,51 @@ class Application {
                     } else if (part == inGoAway)
                         quit = TrackGoAway(window_, event.where);
                     else if (part == inGrow) {
-                        Rect limit{120, 160, 1201, 1601};
+                        Rect limit{120, static_cast<short>(Sidebar::kWidth + 160), 1201, 1601};
                         const auto size = GrowWindow(window_, event.where, &limit);
                         if (size) {
                             const int width = static_cast<unsigned long>(size) & 0xffffU;
                             const int height = (static_cast<unsigned long>(size) >> 16) & 0xffffU;
-                            if (buffers(width, height)) {
+                            const int globe_width = width - Sidebar::kWidth;
+                            if (buffers(globe_width, height)) {
                                 SizeWindow(window_, width, height, true);
-                                apply(Resize{width, height});
+                                sidebar_.layout(static_cast<short>(width),
+                                                static_cast<short>(height));
+                                apply(Resize{globe_width, height});
+                                InvalRect(&window_->portRect); // the sidebar moved: redraw it
                             } else
-                                quit = true;
+                                SysBeep(10); // no memory for the larger buffers: keep the old size
                         }
                     }
-                } else if (hit == info_.window())
-                    info_.mouse_down(event);
-                else if (hit == palette_.window()) {
-                    int row = -1;
-                    palette_.mouse_down(event, row);
+                } else if (hit && hit == prefs_window_.window()) {
+                    if (part == inGoAway) {
+                        if (TrackGoAway(hit, event.where))
+                            prefs_window_.close();
+                    } else if (part == inDrag) {
+                        Rect limit{20, -32000, 32000, 32000};
+                        DragWindow(hit, event.where, &limit);
+                    } else if (part == inContent) {
+                        if (FrontWindow() != hit)
+                            SelectWindow(hit);
+                        else {
+                            SetPortWindowPort(hit);
+                            Point inside = event.where;
+                            GlobalToLocal(&inside);
+                            if (const auto next = prefs_window_.mouse_down(inside))
+                                set_preferences(*next, time);
+                        }
+                    }
                     SetPortWindowPort(window_);
-                    if (const auto pick = looks_pick(model_.terrain_style, row))
-                        quit = apply(CommandIssued{time, *pick});
+                } else if (hit && hit == about_.window()) {
+                    if (part == inGoAway) {
+                        if (TrackGoAway(hit, event.where))
+                            about_.close();
+                    } else if (part == inDrag) {
+                        Rect limit{20, -32000, 32000, 32000};
+                        DragWindow(hit, event.where, &limit);
+                    } else if (part == inContent && FrontWindow() != hit)
+                        SelectWindow(hit);
+                    SetPortWindowPort(window_);
                 } else if (part == inSysWindow)
                     SystemClick(&event, hit);
             } else if (event.what == mouseUp) {
@@ -246,34 +321,42 @@ class Application {
             } else if (event.what == keyDown || event.what == autoKey)
                 quit = key(event.message, time);
             else if (event.what == updateEvt) {
-                if (reinterpret_cast<WindowPtr>(event.message) == window_) {
+                if (prefs_window_.window() &&
+                    reinterpret_cast<WindowPtr>(event.message) == prefs_window_.window()) {
+                    BeginUpdate(prefs_window_.window());
+                    prefs_window_.draw();
+                    EndUpdate(prefs_window_.window());
+                    SetPortWindowPort(window_);
+                } else if (about_.window() &&
+                           reinterpret_cast<WindowPtr>(event.message) == about_.window()) {
+                    BeginUpdate(about_.window());
+                    about_.draw();
+                    EndUpdate(about_.window());
+                    SetPortWindowPort(window_);
+                } else if (reinterpret_cast<WindowPtr>(event.message) == window_) {
                     BeginUpdate(window_);
                     // Background update events repaint the cached GWorld, never convert terrain.
                     copy(0, fb_->height(),
                          foreground_ && !presentation_.pending(model_.generation));
+                    sidebar_.draw();
                     EndUpdate(window_);
-                } else if (reinterpret_cast<WindowPtr>(event.message) == palette_.window()) {
-                    BeginUpdate(palette_.window());
-                    palette_.draw();
-                    EndUpdate(palette_.window());
-                    SetPortWindowPort(window_);
-                } else if (reinterpret_cast<WindowPtr>(event.message) == info_.window()) {
-                    BeginUpdate(info_.window());
-                    info_.draw();
-                    EndUpdate(info_.window());
-                    SetPortWindowPort(window_);
                 }
-            } else if (event.what == activateEvt && !(event.modifiers & activeFlag))
-                apply(PointerUp{time});
-            else if (event.what != nullEvent && event.what != activateEvt &&
-                     event.what != diskEvt && event.what != osEvt) {
+            } else if (event.what == activateEvt) {
+                if (reinterpret_cast<WindowPtr>(event.message) == window_) {
+                    sidebar_.activate(event.modifiers & activeFlag);
+                    sidebar_.draw();
+                }
+                if (!(event.modifiers & activeFlag))
+                    apply(PointerUp{time});
+            } else if (event.what != nullEvent && event.what != activateEvt &&
+                       event.what != diskEvt && event.what != osEvt) {
                 // Not an event this program knows (a scroll wheel, if the system sends one to a
                 // non-Carbon program, would show up here): remember the code for the title.
                 last_unknown_ = static_cast<unsigned>(event.what);
                 ++unknown_count_;
                 show_timing(); // refresh the title so the code is visible
             }
-            palette_.sync(model_.terrain_style); // the check follows the look, whoever changed it
+            sidebar_.sync(model_.terrain_style); // the check follows the look, whoever changed it
             SetPortWindowPort(window_);
             // A one-pixel mouse region wakes on motion, even with no button held. No periodic poll.
             Point current;
@@ -293,8 +376,10 @@ class Application {
                 hover_valid_ = true;
             }
             const auto target = hover_;
-            const auto intent = FrontWindow() == window_ ? cursor_for(model_, position, target)
-                                                         : CursorIntent::Arrow;
+            const bool over_globe = position.x < sidebar_.left();
+            const auto intent = FrontWindow() == window_ && over_globe
+                                    ? cursor_for(model_, position, target)
+                                    : CursorIntent::Arrow;
             if (foreground_ && intent != cursor_) {
                 cursor_ = intent;
                 const auto native = intent == CursorIntent::OpenHand       ? 9U
@@ -373,12 +458,14 @@ class Application {
         copy_ms_ += now_ms() - start;
         return ok;
     }
-    // The window title reports the last settle: first refine step to last, and time spent
-    // copying.
+    // With GLOBE_TIMING_TITLE (cmake -DGLOBE_TIMING_TITLE=ON, for measurement builds) the window
+    // title reports the last settle: first refine step to last, and time spent copying. Release
+    // builds keep the plain title "Globe".
     void show_timing() {
         if (!titled_)
             settled_ms_ = now_ms() - refine_t0_;
         titled_ = true;
+#ifdef GLOBE_TIMING_TITLE
         unsigned char title[128];
         unsigned n = 0;
         const auto put = [&](const char* text) {
@@ -414,6 +501,7 @@ class Application {
         }
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
+#endif
     }
     bool copy(int first, int end, bool convert = true) {
         if (!world_ || !fb_)
@@ -492,10 +580,7 @@ class Application {
     void pick(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
-            SetPortWindowPort(window_);
-            Point corner{window_->portRect.top, window_->portRect.right};
-            LocalToGlobal(&corner);
-            info_.show(*card, corner.h);
+            sidebar_.show(*card);
             SetPortWindowPort(window_);
         }
         if (changed)
@@ -515,12 +600,6 @@ class Application {
             overlays_.toggle_measure();
             hover_valid_ = false; // measuring makes the whole globe clickable
             reshow();
-        } else if (which == KeyBinding::Overlay::Palette) {
-            SetPortWindowPort(window_);
-            Point corner{window_->portRect.top, window_->portRect.right};
-            LocalToGlobal(&corner);
-            palette_.show(model_.terrain_style, corner.h);
-            SetPortWindowPort(window_);
         }
     }
     // Check marks and dimming for the menu about to be shown; the model is the only state.
@@ -536,12 +615,20 @@ class Application {
                 CheckItem(view, item, s.checked);
             }
         }
-        // Edit exists for desk accessories only: live while one is in front.
+        // Close is for the About and Preferences windows (or a desk accessory) in front; the globe
+        // window leaves the program through Quit.
         const WindowPtr front = FrontWindow();
+        if (const MenuHandle file = GetMenuHandle(kFileMenu)) {
+            if (front != nullptr && front != window_)
+                EnableItem(file, kCloseItem);
+            else
+                DisableItem(file, kCloseItem);
+        }
+        // Edit is for desk accessories, except Copy, which copies the information card.
         const bool accessory = front != nullptr && GetWindowKind(front) < 0;
         if (const MenuHandle edit = GetMenuHandle(kEditMenu)) {
             for (short item = 1; item <= 6; ++item) {
-                if (accessory)
+                if (accessory || item == kCopyItem)
                     EnableItem(edit, item);
                 else
                     DisableItem(edit, item);
@@ -559,12 +646,19 @@ class Application {
             GetMenuItemText(GetMenuHandle(kAppleMenu), item, name);
             OpenDeskAcc(name);
             SetPortWindowPort(window_);
+        } else if (menu == kEditMenu && item == kPreferencesItem) {
+            prefs_window_.open(model_.prefs);
+            SetPortWindowPort(window_);
+        } else if (menu == kEditMenu && item == kCopyItem && !accessory_in_front()) {
+            copy_card();
         } else if (menu == kEditMenu) {
             SystemEdit(item - 1);
         } else {
             const auto choice = menu_choice(menu, item, model_.terrain_style);
             if (choice.about)
                 show_about();
+            else if (choice.close)
+                close_front();
             else if (choice.command)
                 quit = apply(CommandIssued{time, *choice.command});
             else
@@ -573,21 +667,46 @@ class Application {
         HiliteMenu(0);
         return quit;
     }
-    // The program's own license and data pointers only; the data credits are #11's.
-    void show_about() {
-        InfoCard card{};
-        card.title = "About Globe";
-        card.lines[0] = "An offline, software-rendered interactive Earth.";
-        card.lines[1] = "Copyright (c) 2026 Jack Willis. GPL-3.0-or-later.";
-        card.lines[2] = "Data sources and notices: see the ReadMe.";
-        card.line_count = 3;
+    // File > Close: hides the About or Preferences window in front, or closes a desk accessory.
+    void close_front() {
+        const WindowPtr front = FrontWindow();
+        if (front == nullptr || front == window_)
+            return;
+        if (front == about_.window())
+            about_.close();
+        else if (front == prefs_window_.window())
+            prefs_window_.close();
+        else if (GetWindowKind(front) < 0)
+            CloseDeskAcc(GetWindowKind(front));
         SetPortWindowPort(window_);
-        Point corner{window_->portRect.top, window_->portRect.right};
-        LocalToGlobal(&corner);
-        info_.show(card, corner.h);
+    }
+    bool accessory_in_front() const {
+        const WindowPtr front = FrontWindow();
+        return front != nullptr && GetWindowKind(front) < 0;
+    }
+    // Copy Information: the whole card shown, as TEXT on the scrap (lines separated by CR).
+    void copy_card() {
+        char text[1024];
+        const auto length = card_text(sidebar_.card(), text, sizeof text, '\r');
+        ZeroScrap();
+        PutScrap(static_cast<long>(length), 'TEXT', text);
+    }
+    // Preferences go through update() like any other state; the text and windows follow the Model.
+    void set_preferences(const Preferences& next, std::uint64_t) {
+        apply(SetPreferences{next});
+        overlays_.set_preferences(model_.prefs);
+        prefs_window_.sync(model_.prefs);
+        SetPortWindowPort(window_);
+    }
+    void show_about() {
+        about_.open();
         SetPortWindowPort(window_);
     }
     bool key(unsigned long message, std::uint64_t time) {
+        // The About and Preferences windows take no globe shortcuts, and a bare Q or Escape must
+        // not quit: Quit is Command-Q.
+        if (FrontWindow() != window_)
+            return false;
         const auto code = (message >> 8) & 0xff;
         const auto ch = static_cast<int>(message & 0xff);
         // Arrow and Page keys are decoded here (ADB codes); typed characters go through the shared
@@ -608,6 +727,8 @@ class Application {
         const auto binding = binding_for_char(ch);
         if (!command)
             command = binding.command;
+        if (command == Command::Quit)
+            return false;
         if (command)
             return apply(CommandIssued{time, *command});
         overlay(binding.overlay);
@@ -625,8 +746,9 @@ class Application {
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     Overlays overlays_;
-    InfoCardWindow info_;
-    LooksPalette palette_;
+    Sidebar sidebar_;
+    AboutWindow about_;
+    PrefsWindow prefs_window_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
     std::uint64_t wake_ = 0;
@@ -661,11 +783,17 @@ int main() {
     TEInit();
     InitDialogs(nullptr);
     InitCursor();
-    Application app;
-    if (!app.init()) {
+    bool started = false;
+    {
+        Application app;
+        started = app.init();
+        if (started)
+            app.run();
+    } // the partly built application releases its memory before the alert needs some
+    if (!started) {
         SysBeep(10);
+        StopAlert(kStartupAlert, nullptr);
         return 1;
     }
-    app.run();
     return 0;
 }

@@ -19,6 +19,7 @@ add_library(globe_core
   src/core/app.cpp
   src/core/countries.cpp
   src/core/places.cpp
+  src/core/strings.cpp
   src/core/trace.cpp
   src/data/grid_codec.cpp
   src/data/landclasses.cpp
@@ -138,7 +139,7 @@ if(X11_FOUND AND TARGET globe_embedded_atlas)
     DEPENDS data/elevation-0.5deg.gelv tools/embed_atlas.py)
   add_library(globe_embedded_fineelevation ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp)
   target_link_libraries(globe_embedded_fineelevation PUBLIC globe_core)
-  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp)
+  add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp src/platform/x11/prefs_pane.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
   target_link_libraries(globe-x11 PRIVATE globe_embedded_fineelevation globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
@@ -177,7 +178,10 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
   endif()
-  foreach(name bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus)
+  if(Python3_Interpreter_FOUND)
+    add_test(NAME strings_generated COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_strings.py --check)
+  endif()
+  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus wrap strings card_text)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
@@ -192,6 +196,8 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
   endforeach()
   if(TARGET globe-bench AND Python3_FOUND)
+    add_test(NAME bench_memory COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_bench_memory.py
+      $<TARGET_FILE:globe-bench> ${CMAKE_SOURCE_DIR})
     add_test(NAME progressive COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_progressive.py
       $<TARGET_FILE:globe-bench> ${CMAKE_SOURCE_DIR}/data/elevation-0.5deg.gelv)
   endif()

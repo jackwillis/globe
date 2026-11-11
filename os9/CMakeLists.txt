@@ -33,11 +33,13 @@ endforeach()
 # Floppy payload: atlas, one-degree elevation, land classes, country polygons and 304 cities.
 add_application(${APP} CREATOR Glb2
   ${ROOT}/src/platform/os9/main.cpp ${ROOT}/src/platform/os9/clock_os9.cpp
-  ${ROOT}/src/platform/os9/info_card.cpp
-  ${ROOT}/src/platform/os9/looks_palette.cpp
+  ${ROOT}/src/platform/os9/sidebar.cpp
+  ${ROOT}/src/platform/os9/about_window.cpp
+  ${ROOT}/src/platform/os9/prefs_window.cpp
+  ${ROOT}/src/platform/os9/menu_bar.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
-  ${ROOT}/src/core/app.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp
+  ${ROOT}/src/core/app.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp
   ${ROOT}/src/data/grid_codec.cpp ${ROOT}/src/data/landclasses.cpp
   ${ROOT}/src/data/atlas.cpp ${ROOT}/src/data/elevation.cpp ${ROOT}/src/data/crc32.cpp
   ${ROOT}/src/data/countries.cpp ${ROOT}/src/data/places.cpp
@@ -50,6 +52,11 @@ add_application(${APP} CREATOR Glb2
   ${CMAKE_BINARY_DIR}/embedded_atlas.cpp ${CMAKE_BINARY_DIR}/embedded_elevation.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/globe.r)
 target_compile_definitions(${APP} PRIVATE GLOBE_FLOPPY=1)
+# Measurement builds show the settle timing in the window title; release builds keep "Globe".
+option(GLOBE_TIMING_TITLE "Show render timing in the OS 9 window title" OFF)
+if(GLOBE_TIMING_TITLE)
+  target_compile_definitions(${APP} PRIVATE GLOBE_TIMING_TITLE=1)
+endif()
 target_include_directories(${APP} PRIVATE ${ROOT}/include ${ROOT}/src/platform/common)
 target_compile_options(${APP} PRIVATE -Os -Wall -Wextra -Wpedantic -fno-exceptions -fno-rtti)
 target_link_libraries(${APP} AppearanceLib)

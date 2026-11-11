@@ -13,6 +13,7 @@
 
 #include "globe/atlas.hpp"
 #include "globe/framebuffer.hpp"
+#include "globe/memory_ledger.hpp"
 #include "globe/projection.hpp"
 #include "globe/refine_order.hpp"
 #include "globe/terrain_style.hpp"
@@ -96,10 +97,11 @@ struct PolylineCap {
 class Scene {
   public:
     // Up-front geometry and caps; nullopt on failure.
-    static std::optional<Scene> create(const Atlas& atlas);
+    // Optional payload accounting; the stable ledger must outlive this scene and its moves.
+    static std::optional<Scene> create(const Atlas& atlas, MemoryLedger* ledger = nullptr);
 
     Scene(Scene&&) noexcept = default;
-    Scene& operator=(Scene&&) noexcept = default;
+    Scene& operator=(Scene&& other) noexcept;
     Scene(const Scene&) = delete;
     Scene& operator=(const Scene&) = delete;
     ~Scene() = default;
@@ -111,10 +113,15 @@ class Scene {
     std::size_t bytes() const;
 
   private:
-    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps)
-        : atlas_(atlas), storage_(std::move(storage)), caps_(std::move(caps)) {}
+    Scene(const Atlas& atlas, std::unique_ptr<Vec3[]> storage, std::unique_ptr<PolylineCap[]> caps,
+          MemoryCharge storage_charge, MemoryCharge caps_charge)
+        : atlas_(atlas), storage_charge_(std::move(storage_charge)),
+          caps_charge_(std::move(caps_charge)), storage_(std::move(storage)),
+          caps_(std::move(caps)) {}
 
     Atlas atlas_;
+    // Destruction frees both payloads before releasing their accounting tickets.
+    MemoryCharge storage_charge_, caps_charge_;
     std::unique_ptr<Vec3[]> storage_; // atlas vertices, then graticule samples
     std::unique_ptr<PolylineCap[]> caps_;
 };
