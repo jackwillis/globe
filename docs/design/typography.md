@@ -223,6 +223,15 @@ What this shows:
 - Text encoding: QuickDraw strings are Mac Roman, while data names are likely UTF-8. Some letters
   (Turkish, Polish and others) may lack a Mac Roman glyph. **Check the character set** before
   settling which names can be shown.
+- **Names are Latinized (owner decision, 2026-11-09).** Globe is an American atlas, so display names
+  are Latin-script and fit Mac Roman where possible; no Unicode or script fonts are bundled. Names
+  that do not fit get a reviewed Latinized or transliterated form from the atlas name profiles
+  (#52, #91), while the full-fidelity name stays in the catalog. Mac Roman covers most Western
+  European diacritics but not, as far as I know, Polish, Czech, Romanian, Hungarian, Turkish or
+  non-Latin scripts. Estimated cost of bundling glyphs instead, extrapolated from a host measurement of
+  319 glyphs at 11 px (not G4 figures): about 35 KB for Latin at 1 bpp, about 170 KB with extended
+  Latin, Cyrillic and Greek, and about 560 KB for one CJK face. Not proposed. The encoding question
+  is tracked on #84.
 - Geographic priorities come from #52/#53 (identity, selection, label priority). Typography consumes
   them and hard-codes no rankings.
 

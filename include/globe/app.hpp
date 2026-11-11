@@ -8,6 +8,7 @@
 // Holds no framebuffer, atlas or geometry: the view layer renders from a read-only Model.
 #pragma once
 
+#include "globe/prefs.hpp"
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -54,6 +55,7 @@ struct Model {
     unsigned refine_level = 0, refine_target = 0;
     bool refine_active = false, refine_first = true;
     TerrainStyle terrain_style = TerrainStyle::Map;
+    Preferences prefs; // units; changed by SetPreferences, never redraws the globe
     Camera camera;
     Layers layers;
     DragMode drag_mode;
@@ -104,6 +106,9 @@ struct CommandIssued {
     std::uint64_t time_ms;
     Command command;
 };
+struct SetPreferences {
+    Preferences prefs;
+};
 struct Resize {
     int width;
     int height;
@@ -128,7 +133,7 @@ struct RefinementFinished {
 };
 
 using Msg = std::variant<PointerDown, PointerMove, PointerUp, Wheel, CommandIssued, Resize, Repaint,
-                         Tick, RegisterElevation, RefinementFinished>;
+                         Tick, RegisterElevation, RefinementFinished, SetPreferences>;
 
 struct Effects {
     std::optional<Refine> refine;
@@ -206,7 +211,7 @@ constexpr std::uint64_t kPickDelayMs = kDoubleClickMs;
 // keys are decoded by each front end; this is the part that must not drift between them. Escape
 // is character 27.
 struct KeyBinding {
-    enum class Overlay : std::uint8_t { Nothing, Night, Measure, Palette };
+    enum class Overlay : std::uint8_t { Nothing, Night, Measure };
     std::optional<Command> command;     // sent through update()
     Overlay overlay = Overlay::Nothing; // an overlay or window the front end handles itself
 };

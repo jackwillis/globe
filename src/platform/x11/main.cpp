@@ -23,6 +23,7 @@
 #include <sys/resource.h>
 #include <sys/select.h>
 
+#include <algorithm>
 #include <array>
 #include <cerrno>
 #include <cmath>
@@ -40,6 +41,7 @@
 #include "frame_stats.hpp"
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
+#include "globe/card_text.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -56,6 +58,7 @@
 #include "globe/zoom.hpp"
 #include "info_window.hpp"
 #include "pixel_format.hpp"
+#include "prefs_pane.hpp"
 #include "style_window.hpp"
 
 using namespace globe;
@@ -67,8 +70,8 @@ struct Options {
     std::array<const char*, 3> elevation_paths{};
     unsigned elevation_count = 0;
     const char* script_path = nullptr;
-    int width = 640;
-    int height = 480;
+    int width = 420;
+    int height = 440;
     bool exit_when_done = false;
     bool stats = false;
     bool verify_pixels = false;
@@ -107,7 +110,7 @@ class App {
   public:
     App(Display* dpy, const Scene& scene, ElevationPacks& packs, const Options& opt)
         : dpy_(dpy), scene_(scene), packs_(packs), opt_(opt),
-          model_(initial_model(opt.width, opt.height)), info_(dpy), styles_(dpy) {
+          model_(initial_model(opt.width, opt.height)), info_(dpy), styles_(dpy), prefs_pane_(dpy) {
         packs_.register_levels(model_);
         places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
         if (places_)
@@ -148,9 +151,10 @@ class App {
         }
         depth_ = DefaultDepth(dpy_, screen);
         visual_ = visual;
-        win_ = XCreateSimpleWindow(
-            dpy_, RootWindow(dpy_, screen), 0, 0, static_cast<unsigned>(opt_.width),
-            static_cast<unsigned>(opt_.height), 0, 0, BlackPixel(dpy_, screen));
+        win_ =
+            XCreateSimpleWindow(dpy_, RootWindow(dpy_, screen), 0, 0,
+                                static_cast<unsigned>(opt_.width + StyleWindow::kWidth),
+                                static_cast<unsigned>(opt_.height), 0, 0, BlackPixel(dpy_, screen));
         XStoreName(dpy_, win_, "Globe");
         XSelectInput(dpy_, win_,
                      ExposureMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask |
@@ -174,6 +178,12 @@ class App {
         cursors_ = {XCreateFontCursor(dpy_, XC_left_ptr), XCreateFontCursor(dpy_, XC_hand2),
                     XCreateFontCursor(dpy_, XC_fleur), XCreateFontCursor(dpy_, XC_hand2)};
         XDefineCursor(dpy_, win_, cursors_[0]);
+        // The sidebar: looks above, information below, both children of the one window.
+        styles_.attach(win_, opt_.width, 0, looks_row(model_.terrain_style));
+        prefs_pane_.attach(win_, opt_.width, StyleWindow::kHeight, model_.prefs);
+        info_.attach(win_, opt_.width, kInfoTop, StyleWindow::kWidth,
+                     std::max(48, opt_.height - kInfoTop));
+        info_.show(nothing_selected_card());
         XMapWindow(dpy_, win_);
         XMapWindow(dpy_, toolbar_);
         return true;
@@ -258,6 +268,7 @@ class App {
         std::printf("  \"info_cards\": %zu,\n  \"info_scrolls\": %zu,\n", info_cards_,
                     info_.scrolls());
         std::printf("  \"terrain_style\": %u,\n", static_cast<unsigned>(model_.terrain_style));
+        std::printf("  \"units\": %u,\n", static_cast<unsigned>(model_.prefs.units));
         print_summary("render_ms", r, false);
         print_summary("pack_ms", p, false);
         print_summary("present_ms", x, false);
@@ -344,7 +355,8 @@ class App {
     void pick_at(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
-            info_.show(win_, *card, model_.camera.width + 20);
+            info_.show(*card);
+            // The selected card already uses the single release UI language.
             ++info_cards_;
         }
         if (changed)
@@ -394,14 +406,31 @@ class App {
             wake_at_ms_ = monotonic_ns() / 1000000ULL + fx.wake_after_ms;
         }
         styles_.set_current(model_.terrain_style == TerrainStyle::Map ? 0 : 1);
+        follow_preferences();
         if (std::holds_alternative<Resize>(msg))
-            info_.move(model_.camera.width + 20);
+            layout_sidebar();
         if (toolbar_ && std::holds_alternative<Resize>(msg))
             XMoveWindow(dpy_, toolbar_, 0, model_.camera.height + 20);
         if (toolbar_ && toolbar_state(model_) != toolbar_cache_)
             draw_toolbar();
         update_cursor();
         return fx.quit;
+    }
+
+    // Units are the Model's: the card and pane follow them.
+    void follow_preferences() {
+        if (model_.prefs == shown_prefs_)
+            return;
+        shown_prefs_ = model_.prefs;
+        overlays_.set_preferences(model_.prefs);
+        prefs_pane_.sync(model_.prefs);
+    }
+    // The sidebar sits to the right of the globe pane and follows its size.
+    void layout_sidebar() {
+        styles_.place(model_.camera.width, 0);
+        prefs_pane_.place(model_.camera.width, StyleWindow::kHeight);
+        info_.place(model_.camera.width, kInfoTop, StyleWindow::kWidth,
+                    std::max(48, model_.camera.height - kInfoTop));
     }
 
     // One frame per redraw request, exactly as interactive use would draw them.
@@ -413,7 +442,8 @@ class App {
             if (need_redraw_) {
                 if (const auto* r = std::get_if<Resize>(&msg)) {
                     (void)r;
-                    XResizeWindow(dpy_, win_, static_cast<unsigned>(model_.camera.width),
+                    XResizeWindow(dpy_, win_,
+                                  static_cast<unsigned>(model_.camera.width + StyleWindow::kWidth),
                                   static_cast<unsigned>(model_.camera.height));
                     if (!make_buffers(model_.camera.width, model_.camera.height)) {
                         return true;
@@ -720,6 +750,11 @@ class App {
         const std::uint64_t now = monotonic_ns() / 1000000ULL;
         if (info_.handle(ev))
             return false;
+        if (const auto r = prefs_pane_.handle(ev); r.handled) {
+            if (r.next)
+                return apply(SetPreferences{*r.next});
+            return false;
+        }
         if (const auto r = styles_.handle(ev); r.handled) {
             if (const auto pick = looks_pick(model_.terrain_style, r.picked))
                 return apply(CommandIssued{now, *pick});
@@ -764,7 +799,7 @@ class App {
             }
             return false;
         case ConfigureNotify: {
-            const int w = ev.xconfigure.width;
+            const int w = ev.xconfigure.width - StyleWindow::kWidth;
             const int h = ev.xconfigure.height;
             if (w != model_.camera.width || h != model_.camera.height) {
                 const bool q = apply(Resize{w, h});
@@ -807,8 +842,17 @@ class App {
             }
             return false;
         }
+        case SelectionRequest:
+            answer_selection(ev.xselectionrequest);
+            return false;
+        case SelectionClear:
+            return false;
         case KeyPress: {
             const KeySym sym = XLookupKeysym(&ev.xkey, 0);
+            if ((ev.xkey.state & ControlMask) && (sym == XK_c || sym == XK_C)) {
+                copy_card();
+                return false;
+            }
             return on_key(sym, now);
         }
         case ClientMessage:
@@ -816,6 +860,41 @@ class App {
         default:
             return false;
         }
+    }
+
+    // Copy Information: take the CLIPBOARD and PRIMARY selections; the text is the card as it is
+    // when someone asks (it is copied here too, so a later pick does not change what was copied).
+    void copy_card() {
+        char text[1024];
+        copied_ = std::string(text, card_text(info_.card(), text, sizeof text, '\n'));
+        XSetSelectionOwner(dpy_, XInternAtom(dpy_, "CLIPBOARD", False), win_, CurrentTime);
+        XSetSelectionOwner(dpy_, XA_PRIMARY, win_, CurrentTime);
+    }
+    void answer_selection(const XSelectionRequestEvent& request) {
+        XSelectionEvent reply{};
+        reply.type = SelectionNotify;
+        reply.display = request.display;
+        reply.requestor = request.requestor;
+        reply.selection = request.selection;
+        reply.target = request.target;
+        reply.time = request.time;
+        reply.property = None;
+        const Atom property = request.property != None ? request.property : request.target;
+        const Atom utf8 = XInternAtom(dpy_, "UTF8_STRING", False);
+        const Atom targets = XInternAtom(dpy_, "TARGETS", False);
+        if (request.target == targets) {
+            const Atom list[] = {targets, XA_STRING, utf8};
+            XChangeProperty(dpy_, request.requestor, property, XA_ATOM, 32, PropModeReplace,
+                            reinterpret_cast<const unsigned char*>(list), 3);
+            reply.property = property;
+        } else if (request.target == XA_STRING || request.target == utf8) {
+            // ASCII only until #84 settles the text encoding, so both targets are the same bytes.
+            XChangeProperty(dpy_, request.requestor, property, request.target, 8, PropModeReplace,
+                            reinterpret_cast<const unsigned char*>(copied_.data()),
+                            static_cast<int>(copied_.size()));
+            reply.property = property;
+        }
+        XSendEvent(dpy_, request.requestor, False, NoEventMask, reinterpret_cast<XEvent*>(&reply));
     }
 
     bool on_key(KeySym sym, std::uint64_t now) {
@@ -872,9 +951,6 @@ class App {
             overlays_.toggle_measure();
             reshow();
             break;
-        case KeyBinding::Overlay::Palette:
-            styles_.show(win_, model_.camera.width + 20, looks_row(model_.terrain_style));
-            break;
         case KeyBinding::Overlay::Nothing:
             break;
         }
@@ -888,6 +964,10 @@ class App {
     Model model_;
     InfoWindow info_;
     StyleWindow styles_;
+    PrefsPane prefs_pane_;
+    std::string copied_; // the text offered for the selections
+    Preferences shown_prefs_{};
+    static constexpr int kInfoTop = StyleWindow::kHeight + PrefsPane::kHeight;
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;

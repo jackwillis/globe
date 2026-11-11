@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #include "check.hpp"
 #include "globe/app.hpp"
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <cstdio>
@@ -10,23 +11,30 @@
 #include <sys/wait.h>
 #include <unistd.h>
 using namespace globe;
-Window find(Display* d, const char* title) {
+// The window named `title` among the root's children and their children (the sidebar panes are
+// children of the one Globe window).
+static Window find_in(Display* d, Window parent_window, const char* title, int depth) {
     Window root, parent, *children = nullptr;
     unsigned count = 0;
     Window found = 0;
-    if (XQueryTree(d, DefaultRootWindow(d), &root, &parent, &children, &count)) {
-        for (unsigned i = 0; i < count; ++i) {
+    if (XQueryTree(d, parent_window, &root, &parent, &children, &count)) {
+        for (unsigned i = 0; i < count && !found; ++i) {
             char* name = nullptr;
             if (XFetchName(d, children[i], &name) && name) {
                 if (std::strcmp(name, title) == 0)
                     found = children[i];
                 XFree(name);
             }
+            if (!found && depth > 0)
+                found = find_in(d, children[i], title, depth - 1);
         }
         if (children)
             XFree(children);
     }
     return found;
+}
+Window find(Display* d, const char* title) {
+    return find_in(d, DefaultRootWindow(d), title, 1);
 }
 int main(int argc, char** argv) {
     CHECK(argc == 2 || argc == 3);
@@ -182,6 +190,64 @@ int main(int argc, char** argv) {
         click(Command::AlignNorth); // disabled in initial north-up state
         click(Command::ToggleGraticule);
         click(Command::ToggleGraticule);
+        // Preferences pane (a child of the Globe window): Imperial.
+        {
+            if (const auto prefs = find(d, "Globe preferences")) {
+                for (const int y : {45}) {
+                    XEvent click{};
+                    click.xbutton.type = ButtonPress;
+                    click.xbutton.display = d;
+                    click.xbutton.window = prefs;
+                    click.xbutton.button = Button1;
+                    click.xbutton.x = 40;
+                    click.xbutton.y = y;
+                    XSendEvent(d, prefs, False, ButtonPressMask, &click);
+                    XFlush(d);
+                    usleep(60000);
+                }
+            } else
+                CHECK(false);
+        }
+        {
+            // Copy Information: Ctrl-C on the Globe window, then ask for the CLIPBOARD as text.
+            XEvent key{};
+            key.xkey.type = KeyPress;
+            key.xkey.display = d;
+            key.xkey.window = main;
+            key.xkey.state = ControlMask;
+            key.xkey.keycode = XKeysymToKeycode(d, XK_c);
+            XSendEvent(d, main, False, KeyPressMask, &key);
+            XFlush(d);
+            usleep(150000);
+            const Atom clipboard = XInternAtom(d, "CLIPBOARD", False);
+            const Atom property = XInternAtom(d, "GLOBE_TEST_COPY", False);
+            const Window me = XCreateSimpleWindow(d, DefaultRootWindow(d), 0, 0, 1, 1, 0, 0, 0);
+            XSelectInput(d, me, PropertyChangeMask);
+            XConvertSelection(d, clipboard, XA_STRING, property, me, CurrentTime);
+            XFlush(d);
+            std::string copied;
+            for (int i = 0; i < 100; ++i) {
+                XEvent ev;
+                if (XCheckTypedWindowEvent(d, me, SelectionNotify, &ev)) {
+                    if (ev.xselection.property != None) {
+                        Atom type;
+                        int format;
+                        unsigned long count, after;
+                        unsigned char* data = nullptr;
+                        if (XGetWindowProperty(d, me, property, 0, 1024, True, AnyPropertyType,
+                                               &type, &format, &count, &after, &data) == Success &&
+                            data) {
+                            copied.assign(reinterpret_cast<char*>(data), count);
+                            XFree(data);
+                        }
+                    }
+                    break;
+                }
+                usleep(20000);
+            }
+            CHECK(copied.rfind("Distance\n", 0) == 0 || copied.rfind("Distancia\n", 0) == 0);
+            XDestroyWindow(d, me);
+        }
         click(Command::Quit);
     } else {
         kill(pid, SIGTERM);
@@ -208,6 +274,7 @@ int main(int argc, char** argv) {
         CHECK(text.find("\"cursor_changes\": 11") != std::string::npos);
         CHECK(text.find("\"info_cards\": 2") != std::string::npos); // country card, then distance
         CHECK(text.find("\"info_scrolls\": 1") != std::string::npos);
+        CHECK(text.find("\"units\": 1,") != std::string::npos);        // Imperial
         CHECK(text.find("\"terrain_style\": 1") != std::string::npos); // Relief, via the palette
     }
     if (test::failures())

@@ -262,9 +262,6 @@ KeyBinding binding_for_char(int ch) {
     case 'm':
         b.overlay = KeyBinding::Overlay::Measure;
         break;
-    case 'p':
-        b.overlay = KeyBinding::Overlay::Palette;
-        break;
     default:
         break;
     }
@@ -565,6 +562,8 @@ Effects update(Model& model, const Msg& msg) {
             fx.redraw = true;
             fx.wake_after_ms = kSettleDelayMs;
         }
+    } else if (const auto* prefs = std::get_if<SetPreferences>(&msg)) {
+        model.prefs = prefs->prefs; // only text and units change: no redraw, no new generation
     } else if (std::holds_alternative<Repaint>(msg)) {
         fx.present_only = true; // the model is unchanged: show the existing pixels again
     }

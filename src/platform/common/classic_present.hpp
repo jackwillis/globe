@@ -24,6 +24,7 @@ class ClassicPresentation {
             return false;
         height_ = height;
         next_ = 0;
+        slice_rows_ = rows_;
         active_ = true;
         dirty_ = false;
         return true;
@@ -33,7 +34,8 @@ class ClassicPresentation {
         return generation == generation_ && (active_ || dirty_);
     }
     int first() const { return next_; }
-    int end() const { return std::min(height_, next_ + rows_); }
+    int end() const { return std::min(height_, next_ + slice_rows_); }
+    // Tuning changes the next slice, never the range currently being copied/acknowledged.
     // Rows per slice start at kStartRows (the slow Classic-under-OS-X days) and follow the machine:
     // after a slice of `rows` took `elapsed_ms`, aim the next at `target_ms`, growing at most
     // twofold a time. On bare OS 9 a whole frame is a few milliseconds, so a frame then arrives in
@@ -52,12 +54,13 @@ class ClassicPresentation {
         if (!active(generation))
             return;
         next_ = end();
+        slice_rows_ = rows_;
         active_ = next_ < height_;
     }
 
   private:
     static constexpr int kStartRows = 32, kMinRows = 8, kMaxRows = 4096;
-    int rows_ = kStartRows;
+    int rows_ = kStartRows, slice_rows_ = kStartRows;
     std::uint64_t generation_ = 0;
     int height_ = 0, next_ = 0;
     bool active_ = false, dirty_ = false;
