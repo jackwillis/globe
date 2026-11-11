@@ -436,7 +436,7 @@ Owner decisions after hands-on tries of tips 11-16, in order:
 
 ## Addendum 2026-11-03 (after midnight): OS 9 first run and feel
 
-- **First OS 9 run.** The floppy build launched and rendered under Tiger Classic on maul (emulated
+- **First OS 9 run.** The floppy build launched and rendered under Tiger Classic on the G4 (emulated
   OS 9; `docs/os9-proof.md`). The owner then confirmed dragging, zoom and keys work. Real OS 9
   hardware is still untested.
 - **Slow in Classic, fixed twice.** Measured from the window title: 4,267 ms settle with 2,101 ms

@@ -7,3 +7,12 @@ compile_commands.json
 *.a
 __pycache__/
 .claude/
+
+# Python tooling and developer-local files
+.venv/
+.venv-*/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+*.swp

@@ -33,14 +33,16 @@ The other screenshots are headless renders of the bundled data at 640x480 (`docs
 This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
 checks pass on host and G4. The OS 9 application is built and packaged, and has been run by the owner under Tiger Classic
 (2026-11-02) and on **bare Mac OS 9 on the G4** (2026-11-07: about one second to settle, input
-checked every 20 ms; [numbers](docs/os9-proof.md)). It still lacks a menu bar, a looks palette and
-settled cursors (see the usability epic, issue #35). Real-display timing on X11 remains open.
-CI runs on GitHub Actions; check the Actions tab for the current result.
+checked every 20 ms; [numbers](docs/os9-proof.md)). The menu bar, looks palette and cursor implementations are present but await full bare-OS-9
+acceptance (issues #44-#46 and docs/ux-acceptance.md). Real-display timing on X11 remains open.
+CI is configured on GitHub Actions; check the Actions tab for current runs.
 
 - [Current handoff](docs/handoff.md) and [prioritized backlog](docs/backlog.md)
 - [Architecture](docs/architecture.md), [design and ADR](docs/adr/0001-m2-to-m5-decisions.md)
 - [Terrain measurements](docs/terrain.md), [performance history](docs/perf/README.md)
 - [Toolchains](docs/toolchain.md) and [OS 9 acceptance](docs/os9-proof.md)
+- [Contributing](CONTRIBUTING.md), [documentation index](docs/README.md),
+  [Python setup](docs/python-tooling.md) and [release checklist](docs/release-checklist.md)
 
 ## Build and use
 
@@ -69,7 +71,7 @@ toolbar. Exposing or moving a window resends cached pixels. The graticule hides 
   and places; local optional elevation packs. [Import](docs/elevation-import.md),
   [toolbar](docs/toolbar.md), [countries](docs/country-format.md), [places](docs/place-format.md).
 - `tools/build-edition.sh floppy`: classic PowerPC OS 9 application with atlas and one-degree
-elevation, countries and cities; no toolbar, palette or menu bar yet. It emits a MacBinary application,
+elevation, countries and cities; no X11 toolbar; native menus/palette are implemented but require hardware acceptance. It emits a MacBinary application,
   a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md). **Paused since
   2026-11-07:** it still builds and is checked in CI, but releases are digital first (a StuffIt
   archive, a MacBinary file and a disk image), and the next edition is an application plus a data

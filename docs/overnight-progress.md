@@ -18,7 +18,7 @@ Host high-zoom compute, nine repeats: complete coarse terrain 9.55 ms, final pro
 42.22 ms; finest-only final 31.64 ms. Final checksums match. No observed ordinary one-degree
 compute regression in the recorded sample. These are host compute timings, not G4 scanout.
 
-Tiger is shared. GlobeVerify (creator GlP3) at /tmp/globe-verify-volume was verified with its new
+Tiger is shared. GlobeVerify (creator GlP3) at <temporary-test-binary> was verified with its new
 band-count title, alongside the other session's Classic apps. Identified launch: 180 bands,
 2,750 ms settle, 734 ms copy, 20 ms maximum turn, 7 ms maximum continuation. Identified Reset:
 180 bands, 2,757 ms settle, 732 ms copy, 17 ms maximum turn, 16 ms maximum continuation.
@@ -31,7 +31,7 @@ Review: docs/progressive-resolution-plan.md, docs/os9-scheduling.md, data/SOURCE
 docs/perf/progressive-resolution-host.json, docs/perf/progressive-resolution-tiger.json.
 Installable production image/MacBinary and screenshots are retained in the Codex worktree's
 ignored build-scheduling-evidence directory, named GlobeProgressive-1440.dsk and GlobeProgressive.bin.
-The worktree is /home/jack/.codex/worktrees/progressive-resolution/globe.
+The worktree is <isolated-agent-worktree>
 
 Remaining limits, not claimed complete: native OS 9 hardware acceptance, G4 half-degree runtime
 performance, measured input-to-pixel latency, and bounded moving-frame/snapshot-conversion/full

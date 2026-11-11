@@ -40,7 +40,7 @@ Source/license/hash are in data/SOURCES.md. Reproduce with a modern Python conta
 
 ```
 python3 tools/elevation-builder/build_elevation.py \
-  ~/scratch/globe-data/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc data/elevation-1deg.gelv
+  <verified-source-cache>/etopo/ETOPO_2022_v1_60s_N90W180_surface.nc data/elevation-1deg.gelv
 ```
 
 The fixture tests all truncation lengths, extra bytes, every byte mutation, header/extent/lookup

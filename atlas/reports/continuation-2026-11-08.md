@@ -1,3 +1,5 @@
+> **Sanitized historical record.** Private host aliases, local worktrees and access-helper commands have been generalized. Historical shell fragments referring to those placeholders are not runnable instructions. Refer to current issues and code for operational guidance.
+
 # Accepted checkpoint continuation — catalog and memory primitive
 
 Jack accepted the prior research checkpoint and selected **both follow-ups, starting with the atlas
@@ -16,7 +18,7 @@ was accepted. #53's scope/closure and production adoption remain separate from t
 - `dfb3b3c`: normal-build and sanitizer test registration after confirming no pending CMake edits elsewhere.
 - A final documentation commit contains this note, verification and the atlas entry-point update.
 
-Worktree `/tmp/globe-atlas-contract`, branch `codex/atlas-contract`; original runtime base `52ccb33`.
+Worktree `<temporary-test-binary>`, branch `codex/atlas-contract`; original runtime base `52ccb33`.
 The prior commits `2afaebe` and `3e2057a` remain unchanged ancestors. No local merge, rebase, push,
 release, target-machine access or modification of another worktree was performed. Local commits
 live in the owner's main Git repository even if the temporary worktree directory disappears.
@@ -26,8 +28,8 @@ Other sessions continued concurrently. At the final inspection, local main was `
 `bf33b42` (menu smoke-test observation), `e06a0c6` (packaging helper), and `0c2087a` (StuffIt CRC
 updates) newer than cached `origin/main` at `e3de54a`. These change packaging/UX documentation/tools
 and no atlas/data files.
-`/home/jack/code/globe-menubar` was on `claude/menu-bar` at `bf33b42`.
-The original renderer WIP remains unstaged in `/home/jack/code/globe`:
+`<local-checkout>` was on `claude/menu-bar` at `bf33b42`.
+The original renderer WIP remains unstaged in `<local-checkout>`:
 `include/globe/render.hpp` and `src/render/render.cpp`. A packaging-source edit observed during
 this continuation was subsequently committed by its owner as `0c2087a`. None of that work was
 touched; the old stash is untouched. The progressive
@@ -72,9 +74,9 @@ stale; duplicate/missing targets fail; unresolved candidates cannot become accep
 status toggle. A 1,869-entry queue covers assertions, points and lossy fallbacks without flooding
 review with every exact localized name. No human geographic decisions were fabricated.
 
-Full 11,885,212-byte catalog outputs remain `/tmp/globe-inventory-{a,b}.json`; the review queue is
-`/tmp/globe-inventory-review.jsonl`. Full role-selected JSONL/gzip outputs are in
-`/tmp/globe-role-selection-{a,b}`. They are reproducible local evidence outside Git, not releases.
+Full 11,885,212-byte catalog outputs remain `<temporary-test-binary>{a,b}.json`; the review queue is
+`<temporary-test-binary>`. Full role-selected JSONL/gzip outputs are in
+`<temporary-test-binary>{a,b}`. They are reproducible local evidence outside Git, not releases.
 Committed source/allocation/review files and summaries are enough to recover and regenerate them.
 
 ## Independently scoped memory work
