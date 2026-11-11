@@ -168,6 +168,7 @@ if(GLOBE_BUILD_TESTS)
   # Portable accounting tests are also independently buildable without the full runtime.
   add_subdirectory(atlas/research/ledger)
   if(Python3_FOUND)
+    add_test(NAME g4_bench_runner COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_g4_bench.py)
     add_test(NAME compression_bench COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_compression_bench.py)
     add_test(NAME floppy_report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_floppy_report.py)
     add_test(NAME place_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_place_builder.py)
