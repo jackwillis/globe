@@ -45,9 +45,9 @@ The initial packaging pass did not execute the app. Subsequent Tiger Classic run
 below and in the scheduling audit. Native OS 9 hardware acceptance, drag/cursor behavior,
 resize/expose and quiet idle remain open. G4 headless NetBSD tests are not OS 9 tests.
 
-## First run, 2026-11-02 (Tiger Classic on shared G4)
+## First run, 2026-11-02 (Tiger Classic on the G4)
 
-Mac OS X 10.4.11 on shared G4, reached with `private host-control helper osx`. `GlobeFloppy-1440.dsk` was pushed to `/tmp`,
+Mac OS X 10.4.11 on the G4, reached with `private host-control helper osx`. `GlobeFloppy-1440.dsk` was pushed to `/tmp`,
 attached with `hdiutil attach -imagekey diskimage-class=CRawDiskImage` (the plain `.dsk` is not
 recognized; the raw-image key is), and `open /Volumes/Globe/GlobeFloppy` started Classic
 (`Classic Startup`, `TruBlueEnvironment`) and the app. A `screencapture` of the Tiger desktop shows the Globe

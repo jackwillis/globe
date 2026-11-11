@@ -33,9 +33,9 @@ terrain (M5), the Mac OS 9 front end.
    Replayable message-trace test. Moving stage only; the stage enum exists for M2.
 6. **X11 adapter** *(done; tested under Xvfb and run by the owner on the G4's display)* (`src/platform/x11`). Window, XImage conversion from RGB565 using the
    visual's masks and byte order, blocks while idle, redraws on change. Cross-built on the
-   laptop; shared G4 only runs it (display access is the owner's, see the weather project's notes).
+   laptop; the G4 only runs it (display access is the owner's, see the weather project's notes).
 7. **Measurement.** *(done for render and pack; X submission on real hardware not yet measured)* Injectable clock; per-frame time, segments drawn, peak memory, idle CPU,
-   time to first frame. Cross-build, push to shared G4, run. Results recorded in `docs/perf/`.
+   time to first frame. Cross-build, push to the G4, run. Results recorded in `docs/perf/`.
 
 ## Acceptance
 
@@ -49,7 +49,7 @@ terrain (M5), the Mac OS 9 front end.
 
 - Per-frame cost on a 467 MHz G4 is unknown until step 7; the rasterizer and atlas decimation
   levels may need tuning, and the doc forbids guessing: measure first.
-- Display access on shared G4 belongs to the owner; step 6 may need you to run the binary from the
+- Display access on the G4 belongs to the owner; step 6 may need you to run the binary from the
   logged-in session.
 - Trackball needs care with floating-point drift and with the horizon at high zoom.
 
@@ -61,7 +61,7 @@ on host and G4); idle redraws are zero (Xvfb); atlas and binary sizes are report
 
 Not yet met, and why:
 
-- **Running on the G4's real display.** `globe-x11` is cross-built and pushed to shared G4
+- **Running on the G4's real display.** `globe-x11` is cross-built and pushed to the G4
   (`/tmp/globe-x11`), links and starts there, then stops at "cannot open display": the remote
   account has no desktop access. Run it from the logged-in desktop session:
   `/tmp/globe-x11 --size 640x480`, or for timing,

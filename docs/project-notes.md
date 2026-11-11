@@ -23,7 +23,7 @@ line reveal after the terrain (GL-41), a click that waits out the double-click w
 Host suite 40/40; refined pins Map `e86d02e2424d2a47`, Relief `1c3eac3bcc2d3b8f`, replay hash
 `9b4a458633a32d9d`, all equal on the G4 (headless). The Retro68 probe is clean and the OS 9 floppy
 build packages and runs under Tiger Classic (2026-11-02, emulated; the owner confirmed drag, zoom and keys; not real OS 9 hardware), CI never run, real-display timing (GL-7) unmeasured.
-Owner builds tip3-tip17 on shared G4 remain theirs and must not be deleted, overwritten or killed.
+Owner builds tip3-tip17 on the G4 remain theirs and must not be deleted, overwritten or killed.
 
 ## Measurements and limits
 
@@ -39,7 +39,7 @@ OS 9 execution or live TLS evidence is claimed for Globe.
 
 ## Carry-forward constraints
 
-Never compile on shared G4 or change desktop access controls. Use new temporary binary names and
+Never compile on the G4 or change desktop access controls. Use new temporary binary names and
 restore their executable bit after transfer. ETOPO and Natural Earth source files live in
 `<verified-source-cache>`, not Git; elevation rows are south-first. Keep no clock/OS headers,
 exceptions/RTTI or frame allocations in the portable core. Retro68 printf lacks %ll/%z. Use

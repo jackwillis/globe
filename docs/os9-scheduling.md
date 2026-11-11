@@ -15,7 +15,7 @@ The original long idle wait, one-shot deadlines, paused-drag presentation gating
 
 ## Evidence and tuning
 
-Fresh baseline screenshot on shared G4: 2,303 ms total, 501 ms copying, default home view at 640 x 480. An 8 ms / 16-work-unit candidate with additional per-continuation timing reads took 7,066 ms (copy 1,012, max turn 117, max step 109); reset repeat 6,822 ms (copy 1,014, max turn 61, max step 8). Rejected: too much completion overhead, with copies still extending turns.
+Fresh baseline screenshot on the G4: 2,303 ms total, 501 ms copying, default home view at 640 x 480. An 8 ms / 16-work-unit candidate with additional per-continuation timing reads took 7,066 ms (copy 1,012, max turn 117, max step 109); reset repeat 6,822 ms (copy 1,014, max turn 61, max step 8). Rejected: too much completion overhead, with copies still extending turns.
 
 A 16 ms / 64-work-unit candidate before reducing clock instrumentation took 3,562 ms (copy 546, max turn 78, max step 14). These candidates change several factors, so they do not isolate the cost of yield frequency, work size, clock reads or pixel conversion. Do not treat a single launch or an incomparable maximum as a causal benchmark. The tuned 16 ms / 64-work-unit candidate, reusing one timing read per continuation and checking queued input every 16 continuations, took 2,783 ms (copy 480, max turn 64, max step 8); reset repeat 2,690 ms (copy 480, max turn 67, max step 14). Retained as a modest throughput tradeoff for a shorter foreground budget and explicit background policy. This does not establish improved perceived responsiveness: the baseline lacks comparable turn instrumentation, and screen copying still overruns the target.
 
@@ -27,7 +27,7 @@ Validation: 40/40 host tests pass (display tests run sequentially because their 
 
 ## Repeatable measurement procedure
 
-1. Build locally with tools/build-os9.sh --floppy. Never compile on shared G4. Preserve the baseline image and each candidate under distinct filenames; record their hashes and configuration. Transfer to /tmp, mount as a raw HFS disk with hdiutil, and launch the exact mounted application. Do not reuse a still-running older instance accidentally.
+1. Build locally with tools/build-os9.sh --floppy. Never compile on the G4. Preserve the baseline image and each candidate under distinct filenames; record their hashes and configuration. Transfer to /tmp, mount as a raw HFS disk with hdiutil, and launch the exact mounted application. Do not reuse a still-running older instance accidentally.
 2. At 640 x 480 in the default Map view, wait for completion and record the title. Repeat Reset at least three times with the pointer stationary. Record total, aggregate copying, maximum foreground turn and maximum continuation separately. Use screenshots as evidence. For a fair comparison, instrument the baseline equivalently before comparing turn maxima.
 3. During refinement, use a Classic application such as SimpleText. Confirm that it accepts input promptly, Globe stops advancing while suspended, no stuck drag remains, and Globe finishes after returning. Repeat during paused drag and paced line reveal. Also try a native Tiger app, while keeping that result distinct from Classic-to-Classic cooperation.
 4. Exercise rotation, zoom, style changes, expose and resize during refinement. Assess first useful image, interruption responsiveness and visual continuity separately from total completion. A shorter settle that stalls input is not automatically preferable.

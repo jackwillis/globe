@@ -90,7 +90,7 @@ The X11 front end already draws with X core fonts (see [toolbar.md](../toolbar.m
   I did not confirm the families in that package from a source; to my knowledge it has a Helvetica
   but no Palatino. These would be fonts the machine already has, not fonts Globe ships.
 - A serif for areas without Palatino: New Century Schoolbook, Charter or Utopia. Unverified here.
-- **To check on NetBSD:** `xlsfonts` on shared G4, and whether fontconfig or Type 1 URW fonts are installed (E5).
+- **To check on NetBSD:** `xlsfonts` on the G4, and whether fontconfig or Type 1 URW fonts are installed (E5).
 
 ## Surface C: map labels with system fonts
 
@@ -243,7 +243,7 @@ What this shows:
 | E2 | Halo method (offset draws or other) on Relief and Map | Choice recorded; no label unreadable on the standard views |
 | E3 | Cost of a screenful of labels | Milliseconds on bare OS 9 within the turn budget |
 | E4 | Font inventory on the G4 (names, sizes) | List recorded for both OS states; fallbacks confirmed |
-| E5 | `xlsfonts` and fontconfig on shared G4 for the Unix stack | List recorded; Unix stack chosen |
+| E5 | `xlsfonts` and fontconfig on the G4 for the Unix stack | List recorded; Unix stack chosen |
 | E6 | Draw path: offscreen copy before presenting versus on the window after | Flicker and cost recorded; choice made |
 
 E1 and E3 to E6 need the G4 and the owner's authorization.

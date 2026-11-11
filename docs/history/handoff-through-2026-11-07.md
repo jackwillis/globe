@@ -64,7 +64,7 @@ reports. Work counts are bounded; no hard wall-clock promise or real-display tim
 
 ## Hardware and portability rules
 
-Never compile on shared G4. Owner binaries `<temporary-test-binary>` through `tip8` are theirs: do not kill,
+Never compile on the G4. Owner binaries `<temporary-test-binary>` through `tip8` are theirs: do not kill,
 delete or overwrite them. Cross-build locally and push tests under fresh names with
 `<private-host-control-helper> push nb FILE NAME`; restore chmod 755, run headless. Do not change desktop
 display access. `/tmp` can disappear after reboot. Pass names include `gl19-20261102-*`, `gl27-20261102-*` and
@@ -170,14 +170,14 @@ cache after source restoration; clearing that cache and rerunning every variant 
 fail/pass sequence. The initial TLS size probe had no retained TLS symbols and zero delta; it was
 discarded and replaced by a retained entry probe verified with nm, never executed.
 
-No pushes, remote merges, tags, shared G4 compilation, owner-binary changes or display permission changes.
+No pushes, remote merges, tags, the G4 compilation, owner-binary changes or display permission changes.
 No CI, current G4 desktop/scanout, native OS 9 runtime or live TLS claim. No further smoothing tuning,
 Map look, river vectors, thematic look, class/imagery grid, antialiasing, pass/surface refactor,
 dissolve or runtime compression in this pass. Those remain separate backlog scopes/owner gates.
 
 ### 2026-11-02 — Claude: next tasks for Codex (bell-curve dissolve; Greenland ice)
 
-Merged and tested at `1e6ea18` (36/36 host tests; branches gone); owner has `<temporary-test-binary>` on shared G4.
+Merged and tested at `1e6ea18` (36/36 host tests; branches gone); owner has `<temporary-test-binary>` on the G4.
 
 1. **GL-19/GL-26: refinement focus and bell-curve dissolve.** Design is in the ADR addendum "refinement
    focus and a bell-curve dissolve" (`5a929c4`): read it first. Implement it as an experiment that can
@@ -199,7 +199,7 @@ Merged and tested at `1e6ea18` (36/36 host tests; branches gone); owner has `<te
    could carry the flag without breaking v1 decoders (or whether v2 is needed), size effect, and a
    test plan. If it needs a format change, stop after the proposal. Do not change data files.
 
-Rules still apply: no push, no email or personal contact details in any outbound request, new shared G4 file
+Rules still apply: no push, no email or personal contact details in any outbound request, new the G4 file
 names only, never touch `tip3` to `tip8`.
 
 ### 2026-11-02 — Codex: GL-19/26 experiment and GL-40 proposal completed
@@ -256,7 +256,7 @@ final sanitizer suite ran outside that restriction and passes.
 Limits: headless G4 only; no real-display/scanout, native OS 9 or CI acceptance. Dissolve temporarily
 omits outlines until final lines and uploads full frames per pass; presentation costs are excluded,
 so owner hands-on acceptance is still required before changing the default. No push, remote merge,
-tag, compilation on shared G4, display-access change or touch to owner tip3–tip8. No additional backlog
+tag, compilation on the G4, display-access change or touch to owner tip3–tip8. No additional backlog
 work, networking, ice data, smoothing tuning or pass/surface/theme refactor in this continuation.
 
 ### 2026-11-02 — Claude fork: refinement orders replaced by rectangle, circle and globe
@@ -300,7 +300,7 @@ Do:
    with reasons and host/G4 evidence. Update `docs/terrain.md`, `data/SOURCES.md`, backlog.
 
 Verify as before (36/36 host, ASan/UBSan, policy, Retro68 probes), mutation-check new tests,
-append a dated note here. No compiling on shared G4; owner/Claude push test builds.
+append a dated note here. No compiling on the G4; owner/Claude push test builds.
 
 ### 2026-11-02 — Assignment for Codex, after GL-34/33: progressive line reveal (GL-41, written by Claude)
 
@@ -396,7 +396,7 @@ at 15 ms; refinement precomputes during a paused drag (300 ms, button down) and 
 release (`presentation_held`; the platform gating has no automated test). Host 40/40, Retro68
 probe clean, OS 9 floppy build packages. Not done: the settled-frame cache (GL-45), terrain-plus-lines
 split, OS 9 picking and palette, dithered country fill, GL-38/35/36/40, GL-5 CI (first push to
-GitHub may start it), GL-7 X11 display timing, real OS 9 hardware. shared G4 was left booted into Tiger.
+GitHub may start it), GL-7 X11 display timing, real OS 9 hardware. the G4 was left booted into Tiger.
 `main` was pushed to origin on 2026-11-03 at the owner's explicit request (no tags).
 
 CI ran on GitHub for the first time (run 41576444739): everything passes except clang-tidy on
@@ -507,7 +507,7 @@ preview at every level, skipping the coarse level after a pure zoom (core: `sett
 the progress bar, a pixel list for the line composites (G4 first lines at 53 ms, whole refine 539
 ms, `docs/perf/g4-2026-11-06.txt`). Details and measurements: `docs/refinement-order.md`.
 
-Builds on shared G4: `<temporary-test-binary>` (everything above except the pixel list); newer tips as pushed.
+Builds on the G4: `<temporary-test-binary>` (everything above except the pixel list); newer tips as pushed.
 Issue #34 holds the owner's idea of low/medium/high render tiers with first-run calibration.
 Not verified on OS 9 (built and probed only): zoom preview, progress bar, shared runner and keys.
 
@@ -515,7 +515,7 @@ Not verified on OS 9 (built and probed only): zoom preview, progress bar, shared
 
 State: local `main` is 19+ commits ahead of `origin/main` and **not pushed** (the owner pushes). Latest
 code commit `a838974`, docs `a3a3aea`, then this note. Scratch builds: NetBSD `<temporary-test-binary>`
-on shared G4 (lost on reboot); the OS 9 app at `MacOS9Lives/globe-tip9` on shared G4's OS 9 volume. Tiger and
+on the G4 (lost on reboot); the OS 9 app at `MacOS9Lives/globe-tip9` on the G4's OS 9 volume. Tiger and
 OS 9 are shared with Codex, which had nothing in flight.
 
 Decided this session: see [ADR 0002](adr/0002-rendering-shared-code-and-usability.md). Direction is now
@@ -527,7 +527,7 @@ menu bar); commented on #16 twice (plan, then status); retitled #40 to the help 
 Owner's cursor rule (#44): the drag hand by default; a pointing hand over something clickable; the
 ocean counts as clickable only while a country is selected.
 
-Not done and why: the 8 ms OS 9 step (suspected zoom-cache copy, unverified; shared G4 was on OS 9 then),
+Not done and why: the 8 ms OS 9 step (suspected zoom-cache copy, unverified; the G4 was on OS 9 then),
 render tiers (an evaluation ticket, no code), OS 9 full edition (no ticket yet), splitting the
 `apply()` skeletons (not worth it, #16). The `x11_toolbar` test fails under sanitizers when the
 machine is busy (a fixed 700 ms wait for the info window); wait for the window instead of sleeping.

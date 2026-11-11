@@ -21,7 +21,7 @@ The CI workflow is configured for GCC, clang, portability and edition size repor
 run evidence is recorded in [docs/ci-issue-7.md](ci-issue-7.md); check GitHub Actions for the
 current result rather than treating a dated report as a current status. Publishing is the owner's action.
 
-Never compile on shared G4. Cross-build locally, push under a new name, restore its executable bit and
+Never compile on the G4. Cross-build locally, push under a new name, restore its executable bit and
 run headless. Owner binaries tip3–tip7 and desktop display permissions are untouched. Earlier X11
 builds were owner-tried; this pass claims headless correctness/performance and private host displays,
 not real G4 submission/scanout, current GUI acceptance or OS 9 execution. See [terrain](terrain.md),

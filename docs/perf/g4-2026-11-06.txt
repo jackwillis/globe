@@ -1,4 +1,4 @@
-G4 (shared G4, NetBSD macppc), 2026-11-06, cross-built Release, 640x480, medians.
+G4 (the G4, NetBSD macppc), 2026-11-06, cross-built Release, 640x480, medians.
 
 globe-line-reveal-bench --repeat 5 (modes: unpaced = lines at the end; paced = old 15 ms reveal;
 layer = lines first into a layer and composited after every pass; all with the limb-cell final pass):

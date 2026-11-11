@@ -34,4 +34,4 @@ GitHub issues #16, #34 to #46.
   OS 9 ("it works great") but have no automated OS 9 test; the logic is covered on the host.
 - The OS 9 app is the floppy edition only; a full edition needs pack loading through the Toolbox and
   a larger partition than the 24 MiB preferred / 12 MiB minimum now requested.
-- The Tiger and OS 9 copies on shared G4 and the NetBSD tips are scratch builds, not releases.
+- The Tiger and OS 9 copies on the G4 and the NetBSD tips are scratch builds, not releases.
