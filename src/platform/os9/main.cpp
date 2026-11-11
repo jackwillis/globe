@@ -54,6 +54,8 @@ constexpr std::uint64_t kPresentSliceMs = 6;
 // The installed Multiversal Events.h omits these two constants.
 constexpr unsigned kSuspendResumeMessage = 1;
 constexpr unsigned kResumeFlag = 1;
+// 'ALRT' id in os9/globe.r: shown when the application cannot start.
+constexpr short kStartupAlert = 128;
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
 }
@@ -251,7 +253,7 @@ class Application {
                                 apply(Resize{globe_width, height});
                                 InvalRect(&window_->portRect); // the sidebar moved: redraw it
                             } else
-                                quit = true;
+                                SysBeep(10); // no memory for the larger buffers: keep the old size
                         }
                     }
                 } else if (hit && hit == prefs_window_.window()) {
@@ -731,11 +733,17 @@ int main() {
     TEInit();
     InitDialogs(nullptr);
     InitCursor();
-    Application app;
-    if (!app.init()) {
+    bool started = false;
+    {
+        Application app;
+        started = app.init();
+        if (started)
+            app.run();
+    } // the partly built application releases its memory before the alert needs some
+    if (!started) {
         SysBeep(10);
+        StopAlert(kStartupAlert, nullptr);
         return 1;
     }
-    app.run();
     return 0;
 }
