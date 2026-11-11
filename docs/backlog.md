@@ -12,6 +12,14 @@
 - **Evidence before optimization:** match view/style/hardware; measure input responsiveness, worst continuation, first useful frame, total completion, copy/upload cost and pixel correctness.
 - **Safety:** honor [agent handoff](handoff.md) for protected machines, worktrees and release authorization. The tracker authorizes planning, not unattended device access or publication.
 
+## Product direction — 2026-11-10
+
+The [owner product brief](design/product-direction-2026-11-10.md) establishes Globe as an offline-first, free-software geographic hypermedia atlas. The next development emphasis is one coherent identity → administrative regions → interactive labels → linked cards/navigation slice, exemplified by United States → Wisconsin → Madison → Back to Wisconsin. This is planning direction, not an expansion of v0.1 acceptance.
+
+[Draft ADR 0005](adr/0005-entity-identity-and-navigation.md) records identity/concordance and reference semantics; the [minimum shared interface proposal](design/entity-navigation-contract.md) defines research steps and agent boundaries. A [small cross-cutting tracker is proposed](design/geographic-navigation-tracking-proposal.md), not yet filed. Existing issues retain implementation ownership and the live queue remains authoritative.
+
+Structured facts and readable linked articles are both eventual goals. Search, favorites, richer geography, naturalistic land cover/urban rendering, native speech and Earth-and-sky context remain future themes; no new milestone commitment or approved source acquisition follows. Preserve native single-window/sidebar usability at 640×480, installed Helvetica/Palatino with fallbacks, and the embedded offline atlas.
+
 ## Release themes
 
 These are the four GitHub milestones (v0.1 to v0.4), created without due dates and restructured on 2026-11-10 (owner decision): v0.1 is the app as built on `main`, and the old v0.2 was split by theme. The epics (#1–#6) span releases and carry no milestone. Parked experiments (#15, #16, #19, #21, #22) have no milestone.
@@ -19,7 +27,7 @@ These are the four GitHub milestones (v0.1 to v0.4), created without due dates a
 | Milestone | Outcome | Practical gate |
 | --- | --- | --- |
 | **v0.1 — The Classic Atlas** | The application as built on `main`: single window with sidebar, menus, palette, About and Preferences | [Hardware acceptance: v0.1](https://github.com/jackwillis/globe/issues/95), CI, verified minimum memory (#10), essential Mac polish (#11), fork-preserving release (#47, #12) |
-| **v0.2 — The Atlas on the Map** | Text, labels, pointer readout, scale bar and compass, city symbols, help overlay, render performance | Placement function and label rules (#36, #38), measured cost on the G4, hardware acceptance for the release |
+| **v0.2 — The Atlas on the Map** | Text, labels, pointer readout, scale bar and compass, city symbols, help overlay, render performance; proposed additive emphasis: identity, administrative regions and basic linked navigation | Placement and label rules (#36, #38), measured G4 cost and release hardware acceptance; proposed navigation slice scope follows prerequisites/prototypes, without automatically expanding the gate |
 | **v0.3 — Memory and Packs** | Memory ledger and budget, low-memory handling, stable resource handles, versioned packs, external packs on Classic Mac OS, Preferences handling | Memory regression gate, tested degradation ladder, safe pack lifecycle (#55, #56, #58, #26, #31, #48, #49) |
 | **v0.4 — The Expandable Atlas** | Richer optional data and editions | Full-edition data and volume layout (#50, #51), a third look (#75), optional acquisition (#28), CD-ROM research (#72) |
 
@@ -43,7 +51,7 @@ Full synthesis: [Layered atlas and CD-ROM research](research/cd-rom-atlas-archit
 
 **Proposed progression (not new release gates):**
 - **v0.1 — Classic Atlas:** a standalone, useful embedded globe on actual Classic Mac OS, verified memory and digital distribution.
-- **v0.2 — The Atlas on the Map:** labels, readout, scale bar and compass, city symbols, help overlay and render performance (usability core).
+- **v0.2 — The Atlas on the Map:** labels, readout, scale bar and compass, city symbols, help overlay and render performance; add identity/administrative-region/linked-navigation emphasis subject to prototype scope review.
 - **v0.3 — Memory and Packs:** the memory ledger and budget, safe resource lifecycle, versioned packs, external packs and read-only loading proof, Preferences handling.
 - **v0.4 — Expandable Atlas:** measured rich editions, regional loading/eviction, distributable read-only disk image; optical retrieval research can happen but no mandatory physical CD.
 - **Possible later — Disc Atlas:** contingent future concept for seek-aware indexed geography, CD/HDD comparison, larger curated packs, optical-media compatibility and graceful removal. **No milestone for it exists or is authorized by this note.**
@@ -63,7 +71,7 @@ The atlas builder (#52) owns source curation, geographic identity, editorial com
 | Atlas production and geographic integrity | Reproducible data pipeline, editorial rules, identity, semantic QA and edition recipes | [#52](https://github.com/jackwillis/globe/issues/52) |
 | Release engineering and verification | Reproducible CI and builds, target evidence | [#6](https://github.com/jackwillis/globe/issues/6) |
 
-Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.3 exist.
+Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.4 exist.
 
 ## Direction since 2026-11-07: usability
 

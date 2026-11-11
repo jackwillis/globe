@@ -40,3 +40,7 @@ and local elevation imports; the OS 9 proof is intentionally smaller. Baked arra
 A proposed independent fetch library is [design only](fetch-design.md), with no dependency on the
 rendering core. [Terrain measurements](terrain.md), [format specifications](elevation-format.md)
 and [toolchain evidence](toolchain.md) document practical limits.
+
+## Planned entity/navigation boundary
+
+The [2026-11-10 product brief](design/product-direction-2026-11-10.md) extends the atlas direction. [Draft ADR 0005](adr/0005-entity-identity-and-navigation.md) and the [shared interface proposal](design/entity-navigation-contract.md) describe future stable identities, bounded resource-independent navigation references and native-font label interaction. These are design contracts awaiting prototypes and review, not changes to the as-built layers above. Existing research allocations remain proposed concepts; production GPOL/GPLC readers and Model/Msg behavior are unchanged.
