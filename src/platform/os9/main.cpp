@@ -26,6 +26,7 @@
 #include "wall_clock.hpp"
 #include <Dialogs.h>
 #include <Events.h>
+#include <Memory.h>
 #include <Menus.h>
 #include <OSUtils.h>
 #include <Quickdraw.h>
@@ -73,6 +74,23 @@ Rect window_content() {
         std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), 120, 1200);
     return Rect{top, left, static_cast<short>(top + height), static_cast<short>(left + width)};
 }
+// Shrinks the initial window so the buffers it needs fit in the free heap. Per pixel: the
+// framebuffer (2 bytes plus coverage), the GWorld (2), the overlay copy (about 2) and the zoom
+// cache (about 2), rounded up to 11; the terrain scene and embedded data are already allocated when
+// this runs. The window grows back only by the user's choice (a failed grow keeps the old size).
+// Estimates from the host ledger and the code, not measured on OS 9 (#10).
+void fit_to_memory(Rect& r) {
+    constexpr long kBytesPerPixel = 11, kReserve = 1024 * 1024;
+    const long budget = std::max(0L, static_cast<long>(FreeMem()) - kReserve) / kBytesPerPixel;
+    long width = r.right - r.left, height = r.bottom - r.top;
+    const long min_width = Sidebar::kWidth + 160, min_height = 120;
+    while (width * height > budget && (width > min_width || height > min_height)) {
+        width = std::max(min_width, width * 7 / 8);
+        height = std::max(min_height, height * 7 / 8);
+    }
+    r.right = static_cast<short>(r.left + width);
+    r.bottom = static_cast<short>(r.top + height);
+}
 class Application {
   public:
     ~Application() {
@@ -112,6 +130,7 @@ class Application {
         runner_.set_scene(*scene_);
         runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
         Rect bounds = window_content();
+        fit_to_memory(bounds);
         const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);

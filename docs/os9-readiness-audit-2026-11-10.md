@@ -85,3 +85,23 @@ Boot bare OS 9.2.2, one build name, record RAM and the Preferred partition.
 7. **Idle:** leave it unfocused for several minutes: no CPU use in the Finder's process list, no
    memory growth.
 8. **Title bar (finding 3):** note what the title shows after each settle.
+
+## Memory model for #10 (estimate, 2026-11-10; not measured on OS 9)
+
+From `globe-bench --refine` on a Linux host at 640x480 and 1600x1200 (ledger fields) and from
+reading the code: the terrain cache is 3.66 MB and the atlas/scene about 0.3 MB at any size; the
+framebuffer is 2 bytes per pixel plus a coverage plane (3.84 MB + 0.24 MB at 1600x1200); the GWorld
+is another 2 bytes per pixel; the overlay copy and the zoom cache are framebuffer-sized when used.
+That is about 11 bytes per pixel of globe pane, so:
+
+| Globe pane | Pixels | Buffers | With 4.7 MB fixed |
+|---|---|---|---|
+| 420x428 (640x480 screen) | 0.18 M | 2 MB | about 7 MB |
+| 1004x700 (1024x768 screen) | 0.70 M | 7.7 MB | about 12.5 MB |
+| 1600x1200 | 1.92 M | 21 MB | about 26 MB (over 24 MiB) |
+
+So the 12 MiB minimum only holds for screens up to about 1024x768, and the maximum window does not
+fit in the preferred 24 MiB. The window used to be sized to the screen unconditionally; it now
+shrinks at startup to fit the free heap (`fit_to_memory`), and a failed grow keeps the old size, so
+a small partition on a large screen gives a smaller window instead of failing to start. The real
+minimum and preferred sizes still need the G4 measurement in the checklist above.
