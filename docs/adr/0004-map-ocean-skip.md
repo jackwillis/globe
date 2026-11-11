@@ -1,8 +1,10 @@
 # ADR 0004 — The Map look does not redraw ocean the cleared disc already shows
 
-**Status:** proposed, 2026-11-09 (issue [#67](https://github.com/jackwillis/globe/issues/67), under
-[#64](https://github.com/jackwillis/globe/issues/64)). The settled pixels do not change, so this is
-an engineering decision for the owner to accept or reject, not a visual one.
+**Status:** accepted, 2026-11-10. Integrated as PR #71 after host equivalence/guard/intermediate
+checks and G4 CPU/final-checksum revalidation; [integration evidence](../perf/renderer-integration-20261110.md).
+Proposed 2026-11-09 under [#67](https://github.com/jackwillis/globe/issues/67) and
+[#64](https://github.com/jackwillis/globe/issues/64). Final pixels are unchanged. Actual OS9/X11
+presentation acceptance remains separate.
 
 ## Context
 
