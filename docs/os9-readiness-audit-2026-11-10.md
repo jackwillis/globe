@@ -86,22 +86,38 @@ Boot bare OS 9.2.2, one build name, record RAM and the Preferred partition.
    memory growth.
 8. **Title bar (finding 3):** note what the title shows after each settle.
 
-## Memory model for #10 (estimate, 2026-11-10; not measured on OS 9)
+## Memory model for #10 (estimate, corrected for #106)
 
-From `globe-bench --refine` on a Linux host at 640x480 and 1600x1200 (ledger fields) and from
-reading the code: the terrain cache is 3.66 MB and the atlas/scene about 0.3 MB at any size; the
-framebuffer is 2 bytes per pixel plus a coverage plane (3.84 MB + 0.24 MB at 1600x1200); the GWorld
-is another 2 bytes per pixel; the overlay copy and the zoom cache are framebuffer-sized when used.
-That is about 11 bytes per pixel of globe pane, so:
+Host ledger measurements and code reading put the 1° terrain cache at about 3.66 MB, with additional
+atlas/scenes, embedded data, code and Toolbox state. Pixel storage covers the **globe pane**, not
+the fixed 220-pixel sidebar. Eleven bytes/globe-pixel approximates four framebuffer+coverage
+allocations (primary, overlay, zoom and line layer,8.5), GWorld (~2 plus row padding), and default
+line-pixel list (~0.25). Small row/scratch/block-header costs need additional heuristic headroom.
 
-| Globe pane | Pixels | Buffers | With 4.7 MB fixed |
-|---|---|---|---|
-| 420x428 (640x480 screen) | 0.18 M | 2 MB | about 7 MB |
-| 1004x700 (1024x768 screen) | 0.70 M | 7.7 MB | about 12.5 MB |
-| 1600x1200 | 1.92 M | 21 MB | about 26 MB (over 24 MiB) |
+For illustration only, using an estimated 4.7 MB fixed footprint and decimal MB:
 
-So the 12 MiB minimum only holds for screens up to about 1024x768, and the maximum window does not
-fit in the preferred 24 MiB. The window used to be sized to the screen unconditionally; it now
-shrinks at startup to fit the free heap (`fit_to_memory`), and a failed grow keeps the old size, so
-a small partition on a large screen gives a smaller window instead of failing to start. The real
-minimum and preferred sizes still need the G4 measurement in the checklist above.
+| Content window | Globe pane | Pixels | 11 B/pixel | With estimated fixed footprint |
+| --- | --- | ---: | ---: | ---: |
+| 628x428 (640x480 screen) | 408x428 | 174624 | 1.92 MB | 6.62 MB |
+| 1012x716 (1024x768 screen) | 792x716 | 567072 | 6.24 MB | 10.94 MB |
+| 1600x1200 (maximum content) | 1380x1200 | 1656000 | 18.22 MB | 22.92 MB |
+
+The old whole-window calculation unnecessarily shrank a 628x428 window to 480x327 when its 408x428
+globe already fitted the 174624-pixel budget, reducing globe area to 85020 pixels. Portable tests
+cover exact fit, one byte below, exhausted budgets, odd dimensions, minimums and maximums. The
+maximum pane's steady-state estimate alone does **not** prove that it exceeds a 24 MiB partition,
+nor establish that the partition is sufficient for all workloads.
+
+FreeMem is a conservative startup hint, sampled after terrain/scenes but before window/control
+allocations. The installed Retro68 allocator uses NewPtr, so it samples the relevant current
+Classic heap. It reports total free bytes: fragmentation can prevent a large allocation; zone
+growth or purgeable storage can make the snapshot conservative. MaxMem is not a drop-in total
+budget: it moves/purges storage and reports the largest block. See [Inside Macintosh, Memory
+Manager](https://dev.os9.ca/techpubs/mac/pdf/Memory/Memory_Manager.pdf), pp.2-66/2-75, and the
+[Retro68 allocator](https://github.com/autc04/Retro68/blob/master/libretro/malloc.c).
+
+Subtracting 1 MiB is **not a reserved block**. Later resizes may retain old and new framebuffer,
+GWorld, zoom or overlay allocations simultaneously, exceeding the 11 B/pixel steady-state model.
+Actual allocations remain fallible; the minimum-size fallback can still fail to launch. This
+startup heuristic does not bound future peaks. Neither it nor host tests establishes the 12/24 MiB
+SIZE claims: bare OS 9 #10/#95 partition, fragmentation and resize measurements remain required.
