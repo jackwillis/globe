@@ -4,6 +4,7 @@
 #include "globe/raster.hpp"
 #include "globe/render.hpp"
 #include "globe/trackball.hpp"
+#include "terrain_world.hpp"
 #include <algorithm>
 #include <cmath>
 #include <new>
@@ -113,15 +114,8 @@ std::optional<TerrainScene> TerrainScene::create(const Elevation& grid,
     std::unique_ptr<CellBands[]> bands(new (std::nothrow) CellBands[cells]);
     if (!world || !projected || !bands)
         return std::nullopt;
-    for (std::uint32_t y = 0; y <= grid.height(); ++y)
-        for (std::uint32_t x = 0; x <= grid.width(); ++x) {
-            const double lat =
-                grid.south_deg() + (grid.north_deg() - grid.south_deg()) * y / grid.height();
-            const double lon =
-                grid.west_deg() + (grid.east_deg() - grid.west_deg()) * x / grid.width();
-            world[static_cast<std::size_t>(y) * (grid.width() + 1) + x] =
-                to_unit_vector({lat, lon});
-        }
+    detail::initialize_terrain_world(world.get(), grid.width(), grid.height(), grid.west_deg(),
+                                     grid.east_deg(), grid.south_deg(), grid.north_deg());
     TerrainScene scene(grid, std::move(world), std::move(projected), std::move(bands));
     scene.values_.reset(new (std::nothrow) std::uint8_t[corners]);
     scene.passes_.reset(new (std::nothrow) std::uint8_t[cells]);

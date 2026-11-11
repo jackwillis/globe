@@ -6,7 +6,9 @@
 #include "globe/raster.hpp"
 #include "globe/render.hpp"
 #include "globe/terrain.hpp"
+#include "terrain_world.hpp"
 #include <algorithm>
+#include <bit>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -27,6 +29,32 @@ Bytes land_grid() {
     std::fill(b.begin() + 552, b.end(), 192);
     store_le32(b.data() + 36, crc32_extend(crc32(b.data(), 36), b.data() + 40, b.size() - 40));
     return b;
+}
+// Independent scalar oracle: compare every component bit, including signed zero, against the
+// original per-corner conversion. Includes poles, dateline, regional/odd grids and both editions.
+void test_world_vectors() {
+    struct Grid {
+        std::uint32_t width, height;
+        double west, east, south, north;
+    };
+    for (const Grid g :
+         {Grid{1, 1, -180, 180, -90, 90}, Grid{12, 6, -180, 180, -90, 90},
+          Grid{241, 137, 170, 180, -89.99, 71.123}, Grid{37, 23, -178.123, 34.567, -45.321, 90},
+          Grid{360, 180, -180, 180, -90, 90}, Grid{720, 360, -180, 180, -90, 90}}) {
+        std::vector<Vec3> world(static_cast<std::size_t>(g.width + 1) * (g.height + 1));
+        detail::initialize_terrain_world(world.data(), g.width, g.height, g.west, g.east, g.south,
+                                         g.north);
+        for (std::uint32_t y = 0; y <= g.height; ++y)
+            for (std::uint32_t x = 0; x <= g.width; ++x) {
+                const double lat = g.south + (g.north - g.south) * y / g.height;
+                const double lon = g.west + (g.east - g.west) * x / g.width;
+                const auto want = to_unit_vector({lat, lon});
+                const auto got = world[static_cast<std::size_t>(y) * (g.width + 1) + x];
+                CHECK(std::bit_cast<std::uint64_t>(got.x) == std::bit_cast<std::uint64_t>(want.x));
+                CHECK(std::bit_cast<std::uint64_t>(got.y) == std::bit_cast<std::uint64_t>(want.y));
+                CHECK(std::bit_cast<std::uint64_t>(got.z) == std::bit_cast<std::uint64_t>(want.z));
+            }
+    }
 }
 void test_terrain() {
     auto bytes = land_grid();
@@ -724,6 +752,7 @@ void test_ocean_skip() {
 }
 } // namespace
 int main() {
+    test_world_vectors();
     test_resolution_replacement();
     test_orders();
     test_pass_lists();

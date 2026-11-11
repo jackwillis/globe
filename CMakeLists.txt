@@ -58,6 +58,11 @@ target_link_libraries(globe_platform_common PUBLIC globe_core)
 add_library(globe_clock_posix src/platform/common/clock_posix.cpp)
 target_include_directories(globe_clock_posix PUBLIC src/platform/common)
 
+# Explicit headless startup kernel: no data embedding, no timed output or runtime changes.
+add_executable(globe-grid-vector-bench src/platform/bench/grid_vectors_bench.cpp)
+target_include_directories(globe-grid-vector-bench PRIVATE src/render)
+target_link_libraries(globe-grid-vector-bench PRIVATE globe_core globe_clock_posix)
+
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_FOUND)
   add_custom_command(
@@ -189,6 +194,7 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR})
     set_tests_properties(${name} PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   endforeach()
+  target_include_directories(test_terrain PRIVATE src/render)
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
   foreach(name pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)
     add_executable(test_${name} tests/test_${name}.cpp)
