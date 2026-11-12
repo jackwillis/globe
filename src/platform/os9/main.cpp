@@ -70,13 +70,16 @@ Rect window_content() {
     const short top = static_cast<short>(screen.top + GetMBarHeight() + kTitleBar + kGap);
     const short left = static_cast<short>(screen.left + kGap);
     const short width = std::clamp<short>(static_cast<short>(screen.right - screen.left - 2 * kGap),
-                                          Sidebar::kWidth + 160, 1600);
+                                          Sidebar::kWidth + kClassicMinGlobeWidth, 1600);
     const short height =
-        std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), 120, 1200);
+        std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), kClassicMinHeight, 1200);
     return Rect{top, left, static_cast<short>(top + height), static_cast<short>(left + width)};
 }
 // Keep integer sizing testable without Toolbox; every actual allocation remains fallible.
 void fit_to_memory(Rect& r) {
+    // The heap zone starts small and grows on demand; until it spans the partition FreeMem sees
+    // only a few KB (5,344 bytes at startup on the G4, which shrank the window to its minimum).
+    MaxApplZone();
     const auto size =
         fit_classic_window_to_heap(r.right - r.left, r.bottom - r.top, Sidebar::kWidth, FreeMem());
     r.right = static_cast<short>(r.left + size.width);

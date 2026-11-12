@@ -5,7 +5,7 @@ the globe, zoom, click a country or city for its information card, switch betwee
 Map look and a Relief look, shade the night side, and measure a great-circle distance. Nothing is
 downloaded and nothing is written to disk.
 
-**Downloads** (all contain the same application, ReadMe, License and DataCredit):
+**Downloads** (all contain the same application, ReadMe, the License (two files) and DataCredit):
 `PoodleEarth-0.1.0-<rev>.sit` (StuffIt; recommended), `.bin` (MacBinary) and `.dsk` (1.44 MB HFS
 image). `PoodleEarth-0.1.0-<rev>-source.tar.gz` is the complete corresponding source of exactly
 these binaries. `RELEASE.json` and `SHA256SUMS` record sizes, checksums, the source revision and the

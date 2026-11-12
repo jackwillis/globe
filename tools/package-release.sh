@@ -45,7 +45,9 @@ rust_ref=${rust_ref:-$RUST_IMAGE}
 sit="$out/$name.sit"
 "$build_dir/sit-target/release/sit-pack" -m "${SIT_METHOD:-13}" --date "$epoch" -o "$sit" \
     --mac "Poodle Earth=$build_dir/PoodleEarth-Finder.bin" \
-    --text ReadMe=os9/ReadMe.txt --text License=LICENSE \
+    --text ReadMe=os9/ReadMe.txt \
+    --text "License (1 of 2)=$build_dir/license/License-1.txt" \
+    --text "License (2 of 2)=$build_dir/license/License-2.txt" \
     --text DataCredit=data/DATA-CREDITS.txt
 cp "$build_dir/PoodleEarth-Finder.bin" "$out/$name.bin"
 cp "$build_dir/PoodleEarth-1440.dsk" "$out/$name.dsk"
@@ -56,8 +58,8 @@ unar -q -o "$check/sit" -forks visible "$sit" >/dev/null
 unar -q -o "$check/bin" -forks visible "$out/$name.bin" >/dev/null
 hmount "$out/$name.dsk" >/dev/null
 hcopy -m ":Poodle Earth" "$check/from-dsk.bin"
-for doc in ReadMe License DataCredit; do hcopy -t ":$doc" "$check/dsk-$doc"; done
-hls -l ":ReadMe" ":License" ":DataCredit" | awk '$2 != "TEXT/ttxt" { bad = 1 } END { exit bad }' || { echo "release: HFS documents are not TEXT/ttxt" >&2; exit 1; }
+for doc in "ReadMe" "License (1 of 2)" "License (2 of 2)" DataCredit; do hcopy -t ":$doc" "$check/dsk-$doc"; done
+hls -l ":ReadMe" ":License (1 of 2)" ":License (2 of 2)" ":DataCredit" | awk '$2 != "TEXT/ttxt" { bad = 1 } END { exit bad }' || { echo "release: HFS documents are not TEXT/ttxt" >&2; exit 1; }
 humount >/dev/null
 unar -q -o "$check/dsk" -forks visible "$check/from-dsk.bin" >/dev/null
 for route in "$check/sit/$name" "$check/dsk"; do
@@ -65,11 +67,15 @@ for route in "$check/sit/$name" "$check/dsk"; do
   cmp "$route/Poodle Earth.rsrc" "$check/bin/Poodle Earth.rsrc"
 done
 # The texts the user reads are the repository's (LF there, CR on the Mac) in every route.
-for pair in ReadMe:os9/ReadMe.txt License:LICENSE DataCredit:data/DATA-CREDITS.txt; do
+for pair in "ReadMe:os9/ReadMe.txt" "License (1 of 2):$build_dir/license/License-1.txt" \
+            "License (2 of 2):$build_dir/license/License-2.txt" "DataCredit:data/DATA-CREDITS.txt"; do
   doc=${pair%%:*}; src=${pair#*:}
   tr '\r' '\n' < "$check/dsk-$doc" | cmp - "$src"
   tr '\r' '\n' < "$check/sit/$name/$doc" | cmp - "$src"
 done
+# ...and the two halves are exactly the GPL text, each small enough for SimpleText.
+cat "$build_dir/license/License-1.txt" "$build_dir/license/License-2.txt" | cmp - LICENSE
+for part in "$build_dir"/license/License-*.txt; do [ "$(wc -c < "$part")" -lt 32768 ]; done
 # GNU tar and gzip timestamps are determined by the commit, not build wall time.
 # The complete tracked corresponding source, so the release does not rest on an online repository.
 source_archive="$out/$name-source.tar.gz"

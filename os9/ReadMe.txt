@@ -15,8 +15,9 @@ WHAT IT NEEDS
    (Classic mode on Tiger worked in earlier builds, but is not supported).
 
 INSTALL
- Copy the Poodle Earth application, with this ReadMe, License and DataCredit,
- to any folder on your hard disk and double-click it. It writes no
+ Copy the folder (the Poodle Earth application, this ReadMe, the two
+ License files - the GPL in halves small enough for SimpleText - and
+ DataCredit) to your hard disk and double-click the application. It writes no
  preferences or other files. If you downloaded the .sit, expand it with
  StuffIt Expander. The .bin is the same application as a MacBinary file, and
  the .dsk is the same application on a 1.44 MB HFS disk image.
@@ -43,7 +44,7 @@ KNOWN LIMITS (version 0.1)
 
 LICENSE AND CREDITS
  Copyright (c) 2026 Jack Willis. Free software under the GNU General Public
- License, version 3 or later, with NO WARRANTY: see the License file.
+ License, version 3 or later, with NO WARRANTY: see the two License files.
  Data credits (Natural Earth, NOAA ETOPO 2022, Wikidata, and RESOLVE
  Ecoregions 2017 under CC BY 4.0, adapted): see the DataCredit file and the
  About Poodle Earth window (Apple menu).

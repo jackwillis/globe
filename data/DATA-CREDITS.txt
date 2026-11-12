@@ -1,7 +1,7 @@
 Poodle Earth 0.1 - data credits and notices
 
 Poodle Earth is copyright (c) 2026 Jack Willis and is free software under the
-GNU General Public License, version 3 or later (see the License file). It
+GNU General Public License, version 3 or later (see the two License files). It
 comes with NO WARRANTY. The geographic data below is separate from the program
 and keeps its own terms.
 

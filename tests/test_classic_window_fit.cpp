@@ -18,18 +18,18 @@ int main() {
     for (auto free_bytes : {std::numeric_limits<std::int64_t>::min(), std::int64_t{-1},
                             std::int64_t{0}, reserve - 1, reserve}) {
         const auto minimum = fit_classic_window_to_heap(1600, 1200, sidebar, free_bytes);
-        CHECK(minimum.width == 380 && minimum.height == 120);
+        CHECK(minimum.width == 476 && minimum.height == 256);
     }
-    for (const auto input : {ClassicWindowSize{381, 121}, ClassicWindowSize{629, 429},
+    for (const auto input : {ClassicWindowSize{477, 257}, ClassicWindowSize{629, 429},
                              ClassicWindowSize{1600, 1200}}) {
         int last_width = 0, last_height = 0;
         for (std::int64_t budget = 0; budget <= 24 * 1024 * 1024; budget += 8191) {
             const auto got = fit_classic_window_to_heap(input.width, input.height, sidebar, budget);
-            CHECK(got.width >= 380 && got.height >= 120);
+            CHECK(got.width >= 476 && got.height >= 256);
             CHECK(got.width <= input.width && got.height <= input.height);
             CHECK(got.width >= last_width && got.height >= last_height);
             const auto cost = std::int64_t{got.width - sidebar} * got.height * 11;
-            CHECK((got.width == 380 && got.height == 120) || cost <= budget - reserve);
+            CHECK((got.width == 476 && got.height == 256) || cost <= budget - reserve);
             last_width = got.width;
             last_height = got.height;
         }
@@ -39,6 +39,6 @@ int main() {
     CHECK(maximum.width == 1600 && maximum.height == 1200);
     const auto invalid = fit_classic_window_to_heap(std::numeric_limits<int>::min(),
                                                     std::numeric_limits<int>::min(), sidebar, 0);
-    CHECK(invalid.width == 380 && invalid.height == 120);
+    CHECK(invalid.width == 476 && invalid.height == 256);
     return TEST_MAIN_RESULT();
 }
