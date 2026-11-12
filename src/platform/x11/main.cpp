@@ -423,6 +423,8 @@ class App {
             return;
         shown_prefs_ = model_.prefs;
         overlays_.set_preferences(model_.prefs);
+        if (const auto card = overlays_.take_card())
+            info_.show(*card); // a finished measurement follows the units
         prefs_pane_.sync(model_.prefs);
     }
     // The sidebar sits to the right of the globe pane and follows its size.

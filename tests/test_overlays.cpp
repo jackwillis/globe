@@ -93,15 +93,23 @@ int main(int argc, char** argv) {
     CHECK(distance &&
           distance->lines[2].find("3336 km") != std::string_view::npos); // 30 deg of arc
     CHECK(o.compose(*fb, camera, 0) != nullptr);
-    // Preferences change the units of the next card.
+    // Preferences remake the card on screen in the new units, once; the same units change nothing.
     o.set_preferences(Preferences{Units::Imperial});
-    CHECK(o.click(camera, at(camera, 0, 10)) && !o.take_card());
-    CHECK(o.click(camera, at(camera, 0, 40)));
     const auto imperial = o.take_card();
     CHECK(imperial && imperial->title == "Distance" &&
           imperial->lines[2].find("2073 mi") != std::string_view::npos &&
           imperial->lines[2].find("km") == std::string_view::npos);
+    CHECK(!o.take_card());
+    o.set_preferences(Preferences{Units::Imperial});
+    CHECK(!o.take_card());
+    // A new measurement uses the units now in force.
+    CHECK(o.click(camera, at(camera, 0, 10)) && !o.take_card());
+    CHECK(o.click(camera, at(camera, 0, 40)));
+    const auto again = o.take_card();
+    CHECK(again && again->lines[2].find("2073 mi") != std::string_view::npos);
     o.set_preferences(Preferences{});
+    const auto metric = o.take_card();
+    CHECK(metric && metric->lines[2].find("3336 km") != std::string_view::npos);
     CHECK(o.click(camera, at(camera, 0, 20)) && !o.take_card()); // a third click starts over
     o.toggle_measure();                                          // leaving clears the points
     CHECK(!o.active());

@@ -694,6 +694,8 @@ class Application {
     void set_preferences(const Preferences& next, std::uint64_t) {
         apply(SetPreferences{next});
         overlays_.set_preferences(model_.prefs);
+        if (const auto card = overlays_.take_card())
+            sidebar_.show(*card); // a finished measurement follows the units
         prefs_window_.sync(model_.prefs);
         SetPortWindowPort(window_);
     }
