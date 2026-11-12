@@ -27,6 +27,10 @@ assert out[128:] == raw[128:] and len(out) == len(raw)
 assert out[1] == 12 and out[2:14] == b"Poodle Earth" and out[14:65] == b"\0" * 51
 assert out[65:73] == b"APPLPdlE" and out[83:91] == raw[83:91]
 assert struct.unpack_from(">H", out, 124)[0] == m.crc16_xmodem(out[:124])
+dated = m.rename(raw, "Poodle Earth", 1700000000)
+assert struct.unpack_from(">II", dated, 91) == (1700000000 + 2082844800,) * 2
+assert struct.unpack_from(">H", dated, 124)[0] == m.crc16_xmodem(dated[:124])
+assert dated[128:] == raw[128:]
 # The CRC variant: a known value for the standard check string.
 assert m.crc16_xmodem(b"123456789") == 0x31C3
 for bad in (b"", raw[:100], bytes([1]) + raw[1:]):

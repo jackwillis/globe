@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 build_dir=${1:-build-os9-floppy}
 TC=/Retro68-build/toolchain/bin
 app="$build_dir/PoodleEarth-Finder.bin"
-python3 tools/macbinary_rename.py "$build_dir/PoodleEarth.bin" "$app" "Poodle Earth"
+python3 tools/macbinary_rename.py "$build_dir/PoodleEarth.bin" "$app" "Poodle Earth" "${SOURCE_DATE_EPOCH:?}"
 image="$build_dir/PoodleEarth-1440.dsk"
 python3 -c 'import sys; f=open(sys.argv[1],"wb"); f.truncate(1474560); f.close()' "$image"
 "$TC/hformat" -l "Poodle Earth" "$image"

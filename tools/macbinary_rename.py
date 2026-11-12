@@ -3,9 +3,10 @@
 # Copyright (c) 2026 Jack Willis
 """Give a Retro68 MacBinary file its Finder name (CMake target names cannot contain spaces).
 
-    macbinary_rename.py IN.bin OUT.bin "Poodle Earth"
+    macbinary_rename.py IN.bin OUT.bin "Poodle Earth" [UNIX_EPOCH]
 
-Only the header's file name changes (and its CRC); both forks are copied unchanged.
+Only the header's file name, its dates (set to UNIX_EPOCH, if given, so the same source gives the
+same file) and its CRC change; both forks are copied unchanged.
 """
 import struct
 import sys
@@ -20,7 +21,10 @@ def crc16_xmodem(data: bytes) -> int:
     return crc
 
 
-def rename(raw: bytes, name: str) -> bytes:
+MAC_EPOCH_OFFSET = 2082844800  # seconds from 1904-01-01 to 1970-01-01
+
+
+def rename(raw: bytes, name: str, epoch=None) -> bytes:
     encoded = name.encode("mac_roman")
     if not 1 <= len(encoded) <= 63 or b":" in encoded:
         raise ValueError("invalid Macintosh file name")
@@ -31,15 +35,17 @@ def rename(raw: bytes, name: str) -> bytes:
     header = bytearray(raw[:128])
     header[1] = len(encoded)
     header[2:65] = encoded.ljust(63, b"\0")
+    if epoch is not None:
+        struct.pack_into(">II", header, 91, epoch + MAC_EPOCH_OFFSET, epoch + MAC_EPOCH_OFFSET)
     struct.pack_into(">H", header, 124, crc16_xmodem(bytes(header[:124])))
     return bytes(header) + raw[128:]
 
 
 def main() -> None:
-    if len(sys.argv) != 4:
+    if len(sys.argv) not in (4, 5):
         sys.exit(__doc__)
     with open(sys.argv[1], "rb") as source:
-        out = rename(source.read(), sys.argv[3])
+        out = rename(source.read(), sys.argv[3], int(sys.argv[4]) if len(sys.argv) == 5 else None)
     with open(sys.argv[2], "wb") as target:
         target.write(out)
 
