@@ -49,9 +49,9 @@ LICENSE AND CREDITS
  About Poodle Earth window (Apple menu).
 
 SOURCE CODE
- The complete corresponding source for this exact build is the file
- PoodleEarth-0.1.0-*-source.tar.gz published next to this download, and the
- matching tag v0.1.0 at https://github.com/jackwillis/globe . The file
- name carries the same revision code as the application download. If you
- received this program without it, ask on https://github.com/jackwillis/globe/issues
- and it will be provided.
+ The complete corresponding source code of this exact version, including
+ the scripts that build and package it, is the file
+ PoodleEarth-0.1.0-XXXXXXX-source.tar.gz, published with the same download
+ page as this program; XXXXXXX is the same revision code as in this
+ download's file name. The repository is https://github.com/jackwillis/globe
+ and this version is tagged v0.1.0.

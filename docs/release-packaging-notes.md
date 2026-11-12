@@ -66,3 +66,14 @@ The owner launched the Expander-expanded Globe in Classic on Tiger and reported 
 That is a one-line report: it shows the expanded copy launches (so type and creator survived), but
 it does not say which menu items, Cmd keys or About were tried, so the #46 checklist in
 `docs/ux-acceptance.md` is still not recorded as passed. Bare OS 9 is untested.
+
+## Toolchain licensing (checked 2026-11-11, not legal advice)
+
+The Classic binary links Retro68's `libretro` start-up/runtime code and import stubs, plus libgcc and
+libstdc++. Upstream's README states that `libretro` is GPL-3.0-or-later with the GCC Runtime Library
+Exception; the file headers of `ppcstart.c`, `relocate.c`, `malloc.c`, `syscalls.c`, `start.c`,
+`ppcfpsave.s` and `Retro68Runtime.h` cite that exception (`qdglobals.c` is one declaration with no
+notice). The build image uses the Multiversal Interfaces, not Apple's Universal Interfaces. Not
+verified: the provenance of every generated import stub library. The exception means no extra terms
+apply to Poodle Earth's own licence.
+
