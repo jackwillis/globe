@@ -2,7 +2,7 @@
 
 **Status:** Exploratory planning, 2026-11-12. No runtime implementation, support promise, release gate, milestone, or approved platform/toolchain selection.
 
-**Related work:** [#83 X11 single-window layout](../../issues/83), [#31 versioned data packs](../../issues/31), [#72 optical-media research](../../issues/72), [#48 optional Classic Mac data files](../../issues/48), [#49 read-only volume policy](../../issues/49), [#63 developer console](../../issues/63), and [PR #110 geographic workstation direction](https://github.com/jackwillis/globe/pull/110). See also [layered CD-ROM atlas research](cd-rom-atlas-architecture.md), [toolchain evidence](../toolchain.md), [GATL v1](../atlas-format.md), and [architecture](../architecture.md).
+**Related work:** [#83 X11 single-window layout](https://github.com/jackwillis/globe/issues/83), [#31 versioned data packs](https://github.com/jackwillis/globe/issues/31), [#72 optical-media research](https://github.com/jackwillis/globe/issues/72), [#48 optional Classic Mac data files](https://github.com/jackwillis/globe/issues/48), [#49 read-only volume policy](https://github.com/jackwillis/globe/issues/49), [#63 developer console](https://github.com/jackwillis/globe/issues/63), and [PR #110 geographic workstation direction](https://github.com/jackwillis/globe/pull/110). See also [layered CD-ROM atlas research](cd-rom-atlas-architecture.md), [toolchain evidence](../toolchain.md), [GATL v1](../atlas-format.md), and [architecture](../architecture.md).
 
 ## Product thesis
 
