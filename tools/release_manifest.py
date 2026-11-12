@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
-"""Generate a deterministic manifest for committed Globe release artifacts.
+"""Generate a deterministic manifest for committed Poodle Earth release artifacts.
 
 Only summarizes locally verified files; never contacts the network or publishes.
 """
@@ -60,7 +60,7 @@ def make_manifest(
         })
     return {
         "schema": 1,
-        "project": "Globe",
+        "project": "Poodle Earth",
         "version": version,
         "source_revision": revision,
         "source_date_epoch": epoch,
@@ -73,6 +73,7 @@ def make_manifest(
         ),
         "notes": [
             "Source archive is created from the committed revision.",
+            "The HFS disk image carries volume timestamps, so it is not byte-reproducible; the application forks inside it are.",
             "Toolchain versions are not proven reproducible unless pinned and verified.",
             "This manifest records artifact hashes, not OS 9 execution or acceptance.",
         ],

@@ -28,7 +28,7 @@ void StyleWindow::attach(Window owner, int x, int y, int current) {
                                   BlackPixel(display_, screen), WhitePixel(display_, screen));
     XSelectInput(display_, window_, ExposureMask | ButtonPressMask);
     gc_ = XCreateGC(display_, window_, 0, nullptr);
-    XStoreName(display_, window_, "Globe looks");
+    XStoreName(display_, window_, "Poodle Earth looks");
     XMapWindow(display_, window_);
 }
 void StyleWindow::place(int x, int y) {

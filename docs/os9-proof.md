@@ -3,8 +3,8 @@
 **Status (2026-11-07):** the app has since run on real OS 9 on the G4; see the last section, "Bare Mac OS 9 on the G4". Native acceptance is tracked in [#8](https://github.com/jackwillis/globe/issues/8). The sections below are the earlier Tiger Classic record.
 
 Build the OS 9 floppy edition locally with `tools/build-edition.sh floppy` (Retro68 container).
-Transfer `build-os9-floppy/GlobeFloppy.bin` as MacBinary and decode on the Mac; preserve both forks.
-Alternatively use `build-os9-floppy/GlobeFloppy-1440.dsk`, the designated 1.44 MB HFS image. The
+Transfer `build-os9-floppy/PoodleEarth-Finder.bin` as MacBinary and decode on the Mac; preserve both forks.
+Alternatively use `build-os9-floppy/PoodleEarth-1440.dsk`, the designated 1.44 MB HFS image. The
 framework also generates an 800 KB transport image; that is not the designated floppy report.
 
 No Apple headers, implementations or binaries are copied into this repository. Compilation uses

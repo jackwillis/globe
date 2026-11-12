@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 # OS 9 is the floppy release; the root build produces the full X11 release.
-set(APP GlobeFloppy)
+set(APP PoodleEarth)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 foreach(kind atlas elevation landclasses countries places)
   if(kind STREQUAL countries)
@@ -31,7 +31,7 @@ foreach(kind atlas elevation landclasses countries places)
     DEPENDS ${ROOT}/tools/embed_atlas.py ${ROOT}/data/${DATA})
 endforeach()
 # Floppy payload: atlas, one-degree elevation, land classes, country polygons and 304 cities.
-add_application(${APP} CREATOR Glb2
+add_application(${APP} CREATOR PdlE
   ${ROOT}/src/platform/os9/main.cpp ${ROOT}/src/platform/os9/clock_os9.cpp
   ${ROOT}/src/platform/os9/sidebar.cpp
   ${ROOT}/src/platform/os9/about_window.cpp
@@ -52,7 +52,7 @@ add_application(${APP} CREATOR Glb2
   ${CMAKE_BINARY_DIR}/embedded_atlas.cpp ${CMAKE_BINARY_DIR}/embedded_elevation.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/globe.r)
 target_compile_definitions(${APP} PRIVATE GLOBE_FLOPPY=1)
-# Measurement builds show the settle timing in the window title; release builds keep "Globe".
+# Measurement builds show the settle timing in the window title; release builds keep "Poodle Earth".
 option(GLOBE_TIMING_TITLE "Show render timing in the OS 9 window title" OFF)
 if(GLOBE_TIMING_TITLE)
   target_compile_definitions(${APP} PRIVATE GLOBE_TIMING_TITLE=1)

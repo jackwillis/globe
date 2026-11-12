@@ -1,32 +1,57 @@
-Globe - Classic PowerPC preview
+Poodle Earth 0.1 - public preview for Mac OS 9 (PowerPC)
 
-A free-software, offline, software-rendered Earth for Mac OS 9.
-Pre-1.0 software: it has been tried on a Power Mac G4, but not on a
-wide range of machines or systems.
+An offline, software-rendered globe: drag to turn it, zoom in, and click a
+country or city for its information card. Nothing is downloaded or sent;
+there is no network use.
 
-Requires Mac OS 9, Color QuickDraw and Appearance Manager.
-Preferred application memory: 24 MB. A big monitor needs more memory:
-Globe makes its window smaller when memory is short and tells you if
-it cannot start at all. If the window will not grow, raise the
-Preferred size in Get Info.
+WHAT IT NEEDS
+ - A PowerPC Mac running Mac OS 9 (Color QuickDraw, Appearance Manager).
+ - Application memory: Preferred 24 MB, Minimum 12 MB (already set in the
+   application). If memory is short Poodle Earth opens a smaller window;
+   with a big monitor, raise the Preferred size (Finder: select the
+   application, File > Get Info > Memory). Quit it before changing that.
+ - Tested so far: a Power Mac G4 (AGP, 467 MHz, 256 MB) on bare Mac OS 9.2.2.
+   Other Macs and system versions have not been tried. Not for Mac OS X
+   (Classic mode on Tiger worked in earlier builds, but is not supported).
 
-Drag to turn the globe; double-click to center and zoom. Click a
-country or city for its information card (Edit > Copy copies it).
-Arrow keys turn it. Keys: + and - zoom, R resets, N aligns north,
-G graticule, B borders, T drag mode, D night side, M measure.
-The Map and Relief looks are in the list at the right and in the View
-menu. Command-Q (File > Quit) quits; Command-W closes About and
-Preferences. Preferences (Edit menu) sets metric or imperial units.
+INSTALL
+ Copy the Poodle Earth application, with this ReadMe, License and DataCredit,
+ to any folder on your hard disk and double-click it. It writes no
+ preferences or other files. If you downloaded the .sit, expand it with
+ StuffIt Expander. The .bin is the same application as a MacBinary file, and
+ the .dsk is the same application on a 1.44 MB HFS disk image.
 
-Includes an embedded atlas, country and place data, one-degree
-elevation and biome classes. No network connection is used.
+USE
+ Drag the globe to turn it (arrow keys also turn it). Double-click to
+ center and zoom in. Click a country or city for its card; Copy in the Edit
+ menu copies the card. The Map and Relief looks are in the list at the right
+ and the View menu.
+ Single keys: + and - zoom, R reset, N align north, G graticule,
+ B borders, T drag mode, D night side, M measure two points. The menus
+ show the Command-key versions (Command-= also zooms in). Command-W
+ closes About or Preferences; Command-Q quits.
+ Edit > Preferences sets metric or imperial units.
 
-Natural Earth (public domain); NOAA ETOPO 2022 (CC0); Wikidata places
-(CC0); RESOLVE Ecoregions 2017 (CC BY 4.0, simplified by Jack Willis).
-See DataCredit and the About Globe window, and
-https://github.com/jackwillis/globe/blob/main/data/SOURCES.md
+KNOWN LIMITS (version 0.1)
+ - After drawing or resizing, the edge of the globe may occasionally be
+   left unfinished; turn the globe a little or zoom to repaint it.
+ - The data is small: 1:110 million-scale coastlines and borders,
+   one-degree terrain, 304 large cities. Small islands, small countries
+   and many cities are missing. It is a globe, not a street atlas.
+ - Place names are plain ASCII. The window has no icon of its own yet.
+ - The window size is limited by the memory available to the application.
 
-Copyright (c) 2026 Jack Willis. GPL-3.0-or-later; see License.
-Source and build instructions: https://github.com/jackwillis/globe
-Physical-media copies should carry the corresponding source with them
-rather than rely on the online repository.
+LICENSE AND CREDITS
+ Copyright (c) 2026 Jack Willis. Free software under the GNU General Public
+ License, version 3 or later, with NO WARRANTY: see the License file.
+ Data credits (Natural Earth, NOAA ETOPO 2022, Wikidata, and RESOLVE
+ Ecoregions 2017 under CC BY 4.0, adapted): see the DataCredit file and the
+ About Poodle Earth window (Apple menu).
+
+SOURCE CODE
+ The complete corresponding source for this exact build is the file
+ PoodleEarth-0.1.0-*-source.tar.gz published next to this download, and the
+ matching tag v0.1.0 at https://github.com/jackwillis/globe . The file
+ name carries the same revision code as the application download. If you
+ received this program without it, ask on https://github.com/jackwillis/globe/issues
+ and it will be provided.

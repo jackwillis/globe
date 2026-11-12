@@ -29,7 +29,7 @@ void PrefsPane::attach(Window owner, int x, int y, const Preferences& current) {
                                   BlackPixel(display_, screen), WhitePixel(display_, screen));
     XSelectInput(display_, window_, ExposureMask | ButtonPressMask);
     gc_ = XCreateGC(display_, window_, 0, nullptr);
-    XStoreName(display_, window_, "Globe preferences");
+    XStoreName(display_, window_, "Poodle Earth preferences");
     XMapWindow(display_, window_);
 }
 void PrefsPane::place(int x, int y) {

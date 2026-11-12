@@ -99,7 +99,7 @@ jobs:
         with:
           name: os9-floppy-build-and-size-report
           path: |
-            build-os9-floppy/GlobeFloppy.bin
-            build-os9-floppy/GlobeFloppy-1440.dsk
+            build-os9-floppy/PoodleEarth-Finder.bin
+            build-os9-floppy/PoodleEarth-1440.dsk
             build-os9-floppy/size-report.*
             build-os9-floppy/hfs-*.txt
