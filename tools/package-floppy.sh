@@ -18,6 +18,8 @@ trap '"$TC/humount" >/dev/null 2>&1 || true' EXIT HUP INT TERM
 "$TC/hcopy" -t os9/ReadMe.txt :ReadMe
 "$TC/hcopy" -t LICENSE :License
 "$TC/hcopy" -t data/DATA-CREDITS.txt :DataCredit
+# hcopy -t leaves creator UNIX; documents should open in SimpleText.
+for doc in ReadMe License DataCredit; do "$TC/hattrib" -t TEXT -c ttxt ":$doc"; done
 "$TC/hcopy" -m ":Poodle Earth" "$build_dir/roundtrip.bin"
 "$TC/hls" -la : > "$build_dir/hfs-files.txt"
 "$TC/hvol" > "$build_dir/hfs-volume.txt"

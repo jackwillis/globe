@@ -39,6 +39,9 @@ mkdir -p "$out" "$build_dir/sit-target"
 epoch=${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct)}
 "$CONTAINER" run --rm -v "$PWD/tools/sit-pack":/w:Z -v "$PWD/$build_dir/sit-target":/t:Z \
     -w /w -e CARGO_TARGET_DIR=/t "$RUST_IMAGE" cargo build --release --locked >/dev/null
+# Record the image actually used by its digest, when the local engine knows one.
+rust_ref=$("$CONTAINER" image inspect --format '{{index .RepoDigests 0}}' "$RUST_IMAGE" 2>/dev/null || true)
+rust_ref=${rust_ref:-$RUST_IMAGE}
 sit="$out/$name.sit"
 "$build_dir/sit-target/release/sit-pack" -m "${SIT_METHOD:-13}" --date "$epoch" -o "$sit" \
     --mac "Poodle Earth=$build_dir/PoodleEarth-Finder.bin" \
@@ -54,6 +57,7 @@ unar -q -o "$check/bin" -forks visible "$out/$name.bin" >/dev/null
 hmount "$out/$name.dsk" >/dev/null
 hcopy -m ":Poodle Earth" "$check/from-dsk.bin"
 for doc in ReadMe License DataCredit; do hcopy -t ":$doc" "$check/dsk-$doc"; done
+hls -l ":ReadMe" ":License" ":DataCredit" | awk '$2 != "TEXT/ttxt" { bad = 1 } END { exit bad }' || { echo "release: HFS documents are not TEXT/ttxt" >&2; exit 1; }
 humount >/dev/null
 unar -q -o "$check/dsk" -forks visible "$check/from-dsk.bin" >/dev/null
 for route in "$check/sit/$name" "$check/dsk"; do
@@ -73,7 +77,7 @@ git archive --format=tar --prefix="globe-$version-$rev/" HEAD | gzip -n > "$sour
 python3 tools/release_manifest.py --output "$out/RELEASE.json" \
     --revision "$revision" --epoch "$epoch" \
     --retro68-image "${RETRO68_IMAGE:-${retro68_image:-ghcr.io/autc04/retro68}}" \
-    --rust-image "$RUST_IMAGE" \
+    --rust-image "$rust_ref" \
     "$sit" "$out/$name.bin" "$out/$name.dsk" "$source_archive"
 (cd "$out" && sha256sum "$name.sit" "$name.bin" "$name.dsk" "$name-source.tar.gz" RELEASE.json > SHA256SUMS)
 echo "round trip ok (data and resource forks via .sit, .bin and .dsk); artifacts, source, manifest and checksums in $out"
