@@ -1,17 +1,17 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
-# Digital-release artifacts from one build (#47): StuffIt, MacBinary, HFS disk image, committed
+# Digital-release artifacts from one build (#47): the StuffIt archive (the only download), committed
 # source, manifest and checksums in <build>/release/. Needs the Classic build from
-# tools/build-os9.sh (PoodleEarth-Finder.bin, PoodleEarth-1440.dsk, build-info.txt), podman, the Rust
-# build image, Python 3, git, unar and hfsutils (round-trip verification). Publishes nothing.
+# tools/build-os9.sh (PoodleEarth-Finder.bin, the sit input, and build-info.txt), podman, the Rust
+# build image, Python 3, git and unar (round-trip verification). Publishes nothing.
 #   GLOBE_RELEASE_STRICT=1  refuse a dirty tree or a build made from any other revision.
 set -eu
 cd "$(dirname "$0")/.."
 build_dir=${1:-build-os9-floppy}
 CONTAINER=${CONTAINER:-podman}
 RUST_IMAGE=${RUST_IMAGE:-docker.io/library/rust:slim}
-for f in PoodleEarth-Finder.bin PoodleEarth-1440.dsk build-info.txt; do
+for f in PoodleEarth-Finder.bin build-info.txt; do
   [ -f "$build_dir/$f" ] || { echo "no $build_dir/$f: build first (tools/build-os9.sh)" >&2; exit 2; }
 done
 rev=$(git rev-parse --short HEAD)
@@ -49,28 +49,17 @@ sit="$out/$name.sit"
     --text "License (1 of 2)=$build_dir/license/License-1.txt" \
     --text "License (2 of 2)=$build_dir/license/License-2.txt" \
     --text DataCredit=data/DATA-CREDITS.txt
-cp "$build_dir/PoodleEarth-Finder.bin" "$out/$name.bin"
-cp "$build_dir/PoodleEarth-1440.dsk" "$out/$name.dsk"
-# Round trip with independent readers: every route must give the same application forks.
+# Round trip with an independent reader: the archive must give back the built application forks.
 check=$(mktemp -d)
-trap '"humount" >/dev/null 2>&1 || true; rm -rf "$check"' EXIT HUP INT TERM
+trap 'rm -rf "$check"' EXIT HUP INT TERM
 unar -q -o "$check/sit" -forks visible "$sit" >/dev/null
-unar -q -o "$check/bin" -forks visible "$out/$name.bin" >/dev/null
-hmount "$out/$name.dsk" >/dev/null
-hcopy -m ":Poodle Earth" "$check/from-dsk.bin"
-for doc in "ReadMe" "License (1 of 2)" "License (2 of 2)" DataCredit; do hcopy -t ":$doc" "$check/dsk-$doc"; done
-hls -l ":ReadMe" ":License (1 of 2)" ":License (2 of 2)" ":DataCredit" | awk '$2 != "TEXT/ttxt" { bad = 1 } END { exit bad }' || { echo "release: HFS documents are not TEXT/ttxt" >&2; exit 1; }
-humount >/dev/null
-unar -q -o "$check/dsk" -forks visible "$check/from-dsk.bin" >/dev/null
-for route in "$check/sit/$name" "$check/dsk"; do
-  cmp "$route/Poodle Earth" "$check/bin/Poodle Earth"
-  cmp "$route/Poodle Earth.rsrc" "$check/bin/Poodle Earth.rsrc"
-done
+unar -q -o "$check/bin" -forks visible "$build_dir/PoodleEarth-Finder.bin" >/dev/null
+cmp "$check/sit/$name/Poodle Earth" "$check/bin/Poodle Earth"
+cmp "$check/sit/$name/Poodle Earth.rsrc" "$check/bin/Poodle Earth.rsrc"
 # The texts the user reads are the repository's (LF there, CR on the Mac) in every route.
 for pair in "ReadMe:os9/ReadMe.txt" "License (1 of 2):$build_dir/license/License-1.txt" \
             "License (2 of 2):$build_dir/license/License-2.txt" "DataCredit:data/DATA-CREDITS.txt"; do
   doc=${pair%%:*}; src=${pair#*:}
-  tr '\r' '\n' < "$check/dsk-$doc" | cmp - "$src"
   tr '\r' '\n' < "$check/sit/$name/$doc" | cmp - "$src"
 done
 # ...and the two halves are exactly the GPL text, each small enough for SimpleText.
@@ -84,6 +73,6 @@ python3 tools/release_manifest.py --output "$out/RELEASE.json" \
     --revision "$revision" --epoch "$epoch" \
     --retro68-image "${RETRO68_IMAGE:-${retro68_image:-ghcr.io/autc04/retro68}}" \
     --rust-image "$rust_ref" \
-    "$sit" "$out/$name.bin" "$out/$name.dsk" "$source_archive"
-(cd "$out" && sha256sum "$name.sit" "$name.bin" "$name.dsk" "$name-source.tar.gz" RELEASE.json > SHA256SUMS)
-echo "round trip ok (data and resource forks via .sit, .bin and .dsk); artifacts, source, manifest and checksums in $out"
+    "$sit" "$source_archive"
+(cd "$out" && sha256sum "$name.sit" "$name-source.tar.gz" RELEASE.json > SHA256SUMS)
+echo "round trip ok (data and resource forks via .sit); artifacts, source, manifest and checksums in $out"

@@ -18,9 +18,8 @@ INSTALL
  Copy the folder (the Poodle Earth application, this ReadMe, the two
  License files - the GPL in halves small enough for SimpleText - and
  DataCredit) to your hard disk and double-click the application. It writes no
- preferences or other files. If you downloaded the .sit, expand it with
- StuffIt Expander. The .bin is the same application as a MacBinary file, and
- the .dsk is the same application on a 1.44 MB HFS disk image.
+ preferences or other files. Expand the downloaded .sit archive with
+ StuffIt Expander.
 
 USE
  Drag the globe to turn it (arrow keys also turn it). Double-click to

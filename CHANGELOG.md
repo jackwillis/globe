@@ -12,7 +12,7 @@ See [release notes](docs/release-notes-0.1.md).
 - Map and Relief looks, progressive software rendering, country and city picking with information
   cards, night side, measurement and units; one Classic window with a sidebar, native menus and
   an About window with data credits.
-- Distribution: StuffIt archive, MacBinary and HFS disk image; exact-version source archive,
+- Distribution: StuffIt archive only; exact-version source archive,
   manifest and checksums. Application, Finder name and creator code changed from the development
   `GlobeFloppy` / `Glb2` to **Poodle Earth** / `PdlE`.
 - Known limits: occasional unfinished globe edge (#74), small embedded data set, no icon yet.
