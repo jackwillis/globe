@@ -13,7 +13,7 @@
 - [Pack formats](atlas-format.md) · [elevation](elevation-format.md) · [places](place-format.md)
 - [Terrain](terrain.md) · [refinement](refinement.md) · [performance](perf/README.md)
 - [Architecture decisions](adr/0001-m2-to-m5-decisions.md) · [atlas builder boundary](adr/0003-atlas-production-boundary.md)
-- [CD-ROM atlas research](research/cd-rom-atlas-architecture.md)
+- [CD-ROM atlas research](research/cd-rom-atlas-architecture.md) · [cross-platform frontends and distribution](research/cross-platform-frontends-and-distribution.md)
 
 ## Historical work records
 
