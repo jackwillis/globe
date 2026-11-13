@@ -50,7 +50,7 @@ Atlas delta-varint points measure 26,706 bytes versus 32,480 raw. These modern P
 choose the eventual target decoder; target speed and decoder memory remain unmeasured.
 
 See [floppy JSON](floppy-size-20261102.json), [full JSON](full-size-20261102.json),
-[OS 9 scope and acceptance](os9-proof.md) and [remaining execution log](open-work.md).
+[OS 9 scope and acceptance](os9-proof.md) and [remaining execution log](history/open-work.md).
 
 The 2026-11-01 JSON snapshots remain historical. Current snapshots above include GL-27 shading/base
 and GL-28 lake data; the size-only TLS experiment is separate and not linked into either release.

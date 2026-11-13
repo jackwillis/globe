@@ -10,7 +10,7 @@
 - **Adaptive by default:** Globe adapts to the computer, rather than requiring the user to configure the computer for Globe. Memory and geographic detail are managed automatically; advanced resource controls and developer diagnostics remain optional.
 - **Progressive computation is a core technique; presentation is a UX hypothesis.** Compare current expressive reveal, minimal-delay and adaptive variants with representative users and on the real G4. Do not impose theatrical delays or weaken accessibility.
 - **Evidence before optimization:** match view/style/hardware; measure input responsiveness, worst continuation, first useful frame, total completion, copy/upload cost and pixel correctness.
-- **Safety:** honor [agent handoff](handoff.md) for protected machines, worktrees and release authorization. The tracker authorizes planning, not unattended device access or publication.
+- **Safety:** honor [agent contract](../AGENTS.md) for protected machines, worktrees and release authorization. The tracker authorizes planning, not unattended device access or publication.
 
 ## Product direction — 2026-11-10
 
@@ -137,7 +137,7 @@ Ruby scripting, fantasy cartography and a separate flat-map editor; native 68k s
 
 ## Current / historical source material
 
-- [Architecture as built](architecture.md), [ADR history](adr/0001-m2-to-m5-decisions.md), [progressive-resolution implementation](progressive-resolution-plan.md), [OS 9 evidence](os9-proof.md), [benchmark history](perf/README.md), and [live agent handoff](handoff.md).
+- [Architecture as built](architecture.md), [ADR history](adr/0001-m2-to-m5-decisions.md), [progressive-resolution implementation](progressive-resolution-plan.md), [OS 9 evidence](os9-proof.md), [benchmark history](perf/README.md), and [live agent handoff](history/handoff.md).
 - [Historical GL backlog](history/backlog-through-2026-11-05.md) contains GL-1 through GL-55 and their previous, sometimes superseded statuses; **do not treat it as an active to-do list**. New GitHub issues preserve relevant GL identifiers in their bodies.
 - Migration note: one accidentally duplicated resource-lifecycle issue [#27](https://github.com/jackwillis/globe/issues/27) was closed as duplicate of [#26](https://github.com/jackwillis/globe/issues/26).
 

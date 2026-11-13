@@ -1,7 +1,7 @@
 # Historical M1 plan: responsive globe
 
 Historical baseline, completed before the current terrain/data/UI work. Current scope is in
-[backlog.md](backlog.md) and [handoff.md](handoff.md).
+[backlog.md](backlog.md) and [handoff.md](history/handoff.md).
 
 Original status: **agreed 2026-11-01**. Scope follows `docs/v2-design.md` section 11 (M1) and the
 decisions below. Not in M1: refinement stages and LOD (M2, M3), network I/O (M4), land fill and

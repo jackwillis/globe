@@ -4,7 +4,9 @@ This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
 
-## 0.1.0 - public preview (not yet published)
+- The unfinished globe edge report (#74) was closed after the owner reported sustained use since the fix with no recurrence. The closure was based on regular use without a structured test.
+
+## 0.1.0 - public preview (2026-11-13)
 
 The first public release of **Poodle Earth** (repository `jackwillis/globe`), for Mac OS 9 on PowerPC.
 See [release notes](docs/release-notes-0.1.md).
@@ -24,4 +26,4 @@ See [release notes](docs/release-notes-0.1.md).
 - Native Classic Macintosh implementation and digital-first packaging undergoing acceptance and release verification.
 - Atlas production, reproducibility and resource-accounting work in progress.
 
-**No v0.1 release is published yet.** Historical tag `v1` is a prototype tag, not a semantic version 1.0 release. See [issues](https://github.com/jackwillis/globe/issues) for current progress.
+Historical tag `v1` is a prototype tag, not a semantic version 1.0 release. See [issues](https://github.com/jackwillis/globe/issues) for current progress.
