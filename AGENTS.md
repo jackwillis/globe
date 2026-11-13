@@ -58,6 +58,44 @@ milestones are the state; the Project is a view.
   evidence to the issue and docs/os9-proof.md or docs/perf/.
 - Never change release scope, an Accepted ADR or another agent's work silently.
 
+### Issue maintenance is part of the task
+
+The GitHub issue is the **live record and restart point**, not merely a pointer to a PR or
+a conversation. Before work, read its latest description, comments, labels,
+milestone and linked PRs. Keep it current at every meaningful transition:
+
+- **Claim:** with assignment or `status: ready` authority, set `status: in progress`
+  and post the agent/tool, branch, date, intended slice, dependencies and any known
+  unverified assumptions. Do not take over a freshly claimed issue.
+- **During work:** add a concise factual update when scope, findings, dependencies,
+  platform evidence or next steps change; link commits/PRs. Keep checkboxes honest:
+  proposed, implemented, CI-tested and hardware-accepted are different states.
+  Update acceptance checkboxes only when authorized within the assigned issue's
+  scope and supported by verifiable evidence. Otherwise report completion evidence
+  in a comment and leave the checkbox unchanged. Owner-controlled hardware
+  acceptance, waivers, readiness and release decisions require owner approval.
+- **Review:** link the PR with `Closes #N` only when a merge actually satisfies all
+  acceptance items; otherwise `Refs #N`. Set `status: in review`, note the exact
+  revision and tests plus omissions, and specify who/what is needed next.
+- **Waiting:** when no further work can proceed, set `status: blocked`, add
+  `needs: owner` or `needs: hardware` as appropriate, and state the precise
+  blocker and condition that clears it. Do not use `status: blocked` merely because
+  an owner will eventually review a proposed plan.
+- **After merge or handoff:** verify the issue against actual acceptance criteria
+  and native evidence; update only authorized checkboxes and permitted status/needs
+  labels, links and next steps. Record evidence for owner-controlled items without
+  checking them off. A merged PR is not automatically a completed issue. Close only
+  with evidence or owner direction; otherwise leave it open with an explicit reason.
+
+Keep comments brief, dated and attributable; correct superseded factual statements
+with a new comment or a clearly identified update rather than silently rewriting
+someone else's evidence. Prefer updating the existing issue over creating a
+duplicate tracker. Treat milestones and owner-only `status: ready` as protected:
+report suspected drift outside the assigned scope rather than silently correcting
+protected acceptance items, reinterpreting release scope or granting yourself work.
+If a connected GitHub Project view is inaccessible, record that limitation and use
+issues/labels/milestones as the source of truth.
+
 ## 4. Done means (every session)
 
 - A comment on the issue or PR: what changed (commits or PR); exact commands with
