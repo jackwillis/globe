@@ -18,6 +18,7 @@
 - [Shared presentation](design/shared-presentation-architecture.md) · [rendering backends and execution](research/rendering-backends-and-execution.md) (exploratory, nonbinding)
 - [CD-ROM atlas research](research/cd-rom-atlas-architecture.md)
 - [Cross-platform frontends and distribution](research/cross-platform-frontends-and-distribution.md) (exploratory, nonbinding)
+- [v0.2 repository modernization proposal](design/repository-modernization-v0.2.md) (planning only; no approved moves or release gate)
 
 ## Historical work records
 
