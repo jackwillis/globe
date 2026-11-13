@@ -1,3 +1,6 @@
+> **Historical record.** For current instructions and work status, see
+> [AGENTS.md](../../AGENTS.md) and [live GitHub issues](https://github.com/jackwillis/globe/issues).
+
 # Agent restart and worktree reconciliation — 2026-11-08
 
 **Status:** Coordination handoff, not a release, merge approval, permission to use hardware, or declaration that local worktrees are clean. GitHub Issues remain the authoritative queue. This note records the observed remote state and the procedure for new Claude Code and Codex sessions; **reinspect the live repository before acting.**

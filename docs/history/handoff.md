@@ -1,3 +1,6 @@
+> **Historical record.** For current instructions and work status, see
+> [AGENTS.md](../../AGENTS.md) and [live GitHub issues](https://github.com/jackwillis/globe/issues).
+
 # Codex handoff — Globe
 
 **Fresh-session recovery (2026-11-08):** Read [the agent restart handoff](agent-restart-2026-11-08.md) before any checkout, pull, staging, merge, hardware access or new issue work. Its status is a remote observation; inspect each local worktree independently.
