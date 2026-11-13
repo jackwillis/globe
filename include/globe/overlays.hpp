@@ -36,8 +36,9 @@ class Overlays {
     // True when something is drawn over the frame.
     bool active() const { return night_ || focused_.has_value() || measure_a_.has_value(); }
     void toggle_night() { night_ = !night_; }
-    // Units for the text of cards made from now on (the shell takes them from Model).
-    void set_preferences(const Preferences& prefs) { prefs_ = prefs; }
+    // Units for card text (the shell takes them from Model). A finished measurement's distance card
+    // is remade in the new units and offered again through `take_card`.
+    void set_preferences(const Preferences& prefs);
     // Leaving measure mode clears the measured points.
     void toggle_measure();
     // A click that survived the double-click wait, at screen point `at`. Handles measuring, places
@@ -59,6 +60,7 @@ class Overlays {
 
   private:
     void measure_click(LatLon point);
+    void make_measure_card(LatLon a, LatLon p);
     const Countries* countries_ = nullptr;
     const CountryScene* country_scene_ = nullptr;
     const Places* places_ = nullptr;

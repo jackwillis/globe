@@ -25,7 +25,7 @@ void InfoWindow::attach(Window owner, int x, int y, int width, int height) {
     XSelectInput(display_, window_,
                  ExposureMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask);
     gc_ = XCreateGC(display_, window_, 0, nullptr);
-    XStoreName(display_, window_, "Globe information");
+    XStoreName(display_, window_, "Poodle Earth information");
     XMapWindow(display_, window_);
 }
 void InfoWindow::place(int x, int y, int width, int height) {

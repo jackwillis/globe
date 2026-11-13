@@ -17,7 +17,7 @@ resource 'SIZE' (-1) {
 #define DIVIDER "-", noIcon, noKey, noMark, plain
 resource 'MENU' (128, preload) {
     128, textMenuProc, allEnabled, enabled, apple,
-    { ITEM("About Globe\0xC9", noKey); DIVIDER }
+    { ITEM("About Poodle Earth\0xC9", noKey); DIVIDER }
 };
 resource 'MENU' (129, preload) {
     129, textMenuProc, allEnabled, enabled, "File",
@@ -48,8 +48,8 @@ resource 'DITL' (128, purgeable) {
     {
         {103, 262, 123, 330}, Button { enabled, "OK" };
         {10, 70, 95, 330}, StaticText { disabled,
-            "Globe could not start. This is usually because too little memory is available. "
-            "Quit other applications, or select Globe in the Finder, choose Get Info, and raise "
+            "Poodle Earth could not start. This is usually because too little memory is available. "
+            "Quit other applications, or select Poodle Earth in the Finder, choose Get Info, and raise "
             "its Preferred size." };
     }
 };

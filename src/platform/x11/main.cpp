@@ -155,7 +155,7 @@ class App {
             XCreateSimpleWindow(dpy_, RootWindow(dpy_, screen), 0, 0,
                                 static_cast<unsigned>(opt_.width + StyleWindow::kWidth),
                                 static_cast<unsigned>(opt_.height), 0, 0, BlackPixel(dpy_, screen));
-        XStoreName(dpy_, win_, "Globe");
+        XStoreName(dpy_, win_, "Poodle Earth");
         XSelectInput(dpy_, win_,
                      ExposureMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask |
                          PointerMotionMask | KeyPressMask | EnterWindowMask | LeaveWindowMask);
@@ -168,7 +168,7 @@ class App {
         toolbar_ = XCreateSimpleWindow(dpy_, RootWindow(dpy_, screen), 0, opt_.height + 20,
                                        kToolbarWidth, kToolbarHeight, 1, BlackPixel(dpy_, screen),
                                        WhitePixel(dpy_, screen));
-        XStoreName(dpy_, toolbar_, "Globe tools");
+        XStoreName(dpy_, toolbar_, "Poodle Earth tools");
         XSetTransientForHint(dpy_, toolbar_, win_);
         const Atom kind = XInternAtom(dpy_, "_NET_WM_WINDOW_TYPE_UTILITY", False);
         XChangeProperty(dpy_, toolbar_, XInternAtom(dpy_, "_NET_WM_WINDOW_TYPE", False), XA_ATOM,
@@ -423,6 +423,8 @@ class App {
             return;
         shown_prefs_ = model_.prefs;
         overlays_.set_preferences(model_.prefs);
+        if (const auto card = overlays_.take_card())
+            info_.show(*card); // a finished measurement follows the units
         prefs_pane_.sync(model_.prefs);
     }
     // The sidebar sits to the right of the globe pane and follows its size.

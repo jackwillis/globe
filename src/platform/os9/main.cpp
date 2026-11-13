@@ -70,13 +70,16 @@ Rect window_content() {
     const short top = static_cast<short>(screen.top + GetMBarHeight() + kTitleBar + kGap);
     const short left = static_cast<short>(screen.left + kGap);
     const short width = std::clamp<short>(static_cast<short>(screen.right - screen.left - 2 * kGap),
-                                          Sidebar::kWidth + 160, 1600);
+                                          Sidebar::kWidth + kClassicMinGlobeWidth, 1600);
     const short height =
-        std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), 120, 1200);
+        std::clamp<short>(static_cast<short>(screen.bottom - kGap - top), kClassicMinHeight, 1200);
     return Rect{top, left, static_cast<short>(top + height), static_cast<short>(left + width)};
 }
 // Keep integer sizing testable without Toolbox; every actual allocation remains fallible.
 void fit_to_memory(Rect& r) {
+    // The heap zone starts small and grows on demand; until it spans the partition FreeMem sees
+    // only a few KB (5,344 bytes at startup on the G4, which shrank the window to its minimum).
+    MaxApplZone();
     const auto size =
         fit_classic_window_to_heap(r.right - r.left, r.bottom - r.top, Sidebar::kWidth, FreeMem());
     r.right = static_cast<short>(r.left + size.width);
@@ -122,7 +125,8 @@ class Application {
         runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
         Rect bounds = window_content();
         fit_to_memory(bounds);
-        const unsigned char title[] = {5, 'G', 'l', 'o', 'b', 'e'};
+        const unsigned char title[] = {12,  'P', 'o', 'o', 'd', 'l', 'e',
+                                       ' ', 'E', 'a', 'r', 't', 'h'};
         window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);
         mouse_region_ = NewRgn();
@@ -455,7 +459,7 @@ class Application {
     }
     // With GLOBE_TIMING_TITLE (cmake -DGLOBE_TIMING_TITLE=ON, for measurement builds) the window
     // title reports the last settle: first refine step to last, and time spent copying. Release
-    // builds keep the plain title "Globe".
+    // builds keep the plain title "Poodle Earth".
     void show_timing() {
         if (!titled_)
             settled_ms_ = now_ms() - refine_t0_;
@@ -477,7 +481,7 @@ class Application {
             while (d)
                 title[++n] = static_cast<unsigned char>(digits[--d]);
         };
-        put("Globe ");
+        put("Poodle Earth ");
         number(present_bands_);
         put(" bands, ");
         number(settled_ms_);
@@ -690,6 +694,8 @@ class Application {
     void set_preferences(const Preferences& next, std::uint64_t) {
         apply(SetPreferences{next});
         overlays_.set_preferences(model_.prefs);
+        if (const auto card = overlays_.take_card())
+            sidebar_.show(*card); // a finished measurement follows the units
         prefs_window_.sync(model_.prefs);
         SetPortWindowPort(window_);
     }

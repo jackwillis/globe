@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
 cmake_minimum_required(VERSION 3.20)
-project(globe VERSION 0.0.1 LANGUAGES CXX)
+project(globe VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -175,6 +175,8 @@ if(GLOBE_BUILD_TESTS)
   if(Python3_FOUND)
     add_test(NAME g4_bench_runner COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_g4_bench.py)
     add_test(NAME compression_bench COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_compression_bench.py)
+    add_test(NAME split_license COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_split_license.py)
+    add_test(NAME macbinary_rename COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_macbinary_rename.py)
     add_test(NAME floppy_report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_floppy_report.py)
     add_test(NAME place_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_place_builder.py)
     add_test(NAME country_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_country_builder.py)

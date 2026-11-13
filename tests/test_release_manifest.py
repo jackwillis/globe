@@ -25,7 +25,7 @@ class ManifestTest(unittest.TestCase):
             b.write_bytes(b"test")
             a.write_bytes(b"archive")
             kwargs = dict(
-                revision="a" * 40, epoch=1700000000, version="0.0.1",
+                revision="a" * 40, epoch=1700000000, version="0.1.0",
                 retro68_image="example@sha256:123", rust_image="other:slim",
                 paths=[b, a],
             )
@@ -47,7 +47,7 @@ class ManifestTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "missing.bin"
             args = dict(
-                revision="a" * 40, epoch=1, version="0.0.1",
+                revision="a" * 40, epoch=1, version="0.1.0",
                 retro68_image="r", rust_image="s",
             )
             with self.assertRaises(ValueError):

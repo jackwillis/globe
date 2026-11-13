@@ -1,4 +1,6 @@
-# Globe
+# Poodle Earth
+
+*(Public name of the project in this repository, `jackwillis/globe`; internal names such as `globe-x11` and the `globe` namespace are unchanged.)*
 
 An interactive, software-rendered Earth for PowerPC G4: NetBSD/X11 and classic Mac OS 9.
 Plain vector lines while you drag; while you zoom, a scaled copy of the last finished frame keeps
@@ -29,6 +31,13 @@ The OS 9 floppy build in Classic under Mac OS X Tiger on the G4 (2026-11-02):
 ![OS 9 build in Tiger Classic, Map look](docs/images/os9-tiger-classic.png)
 
 The other screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
+
+**Version 0.1 (public preview, in preparation).** The Mac OS 9 application "Poodle Earth" is
+distributed as a StuffIt archive, with the exact-version
+source archive, `RELEASE.json` and `SHA256SUMS`; see the [Classic ReadMe](os9/ReadMe.txt) (installation,
+controls, memory, known limits), the [changelog](CHANGELOG.md), [data credits](data/DATA-CREDITS.txt)
+and [release notes](docs/release-notes-0.1.md). Nothing is published until the owner signs off on
+[hardware acceptance (#95)](https://github.com/jackwillis/globe/issues/95).
 
 This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
 checks pass on host and G4. The OS 9 application is built and packaged, and has been run by the owner under Tiger Classic
@@ -74,7 +83,7 @@ toolbar. Exposing or moving a window resends cached pixels. The graticule hides 
 elevation, countries and cities; no X11 toolbar; native menus/palette are implemented but require hardware acceptance. It emits a MacBinary application,
   a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md). **Paused since
   2026-11-07:** it still builds and is checked in CI, but releases are digital first (a StuffIt
-  archive, a MacBinary file and a disk image), and the next edition is an application plus a data
+  archive), and the next edition is an application plus a data
   folder of packs ([#47](https://github.com/jackwillis/globe/issues/47),
   [#48](https://github.com/jackwillis/globe/issues/48)).
 

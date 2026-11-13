@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
-"""Generate a deterministic manifest for committed Globe release artifacts.
+"""Generate a deterministic manifest for committed Poodle Earth release artifacts.
 
 Only summarizes locally verified files; never contacts the network or publishes.
 """
@@ -60,7 +60,7 @@ def make_manifest(
         })
     return {
         "schema": 1,
-        "project": "Globe",
+        "project": "Poodle Earth",
         "version": version,
         "source_revision": revision,
         "source_date_epoch": epoch,

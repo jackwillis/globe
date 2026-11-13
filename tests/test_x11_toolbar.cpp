@@ -57,8 +57,8 @@ int main(int argc, char** argv) {
         return 1;
     Window main = 0, toolbar = 0;
     for (int i = 0; i < 200 && (!main || !toolbar); ++i) {
-        main = find(d, "Globe");
-        toolbar = find(d, "Globe tools");
+        main = find(d, "Poodle Earth");
+        toolbar = find(d, "Poodle Earth tools");
         usleep(10000);
     }
     CHECK(main && toolbar);
@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
         XSendEvent(d, main, False, ButtonReleaseMask, &press);
         XFlush(d);
         usleep(700000); // the card waits out the double-click window
-        const auto info = find(d, "Globe information");
+        const auto info = find(d, "Poodle Earth information");
         CHECK(info);
         if (info) {
             XEvent wheel{};
@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
             XSendEvent(d, main, False, KeyPressMask, &key);
             XFlush(d);
             usleep(300000);
-            const auto looks = find(d, "Globe looks");
+            const auto looks = find(d, "Poodle Earth looks");
             CHECK(looks);
             if (looks) {
                 XEvent press{};
@@ -192,7 +192,7 @@ int main(int argc, char** argv) {
         click(Command::ToggleGraticule);
         // Preferences pane (a child of the Globe window): Imperial.
         {
-            if (const auto prefs = find(d, "Globe preferences")) {
+            if (const auto prefs = find(d, "Poodle Earth preferences")) {
                 for (const int y : {45}) {
                     XEvent click{};
                     click.xbutton.type = ButtonPress;

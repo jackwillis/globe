@@ -1,0 +1,41 @@
+Poodle Earth 0.1 - data credits and notices
+
+Poodle Earth is copyright (c) 2026 Jack Willis and is free software under the
+GNU General Public License, version 3 or later (see the two License files). It
+comes with NO WARRANTY. The geographic data below is separate from the program
+and keeps its own terms.
+
+COASTLINES, BORDERS, COUNTRIES, LAKES
+Made with Natural Earth, 1:110m coastline, boundary lines and Admin 0
+Countries, and 1:50m lakes (used only to mark water in the elevation grid).
+Public domain. https://www.naturalearthdata.com/about/terms-of-use/
+Natural Earth draws de facto boundaries. Borders and country shapes are
+cartographic references, not statements about sovereignty or status.
+
+ELEVATION AND SEA FLOOR
+NOAA National Centers for Environmental Information, ETOPO 2022 15 Arc-Second
+Global Relief Model (60 arc-second ice-surface grid), DOI 10.25921/fd45-gt74.
+Public domain / CC0 1.0. Resampled to coarse grids (one degree in the Mac OS 9 build).
+
+CITIES AND PLACE NAMES
+Wikidata structured data (entity labels, identifiers, coordinates and
+population): CC0 1.0. https://www.wikidata.org/wiki/Wikidata:Licensing
+No Wikipedia article text is included. Names are shown in plain ASCII
+(accents removed). The list is not a complete or authoritative gazetteer.
+
+BIOME CLASSES (Map look land colours) - CC BY 4.0
+Derived from RESOLVE Ecoregions 2017:
+  Dinerstein, E., et al. (2017). An Ecoregion-Based Approach to Protecting
+  Half the Terrestrial Realm. BioScience 67(6): 534-545.
+  https://doi.org/10.1093/biosci/bix014   Source: https://ecoregions.world/
+Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0):
+  https://creativecommons.org/licenses/by/4.0/
+CHANGES MADE by Jack Willis (2026): the ecoregion polygons were sampled at
+the centre of each one-degree cell and reduced to a few simplified biome
+classes; the result is a coarse display approximation of biomes, not a
+survey of present forest or land use, and it is not the original data.
+The data is provided as is, without warranties of any kind, as in section 5
+of the CC BY 4.0 legal code. The authors and the licensor of the original data
+have not endorsed or reviewed Poodle Earth or this adaptation. The CC BY 4.0
+licence applies to this adapted grid only; it does not change the licence of
+the program.
