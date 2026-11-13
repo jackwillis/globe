@@ -1,126 +1,77 @@
 # Cross-platform frontends and distribution — exploratory research
 
-**Status:** Exploratory planning, 2026-11-12. No runtime implementation, support promise, release gate, milestone, or approved platform/toolchain selection.
+**Status:** Nonbinding exploratory planning, 2026-11-12, condensed 2026-11-13. No runtime implementation, support promise, release gate, milestone or approved platform/toolchain selection. The active v0.1 goal remains a stable, usable Classic Mac OS 9 release; nothing here is a v0.1 or v0.2 requirement.
 
-**Related work:** [#83 X11 single-window layout](https://github.com/jackwillis/globe/issues/83), [#31 versioned data packs](https://github.com/jackwillis/globe/issues/31), [#72 optical-media research](https://github.com/jackwillis/globe/issues/72), [#48 optional Classic Mac data files](https://github.com/jackwillis/globe/issues/48), [#49 read-only volume policy](https://github.com/jackwillis/globe/issues/49), [#63 developer console](https://github.com/jackwillis/globe/issues/63), and [PR #110 geographic workstation direction](https://github.com/jackwillis/globe/pull/110). See also [layered CD-ROM atlas research](cd-rom-atlas-architecture.md), [toolchain evidence](../toolchain.md), [GATL v1](../atlas-format.md), and [architecture](../architecture.md).
+**Related work:** [#83 X11 single-window layout](https://github.com/jackwillis/globe/issues/83), [#31 versioned data packs](https://github.com/jackwillis/globe/issues/31), [#72 optical-media research](https://github.com/jackwillis/globe/issues/72), [#48 optional Classic Mac data files](https://github.com/jackwillis/globe/issues/48), [#49 read-only volume policy](https://github.com/jackwillis/globe/issues/49), [#63 developer console](https://github.com/jackwillis/globe/issues/63), [#114 frontend presentation parity](https://github.com/jackwillis/globe/issues/114), [PR #110 geographic direction](https://github.com/jackwillis/globe/pull/110) and [PR #113 experiment registry](https://github.com/jackwillis/globe/pull/113). See also [layered CD-ROM atlas research](cd-rom-atlas-architecture.md), [toolchain evidence](../toolchain.md), [GATL v1](../atlas-format.md) and [architecture](../architecture.md).
 
-## Product thesis
+## Thesis and principles
 
-**A contemporary free-software geographic atlas that remains usable across generations of hardware:** modern, reproducible cross-builds produce native-feeling programs for different desktop systems, while sharing a portable geographic engine, semantic commands, and versioned geographic data.
+A contemporary free-software geographic atlas that stays usable across generations of hardware: modern, reproducible cross-builds produce native-feeling programs, sharing a portable geographic engine, semantic commands and versioned geographic data. This is *not* a plan to port every platform.
 
-This is *not* a plan to port every platform immediately. The active v0.1 goal remains a stable, usable Classic Mac OS 9 release. The existing NetBSD/X11 application and native Mac frontend are real baselines; proposed Windows, FLTK, Tiger, and hybrid-disc paths are experiments.
+1. **One portable engine, platform-specific presentation.** The core owns geography, rendering, navigation and `Model / Msg / update / Effects`. Frontends adapt OS events, windows, controls, fonts, clocks, paths and pixel presentation. No OS APIs in the core, and no large cross-platform widget framework to unify a few handlers.
+2. **Keep working ports while experimenting.** The Xlib frontend and the native OS 9 Toolbox/QuickDraw frontend stay until a replacement is measured and accepted.
+3. **FOSS build inputs by default.** Prefer free compilers, linkers, headers, libraries and scripts usable from Linux, pinned with licences, hashes and reproducibility limits. Convenient CI is fine; the scripts must not require a proprietary service.
+4. **Cross-building is not compatibility proof** (ladder below).
+5. **Shared read-only geography.** The embedded Earth works with no optional pack. Versioned external geography validates before use; one compatible pack is readable on any OS or medium. Preferences and caches go on writable user storage, never beside an application on a disc.
 
-## Working principles
+## Compatibility-family inventory
 
-1. **One portable engine, platform-specific presentation.** The portable C++20 core owns geography, rendering, navigation, commands, and `Model / Msg / update / Effects`. Frontends adapt OS events, native windows, controls, fonts, clocks, file paths, and software framebuffer presentation. Do not put OS APIs in the core or create a large cross-platform widget framework merely to unify a few handlers.
-2. **Keep existing working ports while experimenting.** Continue shipping/testing the current Xlib frontend until a replacement is measured and accepted. The native OS 9 Toolbox/QuickDraw frontend remains independently valuable.
-3. **FOSS build inputs by default.** Prefer modern free-software compilers, linkers, headers/import libraries, libraries, packaging tools, and scripts usable from Linux. Pin revisions and record licenses, provenance, hashes, configurations, runtime assumptions, and reproducibility limitations. Building in GitHub Actions is convenient; the actual scripts should not require a proprietary CI service.
-4. **Cross-building is not compatibility proof.** Distinguish compile/link success, binary/API inspection, emulated or compatible-system execution, and authentic OS/hardware acceptance. Do not label an untested target “supported.”
-5. **Shared read-only geography.** Existing embedded Earth remains usable when no optional pack exists. Versioned external geography must validate before publication; one compatible pack should be readable regardless of operating system or storage medium. Preferences and optional caches belong on writable user storage, not next to an app on CD.
+Research targets only. "Unverified" means no import audit or run on the genuine OS has been recorded.
 
-## Candidate UI and platform strategy
-
-| Target | Proposed frontend / toolchain | Current status / question |
+| Family | Candidate toolchain / frontend | Status |
 | --- | --- | --- |
-| Classic Mac OS 9, PowerPC | Existing native Toolbox/QuickDraw, Retro68 | Existing build and hardware evidence; preserve v0.1 release gate |
-| Linux / NetBSD / FreeBSD, X11 | FLTK 1.4.x as an experiment; retain current Xlib | Does FLTK improve usability while meeting G4 CPU/RAM and input latency constraints? |
-| Modern Unix with Wayland | Modern FLTK where supported | Evaluate only after X11/macppc feasibility |
-| Windows XP, i386 | Native Win32 controls/GDI; GCC/MinGW-w64 targeting an XP-compatible runtime | Cross-build the actual C++20 core and verify PE imports and execution |
-| Windows 98 SE, i386 | Same Win32 frontend, avoiding APIs absent from Win9x; investigate MinGW Lite | Modern compilation is plausible, but CRT, ANSI/Unicode, CPU baseline, fonts, and native execution are unproven |
-| Mac OS X 10.4 Tiger, PowerPC | Separate Carbon/Cocoa/Unix UI research | Cross-compilation exists, but a strictly FOSS native GUI SDK/interface story is unresolved |
-| DOS, OS/2, other vintage targets | No selected frontend or toolchain | Aspirational; no release commitment |
+| Classic Mac OS 9, PowerPC | Existing Toolbox/QuickDraw frontend, Retro68 | **Real, with hardware evidence.** The v0.1 target |
+| Other Classic Mac (System 7/8, 68k) | Retro68 | Unverified. OS 9 source portability implies nothing about other APIs or hardware |
+| Mac OS X 10.4 Tiger, PowerPC | Separate Carbon/Cocoa/Unix UI research | Modern GCC/ld64 cross-builds from Linux exist (e.g. [tiger-ppc-builds](https://github.com/danupsher/tiger-ppc-builds), which uses the proprietary 10.4 universal SDK). A strictly FOSS native GUI path is unresolved |
+| Broader Mac OS X / macOS ranges (10.1–10.6, Intel 10.7+, arm64) | — | **Unverified research targets.** Do not promise one binary across them: Intel Macs began at Tiger, 10.6 is Intel-only, 10.15 dropped 32-bit apps, and SDK/deployment-target compatibility needs evidence |
+| Windows XP / 2000 (NT-era) | Win32/GDI, MinGW-w64 | Plausible: cited MinGW Lite lists `winxp` and `win2000` profiles. Unverified for Globe's C++20 core |
+| Windows 98 SE | Same Win32 frontend, Win9x-safe APIs | Plausible: MinGW Lite lists a `win98` profile. CRT, ANSI/Unicode, CPU baseline, fonts and native execution unproven |
+| **Windows 95 / Me** | — | **Unverified research target.** Not covered by the cited toolchain's profiles; do not treat as a goal until evidence exists |
+| Modern Windows | Reuse a compatible x86 build; native x64 only if justified | Unverified |
+| Linux (x86_64, aarch64), NetBSD (macppc, amd64) | Existing Xlib first | NetBSD/macppc is owner-prioritized; keep the baseline narrow and retest each release. Other architectures and BSDs are source-portability only |
+| DOS, OS/2, other vintage | None | Aspirational; no commitment |
 
-**Unix UI experiment.** Prototype `globe-fltk` alongside `globe-x11` with a globe viewport, menu, sidebar, info card, and basic input. Keep software rasterization and existing renderer scheduling. Profile a minimal X11-only toolkit build on NetBSD/macppc. Compare cold start, incremental heap, peak/private memory, framebuffer copies, image presentation, drag latency, idle CPU, and UI usability against Xlib. **24 MiB is a benchmark hypothesis for a compact app configuration, not a promised total-system or process limit**; distinguish app memory, X-server allocations, and physical RAM. Modern hardware may use larger automatic budgets.
+A shared source tree does not mean one executable spans many OS releases: that holds only if ABI, APIs, C/C++ runtime, graphics and actual tests permit it. Record every claim per *(source revision, executable, ISA, OS version, driver, runtime libraries, test type)*.
 
-**Windows UI experiment.** A native Win32/GDI UI avoids tying Windows 98 compatibility to FLTK's modern Windows implementation. Use old-enough Win32 window, menu, dialog, input, and DIB/GDI presentation APIs; keep the engine and semantics shared. Preserve UTF-8 geographic names inside Globe; handle Win9x ANSI interfaces and lossless/lossy text presentation deliberately. Prefer a *single* Windows UI source tree and one executable across compatible releases if measurements prove practical, not by decree. Modern MinGW Lite Win98-target profiles are a promising **candidate**, not proof that Globe runs on Win98.
+## Unix UI: FLTK deferred
 
-**Mac OS X Tiger exception.** Linux-hosted PowerPC Darwin 8 builds using modern GCC/ld64 have been demonstrated, but documented toolchains commonly rely on Apple's proprietary 10.4u SDK. Open-source Darwin alone does not include native Quartz/Carbon/Cocoa interfaces. Investigate a minimal independently implementable interface, alternate frontend, or an explicitly non-FOSS SDK-dependent build as separate options; do not claim a strict all-FOSS native Tiger pipeline exists. This is a distinct research blocker from GCC's ability to generate PowerPC code.
+A toolkit-based Unix frontend (FLTK 1.4.x) is a possible experiment, but **it is deferred until the existing X11 single-window work under #83 has been assessed**; #83 is the active path and must show what remains unsatisfactory first. If revisited, prototype alongside the Xlib frontend (not replacing it) and compare cold start, incremental and peak memory, framebuffer copies, drag latency, idle CPU and usability on NetBSD/macppc. A 24 MiB budget would be a benchmark hypothesis, not a limit; distinguish application memory, X-server allocations and physical RAM. A second Unix frontend does not by itself reopen the "third platform" threshold in [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md).
 
-## CI and compatibility evidence ladder
+## Windows and Tiger notes
 
-A desirable long-term release workflow would be Linux-hosted and runner-independent, with pinned source/toolchain inputs and build artifacts for each target.
+**Windows.** A native Win32/GDI frontend would avoid tying Win9x compatibility to a modern toolkit. Use old-enough window, menu, dialog, input and DIB/GDI APIs; keep engine and semantics shared; preserve UTF-8 names internally while handling ANSI interfaces deliberately. One Windows source tree, and one executable only if measurement shows it practical. MinGW Lite profiles are *candidates*, not proof that Globe runs on any of these systems.
 
-1. **Host checks:** portable C++20 tests, sanitizers, format/parser tests, deterministic atlas output, and stable rendering/trace fixtures where applicable.
-2. **Cross-build checks:** build/link target binaries (Retro68, NetBSD cross tools, MinGW) and inspect target architecture, CPU baseline, static/shared dependencies, PE imports and Win32 API versions. Build-only evidence must say “build-only.”
-3. **FOSS runtime smoke tests:** Xvfb/native Unix; Wine for fast Windows execution; ReactOS in QEMU for an NT-like guest with real Win32 GUI/GDI and filesystem interactions. ReactOS and Wine share some implementation lineage and neither proves authentic Windows compatibility.
-4. **Authentic acceptance:** test actual bare OS 9, NetBSD/macppc, Windows XP SP3, Windows 98 SE, and other claimed targets on real hardware or carefully identified genuine OS guests. Proprietary guest OS installation media are separate from the fully FOSS cross-build pipeline. Record configurations and reproducible results.
+**Tiger.** GCC's ability to generate PowerPC Darwin code is separate from having a native GUI SDK. Open-source Darwin lacks Quartz/Carbon/Cocoa. Options to investigate separately: a minimal independently implementable interface, an alternate frontend, or an explicitly non-FOSS SDK-dependent build. Do not claim a strict all-FOSS native Tiger pipeline.
 
-Investigate the open-source [ReactOS QEMU GitHub Action](https://github.com/vmactions/reactos-vm), but pin a reviewed action commit and guest image; isolate boot/guest instability from Globe failures. Initially keep ReactOS tests informational or on a separate schedule until reliable. A successful ReactOS test does **not** prove Windows 98 behavior (Win9x is not NT).
+## Evidence ladder
 
-## Shared hybrid CD-ROM hypothesis
+1. **Host checks:** portable C++20 tests, sanitizers, format/parser tests, deterministic atlas output, stable rendering/trace fixtures.
+2. **Cross-build checks:** build and link target binaries (Retro68, NetBSD cross tools, MinGW); inspect target architecture, CPU baseline, dependencies, PE imports and Win32 API floor. Label results "build-only".
+3. **FOSS runtime smoke tests:** Xvfb on Unix; Wine for fast Windows execution; ReactOS under QEMU for an NT-like guest ([vmactions/reactos-vm](https://github.com/vmactions/reactos-vm) is a candidate; pin a reviewed commit and guest image, keep it informational until reliable). ReactOS and Wine share some lineage, neither proves genuine Windows behavior, and ReactOS says nothing about Win9x.
+4. **Authentic acceptance:** actual bare OS 9, NetBSD/macppc, Windows XP SP3, Windows 98 SE or any other claimed target on real hardware or identified genuine guests. Proprietary guest installation media are separate from the FOSS cross-build pipeline.
 
-A future disc could contain platform-native executables (Classic Mac, Unix, Windows) and common indexed geographic packs. Investigate **classic HFS + ISO 9660** hybrid mastering with **Rock Ridge** (Unix) and **Joliet** (Windows) extensions. Multiple filesystem directory views can reference the *same physical pack data sectors*; the Mac application's **resource fork, Finder type/creator metadata, and HFS view** still need special preservation and verification. Avoid claiming that HFS+, plain ISO, and classic HFS are equivalent.
+A future release workflow would be Linux-hosted and runner-independent with pinned inputs. Experiment methodology (predictions, controls, A/B/B/A) lives in the registry proposed in [PR #113](https://github.com/jackwillis/globe/pull/113), not here.
 
-Possible *logical* contents:
+## Hybrid disc idea (not a release requirement)
 
-```text
-MAC/          Classic app and resource-fork-correct metadata
-UNIX/         architecture-specific executables
-WINDOWS/      Win32 executables
-DATA/         versioned shared geography packs
-README.TXT    startup paths, requirements, source/license information
-```
+A future disc might hold platform-native executables and one shared set of geographic packs, using **classic HFS + ISO 9660 hybrid** mastering with Rock Ridge and Joliet views that reference the *same physical pack sectors* (see the [genisoimage manual](https://manpages.debian.org/bookworm/genisoimage/genisoimage.1.en.html)). The Mac resource fork, Finder type/creator and HFS view need special preservation and verification; HFS, HFS+ and plain ISO are not equivalent. Illustrative logical layout: `MAC/`, `UNIX/`, `WINDOWS/`, `DATA/`, `README.TXT`; names stay conservative, host paths are never baked into packs, and each frontend locates its root, validates optional packs and falls back to the embedded Earth.
 
-The precise per-platform directory views and ISO-level naming constraints remain to be tested. Consider conservative names for shared files; never bake host-specific paths into atlas packs. Each frontend should locate its app or disc root, validate optional compatible packs, and fall back to embedded Earth if unavailable.
+[GATL v1](../atlas-format.md) already fixes little-endian fields, byte-by-byte decoding, strict validation, CRC and deterministic output; extend these invariants. Future containers (#31) need stable IDs, explicit byte order and widths, versioning, bounds, checksums and tests on little-endian x86 and big-endian PowerPC. Removal, seek/throughput, read-only startup and corruption belong to #48/#49/#72.
 
-The [GATL v1 format](../atlas-format.md) **already** defines fixed little-endian fields, byte-by-byte decoding, strict validation, CRC, and deterministic output: extend these invariants rather than redesigning them. Future resource containers in #31 need stable IDs, explicit byte order/widths, versioning, bounds, checksums, and tests on both little-endian x86 and big-endian PowerPC. Disc removal, optical seek/throughput, read-only startup, and media corruption belong to #48/#49/#72 and existing resource-budget work.
+**First proof, if ever pursued:** a *small* test image with a resource-fork-correct Classic application, one Unix executable and one shared pack; verify each OS's directory view and the pack checksum. No disc burning, no full data edition, no milestone or physical-media target follows from this note.
 
-First disc proof: a *small* test image with a resource-fork-correct Classic Mac application, one Unix executable, and one shared pack; verify each OS's directory view and the pack's bytes/checksum. **No actual CD burning or full data edition until measured.**
+## Small experiments before any decision
 
-## Small experiments before decisions
-
-| Gate | Narrow proof | Evidence needed | Existing owner |
-| --- | --- | --- | --- |
-| FLTK on vintage Unix | New prototype frontend, no Xlib removal | NetBSD/macppc performance/RAM/UI comparison; native G4 confirmation | #83 and usability work |
-| Native Win32 | Linux-cross-built C++20 core plus a minimal GDI globe viewport | XP/Win98 target import audits, Wine smoke, authentic target results | Research note only; implementation issue later |
-| ReactOS automation | Reproducible QEMU guest smoke run | Boot reliability, command/exit status, GUI repaint/input, logs and screenshots | CI research only |
-| Hybrid CD | Small HFS/ISO image with common pack | Mac resource-fork integrity, Unix/Windows-visible files, identical pack checksum, read-only behavior | #31/#48/#49/#72 |
-| Tiger FOSS feasibility | Assess GUI headers/import interfaces and legal provenance | Fully documented SDK/API dependency graph; no proprietary files in FOSS build | Research only |
-
-Follow these only after v0.1 release obligations, unless a limited experiment provides direct value without changing gates. No new issues or milestones are implied by this note. It should be reconciled with broader geographic-workstation direction in PR #110 without changing that PR's identity/navigation contracts.
-
-## Proposed platform support and executable-family policy
-
-**Scope:** A future distribution policy, not a claim that all these binaries exist today. Minimize independently maintained frontends and artifact families, rather than multiplying a separate application for every operating-system version. One program may run on several OS releases **only if the ABI, APIs, C/C++ runtime, graphics support and actual tests permit it**.
-
-### Intended compatibility families (research targets)
-
-| Family | CPU / build candidates | Initial commitment / compatibility caveat |
+| Gate | Narrow proof | Evidence needed |
 | --- | --- | --- |
-| Classic Macintosh | PowerPC (Retro68), exploratory 68k | **OS 9 PowerPC is the real v0.1 application.** System 7/8 and 68k require their own API, compiler and hardware evidence; not implied by OS 9 source portability. |
-| Early Mac OS X | PowerPC Carbon/Tiger experiment; Intel slice only if justified | Start by investigating **10.4 Tiger**. Do not promise one universal binary for 10.1–10.6: Intel Macs began in the Tiger period, 10.6 is Intel-only, and deployment-target/API/SDK compatibility requires evidence. Proprietary 10.4 SDK remains an unresolved all-FOSS build constraint. |
-| Intel OS X/macOS | x86_64 baseline proposed for 10.7+ | Determine oldest compatible runtime and UI APIs. Catalina 10.15 dropped 32-bit app support. Do not assume a binary built on a new SDK runs on 10.7. |
-| Modern macOS | x86_64 + arm64 universal where overlapping | Target selected modern versions with a native arm64 slice; OS/architecture support changes over time, so a universal file need not run on *every* modern release. |
-| Legacy Windows | Conservative 32-bit x86 Win32/GDI | Explore **95/98/Me**, with separate authentic Win9x checks (ANSI paths, Unicode gaps, import floor, CRT/TLS/CPU). A single shared source tree does not guarantee a single working binary. |
-| NT-era Windows | Same x86 binary *if validated* or separately targeted | Explore 2000/XP/Vista/7 using a known-low API/CRT baseline. NT and Win9x differ; never use ReactOS smoke tests as Win9x proof. |
-| Modern Windows | Reuse compatible x86 build where available; optional native x64 | Explore 8/10/11 with native x64 only if measurable usability, dependency or graphics benefits justify it. 32-bit compatibility on x64 does not prove arbitrary Win9x binaries work. |
-| Modern Linux | x86_64 and aarch64 | Target selected supported modern X11 environments (existing Xlib first; FLTK prototype), specify a dependency/libc floor; source portability is welcome but not an indefinite distribution compatibility promise. |
-| NetBSD | macppc and amd64, release 11.1 as initial research baseline | Owner-prioritized Unix platform; keep supported baseline narrow and retest each new NetBSD release. No claim of all NetBSD architectures or historical versions. |
-| Other BSD / DOS / OS/2 | None selected | Source-portability and community research, not maintained artifact commitments. |
+| Native Win32 | Linux-cross-built core plus a minimal GDI viewport | Import audits, Wine smoke, then authentic XP/Win98 runs |
+| ReactOS automation | Reproducible QEMU smoke run | Boot reliability, exit status, repaint/input, logs and screenshots |
+| Hybrid disc | Small HFS/ISO image with one pack | Resource-fork integrity, Unix/Windows views, identical pack checksum, read-only behavior (#31/#48/#49/#72) |
+| Tiger FOSS feasibility | Assess GUI headers and legal provenance | Documented SDK/API dependency graph; no proprietary files in a FOSS build |
+| Unix toolkit | After #83 is assessed | See "FLTK deferred" |
 
-### Three distinct support labels
+Pursue these only after v0.1 obligations, unless a limited experiment gives direct value without changing gates. No source, CI, interface, pack-format, roadmap or release change is authorized by this note.
 
-- **Supported:** documented real-OS acceptance and regular tests; regression/packaging expectation.
-- **Experimental:** builds/prototypes and limited reproducible execution, with clearly stated gaps and no compatibility guarantee.
-- **Community/source-only:** public source and build directions as available, no maintained official binaries or release QA.
+## Starting points (not endorsements)
 
-Record claims per **(source revision, executable, ISA, OS version, driver, runtime libraries, test type)**. A successfully linked binary or Wine/ReactOS smoke test cannot be described as supported on a genuine historical OS. The initial officially prioritized release remains **Mac OS 9 PowerPC**; the Unix version is a useful but less-complete development frontend, not automatically a feature-parity product.
-
-### One codebase, few artifacts, shared geography
-
-Native UI shells may vary while using the same semantic application behavior, versioned geographic pack contracts and software renderer fallback. A future CD image can ship **only the working applications** and a common read-only geography set; it need not await Windows or all Macintosh generations. Compiled binaries may be tiny relative to atlas packs, so optimizing the number of build artifacts is less important than avoiding duplicated data and unsupported claims. Preserve Mac resource forks/HFS metadata, ISO namespace compatibility, and Preferences writes off read-only media.
-
-**Decision process:** prototype a third frontend (FLTK Unix or Win32) after shared-presentation seams are validated; test actual compatibility floors and split binary families *only on demonstrated ABI/runtime constraints*. Do not create platform milestones, parity release gates, or a physical CD target from this proposal.
-
-## Research starting points (not endorsements)
-
-- [FLTK project](https://www.fltk.org/) — toolkit source, versions, X11/Wayland behavior.
-- [MinGW-w64](https://www.mingw-w64.org/) and [MinGW Lite](https://github.com/redpanda-cpp/mingw-lite) — Linux-to-Win32 builds and historical Windows target profiles.
-- [NetBSD build system](https://www.netbsd.org/docs/guide/en/chap-build.html) — `build.sh` and cross tools.
-- [Retro68](https://github.com/autc04/Retro68) — classic Macintosh GCC cross builds and open-source Multiversal Interfaces.
-- [ReactOS](https://reactos.org/), [Wine](https://www.winehq.org/), [vmactions/reactos-vm](https://github.com/vmactions/reactos-vm) — Windows-style execution/test candidates.
-- [genisoimage manual](https://manpages.debian.org/bookworm/genisoimage/genisoimage.1.en.html) — HFS, ISO, Joliet, Rock Ridge, Macintosh file metadata and hybrid mastering.
-- [tiger-ppc-builds](https://github.com/danupsher/tiger-ppc-builds) — modern Tiger cross-toolchain with 10.4u SDK dependency.
-- [Apple's Darwin/open-source component distinction](https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KernelProgramming/Architecture/Architecture.html) — missing proprietary GUI layers.
-
-**Planning boundary:** no source, CI, interface, pack-format, roadmap, or release change is authorized by this exploratory document.
+[FLTK](https://www.fltk.org/) · [MinGW-w64](https://www.mingw-w64.org/) and [MinGW Lite](https://github.com/redpanda-cpp/mingw-lite) · [NetBSD build system](https://www.netbsd.org/docs/guide/en/chap-build.html) · [Retro68](https://github.com/autc04/Retro68) · [ReactOS](https://reactos.org/) · [Wine](https://www.winehq.org/) · [Apple's Darwin architecture notes](https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KernelProgramming/Architecture/Architecture.html).
