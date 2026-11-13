@@ -15,7 +15,8 @@ See [release notes](docs/release-notes-0.1.md).
 - Distribution: StuffIt archive only; exact-version source archive,
   manifest and checksums. Application, Finder name and creator code changed from the development
   `GlobeFloppy` / `Glb2` to **Poodle Earth** / `PdlE`.
-- Known limits: occasional unfinished globe edge (#74), small embedded data set, no icon yet.
+- Known limits: small embedded data set, no icon yet.
+- The unfinished globe edge report (#74) was closed after the owner reported sustained use since the fix with no recurrence. The closure was based on regular use without a structured test.
 - Version is `0.1.0`; the historical prototype tag `v1` is not a 1.0 release.
 
 ## Development (after 0.1.0)

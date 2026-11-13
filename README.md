@@ -46,7 +46,7 @@ checked every 20 ms; [numbers](docs/os9-proof.md)). The menu bar, looks palette 
 acceptance (issues #44-#46 and docs/ux-acceptance.md). Real-display timing on X11 remains open.
 CI is configured on GitHub Actions; check the Actions tab for current runs.
 
-- [Current handoff](docs/handoff.md) and [prioritized backlog](docs/backlog.md)
+- [Agent contract](AGENTS.md) and [prioritized backlog](docs/backlog.md)
 - [Architecture](docs/architecture.md), [design and ADR](docs/adr/0001-m2-to-m5-decisions.md)
 - [Terrain measurements](docs/terrain.md), [performance history](docs/perf/README.md)
 - [Toolchains](docs/toolchain.md) and [OS 9 acceptance](docs/os9-proof.md)

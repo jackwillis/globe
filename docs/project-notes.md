@@ -1,8 +1,8 @@
 # Project notes — 2026-11-02 (historical)
 
-> Dated 2026-11-02. For the current state read [handoff.md](handoff.md) and [ADR 0002](adr/0002-rendering-shared-code-and-usability.md). Corrections since: refinement is circle-out only (rows, center-out and dissolve orders and the `order` trace verb were removed); lines now appear first through a line layer; the final terrain pass redraws only limb cells.
+> Dated 2026-11-02. For the current state read [handoff.md](../AGENTS.md) and [ADR 0002](adr/0002-rendering-shared-code-and-usability.md). Corrections since: refinement is circle-out only (rows, center-out and dissolve orders and the `order` trace verb were removed); lines now appear first through a line layer; the final terrain pass redraws only limb cells.
 
-Start with [handoff.md](handoff.md), [backlog.md](backlog.md) and the [ADR](adr/0001-m2-to-m5-decisions.md).
+Start with [handoff.md](../AGENTS.md), [backlog.md](backlog.md) and the [ADR](adr/0001-m2-to-m5-decisions.md).
 The historical v2/unmerged-branch state is preserved in [the archive](history/handoff-20261101.md).
 
 ## Current state

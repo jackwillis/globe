@@ -21,4 +21,6 @@
 
 ## Historical work records
 
-[Handoff](handoff.md), [restart notes](agent-restart-2026-11-08.md) and [history](history/) can be stale. Current code/issues and release acceptance override old agent notes. Keep private machine operations outside public docs.
+[Archived handoff](history/handoff.md), [restart notes](history/agent-restart-2026-11-08.md) and [history](history/) can be stale. Current code/issues and release acceptance override old agent notes. Keep private machine operations outside public docs.
+
+[AGENTS.md](../AGENTS.md) defines the current agent operating contract.
