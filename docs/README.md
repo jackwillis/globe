@@ -3,6 +3,7 @@
 ## Start here
 
 - [Architecture](architecture.md) · [backlog](backlog.md) · [toolchains](toolchain.md)
+- [Product direction](design/product-direction-2026-11-10.md) · [entity/navigation contract](design/entity-navigation-contract.md) · [draft ADR 0005](adr/0005-entity-identity-and-navigation.md) · [workstation and scripting ideas](design/geographic-workstation-and-scripting.md)
 - [Classic Mac acceptance](ux-acceptance.md) · [OS 9 proof](os9-proof.md)
 - [Release checklist](release-checklist.md) · [packaging notes](release-packaging-notes.md)
 - [Python tooling](python-tooling.md) · [atlas production](../atlas/README.md)

@@ -1,6 +1,6 @@
 # ADR 0005 — Entity identity, concordances and navigation references
 
-**Status:** Draft, 2026-11-10. Owner principles come from the [product brief](../design/product-direction-2026-11-10.md); concrete runtime representation and migration require prototype evidence and joint interface review. No runtime behavior is implemented by this ADR.
+**Status:** Draft, 2026-11-10. Owner principles come from the [product brief](../design/product-direction-2026-11-10.md); concrete runtime representation and migration require prototype evidence and review of the shared interfaces by the portable-core and native-frontend owners. No runtime behavior is implemented by this ADR, and it stays a draft until the owner accepts it. Numeric limits are **provisional prototype constraints** in the [contract](../design/entity-navigation-contract.md#provisional-prototype-constraints), not decisions here; the acceptance journey is defined once, in the contract.
 
 ## Context
 
@@ -8,7 +8,9 @@
 
 The next coherent experience is United States → Wisconsin → Madison → Back to Wisconsin. Selection should reveal information without moving the camera; explicit navigation should move the view and create history. Names, geometry and optional resource residency must not determine identity.
 
-## Owner-directed principles
+## Core principles (what this draft proposes to decide)
+
+These five owner-directed principles are the decision. Everything after them is draft semantics for prototypes to confirm or revise.
 
 - Globe owns stable entity IDs. External identifiers are scoped concordances, never universal identities. Preserve existing allocations; do not renumber them to fit a runtime experiment.
 - Entity, source record, name, geometry, attributed assertion, knowledge and presentation remain distinct. Names, coordinates and proximity cannot authorize a join.
@@ -16,9 +18,9 @@ The next coherent experience is United States → Wisconsin → Madison → Back
 - A durable reference identifies an entity independently of a pack or memory address. Geometry detail and pack eviction do not change it. Large immutable data stays outside the small mutable Model.
 - User intent enters Model / Msg / update / Effects independently of native controls. Preserve portable C++20, bounded operations and offline embedded fallback. No embedded browser, script engine, graph database or runtime GIS prerequisite.
 
-## Proposed reference and resolution semantics
+## Draft reference and resolution semantics
 
-For the prototype, propose `EntityRef = uint32_t`, zero invalid, with the high-bit range reserved for synthetic IDs and rejected by production publication. Persisted numeric mappings must preserve existing `gcat:` allocations; no QID, source ordinal or polygon index becomes a project ID. This is a prototype choice pending format review, not an approved production encoding. A future binary resource should explicitly byte-assemble little-endian fields like the legacy readers, independent of host endianness.
+For the prototype, propose a compact fixed-width integer `EntityRef` with an invalid value and a reserved range for synthetic test IDs that production publication rejects (width and range: see the contract's provisional constraints). Persisted numeric mappings must preserve existing `gcat:` allocations; no QID, source ordinal or polygon index becomes a project ID. This is a prototype choice pending format review, not an approved production encoding. A future binary resource should explicitly byte-assemble little-endian fields like the legacy readers, independent of host endianness.
 
 The builder decides real-world entity granularity and reviewed equivalence before publication. Country and map-unit source concepts remain separate unless an explicit evidence-bound decision identifies them; bookkeeping allocations are not approved joins. Published active records use canonical references. The builder resolves approved redirect chains to terminal active IDs, rejects cycles/dangling replacements, and emits a flat sorted retired-ID table with status and either one canonical successor or an explicit ambiguous/split marker. No arbitrary successor is chosen for a split. Runtime performs one bounded binary search and at most one direct canonical lookup, never redirect-chain traversal. Builder input can preserve historical chains; published output cannot contain them. Retirement/publication are new prototype work, not existing validator features.
 
@@ -28,7 +30,7 @@ No resolver result crosses a message/update boundary by borrowed reference. Resu
 
 An immutable edition snapshot publishes a reviewed subset of relationships with explicit viewpoint/time policy. Administrative parentage is not necessarily a universal tree. Keep multiple or contested relationships representable; the tiny UI fixture may expose one explicitly curated path without asserting global uniqueness. Reject malformed references and bound traversal even when the research validator permits global cycles.
 
-## Proposed navigation semantics
+## Draft navigation semantics
 
 Today selection is outside `Model`: `Effects::pick` is handled by the front ends, `Overlays::focused_` holds country focus, and cards contain borrowed string views. The slice explicitly proposes migrating semantic selection and bounded history into Model, while leaving native card presentation outside it. This extends the existing message architecture rather than assuming it already exists; it does not imply removing all platform card code.
 
@@ -40,7 +42,7 @@ Picking emits `SelectEntity(ref)`; update changes the selected identity and requ
 
 Selection-summary requests use the same explicit correlation discipline and cannot move the camera. Resolver residency, I/O and lookup never occur inside update. Extend trace parsing/formatting to include every new intent and resolved-result field with exact numeric round trips, including failures, so replay depends solely on Model and recorded Msg values. The review's abbreviated `resolved TOKEN REF STATUS LAT LON FRAME` is illustrative, not a sufficient final grammar. Token width, wrap handling and maximum in-flight work need tests before asynchronous loading; initially allow one pending navigation.
 
-Back/Forward restore stored selection and camera together without recomputing old views from changed anchors. Immediately before a successful push or valid history traversal, overwrite `entry[cursor]` with the live selection/camera snapshot. Selection alone creates no entry; boundary Back/Forward is a no-op. Failed navigation does not alter history. After Back, a new navigation truncates the forward branch. Duplicate suppression requires equal entity identity, reconstructed cameras satisfying existing `same_orientation`, and normalized zoom within a named prototype tolerance (propose 1e-9); pin that tolerance in tests. A fixed 32-entry array drops the oldest entry predictably when full.
+Back/Forward restore stored selection and camera together without recomputing old views from changed anchors. Immediately before a successful push or valid history traversal, overwrite `entry[cursor]` with the live selection/camera snapshot. Selection alone creates no entry; boundary Back/Forward is a no-op. Failed navigation does not alter history. After Back, a new navigation truncates the forward branch. Duplicate suppression requires equal entity identity, reconstructed cameras satisfying existing `same_orientation`, and normalized zoom within a named prototype tolerance, pinned in tests. A fixed-capacity history drops the oldest entry predictably when full (tolerance and capacity: provisional constraints).
 
 Store center latitude/longitude, heading and `radius_px / min(viewport_width, viewport_height)` in a compact camera snapshot, not `Camera` or the existing viewport-bearing `CameraParams` verbatim. Reconstruct CameraParams for the current viewport, clamp through existing camera limits, and invalidate obsolete render work via generation semantics. Round-trip arbitrary trackball orientation, including poles, in tests before accepting this representation; precision and ABI size require evidence.
 
@@ -48,7 +50,7 @@ If a history entity is unavailable, retain its ID, restore its camera and show u
 
 ## Contracts and validation gates
 
-The [shared interface proposal](../design/entity-navigation-contract.md) defines the minimum seam and prototype matrix. Review it between Codex (catalog, portable core, tests) and Claude Code (native UI, text adapters, interaction) before adding shared headers or CMake targets.
+The [shared interface proposal](../design/entity-navigation-contract.md) defines the minimum seam and prototype matrix. Review it between the owners of the catalog and portable core and the owners of the native frontends (controls, text adapters, interaction) before adding shared headers or CMake targets.
 
 Prototype in isolation, then integrate only the tiny journey. Test identity across reordered/alternate-detail editions, unresolved joins, removed resources, retired/split IDs, deterministic replay, history branching/capacity, viewport changes and cancellation. Test fixed-metric label placement separately from native glyph pixels. Native Classic Mac acceptance and latency/memory evidence require a separately authorized G4 run.
 

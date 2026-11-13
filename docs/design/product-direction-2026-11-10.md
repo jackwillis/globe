@@ -224,7 +224,7 @@ Review existing issues and ADRs before creating new ones.
 
 Use existing #52/#53 for atlas production and geographic identity; #35/#36/#38/#61 for map typography and usability; #24 for search; #54 for memory management; and #48/#49 for external packs and read-only-volume behavior.
 
-Propose a small cross-cutting tracking issue for the geographic identity and navigation vertical slice.
+Propose a small cross-cutting tracking issue for the geographic identity and navigation vertical slice. *(Revised 2026-11-13: no separate tracker is proposed. The journey and its acceptance criteria live in the [entity/navigation contract](entity-navigation-contract.md); presentation parity across frontends is tracked separately in #114.)*
 
 Create narrowly scoped implementation issues only after their prerequisites and acceptance criteria are understood.
 
@@ -234,13 +234,13 @@ Do not duplicate source-of-truth content between GitHub Issues, ADRs and the roa
 
 For any new issue, include the intended user experience, dependency links, explicit scope boundaries, acceptance criteria, required tests and hardware evidence.
 
-## 9. Agent responsibilities
+## 9. Architectural responsibilities
 
-**Codex:** Geographic identity, concordances, data pipeline, binary format experiments, indexing, portable placement algorithms, testing and performance.
+**Data, identity and portable core:** geographic identity, concordances, the data pipeline, binary format experiments, indexing, portable placement algorithms, testing and performance.
 
-**Claude Code:** Macintosh UI, native typography adapters, interaction design, navigation behavior, information cards, keyboard support and user-facing documentation.
+**Native frontends:** Macintosh UI, native typography adapters, interaction design, navigation behavior, information cards, keyboard support and user-facing documentation.
 
-Both agents should review shared interfaces and independently review the other's changes where appropriate.
+Owners of both areas review shared interfaces and each other's changes where appropriate. (Revised 2026-11-13: agent names replaced by responsibilities; the original wording named the two coding agents.)
 
 Initial work should be research and small prototypes, not a large simultaneous rewrite.
 
