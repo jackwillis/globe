@@ -79,6 +79,39 @@ First disc proof: a *small* test image with a resource-fork-correct Classic Mac 
 
 Follow these only after v0.1 release obligations, unless a limited experiment provides direct value without changing gates. No new issues or milestones are implied by this note. It should be reconciled with broader geographic-workstation direction in PR #110 without changing that PR's identity/navigation contracts.
 
+## Proposed platform support and executable-family policy
+
+**Scope:** A future distribution policy, not a claim that all these binaries exist today. Minimize independently maintained frontends and artifact families, rather than multiplying a separate application for every operating-system version. One program may run on several OS releases **only if the ABI, APIs, C/C++ runtime, graphics support and actual tests permit it**.
+
+### Intended compatibility families (research targets)
+
+| Family | CPU / build candidates | Initial commitment / compatibility caveat |
+| --- | --- | --- |
+| Classic Macintosh | PowerPC (Retro68), exploratory 68k | **OS 9 PowerPC is the real v0.1 application.** System 7/8 and 68k require their own API, compiler and hardware evidence; not implied by OS 9 source portability. |
+| Early Mac OS X | PowerPC Carbon/Tiger experiment; Intel slice only if justified | Start by investigating **10.4 Tiger**. Do not promise one universal binary for 10.1–10.6: Intel Macs began in the Tiger period, 10.6 is Intel-only, and deployment-target/API/SDK compatibility requires evidence. Proprietary 10.4 SDK remains an unresolved all-FOSS build constraint. |
+| Intel OS X/macOS | x86_64 baseline proposed for 10.7+ | Determine oldest compatible runtime and UI APIs. Catalina 10.15 dropped 32-bit app support. Do not assume a binary built on a new SDK runs on 10.7. |
+| Modern macOS | x86_64 + arm64 universal where overlapping | Target selected modern versions with a native arm64 slice; OS/architecture support changes over time, so a universal file need not run on *every* modern release. |
+| Legacy Windows | Conservative 32-bit x86 Win32/GDI | Explore **95/98/Me**, with separate authentic Win9x checks (ANSI paths, Unicode gaps, import floor, CRT/TLS/CPU). A single shared source tree does not guarantee a single working binary. |
+| NT-era Windows | Same x86 binary *if validated* or separately targeted | Explore 2000/XP/Vista/7 using a known-low API/CRT baseline. NT and Win9x differ; never use ReactOS smoke tests as Win9x proof. |
+| Modern Windows | Reuse compatible x86 build where available; optional native x64 | Explore 8/10/11 with native x64 only if measurable usability, dependency or graphics benefits justify it. 32-bit compatibility on x64 does not prove arbitrary Win9x binaries work. |
+| Modern Linux | x86_64 and aarch64 | Target selected supported modern X11 environments (existing Xlib first; FLTK prototype), specify a dependency/libc floor; source portability is welcome but not an indefinite distribution compatibility promise. |
+| NetBSD | macppc and amd64, release 11.1 as initial research baseline | Owner-prioritized Unix platform; keep supported baseline narrow and retest each new NetBSD release. No claim of all NetBSD architectures or historical versions. |
+| Other BSD / DOS / OS/2 | None selected | Source-portability and community research, not maintained artifact commitments. |
+
+### Three distinct support labels
+
+- **Supported:** documented real-OS acceptance and regular tests; regression/packaging expectation.
+- **Experimental:** builds/prototypes and limited reproducible execution, with clearly stated gaps and no compatibility guarantee.
+- **Community/source-only:** public source and build directions as available, no maintained official binaries or release QA.
+
+Record claims per **(source revision, executable, ISA, OS version, driver, runtime libraries, test type)**. A successfully linked binary or Wine/ReactOS smoke test cannot be described as supported on a genuine historical OS. The initial officially prioritized release remains **Mac OS 9 PowerPC**; the Unix version is a useful but less-complete development frontend, not automatically a feature-parity product.
+
+### One codebase, few artifacts, shared geography
+
+Native UI shells may vary while using the same semantic application behavior, versioned geographic pack contracts and software renderer fallback. A future CD image can ship **only the working applications** and a common read-only geography set; it need not await Windows or all Macintosh generations. Compiled binaries may be tiny relative to atlas packs, so optimizing the number of build artifacts is less important than avoiding duplicated data and unsupported claims. Preserve Mac resource forks/HFS metadata, ISO namespace compatibility, and Preferences writes off read-only media.
+
+**Decision process:** prototype a third frontend (FLTK Unix or Win32) after shared-presentation seams are validated; test actual compatibility floors and split binary families *only on demonstrated ABI/runtime constraints*. Do not create platform milestones, parity release gates, or a physical CD target from this proposal.
+
 ## Research starting points (not endorsements)
 
 - [FLTK project](https://www.fltk.org/) — toolkit source, versions, X11/Wayland behavior.
