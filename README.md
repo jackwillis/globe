@@ -32,12 +32,12 @@ The OS 9 floppy build in Classic under Mac OS X Tiger on the G4 (2026-11-02):
 
 The other screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
 
-**Version 0.1 (public preview, in preparation).** The Mac OS 9 application "Poodle Earth" is
-distributed as a StuffIt archive, with the exact-version
-source archive, `RELEASE.json` and `SHA256SUMS`; see the [Classic ReadMe](os9/ReadMe.txt) (installation,
-controls, memory, known limits), the [changelog](CHANGELOG.md), [data credits](data/DATA-CREDITS.txt)
-and [release notes](docs/release-notes-0.1.md). Nothing is published until the owner signs off on
-[hardware acceptance (#95)](https://github.com/jackwillis/globe/issues/95).
+**Version 0.1 (public preview).** The Mac OS 9 application "Poodle Earth" is distributed as a StuffIt
+archive from the [v0.1.0 release](https://github.com/jackwillis/globe/releases/tag/v0.1.0), together with the
+exact-version source archive (checksums in the release notes). See the [Classic ReadMe](os9/ReadMe.txt)
+(installation, controls, memory, known limits), the [changelog](CHANGELOG.md),
+[data credits](data/DATA-CREDITS.txt) and [release notes](docs/release-notes-0.1.md). Hardware acceptance
+is recorded in [#95](https://github.com/jackwillis/globe/issues/95).
 
 This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
 checks pass on host and G4. The OS 9 application is built and packaged, and has been run by the owner under Tiger Classic
