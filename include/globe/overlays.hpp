@@ -60,7 +60,7 @@ class Overlays {
 
   private:
     void measure_click(LatLon point);
-    void make_measure_card();
+    void make_measure_card(LatLon a, LatLon p);
     const Countries* countries_ = nullptr;
     const CountryScene* country_scene_ = nullptr;
     const Places* places_ = nullptr;

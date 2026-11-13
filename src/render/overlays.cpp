@@ -87,16 +87,15 @@ void Overlays::measure_click(LatLon p) {
         return;
     }
     measure_b_ = p;
-    make_measure_card();
+    make_measure_card(*measure_a_, p);
 }
 void Overlays::set_preferences(const Preferences& prefs) {
     const bool units_changed = prefs.units != prefs_.units;
     prefs_ = prefs;
     if (units_changed && measure_a_.has_value() && measure_b_.has_value())
-        make_measure_card();
+        make_measure_card(*measure_a_, *measure_b_);
 }
-void Overlays::make_measure_card() {
-    const LatLon a = *measure_a_, p = *measure_b_;
+void Overlays::make_measure_card(LatLon a, LatLon p) {
     const double km = great_circle_km(a, p);
     place_text(text_[0], sizeof text_[0], tr(Str::From), a);
     place_text(text_[1], sizeof text_[1], tr(Str::To), p);
