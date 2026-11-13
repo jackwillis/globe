@@ -1,67 +1,48 @@
 # Shared presentation architecture — exploratory proposal
 
-**Status:** Research/design, 2026-11-12. No adopted interface, new release gate, or authorization to refactor the running frontends.
+**Status:** Nonbinding research/design, 2026-11-12, condensed 2026-11-13. No adopted interface, release gate or authorization to refactor the running frontends. The decision it feeds is tracked in [#114](https://github.com/jackwillis/globe/issues/114); geographic identity and the navigation journey are defined in [PR #110](https://github.com/jackwillis/globe/pull/110) and are not redefined here.
 
-**Problem:** Globe has one portable geographic application and two different presentation shells (native Classic Mac and X11). The desired future is *semantic feature parity* across native-feeling frontends, without maintaining independent application behaviors or recreating every system widget.
+**Question:** Globe has one portable application and two presentation shells (native Classic Mac and X11). Would a small shared description of *semantic* presentation decisions reduce drift between frontends, without recreating system widgets? The honest alternative (H0 in #114) is that today's small explicit per-frontend translations are cheaper.
 
-**Current baselines:** [Architecture](../architecture.md), accepted [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md), [text layout](text-layout.md), [typography](typography.md), [menu bar](menu-bar.md), [#3 portable application epic](https://github.com/jackwillis/globe/issues/3), [#16 shared render lifecycle](https://github.com/jackwillis/globe/issues/16), [#23 geographic parity](https://github.com/jackwillis/globe/issues/23), [#36 labels](https://github.com/jackwillis/globe/issues/36), [#61 font roles](https://github.com/jackwillis/globe/issues/61), [#83 X11 sidebar](https://github.com/jackwillis/globe/issues/83). Geographic identity and navigation contracts are separately proposed in [PR #110](https://github.com/jackwillis/globe/pull/110).
+**Baselines:** [architecture](../architecture.md), accepted [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md), [text layout](text-layout.md), [typography](typography.md), [menu bar](menu-bar.md), and issues [#3](https://github.com/jackwillis/globe/issues/3), [#16](https://github.com/jackwillis/globe/issues/16), [#23](https://github.com/jackwillis/globe/issues/23), [#36](https://github.com/jackwillis/globe/issues/36), [#61](https://github.com/jackwillis/globe/issues/61), [#83](https://github.com/jackwillis/globe/issues/83), [#114](https://github.com/jackwillis/globe/issues/114).
 
-## Candidate composition of patterns
+## What already exists (inventory before proposing anything)
 
-Retain the **Elm Architecture** as the authoritative state-transition mechanism: `Model / Msg / update / Effects`, with deterministic replay and no platform UI mutation of geographic state. Borrow the **Presentation Model** (or MVVM's model-to-view-description idea) to derive user-visible state; use **Ports and Adapters** for native widgets and platform services. Do *not* add a second imperative MVC controller with its own geographic truth.
+| Existing structure | Already shared | Stays per frontend |
+| --- | --- | --- |
+| `Command` (`globe/app.hpp`) | The enumerated set of user actions (move, zoom, reset, toggles, align north, drag mode, quit, cycle style) | — |
+| `CommandIssued` in `Msg` | Delivery of a command, with its time, through `update()` | Producing the command from native input |
+| `binding_for_char`, `KeyBinding` | Character → command or frontend-handled overlay; documented as "the part that must not drift" | Decoding native key events |
+| `menu_choice` (`globe/menus.hpp`) | (menu, item) → `Command`, overlay, About or Close; which items are enabled or checked; item numbers match the Toolbox `MENU` resources | The menu bar widgets; Toolbox/X11 specifics |
+| `InfoCard` (`globe/countries.hpp`), `card_text`, word wrap (`globe/wrap.hpp`) | Card content (title, up to 12 lines of borrowed `string_view`), clipboard text, wrapping at a platform-measured width | Drawing, the sidebar/info window, text measurement and editing |
+| `Overlays` and `ShownFrame` | Which overlays (night, measure, focused country) and progress bar are composed, and when, on a copy of the rendered frame | Pixel conversion and submission |
+| `RefineRunner`, `ZoomPreview` | Job start/cancel, preview, step, place markers, moving-frame rendering | Event loop, wake timers, window and pixel APIs |
 
-The proposed flow is: native user event -> semantic action/`Msg` -> `update` -> presentation description -> adapter updates widgets. Expensive work remains an effect and results return as validated messages. Existing core shortcuts, toolbar states, `globe/menus.hpp` mapping and `InfoCard` are starting points, not throwaway implementations.
+Consequence: a shared **action vocabulary** and a shared **menu/shortcut mapping** already exist. Do not introduce a competing `ActionId`, enabled/checked table or second card representation; new actions extend `Command` and `menu_choice`. What the repository does *not* yet have is a card model for selected entities, and that is defined once, as `EntitySummary`, in the [PR #110 contract](https://github.com/jackwillis/globe/pull/110). Any presentation snapshot would be derived from it, not defined in parallel.
 
-| Shared responsibility | Native responsibility |
-| --- | --- |
-| Geographic selection, navigation, history, feature IDs | Toolkit event translation and OS-specific gestures |
-| Action ID, allowed/enabled/checked state, meanings | Menu placement, keyboard conventions, controls/dialogs |
-| Card content, information hierarchy, optional typed blocks | Widget creation, text editing and selection, window management |
-| Text roles, label priorities, placement and synthetic-metrics tests | Font discovery, metrics, glyph rendering and encoding adapter |
-| Viewport and optional pane-layout policy where it reduces duplication | DPI, native window constraints, focus, scrolling mechanics |
-| Application-facing render/progress state | Native display submission and lifecycle |
+## Candidate composition
 
-**Ownership:** distinguish authoritative geographic/application state from optional UI session state (pane/scroll position, open tool, console visibility) and ephemeral native-widget state (focus, tracking, handles). Do not copy camera, selection, or resource lifetimes into two mutable models. Any `UiState` is a proposal; begin with derived immutable snapshots and add persisted state only when needed.
+Keep the Elm-style core authoritative: native event → `Command`/`Msg` → `update` → derived presentation → adapter updates widgets. Borrow the *Presentation Model* idea (derive user-visible state from the Model) and *ports and adapters* for native widgets. No second imperative controller with its own geographic truth, and expensive work stays an effect.
 
-## Smallest useful contract
+A semantic action vocabulary is also a possible input for keyboard mapping, tests, accessibility and the optional Listener/command-observation idea ([#63](https://github.com/jackwillis/globe/issues/63)); none of these may mutate the Model outside `update()`.
 
-A possible *semantic* representation, **not** a prescribed C++ API:
+**Ownership:** distinguish authoritative application state (camera, selection, history), optional UI session state (pane or scroll position, open tool) and ephemeral native-widget state (focus, tracking, handles). Never copy camera or selection into a second mutable model. Begin, if at all, with derived immutable snapshots; add persisted UI state only when needed.
 
-```text
-ActionId, action label/shortcut metadata -> enabled/checked state
-Selection / navigation result -> CardView {title, typed content blocks, actions}
-Application Model + bounded UI session state -> PresentationSnapshot
-Native adapter: dispatch(action), present(snapshot), manage native controls
-```
+## Test for the idea
 
-Start with existing cards rather than creating a generic DOM or toolkit. If richer hypermedia requires it, introduce a *bounded* vocabulary of heading, paragraph, fact, link, divider and fixed-image blocks. Links must carry stable semantic targets, not platform pointers. Reflow and hit testing can be shared where proven useful; native font measurement and native text editing remain platform-specific.
+[#114](https://github.com/jackwillis/globe/issues/114) owns the experiment and its decision gate. In outline: inventory actual duplicated decisions across OS 9 and X11 (the table above is the starting list); run the single geographic journey defined in the PR #110 contract through both frontends and require *semantically* identical state transitions, navigation and card content (not pixel-identical UI); compare code, allocation, partition impact and responsiveness against the current design. The X11 sidebar (#83) is still in progress, so drift measured before it lands may overstate or understate the need.
 
-A semantic action vocabulary also provides a future input for keyboard mapping, scripting/Listener observation, tests and accessibility. It should never let scripts or widgets mutate the Model outside `update()`. This is related to the exploration in [PR #110](https://github.com/jackwillis/globe/pull/110) and [#63](https://github.com/jackwillis/globe/issues/63); neither interpreter nor public scripting API is selected.
+**Exit:** retain existing adapters, extract narrow shared functions, or propose a separate owner-reviewed ADR. A failed or neutral result is a valid outcome, and per [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md) (D6) a generic coordinator stays rejected until a demonstrated need.
 
-## Vertical slice: United States -> Wisconsin -> Madison -> Back
+## Typography boundary
 
-**Before touching existing architecture**, test a narrow path with available geography (if a required administrative level is absent, use a controlled fixture and flag that distinction):
+Accepted policy: installed fonts, no bundled font or glyph data ([typography](typography.md)); placement is portable and glyph drawing native ([text layout](text-layout.md), recommendation A). Compositing system-generated glyph masks into the shared framebuffer (alternative B in `text-layout.md`) is an **alternative to evaluate under [#36](https://github.com/jackwillis/globe/issues/36), not an adopted design**. Its prerequisites are the native-drawing baseline measurement that `text-layout.md` already names, and review of the memory and licensing points in `typography.md`. Labels stay out of reusable terrain and zoom-preview source images in either case.
 
-1. A selection event carries an entity ID into the shared application update; resolution results are owned and generation checked.
-2. A small derived presentation snapshot reports card content, navigation availability, selected style and enabled/checked menu actions.
-3. Existing OS 9 and X11 frontends consume this snapshot and produce *semantically identical* results. Different widget arrangements and font pixels are expected.
-4. Synthetic-metrics tests prove ordering, wrapping, placement, invalidation and long/missing-glyph behavior where text layout is involved.
-5. Verify no new frame-loop allocation, no second authoritative selection store, no regression in measured G4 responsiveness/partition peaks, and no change to existing replay/golden-image contracts.
+## Risks and non-goals
 
-The experiment must also compare code/behavior duplication and adapter complexity *before and after*. A new abstraction is justified only if it reduces actual duplicated decisions, improves parity tests, or enables a real third frontend without significant runtime cost. A failed result is grounds for keeping small explicit per-platform implementations.
+- OS 9 has bounded partitions and Toolbox restrictions: no mandatory GUI framework, virtual-DOM diffing or generic layout/style language.
+- Different installed fonts and Unicode coverage mean identical semantics need not give identical pixels; missing glyphs and name fallback must be represented honestly.
+- Focus, clipboard, accessibility and text selection are subtle; keep OS-appropriate controls.
+- No production change, milestone or release-gate change follows from this note.
 
-## Typography boundary and proposed alternate experiment
-
-The accepted current typography policy remains **installed fonts only, no bundled font or glyph packs**, with role-based Helvetica/Palatino mappings on Classic Mac. [Text layout](text-layout.md) currently recommends *native drawing* for cartographic labels. It already identifies *system-generated glyph bitmaps plus shared framebuffer composition* as alternative B.
-
-The proposed research is to compare A (draw native text on the final presentation surface) against B (measure/rasterize via system font APIs, cache bounded glyph masks, compose into the final shown frame). Keep labels **out of reusable terrain and zoom-preview source images**. A logical text layer can consist of positioned runs, not a full-screen bitmap. Record cache memory, build/runtime cost, text quality, source-font redistribution/legal constraints, cancellation, cross-OS encoding and G4 latency. Do not adopt B until it wins a real test. `libschrift`/FreeType are additional research alternatives, **not dependencies or authority to bundle fonts**.
-
-## Risks and explicit non-goals
-
-- OS 9 has bounded memory partitions and Toolbox restrictions; no mandatory GUI framework or virtual-DOM diffing.
-- Different installed fonts and Unicode coverage mean identical semantic content need not give pixel-identical output. Missing glyphs and source name fallback must be represented honestly.
-- Native focus, clipboard, accessibility and text selection are more subtle than drawing; keep OS-appropriate controls where possible.
-- Do not expose generic layout/style DSLs, CSS, virtual widgets or rich text shaping without a demonstrated need.
-- [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md) rejects a generic frontend coordinator for the then-small duplication; this document does **not** reverse it. A third frontend and the proposed parity experiment may justify a new decision later.
-
-**Exit decision:** after the vertical slice, choose *retain existing adapters*, *extract narrow shared presentation functions*, or *propose an ADR for a broader contract*. No production change or milestone is implied by this note.
+Rendering backends, execution strategies and display adaptation are covered separately in [rendering backends and execution](../research/rendering-backends-and-execution.md).

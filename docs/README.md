@@ -13,7 +13,7 @@
 - [Pack formats](atlas-format.md) · [elevation](elevation-format.md) · [places](place-format.md)
 - [Terrain](terrain.md) · [refinement](refinement.md) · [performance](perf/README.md)
 - [Architecture decisions](adr/0001-m2-to-m5-decisions.md) · [atlas builder boundary](adr/0003-atlas-production-boundary.md)
-- [Shared presentation research](design/shared-presentation-architecture.md) · [renderer/backend and execution research](research/rendering-backends-and-execution.md)
+- [Shared presentation](design/shared-presentation-architecture.md) · [rendering backends and execution](research/rendering-backends-and-execution.md) (exploratory, nonbinding)
 - [CD-ROM atlas research](research/cd-rom-atlas-architecture.md)
 
 ## Historical work records
