@@ -7,8 +7,9 @@ downloaded and nothing is written to disk.
 
 **Download:** `PoodleEarth-0.1.0-<rev>.sit` (StuffIt) holds the application, ReadMe, the License
 (two files) and DataCredit. `PoodleEarth-0.1.0-<rev>-source.tar.gz` is the complete corresponding source of exactly
-these binaries. `RELEASE.json` and `SHA256SUMS` record sizes, checksums, the source revision and the
-toolchain.
+these binaries. Only these two files are published; the release workflow (`release.yml`) also makes
+`RELEASE.json` and `SHA256SUMS` (sizes, checksums, the source revision and the toolchain) as a CI
+artifact, and the checksums are in the release notes.
 
 **Tested:** Power Mac G4 AGP 467 MHz, 256 MB, bare Mac OS 9.2.2 — see the acceptance record in
 issue #95. Other Macs and systems are untested. Application memory: Preferred 24 MB, Minimum 12 MB.
