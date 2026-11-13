@@ -12,6 +12,14 @@
 - **Evidence before optimization:** match view/style/hardware; measure input responsiveness, worst continuation, first useful frame, total completion, copy/upload cost and pixel correctness.
 - **Safety:** honor [agent handoff](handoff.md) for protected machines, worktrees and release authorization. The tracker authorizes planning, not unattended device access or publication.
 
+## Product direction — 2026-11-10
+
+The [owner product brief](design/product-direction-2026-11-10.md) establishes Globe as an offline-first, free-software geographic hypermedia atlas. The next development emphasis is one coherent identity → administrative regions → interactive labels → linked cards/navigation slice, exemplified by United States → Wisconsin → Madison → Back to Wisconsin. This is planning direction, not an expansion of v0.1 acceptance.
+
+[Draft ADR 0005](adr/0005-entity-identity-and-navigation.md) records identity/concordance and reference semantics; the [minimum shared interface proposal](design/entity-navigation-contract.md) defines research steps and responsibility boundaries. The journey's acceptance criteria are defined once, in that contract; no separate tracker is proposed. Frontend presentation parity is the distinct question tracked in #114. Existing issues retain implementation ownership and the live queue remains authoritative. The v0.2 milestone row above is unchanged; this direction does not alter any milestone or gate.
+
+Structured facts and readable linked articles are both eventual goals. Search, favorites, richer geography, naturalistic land cover/urban rendering, native speech and Earth-and-sky context remain future themes; no new milestone commitment or approved source acquisition follows. Preserve native single-window/sidebar usability at 640×480, installed Helvetica/Palatino with fallbacks, and the embedded offline atlas.
+
 ## Release themes
 
 These are the four GitHub milestones (v0.1 to v0.4), created without due dates and restructured on 2026-11-10 (owner decision): v0.1 is the app as built on `main`, and the old v0.2 was split by theme. The epics (#1–#6) span releases and carry no milestone. Parked experiments (#15, #16, #19, #21, #22) have no milestone.
@@ -63,7 +71,7 @@ The atlas builder (#52) owns source curation, geographic identity, editorial com
 | Atlas production and geographic integrity | Reproducible data pipeline, editorial rules, identity, semantic QA and edition recipes | [#52](https://github.com/jackwillis/globe/issues/52) |
 | Release engineering and verification | Reproducible CI and builds, target evidence | [#6](https://github.com/jackwillis/globe/issues/6) |
 
-Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.3 exist.
+Each epic includes a linked checklist of its tracked work. These are ordinary GitHub Issues with cross-references; **native GitHub parent/sub-issue relationships have not been configured**. The repository milestones v0.1–v0.4 exist.
 
 ## Direction since 2026-11-07: usability
 
