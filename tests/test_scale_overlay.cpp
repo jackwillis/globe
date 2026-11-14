@@ -6,6 +6,7 @@
 #include "globe/scale_overlay.hpp"
 #include "globe/shown_frame.hpp"
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <vector>
 using namespace globe;
@@ -102,7 +103,8 @@ int main() {
         const int width = 420, height = 315, bar_y = height - kProgressBarRows - 6;
         auto fb = Framebuffer::create(width, height);
         int seen = 0;
-        for (double radius = 20.0; radius < 5000.0; radius *= 1.07) {
+        for (int step = 0; step < 90; ++step) {
+            const double radius = 20.0 * std::pow(1.07, step);
             const auto camera = camera_for(width, height, radius);
             const auto bar = center_scale_bar(radius, scale_bar_max_width(width));
             if (!bar || bar->width_px < 2)
