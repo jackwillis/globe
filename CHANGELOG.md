@@ -6,6 +6,7 @@ This file will track **published releases**, not every experimental commit.
 
 - Help for the controls (#40): H or ? (and Apple menu > Controls on Classic) shows the keys and gestures in the information pane on both front ends, from the one table in `globe/controls.hpp` that also defines the shortcut keys. Escape hides it. Host-tested and cross-compiled; not yet run on the G4.
 - The Classic About window displays the full project version.
+- Scale at the center of the map (#81, with #133, #134, #139): a bar of a round distance (1, 2 or 5 times a power of ten) with long end ticks, medium ticks at whole decade units, small ticks between, and a label above it, bottom center above the progress bar, on every frame including drags. It follows the units preference (km and m, or mi and ft). The Classic label is drawn in Monaco; X11 uses built-in digits. Owner-observed on the G4 in experimental builds; the compass rose is #140.
 - The unfinished globe edge report (#74) was closed after the owner reported sustained use since the fix with no recurrence. The closure was based on regular use without a structured test.
 
 ## 0.1.0 - public preview (2026-11-13)
