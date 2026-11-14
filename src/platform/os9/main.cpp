@@ -720,7 +720,7 @@ class Application {
             help_shown_ = false;
             sidebar_.show(*card); // a finished measurement follows the units
         }
-        reshow();                 // and so does the scale on the map
+        reshow(); // and so does the scale on the map
         prefs_window_.sync(model_.prefs);
         SetPortWindowPort(window_);
     }

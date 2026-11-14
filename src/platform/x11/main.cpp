@@ -429,7 +429,7 @@ class App {
             help_shown_ = false;
             info_.show(*card); // a finished measurement follows the units
         }
-        reshow();              // and so does the scale on the map
+        reshow(); // and so does the scale on the map
         prefs_pane_.sync(model_.prefs);
     }
     // The sidebar sits to the right of the globe pane and follows its size.
