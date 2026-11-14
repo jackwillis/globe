@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 // The frame a front end converts and shows, built from the rendered one without changing it: the
-// overlays (night, measure, focused country) on a copy, then the refinement progress bar. Both
+// overlays (night, measure, focused country) on a copy, then the scale at the center, then the
+// refinement progress bar. Both
 // front ends build it the same way, so what is overlaid and when cannot drift apart.
 #pragma once
 #include "globe/app.hpp"
