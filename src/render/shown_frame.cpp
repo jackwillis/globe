@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/shown_frame.hpp"
+#include "globe/scale_overlay.hpp"
+#include <algorithm>
 #include <cstring>
 namespace globe {
 bool frame_settled(const Model& model, bool job_active) {
@@ -19,16 +21,23 @@ const Framebuffer& ShownFrame::begin(Overlays& overlays, Framebuffer& fb, const 
     quick_ = shown != nullptr && !settled;
     bar_ = progress >= 0.0 && fb.height() >= kProgressBarRows;
     rows_ = nullptr;
-    if (bar_) {
+    // The scale goes on every frame, so the bottom rows are always drawn on: on the overlay copy,
+    // or in `fb` itself with the rows they cover stashed.
+    const int scale_rows = scale_overlay_rows(fb.width(), fb.height());
+    const int rows = std::min(fb.height(), std::max(bar_ ? kProgressBarRows : 0, scale_rows));
+    if (rows > 0) {
         if (shown == nullptr) {
-            const std::size_t count = static_cast<std::size_t>(fb.width()) * kProgressBarRows;
-            rows_ = fb.data() + static_cast<std::size_t>(fb.height() - kProgressBarRows) *
+            const std::size_t count = static_cast<std::size_t>(fb.width()) * rows;
+            rows_ = fb.data() + static_cast<std::size_t>(fb.height() - rows) *
                                     static_cast<std::size_t>(fb.stride());
             stash_.resize(count);
             std::memcpy(stash_.data(), rows_, count * sizeof(Rgb565));
             shown = &fb;
         }
-        draw_progress_bar(*shown, progress);
+        if (scale_rows > 0)
+            draw_center_scale(*shown, camera, units_);
+        if (bar_)
+            draw_progress_bar(*shown, progress);
     }
     return shown != nullptr ? *shown : fb;
 }

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 // The frame a front end converts and shows, built from the rendered one without changing it: the
-// overlays (night, measure, focused country) on a copy, then the refinement progress bar. Both
+// overlays (night, measure, focused country) on a copy, then the scale at the center, then the
+// refinement progress bar. Both
 // front ends build it the same way, so what is overlaid and when cannot drift apart.
 #pragma once
 #include "globe/app.hpp"
@@ -25,6 +26,8 @@ class ShownFrame {
     // call end() once the frame has been converted. Valid until end().
     const Framebuffer& begin(Overlays& overlays, Framebuffer& fb, const Camera& camera,
                              std::int64_t unix_seconds, bool settled, double progress);
+    // The units the scale is shown in (the preference); metric until set.
+    void set_scale_units(Units units) { units_ = units; }
     // Puts the frame back as it was rendered.
     void end();
     // The last begin() drew overlays on a cheap (quick) copy: a settled frame should replace it.
@@ -37,5 +40,6 @@ class ShownFrame {
     Rgb565* rows_ = nullptr; // where the stashed rows go back
     bool quick_ = false;
     bool bar_ = false;
+    Units units_ = Units::Metric;
 };
 } // namespace globe

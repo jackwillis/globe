@@ -429,6 +429,7 @@ class App {
             help_shown_ = false;
             info_.show(*card); // a finished measurement follows the units
         }
+        reshow(); // and so does the scale on the map
         prefs_pane_.sync(model_.prefs);
     }
     // The sidebar sits to the right of the globe pane and follows its size.
@@ -697,6 +698,7 @@ class App {
             first_row = std::min(first_row, fb.height() - kProgressBarRows);
             end_row = fb.height();
         }
+        shown_.set_scale_units(model_.prefs.units);
         const Framebuffer* shown =
             &shown_.begin(overlays_, fb, model_.camera,
                           static_cast<std::int64_t>(std::time(nullptr)), settled, progress);
