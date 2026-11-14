@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #pragma once
 
+#include <cstdint>
 #include <optional>
 #include <span>
 #include <string_view>
@@ -10,7 +11,7 @@
 
 namespace globe {
 
-enum class LabelRole { area, point };
+enum class LabelRole : std::uint8_t { area, point };
 
 struct LabelCandidate {
     Vec3 anchor; // Earth-centered unit vector.
