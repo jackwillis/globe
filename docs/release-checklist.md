@@ -7,6 +7,7 @@ The public preview `v0.1.0` was published on **2026-11-13**; the historical prot
 ## 1. Candidate, provenance and release scope
 
 - [ ] Confirm the owner-approved release scope, target platforms, version, immutable candidate commit and applicable release/hardware acceptance issue. Do not silently add blockers or alter milestones.
+- [ ] Record the release's **supported frontend/feature matrix** and any platform-specific exceptions or catch-up links. Patch releases may intentionally differ; for minor/major releases, obtain explicit owner approval for any remaining exception. See [platform feature-parity policy](backlog.md#incremental-releases-and-milestone-graduation-owner-decision-2026-11-13).
 - [ ] Verify source revision, clean tree, pinned compiler/container inputs, data editions, dependency/licence review and reproducible source acquisition.
 - [ ] Compare version strings in CMake, native application resources/About, package metadata, filenames, manifest and proposed GitHub release. Record any deliberate difference (e.g. packaging revision).
 - [ ] Review open defects and risk waivers against the candidate; distinguish reported symptoms, user-observed improvements, regression tests and genuine hardware acceptance.
@@ -18,6 +19,7 @@ The public preview `v0.1.0` was published on **2026-11-13**; the historical prot
 - [ ] For **Classic Mac OS**, confirm Retro68 compilation, SIZE/resources, data/resource-fork round trip, StuffIt expansion, installation, startup, menu/input/quit behavior, memory/resize and performance on specifically identified genuine hardware; distinguish Tiger Classic from bare OS 9 and emulators.
 - [ ] For any **Unix/Linux/Windows** release, test the published binary/package in the claimed operating-system and architecture environment. Record libc/runtime/library baseline; test installation, launch, input, repaint, data lookup, clean exit and removal as relevant.
 - [ ] For **pkgsrc NetBSD packages**, when introduced, validate source package metadata/build and resulting `.tgz` binary package with `pkg_add`, including required dependencies, installation paths, checksums and declared NetBSD/architecture compatibility. A generic `.tar.gz` is not a pkgsrc binary package.
+- [ ] For **minor/major `.0` releases**, verify equivalent user-facing outcomes for the owner-approved core feature set across all frontends supported by that release; record coverage, missing functions, platform-native UX differences, and explicitly approved waivers. **Do not require identical widgets or pixel output.** Patch releases require truthful platform availability notes instead of a parity gate; all releases still need applicable build, regression and shipped-artifact checks.
 - [ ] For **read-only or hybrid-media** editions, when introduced, verify the same byte-identical data packs on each supported view/platform, Macintosh forks/Finder metadata, missing/removable media, permissions and fallback to the embedded Earth. Do not claim physical-media support from an image-only check.
 
 ## 3. Documentation and repository hygiene
@@ -43,6 +45,7 @@ The public preview `v0.1.0` was published on **2026-11-13**; the historical prot
 
 - [ ] Update **`CHANGELOG.md`** with a curated, accurate user-visible summary for the actual version, not a dump of commits; preserve the historical behavior/known limits of older releases ([#125](https://github.com/jackwillis/globe/issues/125)).
 - [ ] Prepare **version-specific release notes** with supported platforms, real tests, known limits, artifact links, checksums and corresponding source. The published GitHub release/tag is authoritative for what was actually shipped; do not list proposed features as released.
+- [ ] Publish an accurate **feature availability / parity status** for the release: patch-only frontend features and linked follow-up work, or minor/major parity evidence and owner-approved exceptions. Do not imply cross-frontend parity from one working native build.
 - [ ] Check that documentation and issue/milestone state agree with the release, but do not override owner decisions or `status: ready`. Link real verification records and any remaining tasks to the relevant issues.
 - [ ] After publication, verify downloads, installation instructions, release links and checksums as seen by a newcomer. Keep a dated audit record with passed checks, exceptions, follow-ups and sign-off.
 
