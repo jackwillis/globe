@@ -4,6 +4,8 @@ This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
 
+- The Classic About window displays the full project version.
+
 - The unfinished globe edge report (#74) was closed after the owner reported sustained use since the fix with no recurrence. The closure was based on regular use without a structured test.
 
 ## 0.1.0 - public preview (2026-11-13)
