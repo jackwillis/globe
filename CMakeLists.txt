@@ -42,6 +42,7 @@ add_library(globe_core
   src/render/zoom.cpp
   src/render/shown_frame.cpp
   src/render/scale_overlay.cpp
+  src/render/compass_overlay.cpp
   src/render/refine_runner.cpp)
 target_include_directories(globe_core PUBLIC include)
 target_compile_options(globe_core PUBLIC -fno-exceptions -fno-rtti)
@@ -192,7 +193,7 @@ if(GLOBE_BUILD_TESTS)
   if(Python3_Interpreter_FOUND)
     add_test(NAME strings_generated COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_strings.py --check)
   endif()
-  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays scale_overlay looks menus controls wrap strings card_text label_layout)
+  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays scale_overlay compass_overlay looks menus controls wrap strings card_text label_layout)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

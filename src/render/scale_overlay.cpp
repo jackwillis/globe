@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/scale_overlay.hpp"
-#include "globe/overlays.hpp"
+#include "overlay_pen.hpp"
 #include <algorithm>
 #include <cstdint>
 namespace globe {
@@ -110,20 +110,6 @@ bool lay_out(int width, int height, const Camera& camera, Units units, Layout& l
     layout.length = format_distance(*bar, layout.text);
     return true;
 }
-// White pixels with a black edge: every pixel is put twice, as a 3x3 black block and then white.
-struct Pen {
-    Framebuffer& fb;
-    void edge(int x, int y) {
-        for (int dy = -1; dy <= 1; ++dy)
-            for (int dx = -1; dx <= 1; ++dx)
-                fb.set_pixel(x + dx, y + dy, kProgressEdge);
-    }
-    void fill(int x, int y) { fb.set_pixel(x, y, kProgressFill); }
-};
-template <class Shape> void stroke(Pen& pen, Shape&& shape) {
-    shape([&](int x, int y) { pen.edge(x, y); });
-    shape([&](int x, int y) { pen.fill(x, y); });
-}
 } // namespace
 ScaleTicks scale_ticks(double value) {
     if (!(value > 0.0))
@@ -159,7 +145,7 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera, const LabelBitmap*
     Layout layout{};
     if (!lay_out(fb.width(), fb.height(), camera, units, layout))
         return;
-    Pen pen{fb};
+    overlay_detail::Pen pen{fb};
     const int x0 = (fb.width() - layout.bar_width) / 2, x1 = x0 + layout.bar_width - 1;
     const int y = layout.bar_y;
     stroke(pen, [&](auto put) {

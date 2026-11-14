@@ -276,7 +276,9 @@ int main() {
         CHECK(metric && imperial && metric->width_px != imperial->width_px);
         const auto span_drawn = [&](const Framebuffer& fb) {
             int left = -1, right = -1;
-            for (int x = 0; x < width; ++x)
+            // Sample the centered scale independently of the compass at the left edge.
+            const int margin = (width - scale_bar_max_width(width)) / 2;
+            for (int x = margin; x < width - margin; ++x)
                 if (fb.pixel(x, bar_y - 3) == kProgressFill) {
                     left = left < 0 ? x : left;
                     right = x;

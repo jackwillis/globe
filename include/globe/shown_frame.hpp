@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 // The frame a front end converts and shows, built from the rendered one without changing it: the
-// overlays (night, measure, focused country) on a copy, then the scale at the center, then the
-// refinement progress bar. Both
-// front ends build it the same way, so what is overlaid and when cannot drift apart.
+// overlays (night, measure, focused country) on a copy, then the scale and compass, then the
+// refinement progress bar. Both front ends build it the same way, so what is overlaid and when
+// cannot drift apart.
 #pragma once
 #include "globe/app.hpp"
 #include "globe/framebuffer.hpp"
@@ -23,7 +23,7 @@ double bar_progress(const Model& model, const RefinementJob* job);
 class ShownFrame {
   public:
     // The frame to convert for `fb`: an overlay copy if any overlay is active, else `fb` itself.
-    // The bar (progress >= 0) goes on the copy, or straight into `fb` with its rows stashed, so
+    // Map furniture and the progress bar go on the copy, or into `fb` with their rows stashed, so
     // call end() once the frame has been converted. Valid until end().
     const Framebuffer& begin(Overlays& overlays, Framebuffer& fb, const Camera& camera,
                              std::int64_t unix_seconds, bool settled, double progress);
