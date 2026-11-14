@@ -8,6 +8,8 @@ namespace globe {
 namespace {
 constexpr int kGlyphWidth = 5, kGlyphHeight = 7, kAdvance = 6;
 constexpr int kMinWidth = 80, kMaxBarWidth = 120;
+constexpr int kMinTickSpacing = 4;                              // pixels between ticks
+constexpr int kEndReach = 3, kMediumReach = 2, kSmallReach = 1; // rows either side of the line
 // Rows from the bottom: the progress bar, a gap, then the scale's bar line (ticks reach 1 row
 // either side) and the label above it.
 constexpr int kBarLift = kProgressBarRows + 6; // rows from the bottom edge to the bar line
@@ -47,15 +49,17 @@ int type_scale(int width) {
 }
 struct Layout {
     int type, bar_width, bar_y, label_top;
+    double value; // the length in the unit shown
     char text[16];
     int length;
 };
 // The label "N km" or "N m" ("500 m" below one kilometre), spelled out here so the core needs no
 // number formatting.
-int format_distance(double km, char* out) {
+int format_distance(const CenterScaleBar& bar, char* out) {
     int n = 0;
-    const bool metres = km < 1.0;
-    const auto value = static_cast<long>(metres ? km * 1000.0 + 0.5 : km + 0.5);
+    // Rounded to the nearest whole number by hand (Retro68 68k has no std::round).
+    const auto whole = static_cast<long>(bar.value);
+    const long value = whole + (bar.value - static_cast<double>(whole) >= 0.5 ? 1 : 0);
     char digits[12];
     int count = 0;
     for (long v = value; v > 0 && count < 11; v /= 10)
@@ -68,13 +72,27 @@ int format_distance(double km, char* out) {
             out[n++] = ','; // 1,000 and up
     }
     out[n++] = ' ';
-    if (!metres)
+    switch (bar.unit) {
+    case LengthUnit::Kilometer:
         out[n++] = 'k';
-    out[n++] = 'm';
+        out[n++] = 'm';
+        break;
+    case LengthUnit::Meter:
+        out[n++] = 'm';
+        break;
+    case LengthUnit::Mile:
+        out[n++] = 'm';
+        out[n++] = 'i';
+        break;
+    case LengthUnit::Foot:
+        out[n++] = 'f';
+        out[n++] = 't';
+        break;
+    }
     out[n] = 0;
     return n;
 }
-bool lay_out(int width, int height, const Camera& camera, Layout& layout) {
+bool lay_out(int width, int height, const Camera& camera, Units units, Layout& layout) {
     if (width < kMinWidth)
         return false;
     layout.type = type_scale(width);
@@ -82,13 +100,14 @@ bool lay_out(int width, int height, const Camera& camera, Layout& layout) {
                     std::max(kGlyphHeight * layout.type, LabelBitmap::kMaxHeight) - 1;
     if (top < 0)
         return false;
-    const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width));
+    const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width), units);
     if (!bar || bar->width_px < 2)
         return false;
     layout.bar_width = bar->width_px;
+    layout.value = bar->value;
     layout.bar_y = height - kBarLift;
     layout.label_top = top + 1;
-    layout.length = format_distance(bar->distance_km, layout.text);
+    layout.length = format_distance(*bar, layout.text);
     return true;
 }
 // White pixels with a black edge: every pixel is put twice, as a 3x3 black block and then white.
@@ -106,14 +125,27 @@ template <class Shape> void stroke(Pen& pen, Shape&& shape) {
     shape([&](int x, int y) { pen.fill(x, y); });
 }
 } // namespace
+ScaleTicks scale_ticks(double value) {
+    if (!(value > 0.0))
+        return {};
+    double mantissa = value;
+    while (mantissa >= 9.5)
+        mantissa /= 10.0;
+    while (mantissa < 0.95)
+        mantissa *= 10.0;
+    ScaleTicks ticks;
+    ticks.units = mantissa < 1.5 ? 1 : mantissa < 3.5 ? 2 : 5;
+    ticks.steps_per_unit = ticks.units == 1 ? 10 : 2;
+    return ticks;
+}
 int scale_bar_max_width(int width) {
     return std::clamp(width / 3, 0, kMaxBarWidth);
 }
-int scale_label_text(const Camera& camera, int width, char* out, int capacity) {
+int scale_label_text(const Camera& camera, int width, char* out, int capacity, Units units) {
     if (width < kMinWidth || capacity < 16)
         return 0;
-    const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width));
-    return bar && bar->width_px >= 2 ? format_distance(bar->distance_km, out) : 0;
+    const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width), units);
+    return bar && bar->width_px >= 2 ? format_distance(*bar, out) : 0;
 }
 int scale_overlay_rows(int width, int height) {
     if (width < kMinWidth)
@@ -122,9 +154,10 @@ int scale_overlay_rows(int width, int height) {
     const int top = height - kBarLift - kLabelGap - label - 2;
     return top < 0 ? 0 : height - top;
 }
-void draw_center_scale(Framebuffer& fb, const Camera& camera, const LabelBitmap* label) {
+void draw_center_scale(Framebuffer& fb, const Camera& camera, const LabelBitmap* label,
+                       Units units) {
     Layout layout{};
-    if (!lay_out(fb.width(), fb.height(), camera, layout))
+    if (!lay_out(fb.width(), fb.height(), camera, units, layout))
         return;
     Pen pen{fb};
     const int x0 = (fb.width() - layout.bar_width) / 2, x1 = x0 + layout.bar_width - 1;
@@ -132,9 +165,22 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera, const LabelBitmap*
     stroke(pen, [&](auto put) {
         for (int x = x0; x <= x1; ++x)
             put(x, y);
-        for (int dy = -1; dy <= 1; ++dy) {
-            put(x0, y + dy);
-            put(x1, y + dy);
+        const auto tick = [&](int x, int reach) {
+            for (int dy = -reach; dy <= reach; ++dy)
+                put(x, y + dy);
+        };
+        tick(x0, kEndReach);
+        tick(x1, kEndReach);
+        // Medium ticks at the whole units (the halfway one on a 1), small ones between; each kind
+        // is left out when its ticks would crowd.
+        const auto ticks = scale_ticks(layout.value);
+        const int steps = ticks.steps(), span = layout.bar_width - 1;
+        const bool small = span / steps >= kMinTickSpacing;
+        const bool medium = span / (ticks.units > 1 ? ticks.units : 2) >= kMinTickSpacing;
+        for (int i = 1; i < steps; ++i) {
+            const bool whole = ticks.medium(i);
+            if (whole ? medium : small)
+                tick(x0 + (i * span + steps / 2) / steps, whole ? kMediumReach : kSmallReach);
         }
     });
     if (label != nullptr && label->bits != nullptr && label->width > 0 && label->height > 0 &&

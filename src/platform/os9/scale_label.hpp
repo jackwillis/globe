@@ -11,7 +11,7 @@ namespace globe {
 class ScaleLabel {
   public:
     // The label for the camera in a frame `width` wide; call before building each shown frame.
-    void sync(const Camera& camera, int width);
+    void sync(const Camera& camera, int width, Units units);
     // Null when there is no scale or no Monaco.
     const LabelBitmap* bitmap() const { return ready_ ? &bitmap_ : nullptr; }
 
