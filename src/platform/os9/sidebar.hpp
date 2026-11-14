@@ -8,6 +8,7 @@
 #pragma once
 #include "globe/countries.hpp"
 #include "globe/looks.hpp"
+#include "globe/projection.hpp"
 #include "globe/wrap.hpp"
 #include <Windows.h>
 namespace globe {
@@ -28,6 +29,8 @@ class Sidebar {
     void show(const InfoCard& card);
     // The look changed elsewhere (a key, a menu): redraw the check mark.
     void sync(TerrainStyle current);
+    // Update the center scale if the projected radius changes.
+    void sync_scale(double radius_px);
     // The window became active or inactive: the scroll bar dims with it.
     void activate(bool active);
     // Draws the whole sidebar; clipped to its area, so safe to call at any time or in an update.
@@ -44,14 +47,18 @@ class Sidebar {
     void rewrap();
     void draw_rows();
     void draw_card();
+    void draw_scale();
     WindowPtr window_ = nullptr;
     ControlHandle scroll_ = nullptr;
     Rect area_{0, 0, 0, 0};
+    Rect scale_area_{0, 0, 0, 0};
     Rect card_area_{0, 0, 0, 0};
     InfoCard card_{};
     WrappedCard wrapped_{}; // card_ broken to the pane width; what is drawn and scrolled
     TerrainStyle shown_ = TerrainStyle::Map;
     unsigned offset_ = 0; // first card line shown
+    double scale_radius_px_ = 0.0;
+    std::optional<CenterScaleBar> scale_;
     bool active_ = true;
 };
 } // namespace globe

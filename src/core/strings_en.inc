@@ -11,7 +11,7 @@
 "degrees",
 "About Poodle Earth",
 "Poodle Earth",
-"Version 0.1 (public preview)",
+"Version",
 "An offline, software-rendered interactive Earth.",
 "Copyright (c) 2026 Jack Willis. Free software under the GNU General Public License, version 3 or later, with no warranty. The License files have the full terms; the ReadMe says where to get the exact source code.",
 "Data: Natural Earth (public domain); NOAA NCEI ETOPO 2022 elevation (CC0); Wikidata place names and coordinates (CC0).",

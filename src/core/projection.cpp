@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/projection.hpp"
+#include "globe/measure.hpp"
 
 #include <cmath>
 
@@ -16,6 +17,33 @@ bool all_finite(const CameraParams& p) {
 }
 
 } // namespace
+
+std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_px) {
+    if (!std::isfinite(radius_px) || radius_px <= 0.0 || max_width_px <= 0)
+        return std::nullopt;
+
+    // At the center, differentiating x = radius_px * sin(angle) gives radius_px
+    // pixels per radian. Distance uses the same spherical Earth as Measure.
+    const double max_km = (kEarthMeanRadiusKm * max_width_px) / radius_px;
+    if (!std::isfinite(max_km) || max_km <= 0.0)
+        return std::nullopt;
+    const double decade = std::pow(10.0, std::floor(std::log10(max_km)));
+    double distance = decade;
+    if (5.0 * decade <= max_km)
+        distance *= 5.0;
+    else if (2.0 * decade <= max_km)
+        distance *= 2.0;
+    else if (decade > max_km)
+        distance *= 0.5; // log10 can round up at a decade boundary
+
+    // The width is nonnegative and bounded by max_width_px. Retro68 68k lacks std::round.
+    const double exact_width = (distance / max_km) * max_width_px;
+    const int whole_pixels = static_cast<int>(exact_width);
+    const int width = whole_pixels + (exact_width - whole_pixels >= 0.5 ? 1 : 0);
+    if (width < 1)
+        return std::nullopt;
+    return CenterScaleBar{distance, width};
+}
 
 std::optional<Camera> make_camera(const CameraParams& params) {
     if (!all_finite(params) || !(params.radius_px > 0.0) || params.width < 1 || params.height < 1 ||

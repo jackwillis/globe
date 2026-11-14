@@ -38,6 +38,7 @@ add_library(globe_core
   src/render/daynight.cpp
   src/render/measure.cpp
   src/render/overlays.cpp
+  src/render/label_layout.cpp
   src/render/zoom.cpp
   src/render/shown_frame.cpp
   src/render/refine_runner.cpp)
@@ -190,13 +191,17 @@ if(GLOBE_BUILD_TESTS)
   if(Python3_Interpreter_FOUND)
     add_test(NAME strings_generated COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_strings.py --check)
   endif()
-  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus controls wrap strings card_text)
+  foreach(name scene_ledger bytes framebuffer projection trackball atlas render app elevation terrain toolbar countries places shaded highlight daynight measure overlays looks menus controls wrap strings card_text label_layout)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_core)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)
     add_test(NAME ${name} COMMAND test_${name} ${CMAKE_SOURCE_DIR})
     set_tests_properties(${name} PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   endforeach()
+  add_executable(test_version tests/test_version.cpp)
+  target_include_directories(test_version PRIVATE include)
+  target_compile_options(test_version PRIVATE -Wall -Wextra -Wpedantic)
+  add_test(NAME version COMMAND test_version "${PROJECT_VERSION}")
   target_include_directories(test_terrain PRIVATE src/render)
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
   foreach(name pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)

@@ -143,6 +143,7 @@ class Application {
         sidebar_.show(nothing_selected_card());
         if (globe_width != model_.camera.width || height != model_.camera.height)
             apply(Resize{globe_width, height});
+        sidebar_.sync_scale(model_.camera.radius_px);
         apply(Tick{now_ms()});
         return true;
     }
@@ -550,6 +551,7 @@ class Application {
         const auto generation = model_.generation;
         const auto stage = model_.stage;
         auto fx = update(model_, msg);
+        sidebar_.sync_scale(model_.camera.radius_px);
         if (generation != model_.generation) {
             presentation_.cancel();
             runner_.cancel(fb_ ? &*fb_ : nullptr, model_.camera);
