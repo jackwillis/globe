@@ -2,7 +2,7 @@
 
 :root {
   color-scheme: light;
-  font: 112.5%/1.55 "Geneva", "Lucida Grande", "Lucida Sans Unicode", "Tahoma", "Verdana", "DejaVu Sans", sans-serif;
+  font: 112.5%/1.55 "Archivo", "Geneva", "Lucida Grande", "Lucida Sans Unicode", "Tahoma", "Verdana", "DejaVu Sans", sans-serif;
   color: #171717;
   background: #fffefa;
 }
@@ -30,7 +30,7 @@ a:hover { text-decoration-thickness: .13em; }
   align-items: center;
   gap: .25rem 1rem;
 }
-.actions, .release, .preview, .project-links {
+.actions, .release, .project-links {
   font-size: .85rem;
 }
 .project-links a { display: inline-block; padding-block: .35rem; }
@@ -52,31 +52,6 @@ p, ol { margin: .65rem 0 0; }
 }
 .release { margin-top: .85rem; }
 
-.preview {
-  display: grid;
-  justify-items: start;
-  gap: .65rem;
-  margin: 1.5rem 0 0;
-  padding: 1rem;
-  background: #f4f4ef;
-  border: 1px solid #aaa;
-}
-.preview p { margin: 0; }
-.globe {
-  width: 3.5rem;
-  aspect-ratio: 1;
-  border: 1px solid #383f74;
-  border-radius: 50%;
-  background: repeating-linear-gradient(transparent 0 23%, #383f74 24% 25%, transparent 26% 28%);
-  position: relative;
-}
-.globe::before {
-  content: "";
-  position: absolute;
-  inset: -1px 25%;
-  border: 1px solid #383f74;
-  border-radius: 50%;
-}
 img { display: block; max-width: 100%; height: auto; }
 
 .content { padding-block: 1.25rem; }
