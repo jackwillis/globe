@@ -57,9 +57,16 @@ int main() {
         CHECK(d.bottom < height - kProgressBarRows);
         CHECK(std::abs((d.left + d.right) / 2 - width / 2) <= 1);
         CHECK(d.right - d.left + 1 <= scale_bar_max_width(width) + 2);
-        // No background: the box around it is mostly the map showing through.
-        const int box = (d.right - d.left + 1) * (d.bottom - d.top + 1);
-        CHECK(d.changed * 2 < box);
+        // No background: the gap between label and bar, and the rows under the bar between its end
+        // ticks (past the medium ticks' edge), are the map showing through.
+        const int bar_y = height - kProgressBarRows - 6;
+        for (int x = d.left; x <= d.right; ++x)
+            CHECK(fb->pixel(x, bar_y - 5) == kBackground);
+        const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width));
+        CHECK(bar.has_value());
+        const int bar_left = (width - bar->width_px) / 2;
+        for (int x = bar_left + 3; x < bar_left + bar->width_px - 3; ++x)
+            CHECK(fb->pixel(x, bar_y + 4) == kBackground && fb->pixel(x, bar_y + 5) == kBackground);
         // The label is above the bar; a zoom changes what is drawn.
         auto other = Framebuffer::create(width, height);
         other->clear(kBackground);
@@ -71,7 +78,7 @@ int main() {
         CHECK(differs);
     }
     // From a few metres to thousands of kilometres (with its comma) the label stays centered and
-    // black and white, and the end ticks are three rows tall (one row above and below the bar).
+    // black and white, and the end ticks are seven rows tall (three above and below the bar).
     {
         const int width = 420, height = 315;
         auto fb = Framebuffer::create(width, height);
@@ -88,21 +95,33 @@ int main() {
             while (x0 < width && fb->pixel(x0, bar_y) != kProgressFill)
                 ++x0;
             CHECK(x0 < width);
-            CHECK(fb->pixel(x0, bar_y - 1) == kProgressFill &&
-                  fb->pixel(x0, bar_y + 1) == kProgressFill);
-            CHECK(fb->pixel(x0, bar_y - 2) == kProgressEdge &&
-                  fb->pixel(x0, bar_y + 2) == kProgressEdge);
+            CHECK(fb->pixel(x0, bar_y - 3) == kProgressFill &&
+                  fb->pixel(x0, bar_y + 3) == kProgressFill);
+            CHECK(fb->pixel(x0, bar_y - 4) == kProgressEdge &&
+                  fb->pixel(x0, bar_y + 4) == kProgressEdge);
         }
     }
-    // Small ticks sit at round divisions of the bar: tenths of a 1, quarters of a 2, fifths of a 5.
-    CHECK(scale_divisions(1.0) == 10 && scale_divisions(100.0) == 10 && scale_divisions(0.1) == 10);
-    CHECK(scale_divisions(2.0) == 4 && scale_divisions(200.0) == 4 && scale_divisions(0.02) == 4);
-    CHECK(scale_divisions(5.0) == 5 && scale_divisions(5000.0) == 5 && scale_divisions(0.5) == 5);
-    CHECK(scale_divisions(0.0) == 1 && scale_divisions(-3.0) == 1);
+    // Ticks: the bar is whole decade units (a 1, 2 or 5), with a medium tick at each whole unit
+    // inside it and small ticks between.
+    {
+        const auto t1 = scale_ticks(1.0), t2 = scale_ticks(200.0), t5 = scale_ticks(0.005);
+        CHECK(t1.units == 1 && t1.steps_per_unit == 10 && t1.steps() == 10);
+        CHECK(t2.units == 2 && t2.steps_per_unit == 2 && t2.steps() == 4);
+        CHECK(t5.units == 5 && t5.steps_per_unit == 2 && t5.steps() == 10);
+        CHECK(scale_ticks(100.0).units == 1 && scale_ticks(5000.0).units == 5);
+        CHECK(scale_ticks(0.0).steps() == 1 && scale_ticks(-3.0).steps() == 1);
+    }
     {
         const int width = 420, height = 315, bar_y = height - kProgressBarRows - 6;
         auto fb = Framebuffer::create(width, height);
-        int seen = 0;
+        int seen_small = 0, seen_medium = 0;
+        // True when the column has white exactly `reach` rows either side of the line, in black.
+        const auto column = [&](int x, int reach) {
+            return fb->pixel(x, bar_y - reach) == kProgressFill &&
+                   fb->pixel(x, bar_y + reach) == kProgressFill &&
+                   fb->pixel(x, bar_y - reach - 1) == kProgressEdge &&
+                   fb->pixel(x, bar_y + reach + 1) == kProgressEdge;
+        };
         for (int step = 0; step < 90; ++step) {
             const double radius = 20.0 * std::pow(1.07, step);
             const auto camera = camera_for(width, height, radius);
@@ -111,27 +130,29 @@ int main() {
                 continue;
             fb->clear(kBackground);
             draw_center_scale(*fb, camera);
-            const int divisions = scale_divisions(bar->distance_km);
-            const int span = bar->width_px - 1, left = (width - bar->width_px) / 2;
-            // Count the white pixels one row above the line, between the end ticks.
-            int ticks = 0;
-            for (int x = left + 1; x < left + span; ++x)
-                ticks += fb->pixel(x, bar_y - 1) == kProgressFill;
-            if (span / divisions >= 4) {
-                CHECK(ticks == divisions - 1);
-                // Evenly spaced, and never taller than one row above the line.
-                for (int i = 1; i < divisions; ++i)
-                    CHECK(fb->pixel(left + (i * span + divisions / 2) / divisions, bar_y - 1) ==
-                          kProgressFill);
-                for (int i = 0; i < width; ++i)
-                    CHECK(i >= left && i <= left + span ? true
-                                                        : fb->pixel(i, bar_y - 1) != kProgressFill);
-                ++seen;
-            } else {
-                CHECK(ticks == 0); // too crowded: only the end ticks
+            const auto ticks = scale_ticks(bar->distance_km);
+            const int steps = ticks.steps(), span = bar->width_px - 1;
+            const int left = (width - bar->width_px) / 2;
+            CHECK(column(left, 3) && column(left + span, 3)); // long at the ends
+            const bool small = span / steps >= 4;
+            const bool medium = ticks.units > 1 && span / ticks.units >= 4;
+            int expected = 0;
+            for (int i = 1; i < steps; ++i) {
+                const bool whole = i % ticks.steps_per_unit == 0;
+                const int x = left + (i * span + steps / 2) / steps;
+                if (whole ? medium : small) {
+                    CHECK(column(x, whole ? 2 : 1));
+                    ++expected;
+                    (whole ? seen_medium : seen_small) += 1;
+                }
             }
+            // Nothing else rises above the line between the ends: the other columns are bare.
+            int marked = 0;
+            for (int x = left + 1; x < left + span; ++x)
+                marked += fb->pixel(x, bar_y - 1) == kProgressFill;
+            CHECK(marked == expected);
         }
-        CHECK(seen > 5);
+        CHECK(seen_small > 5 && seen_medium > 2);
     }
     // Too small to fit: nothing is drawn and no rows are claimed.
     {
@@ -170,5 +191,5 @@ int main() {
         shown.end();
         CHECK(measure(*fb).changed == 0);
     }
-    return 0;
+    return TEST_MAIN_RESULT();
 }

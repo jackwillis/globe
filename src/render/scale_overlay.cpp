@@ -8,7 +8,8 @@ namespace globe {
 namespace {
 constexpr int kGlyphWidth = 5, kGlyphHeight = 7, kAdvance = 6;
 constexpr int kMinWidth = 80, kMaxBarWidth = 120;
-constexpr int kMinTickSpacing = 4; // pixels between small ticks
+constexpr int kMinTickSpacing = 4;                              // pixels between ticks
+constexpr int kEndReach = 3, kMediumReach = 2, kSmallReach = 1; // rows either side of the line
 // Rows from the bottom: the progress bar, a gap, then the scale's bar line (ticks reach 1 row
 // either side) and the label above it.
 constexpr int kBarLift = kProgressBarRows + 6; // rows from the bottom edge to the bar line
@@ -108,15 +109,18 @@ template <class Shape> void stroke(Pen& pen, Shape&& shape) {
     shape([&](int x, int y) { pen.fill(x, y); });
 }
 } // namespace
-int scale_divisions(double distance_km) {
+ScaleTicks scale_ticks(double distance_km) {
     if (!(distance_km > 0.0))
-        return 1;
+        return {};
     double mantissa = distance_km;
     while (mantissa >= 9.5)
         mantissa /= 10.0;
     while (mantissa < 0.95)
         mantissa *= 10.0;
-    return mantissa < 1.5 ? 10 : mantissa < 3.5 ? 4 : 5; // 1, 2 or 5
+    ScaleTicks ticks;
+    ticks.units = mantissa < 1.5 ? 1 : mantissa < 3.5 ? 2 : 5;
+    ticks.steps_per_unit = ticks.units == 1 ? 10 : 2;
+    return ticks;
 }
 int scale_bar_max_width(int width) {
     return std::clamp(width / 3, 0, kMaxBarWidth);
@@ -137,17 +141,23 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera) {
     stroke(pen, [&](auto put) {
         for (int x = x0; x <= x1; ++x)
             put(x, y);
-        for (int dy = -1; dy <= 1; ++dy) {
-            put(x0, y + dy);
-            put(x1, y + dy);
+        const auto tick = [&](int x, int reach) {
+            for (int dy = -reach; dy <= reach; ++dy)
+                put(x, y + dy);
+        };
+        tick(x0, kEndReach);
+        tick(x1, kEndReach);
+        // Medium ticks at the whole units, small ones between; each kind is left out when its
+        // ticks would crowd.
+        const auto ticks = scale_ticks(layout.distance_km);
+        const int steps = ticks.steps(), span = layout.bar_width - 1;
+        const bool small = span / steps >= kMinTickSpacing;
+        const bool medium = ticks.units > 1 && span / ticks.units >= kMinTickSpacing;
+        for (int i = 1; i < steps; ++i) {
+            const bool whole = i % ticks.steps_per_unit == 0;
+            if (whole ? medium : small)
+                tick(x0 + (i * span + steps / 2) / steps, whole ? kMediumReach : kSmallReach);
         }
-        // Small ticks at the round divisions (100 m on a 1 km bar), a row high above the line;
-        // left out when they would crowd.
-        const int divisions = scale_divisions(layout.distance_km);
-        const int span = layout.bar_width - 1;
-        if (span / divisions >= kMinTickSpacing)
-            for (int i = 1; i < divisions; ++i)
-                put(x0 + (i * span + divisions / 2) / divisions, y - 1);
     });
     const int s = layout.type;
     int columns = 0;
