@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <vector>
 using namespace globe;
 namespace {
@@ -102,6 +103,77 @@ int main() {
                   fb->pixel(x0, bar_y + 4) == kProgressEdge);
         }
     }
+    // A label the front end drew replaces the built-in digits, in the same place and with the same
+    // black edge; its text comes from the core.
+    {
+        const int width = 420, height = 315;
+        const auto camera = camera_for(width, height, 140);
+        char text[16] = {};
+        const int length = scale_label_text(camera, width, text, sizeof text);
+        CHECK(length > 0 && text[length] == 0 && text[length - 1] == 'm');
+        CHECK(scale_label_text(camera_for(60, 40, 18), 60, text, sizeof text) == 0);
+        // The text names the unit: km or m in metric, mi or ft in imperial.
+        {
+            const auto text_for = [&](double max_km, Units units, const char* want) {
+                const int w = 120;
+                const double r = kEarthMeanRadiusKm * scale_bar_max_width(w) / max_km;
+                char out[16] = {};
+                const int n = scale_label_text(camera_for(w, 90, r), w, out, sizeof out, units);
+                CHECK(n > 0 && std::strcmp(out, want) == 0);
+            };
+            text_for(9000.0, Units::Metric, "5,000 km");
+            text_for(9000.0, Units::Imperial, "5,000 mi");
+            text_for(0.3, Units::Metric, "200 m");
+            text_for(0.3, Units::Imperial, "500 ft");
+            text_for(1.0, Units::Imperial, "2,000 ft");
+            text_for(3.0, Units::Imperial, "1 mi");
+        }
+        // A solid 30x12 block of ink stands in for the glyphs.
+        std::vector<std::uint8_t> bits(48, 0xff); // 12 rows of 4 bytes
+        LabelBitmap label{30, 12, 4, bits.data()};
+        auto plain = Framebuffer::create(width, height);
+        auto native = Framebuffer::create(width, height);
+        plain->clear(kBackground);
+        native->clear(kBackground);
+        draw_center_scale(*plain, camera);
+        draw_center_scale(*native, camera, &label);
+        const auto d = measure(*native);
+        CHECK(d.changed > 0 && d.only_edge_and_fill && d.outside == 0);
+        const int bar_y = height - kProgressBarRows - 6;
+        const int left = (width - 30) / 2, top = bar_y - 6 - 12;
+        CHECK(native->pixel(left, top) == kProgressFill &&
+              native->pixel(left + 29, top + 11) == kProgressFill);
+        CHECK(native->pixel(left - 1, top) == kProgressEdge &&
+              native->pixel(left, top - 1) == kProgressEdge);
+        CHECK(native->pixel(left + 30, top + 11) == kProgressEdge);
+        // The bar underneath is the same either way.
+        bool same = true;
+        for (int x = 0; x < width; ++x)
+            same &= plain->pixel(x, bar_y) == native->pixel(x, bar_y);
+        CHECK(same);
+        // Bitmaps that cannot be drawn are ignored in favour of the built-in digits.
+        LabelBitmap tall{30, 40, 4, bits.data()}, empty{0, 0, 0, nullptr};
+        for (const LabelBitmap* bad : {&tall, &empty}) {
+            auto again = Framebuffer::create(width, height);
+            again->clear(kBackground);
+            draw_center_scale(*again, camera, bad);
+            bool equal = true;
+            for (int y = 0; y < height; ++y)
+                for (int x = 0; x < width; ++x)
+                    equal &= again->pixel(x, y) == plain->pixel(x, y);
+            CHECK(equal);
+        }
+        // ShownFrame passes it along and the rendered frame is put back.
+        auto fb = Framebuffer::create(width, height);
+        fb->clear(kBackground);
+        Overlays overlays;
+        ShownFrame shown;
+        shown.set_scale_label(&label);
+        const auto& frame = shown.begin(overlays, *fb, camera, 0, true, -1.0);
+        CHECK(frame.pixel(left, top) == kProgressFill);
+        shown.end();
+        CHECK(measure(*fb).changed == 0);
+    }
     // Ticks: the bar is whole decade units (a 1, 2 or 5), with a medium tick at each whole unit
     // inside it and small ticks between.
     {
@@ -135,7 +207,7 @@ int main() {
                 if (!bar || bar->width_px < 2)
                     continue;
                 fb->clear(kBackground);
-                draw_center_scale(*fb, camera, units);
+                draw_center_scale(*fb, camera, nullptr, units);
                 const auto ticks = scale_ticks(bar->value);
                 const int steps = ticks.steps(), span = bar->width_px - 1;
                 const int left = (width - bar->width_px) / 2;
@@ -214,7 +286,7 @@ int main() {
         auto fb = Framebuffer::create(width, height);
         for (const Units units : {Units::Metric, Units::Imperial}) {
             fb->clear(kBackground);
-            draw_center_scale(*fb, camera, units);
+            draw_center_scale(*fb, camera, nullptr, units);
             CHECK(span_drawn(*fb) == (units == Units::Metric ? metric : imperial)->width_px);
             fb->clear(kBackground);
             Overlays overlays;

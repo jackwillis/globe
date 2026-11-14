@@ -96,7 +96,8 @@ bool lay_out(int width, int height, const Camera& camera, Units units, Layout& l
     if (width < kMinWidth)
         return false;
     layout.type = type_scale(width);
-    const int top = height - kBarLift - kLabelGap - kGlyphHeight * layout.type - 1;
+    const int top = height - kBarLift - kLabelGap -
+                    std::max(kGlyphHeight * layout.type, LabelBitmap::kMaxHeight) - 1;
     if (top < 0)
         return false;
     const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width), units);
@@ -140,13 +141,21 @@ ScaleTicks scale_ticks(double value) {
 int scale_bar_max_width(int width) {
     return std::clamp(width / 3, 0, kMaxBarWidth);
 }
+int scale_label_text(const Camera& camera, int width, char* out, int capacity, Units units) {
+    if (width < kMinWidth || capacity < 16)
+        return 0;
+    const auto bar = center_scale_bar(camera.radius_px, scale_bar_max_width(width), units);
+    return bar && bar->width_px >= 2 ? format_distance(*bar, out) : 0;
+}
 int scale_overlay_rows(int width, int height) {
     if (width < kMinWidth)
         return 0;
-    const int top = height - kBarLift - kLabelGap - kGlyphHeight * type_scale(width) - 2;
+    const int label = std::max(kGlyphHeight * type_scale(width), LabelBitmap::kMaxHeight);
+    const int top = height - kBarLift - kLabelGap - label - 2;
     return top < 0 ? 0 : height - top;
 }
-void draw_center_scale(Framebuffer& fb, const Camera& camera, Units units) {
+void draw_center_scale(Framebuffer& fb, const Camera& camera, const LabelBitmap* label,
+                       Units units) {
     Layout layout{};
     if (!lay_out(fb.width(), fb.height(), camera, units, layout))
         return;
@@ -174,6 +183,19 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera, Units units) {
                 tick(x0 + (i * span + steps / 2) / steps, whole ? kMediumReach : kSmallReach);
         }
     });
+    if (label != nullptr && label->bits != nullptr && label->width > 0 && label->height > 0 &&
+        label->height <= LabelBitmap::kMaxHeight && label->stride * 8 >= label->width) {
+        // The same place as the built-in label: centered, its last row just above the bar.
+        const int left = (fb.width() - label->width) / 2;
+        const int top = layout.bar_y - 6 - label->height;
+        stroke(pen, [&](auto put) {
+            for (int row = 0; row < label->height; ++row)
+                for (int col = 0; col < label->width; ++col)
+                    if ((label->bits[row * label->stride + col / 8] >> (7 - col % 8)) & 1)
+                        put(left + col, top + row);
+        });
+        return;
+    }
     const int s = layout.type;
     int columns = 0;
     for (int i = 0; i < layout.length; ++i)
