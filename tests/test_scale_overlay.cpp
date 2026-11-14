@@ -106,6 +106,10 @@ int main() {
     {
         const auto t1 = scale_ticks(1.0), t2 = scale_ticks(200.0), t5 = scale_ticks(0.005);
         CHECK(t1.units == 1 && t1.steps_per_unit == 10 && t1.steps() == 10);
+        // On a 1 (100, 1,000) the halfway tick is the medium one and no other.
+        for (int i = 1; i < 10; ++i)
+            CHECK(t1.medium(i) == (i == 5));
+        CHECK(!t2.medium(1) && t2.medium(2) && !t2.medium(3));
         CHECK(t2.units == 2 && t2.steps_per_unit == 2 && t2.steps() == 4);
         CHECK(t5.units == 5 && t5.steps_per_unit == 2 && t5.steps() == 10);
         CHECK(scale_ticks(100.0).units == 1 && scale_ticks(5000.0).units == 5);
@@ -135,10 +139,12 @@ int main() {
             const int left = (width - bar->width_px) / 2;
             CHECK(column(left, 3) && column(left + span, 3)); // long at the ends
             const bool small = span / steps >= 4;
-            const bool medium = ticks.units > 1 && span / ticks.units >= 4;
+            const bool medium = span / (ticks.units > 1 ? ticks.units : 2) >= 4;
             int expected = 0;
             for (int i = 1; i < steps; ++i) {
-                const bool whole = i % ticks.steps_per_unit == 0;
+                // Medium: the 5 on a 1 (500 of 1,000), each whole unit on a 2 or 5.
+                const bool whole = ticks.units == 1 ? i == 5 : i % 2 == 0;
+                CHECK(whole == ticks.medium(i));
                 const int x = left + (i * span + steps / 2) / steps;
                 if (whole ? medium : small) {
                     CHECK(column(x, whole ? 2 : 1));

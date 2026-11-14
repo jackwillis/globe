@@ -147,14 +147,14 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera) {
         };
         tick(x0, kEndReach);
         tick(x1, kEndReach);
-        // Medium ticks at the whole units, small ones between; each kind is left out when its
-        // ticks would crowd.
+        // Medium ticks at the whole units (the halfway one on a 1), small ones between; each kind
+        // is left out when its ticks would crowd.
         const auto ticks = scale_ticks(layout.distance_km);
         const int steps = ticks.steps(), span = layout.bar_width - 1;
         const bool small = span / steps >= kMinTickSpacing;
-        const bool medium = ticks.units > 1 && span / ticks.units >= kMinTickSpacing;
+        const bool medium = span / (ticks.units > 1 ? ticks.units : 2) >= kMinTickSpacing;
         for (int i = 1; i < steps; ++i) {
-            const bool whole = i % ticks.steps_per_unit == 0;
+            const bool whole = ticks.medium(i);
             if (whole ? medium : small)
                 tick(x0 + (i * span + steps / 2) / steps, whole ? kMediumReach : kSmallReach);
         }
