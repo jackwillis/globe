@@ -37,7 +37,9 @@ std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_p
         distance *= 0.5; // log10 can round up at a decade boundary
 
     // The width is nonnegative and bounded by max_width_px. Retro68 68k lacks std::round.
-    const int width = static_cast<int>((distance / max_km) * max_width_px + 0.5);
+    const double exact_width = (distance / max_km) * max_width_px;
+    const int whole_pixels = static_cast<int>(exact_width);
+    const int width = whole_pixels + (exact_width - whole_pixels >= 0.5 ? 1 : 0);
     if (width < 1)
         return std::nullopt;
     return CenterScaleBar{distance, width};
