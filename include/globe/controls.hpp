@@ -14,12 +14,14 @@
 namespace globe {
 enum class Frontend : std::uint8_t { ClassicMac, X11 };
 struct Control {
-    bool classic_mac, x11;          // the front ends the row applies to
-    std::string_view keys;          // what the person presses or does, as Help prints it
-    std::string_view what;          // what it does
-    std::string_view chars;         // typed characters bound to it (any case); empty if none
-    std::optional<Command> command; // sent through update()
-    KeyBinding::Overlay overlay;    // or an overlay or window the front end handles itself
+    bool classic_mac, x11;             // the front ends the row applies to
+    std::string_view keys;             // what the person presses or does, as Help prints it
+    std::string_view what;             // what it does
+    std::string_view chars;            // typed characters bound to it (any case); empty if none
+    std::optional<Command> command;    // sent through update()
+    KeyBinding::Overlay overlay;       // or an overlay or window the front end handles itself
+    std::string_view classic_commands; // effective Command keys, including aliases
+    std::string_view classic_keys;     // optional Classic wording for the plain form
 };
 // The whole table, in the order Help lists it.
 const Control* controls();
