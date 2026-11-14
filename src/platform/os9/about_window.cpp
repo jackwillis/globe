@@ -3,6 +3,7 @@
 #include "about_window.hpp"
 #include "globe/countries.hpp"
 #include "globe/strings.hpp"
+#include "globe/version.hpp"
 #include "globe/wrap.hpp"
 #include <Quickdraw.h>
 #include <algorithm>
@@ -64,7 +65,16 @@ void AboutWindow::draw() {
     TextSize(12);
     TextFace(normal);
     InfoCard card{};
-    card.lines[0] = tr(Str::AboutVersion);
+    // The card borrows this buffer through wrapping and drawing.
+    static_assert(kVersion.size() < 255);
+    constexpr std::size_t kMaxVersionLabel = 255 - 1 - kVersion.size();
+    const auto label = tr(Str::AboutVersion).substr(0, kMaxVersionLabel);
+    char version_line[255];
+    auto* version_start = std::copy(label.begin(), label.end(), version_line);
+    *version_start++ = ' ';
+    const auto* version_end = std::copy(kVersion.begin(), kVersion.end(), version_start);
+    card.lines[0] =
+        std::string_view(version_line, static_cast<std::size_t>(version_end - version_line));
     card.lines[1] = tr(Str::AboutLine1);
     card.lines[2] = tr(Str::AboutLine2);
     card.lines[3] = tr(Str::AboutLine3);
