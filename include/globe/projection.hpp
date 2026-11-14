@@ -9,7 +9,9 @@
 // covers [i, i+1) x [j, j+1), so the viewport center is (width / 2, height / 2).
 #pragma once
 
+#include "globe/prefs.hpp"
 #include <cstddef>
+#include <cstdint>
 #include <optional>
 
 #include "globe/geometry.hpp"
@@ -42,14 +44,21 @@ struct ScreenPoint {
     double y;
 };
 
+enum class LengthUnit : std::uint8_t { Kilometer, Meter, Mile, Foot };
+
 struct CenterScaleBar {
-    double distance_km;
+    double distance_km; // the true length, whatever unit is shown
     int width_px;
+    double value = 0.0; // the length in `unit`: 5 for "5 mi", 500 for "500 m"
+    LengthUnit unit = LengthUnit::Kilometer;
 };
 
 // Uses the local orthographic scale at the view center. Selects the largest 1–2–5
-// distance that fits max_width_px, and rounds the resulting length to the nearest pixel.
-std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_px);
+// distance that fits max_width_px, and rounds the resulting length to the nearest pixel. The
+// distance is 1, 2 or 5 times a power of ten in the unit shown: kilometres, or metres under one;
+// with Units::Imperial miles, or feet under one mile.
+std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_px,
+                                               Units units = Units::Metric);
 
 // True if both cameras show the same view of the globe at the same viewport and center, at any
 // radius: only the zoom differs.

@@ -448,8 +448,9 @@ class Application {
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
         const bool settled = frame_settled(model_, runner_.active());
-        scale_label_.sync(model_.camera, fb_->width());
+        scale_label_.sync(model_.camera, fb_->width(), model_.prefs.units);
         shown_.set_scale_label(scale_label_.bitmap());
+        shown_.set_scale_units(model_.prefs.units);
         const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(), settled,
                                          bar_progress(model_, runner_.job()));
         shown_quick_ = shown_.quick();
@@ -528,8 +529,9 @@ class Application {
         bool converted = true;
         if (convert) { // else the rows were converted by capture(); only submit them
             const bool settled = frame_settled(model_, runner_.active());
-            scale_label_.sync(model_.camera, fb_->width());
+            scale_label_.sync(model_.camera, fb_->width(), model_.prefs.units);
             shown_.set_scale_label(scale_label_.bitmap());
+            shown_.set_scale_units(model_.prefs.units);
             const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(),
                                              settled, bar_progress(model_, runner_.job()));
             shown_quick_ = shown_.quick();
@@ -718,6 +720,7 @@ class Application {
             help_shown_ = false;
             sidebar_.show(*card); // a finished measurement follows the units
         }
+        reshow();                 // and so does the scale on the map
         prefs_window_.sync(model_.prefs);
         SetPortWindowPort(window_);
     }

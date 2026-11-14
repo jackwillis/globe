@@ -30,6 +30,8 @@ class ShownFrame {
     // A label for the scale drawn by the front end with a system font, or null for the built-in
     // digits. Not owned; keep it alive while frames are built.
     void set_scale_label(const LabelBitmap* label) { label_ = label; }
+    // The units the scale is shown in (the preference); metric until set.
+    void set_scale_units(Units units) { units_ = units; }
     // Puts the frame back as it was rendered.
     void end();
     // The last begin() drew overlays on a cheap (quick) copy: a settled frame should replace it.
@@ -43,5 +45,6 @@ class ShownFrame {
     bool quick_ = false;
     bool bar_ = false;
     const LabelBitmap* label_ = nullptr;
+    Units units_ = Units::Metric;
 };
 } // namespace globe

@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <cstring>
 namespace globe {
-void ScaleLabel::sync(const Camera& camera, int width) {
+void ScaleLabel::sync(const Camera& camera, int width, Units units) {
     char text[16];
-    const int length = scale_label_text(camera, width, text, sizeof text);
+    const int length = scale_label_text(camera, width, text, sizeof text, units);
     const short size = width >= 360 ? 12 : 9; // Monaco's two installed sizes
     if (length == 0) {
         ready_ = false;
