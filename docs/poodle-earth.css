@@ -2,7 +2,7 @@
 
 :root {
   color-scheme: light;
-  font: 112.5%/1.55 Georgia, "Times New Roman", serif;
+  font: 112.5%/1.55 "Geneva", "Lucida Grande", "Lucida Sans Unicode", "Tahoma", "Verdana", "DejaVu Sans", sans-serif;
   color: #171717;
   background: #fffefa;
 }
@@ -31,12 +31,11 @@ a:hover { text-decoration-thickness: .13em; }
   gap: .25rem 1rem;
 }
 .actions, .release, .preview, .project-links {
-  font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", system-ui, sans-serif;
   font-size: .85rem;
 }
 .project-links a { display: inline-block; padding-block: .35rem; }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
-h1, h2 { line-height: 1.12; }
+h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
 h1 { font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
 h2 { font-size: 1.45rem; margin: 0; }
 p, ol { margin: .65rem 0 0; }
