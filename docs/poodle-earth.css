@@ -54,8 +54,8 @@ p, ol { margin: .65rem 0 0; }
 
 img { display: block; max-width: 100%; height: auto; }
 
-.content { padding-block: 1.25rem; }
-.content section + section { margin-top: 1.25rem; }
+.content { padding-block: clamp(2rem, 5vw, 3rem); }
+.content section + section { margin-top: clamp(2rem, 5vw, 3rem); }
 ol { padding-inline-start: 1.5rem; }
-.footer .wrap { border-top: 1px solid #888; padding-block: 1rem 1.5rem; }
+.footer .wrap { border-top: 1px solid #888; padding-block: 1.5rem 2rem; }
 .project-links { list-style: none; margin: .5rem 0 0; padding: 0; }
