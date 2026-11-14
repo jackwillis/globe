@@ -8,7 +8,7 @@ namespace globe {
 namespace {
 constexpr int kGlyphWidth = 5, kGlyphHeight = 7, kAdvance = 6;
 constexpr int kMinWidth = 80, kMaxBarWidth = 120;
-// Rows from the bottom: the progress bar, a gap, then the scale's bar line (ticks reach 2 rows
+// Rows from the bottom: the progress bar, a gap, then the scale's bar line (ticks reach 1 row
 // either side) and the label above it.
 constexpr int kBarLift = kProgressBarRows + 6; // rows from the bottom edge to the bar line
 constexpr int kLabelGap = 6;                   // from the bar line up to the label's bottom row
@@ -27,6 +27,7 @@ constexpr Glyph kGlyphs[] = {
     {'7', {0x1f, 0x01, 0x02, 0x04, 0x08, 0x08, 0x08}},
     {'8', {0x0e, 0x11, 0x11, 0x0e, 0x11, 0x11, 0x0e}},
     {'9', {0x0e, 0x11, 0x11, 0x0f, 0x01, 0x02, 0x0c}},
+    {',', {0x00, 0x00, 0x00, 0x00, 0x06, 0x02, 0x04}},
     {'k', {0x10, 0x10, 0x12, 0x14, 0x18, 0x14, 0x12}},
     {'m', {0x00, 0x00, 0x1a, 0x15, 0x15, 0x15, 0x15}},
 };
@@ -35,6 +36,10 @@ const Glyph* glyph_for(char ch) {
         if (g.ch == ch)
             return &g;
     return nullptr;
+}
+// Columns a character takes, including the gap after it: the comma is narrow.
+int advance(char ch) {
+    return ch == ',' ? 3 : kAdvance;
 }
 // Pixel size of the type: doubled where the frame is wide enough to carry it.
 int type_scale(int width) {
@@ -57,8 +62,11 @@ int format_distance(double km, char* out) {
         digits[count++] = static_cast<char>('0' + v % 10);
     if (count == 0)
         digits[count++] = '0';
-    while (count > 0)
+    while (count > 0) {
         out[n++] = digits[--count];
+        if (count > 0 && count % 3 == 0)
+            out[n++] = ','; // 1,000 and up
+    }
     out[n++] = ' ';
     if (!metres)
         out[n++] = 'k';
@@ -116,15 +124,17 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera) {
     stroke(pen, [&](auto put) {
         for (int x = x0; x <= x1; ++x)
             put(x, y);
-        for (int dy = -2; dy <= 2; ++dy) {
+        for (int dy = -1; dy <= 1; ++dy) {
             put(x0, y + dy);
             put(x1, y + dy);
         }
     });
     const int s = layout.type;
-    const int text_width = layout.length * kAdvance * s - s;
-    int x = (fb.width() - text_width) / 2;
-    for (int i = 0; i < layout.length; ++i, x += kAdvance * s) {
+    int columns = 0;
+    for (int i = 0; i < layout.length; ++i)
+        columns += advance(layout.text[i]);
+    int x = (fb.width() - (columns * s - s)) / 2;
+    for (int i = 0; i < layout.length; x += advance(layout.text[i++]) * s) {
         const Glyph* g = glyph_for(layout.text[i]);
         if (g == nullptr)
             continue;

@@ -69,6 +69,30 @@ int main() {
                 differs = fb->pixel(x, y) != other->pixel(x, y);
         CHECK(differs);
     }
+    // From a few metres to thousands of kilometres (with its comma) the label stays centered and
+    // black and white, and the end ticks are three rows tall (one row above and below the bar).
+    {
+        const int width = 420, height = 315;
+        auto fb = Framebuffer::create(width, height);
+        for (const double radius : {2.0, 10.0, 60.0, 140.0, 300.0, 4000.0}) {
+            fb->clear(kBackground);
+            draw_center_scale(*fb, camera_for(width, height, radius));
+            const auto d = measure(*fb);
+            if (d.changed == 0)
+                continue; // a radius with no bar that fits
+            CHECK(d.only_edge_and_fill && d.outside == 0);
+            CHECK(std::abs((d.left + d.right) / 2 - width / 2) <= 2);
+            const int bar_y = height - kProgressBarRows - 6;
+            int x0 = 0;
+            while (x0 < width && fb->pixel(x0, bar_y) != kProgressFill)
+                ++x0;
+            CHECK(x0 < width);
+            CHECK(fb->pixel(x0, bar_y - 1) == kProgressFill &&
+                  fb->pixel(x0, bar_y + 1) == kProgressFill);
+            CHECK(fb->pixel(x0, bar_y - 2) == kProgressEdge &&
+                  fb->pixel(x0, bar_y + 2) == kProgressEdge);
+        }
+    }
     // Too small to fit: nothing is drawn and no rows are claimed.
     {
         auto tiny = Framebuffer::create(60, 40);
