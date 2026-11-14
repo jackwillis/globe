@@ -4,7 +4,7 @@ From the repository root, run `python3 -m http.server 8000 --bind 127.0.0.1 --di
 and open <http://127.0.0.1:8000/>. To exercise a project subpath, serve the
 repository root with `python3 -m http.server 8000 --bind 127.0.0.1` and open
 <http://127.0.0.1:8000/docs/>. The stylesheet and future screenshot URLs
-are relative to the page. The site has no build step or app-build dependency.
+are relative to the page. The site has no build step or app-build dependency. Archivo loads from Google Fonts when available. The page falls back to local fonts offline.
 
 After owner approval, the simplest Pages source is **Deploy from a branch**
 with `main` and `/docs`. This serves the entire `docs/` tree, with Jekyll
@@ -25,7 +25,7 @@ actual release. Check the live download and source archive as a visitor.
 
 When [#118](https://github.com/jackwillis/globe/issues/118) supplies authentic
 OS 9 captures, store optimized images under `docs/images/` and reuse them
-in the README where appropriate. Replace the hero placeholder with a figure
+in the README where appropriate. Add a figure at the screenshot comment in the hero
 using a relative image URL, intrinsic width and height, descriptive alt text
 and a caption naming the captured version and OS. Add one or two supporting
 figures only if they show distinct features. Keep capture provenance with #118.
