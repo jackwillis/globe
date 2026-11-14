@@ -93,6 +93,61 @@ int main() {
                   fb->pixel(x0, bar_y + 2) == kProgressEdge);
         }
     }
+    // A label the front end drew replaces the built-in digits, in the same place and with the same
+    // black edge; its text comes from the core.
+    {
+        const int width = 420, height = 315;
+        const auto camera = camera_for(width, height, 140);
+        char text[16] = {};
+        const int length = scale_label_text(camera, width, text, sizeof text);
+        CHECK(length > 0 && text[length] == 0 && text[length - 1] == 'm');
+        CHECK(scale_label_text(camera_for(60, 40, 18), 60, text, sizeof text) == 0);
+        // A solid 30x12 block of ink stands in for the glyphs.
+        std::vector<std::uint8_t> bits(48, 0xff); // 12 rows of 4 bytes
+        LabelBitmap label{30, 12, 4, bits.data()};
+        auto plain = Framebuffer::create(width, height);
+        auto native = Framebuffer::create(width, height);
+        plain->clear(kBackground);
+        native->clear(kBackground);
+        draw_center_scale(*plain, camera);
+        draw_center_scale(*native, camera, &label);
+        const auto d = measure(*native);
+        CHECK(d.changed > 0 && d.only_edge_and_fill && d.outside == 0);
+        const int bar_y = height - kProgressBarRows - 6;
+        const int left = (width - 30) / 2, top = bar_y - 6 - 12;
+        CHECK(native->pixel(left, top) == kProgressFill &&
+              native->pixel(left + 29, top + 11) == kProgressFill);
+        CHECK(native->pixel(left - 1, top) == kProgressEdge &&
+              native->pixel(left, top - 1) == kProgressEdge);
+        CHECK(native->pixel(left + 30, top + 11) == kProgressEdge);
+        // The bar underneath is the same either way.
+        bool same = true;
+        for (int x = 0; x < width; ++x)
+            same &= plain->pixel(x, bar_y) == native->pixel(x, bar_y);
+        CHECK(same);
+        // Bitmaps that cannot be drawn are ignored in favour of the built-in digits.
+        LabelBitmap tall{30, 40, 4, bits.data()}, empty{0, 0, 0, nullptr};
+        for (const LabelBitmap* bad : {&tall, &empty}) {
+            auto again = Framebuffer::create(width, height);
+            again->clear(kBackground);
+            draw_center_scale(*again, camera, bad);
+            bool equal = true;
+            for (int y = 0; y < height; ++y)
+                for (int x = 0; x < width; ++x)
+                    equal &= again->pixel(x, y) == plain->pixel(x, y);
+            CHECK(equal);
+        }
+        // ShownFrame passes it along and the rendered frame is put back.
+        auto fb = Framebuffer::create(width, height);
+        fb->clear(kBackground);
+        Overlays overlays;
+        ShownFrame shown;
+        shown.set_scale_label(&label);
+        const auto& frame = shown.begin(overlays, *fb, camera, 0, true, -1.0);
+        CHECK(frame.pixel(left, top) == kProgressFill);
+        shown.end();
+        CHECK(measure(*fb).changed == 0);
+    }
     // Too small to fit: nothing is drawn and no rows are claimed.
     {
         auto tiny = Framebuffer::create(60, 40);

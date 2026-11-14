@@ -24,6 +24,7 @@
 #include "menu_bar.hpp"
 #include "pixel_format.hpp"
 #include "prefs_window.hpp"
+#include "scale_label.hpp"
 #include "sidebar.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
@@ -447,6 +448,8 @@ class Application {
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
         const bool settled = frame_settled(model_, runner_.active());
+        scale_label_.sync(model_.camera, fb_->width());
+        shown_.set_scale_label(scale_label_.bitmap());
         const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(), settled,
                                          bar_progress(model_, runner_.job()));
         shown_quick_ = shown_.quick();
@@ -525,6 +528,8 @@ class Application {
         bool converted = true;
         if (convert) { // else the rows were converted by capture(); only submit them
             const bool settled = frame_settled(model_, runner_.active());
+            scale_label_.sync(model_.camera, fb_->width());
+            shown_.set_scale_label(scale_label_.bitmap());
             const auto& shown = shown_.begin(overlays_, *fb_, model_.camera, unix_seconds(),
                                              settled, bar_progress(model_, runner_.job()));
             shown_quick_ = shown_.quick();
@@ -770,6 +775,7 @@ class Application {
     Overlays overlays_;
     Sidebar sidebar_;
     AboutWindow about_;
+    ScaleLabel scale_label_; // the scale's label in Monaco
     PrefsWindow prefs_window_;
     std::optional<Framebuffer> fb_;
     RefineRunner runner_; // the refinement job, the zoom preview and the markers
