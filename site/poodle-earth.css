@@ -29,16 +29,13 @@ a:hover { text-decoration-thickness: .13em; }
 }
 .skip:not(:focus) { clip-path: inset(50%); }
 
-.actions, .project-links {
+.actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: .25rem 1rem;
 }
-.actions, .release, .project-links {
-  font-size: .85rem;
-}
-.project-links a { display: inline-block; padding-block: .35rem; }
+.actions, .release { font-size: .85rem; }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
 h1 { font-family: "Leckerli One", Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
@@ -79,4 +76,3 @@ figcaption { font-size: .78rem; line-height: 1.4; color: #4a4a4a; margin-top: .4
 .content section + section { margin-top: clamp(2rem, 5vw, 3rem); }
 ol { padding-inline-start: 1.5rem; }
 .footer .wrap { border-top: 1px solid #888; padding-block: 1.5rem 2rem; }
-.project-links { list-style: none; margin: .5rem 0 0; padding: 0; }
