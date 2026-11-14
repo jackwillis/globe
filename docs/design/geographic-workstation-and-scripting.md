@@ -1,6 +1,6 @@
 # Geographic workstation and scripting — exploratory direction
 
-**Status:** Owner-directed aspirations and unvalidated hypotheses, 2026-11-10, condensed 2026-11-13. Nonbinding: nothing here is implemented, scheduled, or a release gate. It supplements the [product brief](product-direction-2026-11-10.md) and does not amend [ADR 0005](../adr/0005-entity-identity-and-navigation.md) or the [entity/navigation contract](entity-navigation-contract.md). The optional console and Listener are owned by [#63](https://github.com/jackwillis/globe/issues/63).
+**Status:** Owner-directed aspirations and unvalidated hypotheses, 2026-11-10, condensed 2026-11-13. Most items here remain unscheduled research, **except the optional detached information-window first slice now targeted as a pre-v0.2 patch candidate in [#148](https://github.com/jackwillis/globe/issues/148)**. Nothing in this note independently authorizes implementation, hardware access or a release gate. It supplements the [product brief](product-direction-2026-11-10.md) and does not amend [ADR 0005](../adr/0005-entity-identity-and-navigation.md) or the [entity/navigation contract](entity-navigation-contract.md). The optional console and Listener are owned by [#63](https://github.com/jackwillis/globe/issues/63).
 
 ## Product direction
 
@@ -11,7 +11,7 @@ Globe may grow from an atlas toward an encyclopedia and light GIS workstation, w
 - A native Tools palette with **Explore**, **Inspect** and **Measure**. Inspect would make overlapping entities (city, region, country, physical feature) discoverable. Mode feedback, keyboard access and tool boundaries are untested.
 - Cursors: open hand by default, pointing finger over selectable objects, closed hand while dragging. Keep double-click-to-centre-and-zoom. Shift-double-click to zoom out needs a check against modifier conventions and discoverability.
 - Hover highlights the top candidate without changing selection or camera; hover alone never navigates or runs a script.
-- The main-window Looks/Information sidebar stays the baseline. Detached or multi-window arrangements are UX experiments, especially on small displays.
+- **Pre-v0.2 experiment (#148):** retain the native one-window globe + Looks/Information sidebar as the default, but provide an optional, reversible detached information window first. Make it a candidate for an independently usable v0.1.x patch, before v0.2.0; no exact patch has been selected. X11 catch-up follows the [parity policy](../backlog.md#incremental-releases-and-milestone-graduation-owner-decision-2026-11-13). Broader palettes, arbitrary docking and multiple independent globe viewports remain uncommitted UX experiments, especially on small displays.
 
 ## Programmable-geography hypotheses
 
