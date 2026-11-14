@@ -28,6 +28,7 @@ MenuEdit = Edit
 MenuView = View
 ItemClose = Close
 ItemQuit = Quit
+ItemControls = Controls
 ItemUndo = Undo
 ItemCut = Cut
 ItemCopy = Copy

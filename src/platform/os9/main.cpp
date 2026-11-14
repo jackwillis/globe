@@ -8,6 +8,7 @@
 #include "clock.hpp"
 #include "globe/app.hpp"
 #include "globe/card_text.hpp"
+#include "globe/controls.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -579,6 +580,7 @@ class Application {
     void pick(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
+            help_shown_ = false;
             sidebar_.show(*card);
             SetPortWindowPort(window_);
         }
@@ -598,8 +600,19 @@ class Application {
         } else if (which == KeyBinding::Overlay::Measure) {
             overlays_.toggle_measure();
             hover_valid_ = false; // measuring makes the whole globe clickable
+            if (help_shown_ && measure_replaces_help(which, overlays_.measuring()))
+                toggle_help(false);
             reshow();
+        } else if (which == KeyBinding::Overlay::Help) {
+            toggle_help(!help_shown_);
         }
+    }
+    // The controls list takes the information pane, as a card; hiding it (or any new card) puts
+    // the blank card back. Same text as the X11 front end's for the keys both have.
+    void toggle_help(bool show) {
+        help_shown_ = show;
+        sidebar_.show(show ? help_card(Frontend::ClassicMac) : nothing_selected_card());
+        SetPortWindowPort(window_);
     }
     // Check marks and dimming for the menu about to be shown; the model is the only state.
     void refresh_menus() {
@@ -640,7 +653,7 @@ class Application {
         const short menu = static_cast<short>(result >> 16);
         const short item = static_cast<short>(result & 0xffff);
         bool quit = false;
-        if (menu == kAppleMenu && item > kAboutItem + 1) {
+        if (menu == kAppleMenu && item > kHelpItem + 1) {
             unsigned char name[256];
             GetMenuItemText(GetMenuHandle(kAppleMenu), item, name);
             OpenDeskAcc(name);
@@ -656,6 +669,8 @@ class Application {
             const auto choice = menu_choice(menu, item, model_.terrain_style);
             if (choice.about)
                 show_about();
+            else if (choice.help)
+                toggle_help(true);
             else if (choice.close)
                 close_front();
             else if (choice.command)
@@ -694,8 +709,10 @@ class Application {
     void set_preferences(const Preferences& next, std::uint64_t) {
         apply(SetPreferences{next});
         overlays_.set_preferences(model_.prefs);
-        if (const auto card = overlays_.take_card())
+        if (const auto card = overlays_.take_card()) {
+            help_shown_ = false;
             sidebar_.show(*card); // a finished measurement follows the units
+        }
         prefs_window_.sync(model_.prefs);
         SetPortWindowPort(window_);
     }
@@ -710,6 +727,10 @@ class Application {
             return false;
         const auto code = (message >> 8) & 0xff;
         const auto ch = static_cast<int>(message & 0xff);
+        if (ch == 27 && help_shown_) { // Escape hides Help; it never quits here
+            toggle_help(false);
+            return false;
+        }
         // Arrow and Page keys are decoded here (ADB codes); typed characters go through the shared
         // table so both front ends bind the same shortcuts.
         std::optional<Command> command;
@@ -769,6 +790,7 @@ class Application {
     ScreenPoint hover_at_{};
     std::uint64_t generation_seen_ = 0;
     bool hover_valid_ = false;
+    bool help_shown_ = false;
 };
 } // namespace
 int main() {
