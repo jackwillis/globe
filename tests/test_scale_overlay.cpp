@@ -93,6 +93,44 @@ int main() {
                   fb->pixel(x0, bar_y + 2) == kProgressEdge);
         }
     }
+    // Small ticks sit at round divisions of the bar: tenths of a 1, quarters of a 2, fifths of a 5.
+    CHECK(scale_divisions(1.0) == 10 && scale_divisions(100.0) == 10 && scale_divisions(0.1) == 10);
+    CHECK(scale_divisions(2.0) == 4 && scale_divisions(200.0) == 4 && scale_divisions(0.02) == 4);
+    CHECK(scale_divisions(5.0) == 5 && scale_divisions(5000.0) == 5 && scale_divisions(0.5) == 5);
+    CHECK(scale_divisions(0.0) == 1 && scale_divisions(-3.0) == 1);
+    {
+        const int width = 420, height = 315, bar_y = height - kProgressBarRows - 6;
+        auto fb = Framebuffer::create(width, height);
+        int seen = 0;
+        for (double radius = 20.0; radius < 5000.0; radius *= 1.07) {
+            const auto camera = camera_for(width, height, radius);
+            const auto bar = center_scale_bar(radius, scale_bar_max_width(width));
+            if (!bar || bar->width_px < 2)
+                continue;
+            fb->clear(kBackground);
+            draw_center_scale(*fb, camera);
+            const int divisions = scale_divisions(bar->distance_km);
+            const int span = bar->width_px - 1, left = (width - bar->width_px) / 2;
+            // Count the white pixels one row above the line, between the end ticks.
+            int ticks = 0;
+            for (int x = left + 1; x < left + span; ++x)
+                ticks += fb->pixel(x, bar_y - 1) == kProgressFill;
+            if (span / divisions >= 4) {
+                CHECK(ticks == divisions - 1);
+                // Evenly spaced, and never taller than one row above the line.
+                for (int i = 1; i < divisions; ++i)
+                    CHECK(fb->pixel(left + (i * span + divisions / 2) / divisions, bar_y - 1) ==
+                          kProgressFill);
+                for (int i = 0; i < width; ++i)
+                    CHECK(i >= left && i <= left + span ? true
+                                                        : fb->pixel(i, bar_y - 1) != kProgressFill);
+                ++seen;
+            } else {
+                CHECK(ticks == 0); // too crowded: only the end ticks
+            }
+        }
+        CHECK(seen > 5);
+    }
     // Too small to fit: nothing is drawn and no rows are claimed.
     {
         auto tiny = Framebuffer::create(60, 40);

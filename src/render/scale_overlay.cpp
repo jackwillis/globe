@@ -8,6 +8,7 @@ namespace globe {
 namespace {
 constexpr int kGlyphWidth = 5, kGlyphHeight = 7, kAdvance = 6;
 constexpr int kMinWidth = 80, kMaxBarWidth = 120;
+constexpr int kMinTickSpacing = 4; // pixels between small ticks
 // Rows from the bottom: the progress bar, a gap, then the scale's bar line (ticks reach 1 row
 // either side) and the label above it.
 constexpr int kBarLift = kProgressBarRows + 6; // rows from the bottom edge to the bar line
@@ -47,6 +48,7 @@ int type_scale(int width) {
 }
 struct Layout {
     int type, bar_width, bar_y, label_top;
+    double distance_km;
     char text[16];
     int length;
 };
@@ -85,6 +87,7 @@ bool lay_out(int width, int height, const Camera& camera, Layout& layout) {
     if (!bar || bar->width_px < 2)
         return false;
     layout.bar_width = bar->width_px;
+    layout.distance_km = bar->distance_km;
     layout.bar_y = height - kBarLift;
     layout.label_top = top + 1;
     layout.length = format_distance(bar->distance_km, layout.text);
@@ -105,6 +108,16 @@ template <class Shape> void stroke(Pen& pen, Shape&& shape) {
     shape([&](int x, int y) { pen.fill(x, y); });
 }
 } // namespace
+int scale_divisions(double distance_km) {
+    if (!(distance_km > 0.0))
+        return 1;
+    double mantissa = distance_km;
+    while (mantissa >= 9.5)
+        mantissa /= 10.0;
+    while (mantissa < 0.95)
+        mantissa *= 10.0;
+    return mantissa < 1.5 ? 10 : mantissa < 3.5 ? 4 : 5; // 1, 2 or 5
+}
 int scale_bar_max_width(int width) {
     return std::clamp(width / 3, 0, kMaxBarWidth);
 }
@@ -128,6 +141,13 @@ void draw_center_scale(Framebuffer& fb, const Camera& camera) {
             put(x0, y + dy);
             put(x1, y + dy);
         }
+        // Small ticks at the round divisions (100 m on a 1 km bar), a row high above the line;
+        // left out when they would crowd.
+        const int divisions = scale_divisions(layout.distance_km);
+        const int span = layout.bar_width - 1;
+        if (span / divisions >= kMinTickSpacing)
+            for (int i = 1; i < divisions; ++i)
+                put(x0 + (i * span + divisions / 2) / divisions, y - 1);
     });
     const int s = layout.type;
     int columns = 0;

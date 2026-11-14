@@ -11,6 +11,9 @@
 namespace globe {
 // The most columns the bar may span, for a frame `width` wide.
 int scale_bar_max_width(int width);
+// How many equal parts the bar is divided into by small ticks, so each part is a round number
+// (a 1 km bar by 100 m, 2 km by 500 m, 5 km by 1 km): 10 for a 1, 4 for a 2, 5 for a 5.
+int scale_divisions(double distance_km);
 // The bottom rows of a `width` x `height` frame the scale may change (0 when the frame is too
 // small to show it). The progress bar's own rows are included.
 int scale_overlay_rows(int width, int height);
