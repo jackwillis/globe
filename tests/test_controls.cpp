@@ -49,9 +49,10 @@ int main() {
         const auto b = binding_for_char(ch);
         if (!b.command && b.overlay == Overlay::Nothing)
             continue;
+        const auto lower = static_cast<char>(ch >= 'A' && ch <= 'Z' ? ch + 32 : ch);
         bool listed = false;
         for (unsigned i = 0; i < control_count(); ++i)
-            listed |= controls()[i].chars.find(static_cast<char>(ch)) != std::string_view::npos;
+            listed |= controls()[i].chars.find(lower) != std::string_view::npos;
         CHECK(listed);
     }
     CHECK(binding_for_char('h').overlay == Overlay::Help);
@@ -110,5 +111,5 @@ int main() {
                   std::string::npos);
         }
     }
-    return 0;
+    return TEST_MAIN_RESULT();
 }
