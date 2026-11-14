@@ -47,7 +47,7 @@ add_application(${APP} CREATOR PdlE
   ${ROOT}/src/render/framebuffer.cpp ${ROOT}/src/render/raster.cpp
   ${ROOT}/src/render/render.cpp ${ROOT}/src/render/terrain.cpp ${ROOT}/src/render/places.cpp
   ${ROOT}/src/render/highlight.cpp ${ROOT}/src/render/daynight.cpp ${ROOT}/src/render/measure.cpp
-  ${ROOT}/src/render/overlays.cpp ${ROOT}/src/render/zoom.cpp ${ROOT}/src/render/shown_frame.cpp ${ROOT}/src/render/scale_overlay.cpp ${ROOT}/src/render/refine_runner.cpp
+  ${ROOT}/src/render/overlays.cpp ${ROOT}/src/render/zoom.cpp ${ROOT}/src/render/shown_frame.cpp ${ROOT}/src/render/scale_overlay.cpp ${ROOT}/src/render/compass_overlay.cpp ${ROOT}/src/render/refine_runner.cpp
   ${ROOT}/src/render/label_layout.cpp
   ${CMAKE_BINARY_DIR}/embedded_landclasses.cpp ${CMAKE_BINARY_DIR}/embedded_countries.cpp
   ${CMAKE_BINARY_DIR}/embedded_places.cpp

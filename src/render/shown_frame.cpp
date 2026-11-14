@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/shown_frame.hpp"
+#include "globe/compass_overlay.hpp"
 #include "globe/scale_overlay.hpp"
 #include <algorithm>
 #include <cstring>
@@ -21,10 +22,11 @@ const Framebuffer& ShownFrame::begin(Overlays& overlays, Framebuffer& fb, const 
     quick_ = shown != nullptr && !settled;
     bar_ = progress >= 0.0 && fb.height() >= kProgressBarRows;
     rows_ = nullptr;
-    // The scale goes on every frame, so the bottom rows are always drawn on: on the overlay copy,
-    // or in `fb` itself with the rows they cover stashed.
+    // Stash the bottom rows touched by map furniture when composing directly into the render.
     const int scale_rows = scale_overlay_rows(fb.width(), fb.height());
-    const int rows = std::min(fb.height(), std::max(bar_ ? kProgressBarRows : 0, scale_rows));
+    const int compass_rows = compass_overlay_rows(fb.width(), fb.height());
+    const auto north = compass_rows > 0 ? compass_north(camera) : std::nullopt;
+    const int rows = std::max({bar_ ? kProgressBarRows : 0, scale_rows, north ? compass_rows : 0});
     if (rows > 0) {
         if (shown == nullptr) {
             const std::size_t count = static_cast<std::size_t>(fb.width()) * rows;
@@ -36,6 +38,8 @@ const Framebuffer& ShownFrame::begin(Overlays& overlays, Framebuffer& fb, const 
         }
         if (scale_rows > 0)
             draw_center_scale(*shown, camera, label_, units_);
+        if (north)
+            draw_compass_rose(*shown, *north);
         if (bar_)
             draw_progress_bar(*shown, progress);
     }
