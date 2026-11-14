@@ -11,7 +11,10 @@ blobs from `docs/images/`: `os9-tiger-classic.png` is an OS 9 application
 running in **Tiger Classic on a G4** (2026-11-02); `map.png` and
 `relief.png` are **headless 640×480 renders**, not OS 9 GUI screenshots.
 Captions and alt text distinguish these sources. Do not label these images as
-bare Mac OS 9.2.2 hardware captures. Archivo and Leckerli One load from Google Fonts when available. The page falls back to local fonts offline.
+bare Mac OS 9.2.2 hardware captures.
+
+Archivo and Leckerli One load from Google Fonts when available. The page falls
+back to local fonts offline.
 
 After owner approval, select **GitHub Actions** in Settings → Pages. Run
 **Publish website** from `main` in the Actions tab for the initial publication
