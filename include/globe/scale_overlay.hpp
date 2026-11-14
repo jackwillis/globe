@@ -7,15 +7,16 @@
 // the projected radius, which a drag does not change.
 #pragma once
 #include "globe/framebuffer.hpp"
+#include "globe/prefs.hpp"
 #include "globe/projection.hpp"
 namespace globe {
 // The most columns the bar may span, for a frame `width` wide.
 int scale_bar_max_width(int width);
 // The ticks inside the bar. The bar is `units` whole decade units long (1, 2 or 5 times 10^n km:
-// 1 km, 200 m, 5 km), cut into steps of `steps_per_unit`, with long ticks at the ends. A bar of 1
-// is cut into tenths (100 m on 1 km) with its halfway tick, the 5, medium; a bar of 2 or 5 has a
-// medium tick at each whole unit inside it (one at 100 m on a 200 m bar), with small ticks at the
-// half-steps between. All other ticks are small.
+// 1 km, 200 m, 5 km, or the same numbers of miles or feet), cut into steps of `steps_per_unit`,
+// with long ticks at the ends. A bar of 1 is cut into tenths (100 m on 1 km) with its halfway tick,
+// the 5, medium; a bar of 2 or 5 has a medium tick at each whole unit inside it (one at 100 m on a
+// 200 m bar), with small ticks at the half-steps between. All other ticks are small.
 struct ScaleTicks {
     int units = 1, steps_per_unit = 1;
     int steps() const { return units * steps_per_unit; }
@@ -29,5 +30,7 @@ ScaleTicks scale_ticks(double distance_km);
 // small to show it). The progress bar's own rows are included.
 int scale_overlay_rows(int width, int height);
 // Draws the scale for `camera`'s radius into `fb`; nothing when it does not fit or has no scale.
-void draw_center_scale(Framebuffer& fb, const Camera& camera);
+// `units` is the preference: the bar is a round distance in kilometres and metres, or in miles and
+// feet.
+void draw_center_scale(Framebuffer& fb, const Camera& camera, Units units = Units::Metric);
 } // namespace globe

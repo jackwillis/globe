@@ -18,7 +18,24 @@ bool all_finite(const CameraParams& p) {
 
 } // namespace
 
-std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_px) {
+namespace {
+// The largest 1, 2 or 5 times a power of ten that is at most `max`.
+double nice_distance(double max) {
+    const double decade = std::pow(10.0, std::floor(std::log10(max)));
+    double distance = decade;
+    if (5.0 * decade <= max)
+        distance *= 5.0;
+    else if (2.0 * decade <= max)
+        distance *= 2.0;
+    else if (decade > max)
+        distance *= 0.5; // log10 can round up at a decade boundary
+    return distance;
+}
+
+constexpr double kKmPerMile = 1.609344, kKmPerFoot = 0.0003048;
+} // namespace
+
+std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_px, Units units) {
     if (!std::isfinite(radius_px) || radius_px <= 0.0 || max_width_px <= 0)
         return std::nullopt;
 
@@ -27,14 +44,25 @@ std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_p
     const double max_km = (kEarthMeanRadiusKm * max_width_px) / radius_px;
     if (!std::isfinite(max_km) || max_km <= 0.0)
         return std::nullopt;
-    const double decade = std::pow(10.0, std::floor(std::log10(max_km)));
-    double distance = decade;
-    if (5.0 * decade <= max_km)
-        distance *= 5.0;
-    else if (2.0 * decade <= max_km)
-        distance *= 2.0;
-    else if (decade > max_km)
-        distance *= 0.5; // log10 can round up at a decade boundary
+    double value, distance;
+    LengthUnit unit;
+    if (units == Units::Imperial) {
+        const double max_miles = max_km / kKmPerMile;
+        if (max_miles >= 1.0) {
+            value = nice_distance(max_miles);
+            unit = LengthUnit::Mile;
+            distance = value * kKmPerMile;
+        } else {
+            value = nice_distance(max_km / kKmPerFoot);
+            unit = LengthUnit::Foot;
+            distance = value * kKmPerFoot;
+        }
+    } else {
+        distance = nice_distance(max_km);
+        const bool metres = distance < 1.0;
+        value = metres ? distance * 1000.0 : distance;
+        unit = metres ? LengthUnit::Meter : LengthUnit::Kilometer;
+    }
 
     // The width is nonnegative and bounded by max_width_px. Retro68 68k lacks std::round.
     const double exact_width = (distance / max_km) * max_width_px;
@@ -42,7 +70,7 @@ std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_p
     const int width = whole_pixels + (exact_width - whole_pixels >= 0.5 ? 1 : 0);
     if (width < 1)
         return std::nullopt;
-    return CenterScaleBar{distance, width};
+    return CenterScaleBar{distance, width, value, unit};
 }
 
 std::optional<Camera> make_camera(const CameraParams& params) {

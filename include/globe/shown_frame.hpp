@@ -26,6 +26,8 @@ class ShownFrame {
     // call end() once the frame has been converted. Valid until end().
     const Framebuffer& begin(Overlays& overlays, Framebuffer& fb, const Camera& camera,
                              std::int64_t unix_seconds, bool settled, double progress);
+    // The units the scale is shown in (the preference); metric until set.
+    void set_scale_units(Units units) { units_ = units; }
     // Puts the frame back as it was rendered.
     void end();
     // The last begin() drew overlays on a cheap (quick) copy: a settled frame should replace it.
@@ -38,5 +40,6 @@ class ShownFrame {
     Rgb565* rows_ = nullptr; // where the stashed rows go back
     bool quick_ = false;
     bool bar_ = false;
+    Units units_ = Units::Metric;
 };
 } // namespace globe
