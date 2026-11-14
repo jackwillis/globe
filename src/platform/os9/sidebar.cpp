@@ -5,10 +5,13 @@
 #include <Events.h>
 #include <Quickdraw.h>
 #include <algorithm>
+#include <cstdio>
 #include <string_view>
 namespace globe {
 namespace {
 constexpr short kRow = 22, kLine = 14, kHead = 22, kMargin = 8, kBar = 16, kGrow = 15;
+constexpr short kScaleHeight = 33;
+constexpr int kScaleMaxWidth = 95;
 constexpr Str kNames[kLooksRows] = {Str::LookMap, Str::LookRelief};
 constexpr unsigned char kCheckMark = 0x12; // the check in the system font
 // Pascal string (length byte first) from text, truncated to fit one line.
@@ -43,7 +46,10 @@ void Sidebar::sync_scroll() {
 }
 void Sidebar::layout(short width, short height) {
     area_ = Rect{0, static_cast<short>(width - kWidth), height, width};
-    card_area_ = Rect{static_cast<short>(kRow * kLooksRows + 1), area_.left, height, width};
+    scale_area_ =
+        Rect{static_cast<short>(kRow * kLooksRows + 1), static_cast<short>(area_.left + 1),
+             static_cast<short>(kRow * kLooksRows + 1 + kScaleHeight), width};
+    card_area_ = Rect{scale_area_.bottom, area_.left, height, width};
     if (scroll_) {
         // The scroll bar takes the card's right edge, above the window's grow box.
         const short bottom = static_cast<short>(height - kGrow);
@@ -135,6 +141,47 @@ void Sidebar::draw_card() {
         DrawString(line);
     }
 }
+void Sidebar::sync_scale(double radius_px) {
+    if (radius_px == scale_radius_px_)
+        return;
+    scale_radius_px_ = radius_px;
+    scale_ = center_scale_bar(radius_px, kScaleMaxWidth);
+    SetPortWindowPort(window_);
+    draw_scale();
+}
+void Sidebar::draw_scale() {
+    EraseRect(&scale_area_);
+    if (!scale_)
+        return;
+
+    TextFont(0);
+    TextSize(12);
+    TextFace(normal);
+    unsigned char line[64];
+    to_pascal(line, "Scale at center");
+    const short left = static_cast<short>(area_.left + kMargin);
+    const short top = scale_area_.top;
+    MoveTo(left, static_cast<short>(top + 13));
+    DrawString(line);
+
+    const short right = static_cast<short>(left + scale_->width_px);
+    const short y = static_cast<short>(top + 25);
+    MoveTo(left, static_cast<short>(y - 3));
+    LineTo(left, static_cast<short>(y + 3));
+    MoveTo(left, y);
+    LineTo(right, y);
+    MoveTo(right, static_cast<short>(y - 3));
+    LineTo(right, static_cast<short>(y + 3));
+
+    char distance[32];
+    if (scale_->distance_km < 1.0)
+        std::snprintf(distance, sizeof distance, "%.0f m", scale_->distance_km * 1000.0);
+    else
+        std::snprintf(distance, sizeof distance, "%.0f km", scale_->distance_km);
+    to_pascal(line, distance);
+    MoveTo(static_cast<short>(right + 7), static_cast<short>(y + 4));
+    DrawString(line);
+}
 void Sidebar::draw() {
     if (!window_)
         return;
@@ -143,6 +190,7 @@ void Sidebar::draw() {
     MoveTo(area_.left, 0); // the separator between the globe and the sidebar
     LineTo(area_.left, area_.bottom);
     draw_rows();
+    draw_scale();
     draw_card();
     DrawControls(window_);
     ClipRect(&window_->portRect);

@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "check.hpp"
+#include "globe/measure.hpp"
 #include "globe/projection.hpp"
 
 using namespace globe;
@@ -17,6 +18,42 @@ Camera camera_at(double lat, double lon, double heading = 0.0, int w = 640, int 
     const auto cam = make_camera({{lat, lon}, heading, radius, w, h});
     CHECK(cam.has_value());
     return cam.value_or(Camera{});
+}
+
+void test_center_scale_bar() {
+    struct Example {
+        double radius_px;
+        double distance_km;
+        int width_px;
+    };
+    const Example examples[] = {{65.0, 5000.0, 51},  {200.0, 2000.0, 63}, {400.0, 1000.0, 63},
+                                {4000.0, 100.0, 63}, {20000.0, 20.0, 63}, {800000.0, 0.5, 63}};
+    for (const auto& example : examples) {
+        const auto bar = center_scale_bar(example.radius_px, 95);
+        CHECK(bar.has_value());
+        if (!bar)
+            continue;
+        CHECK_NEAR(bar->distance_km, example.distance_km, kEps);
+        CHECK(bar->width_px == example.width_px);
+
+        // A tiny equatorial arc projects to the same local distance per pixel.
+        const Camera camera = camera_at(0.0, 0.0, 0.0, 640, 480, example.radius_px);
+        const LatLon near_center{0.0, 0.001};
+        const auto point = to_screen(camera, to_camera_space(camera, to_unit_vector(near_center)));
+        const double km_per_px =
+            great_circle_km({0.0, 0.0}, near_center) / (point.x - camera.center_x);
+        CHECK_NEAR(bar->distance_km / km_per_px, bar->width_px, 0.5);
+    }
+
+    const auto narrower = center_scale_bar(200.0, 30);
+    CHECK(narrower.has_value());
+    if (narrower) {
+        CHECK_NEAR(narrower->distance_km, 500.0, kEps);
+        CHECK(narrower->width_px == 16);
+    }
+    CHECK(!center_scale_bar(0.0, 95));
+    CHECK(!center_scale_bar(std::numeric_limits<double>::infinity(), 95));
+    CHECK(!center_scale_bar(200.0, 0));
 }
 
 void test_unit_vectors() {
@@ -304,6 +341,7 @@ void test_subdivision() {
 } // namespace
 
 int main() {
+    test_center_scale_bar();
     test_unit_vectors();
     test_camera_validation();
     test_center_maps_to_screen_center();
