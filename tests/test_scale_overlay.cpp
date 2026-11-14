@@ -207,7 +207,7 @@ int main() {
                 if (!bar || bar->width_px < 2)
                     continue;
                 fb->clear(kBackground);
-                draw_center_scale(*fb, camera, units);
+                draw_center_scale(*fb, camera, nullptr, units);
                 const auto ticks = scale_ticks(bar->value);
                 const int steps = ticks.steps(), span = bar->width_px - 1;
                 const int left = (width - bar->width_px) / 2;
@@ -286,7 +286,7 @@ int main() {
         auto fb = Framebuffer::create(width, height);
         for (const Units units : {Units::Metric, Units::Imperial}) {
             fb->clear(kBackground);
-            draw_center_scale(*fb, camera, units);
+            draw_center_scale(*fb, camera, nullptr, units);
             CHECK(span_drawn(*fb) == (units == Units::Metric ? metric : imperial)->width_px);
             fb->clear(kBackground);
             Overlays overlays;
