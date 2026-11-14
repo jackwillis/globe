@@ -27,6 +27,7 @@
 "View",
 "Close",
 "Quit",
+"Controls",
 "Undo",
 "Cut",
 "Copy",

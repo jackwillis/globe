@@ -42,6 +42,7 @@
 #include "globe/app.hpp"
 #include "globe/atlas.hpp"
 #include "globe/card_text.hpp"
+#include "globe/controls.hpp"
 #include "globe/embedded_atlas.hpp"
 #include "globe/embedded_countries.hpp"
 #include "globe/embedded_elevation.hpp"
@@ -355,6 +356,7 @@ class App {
     void pick_at(ScreenPoint at) {
         const bool changed = overlays_.click(model_.camera, at);
         if (const auto card = overlays_.take_card()) {
+            help_shown_ = false;
             info_.show(*card);
             // The selected card already uses the single release UI language.
             ++info_cards_;
@@ -423,8 +425,10 @@ class App {
             return;
         shown_prefs_ = model_.prefs;
         overlays_.set_preferences(model_.prefs);
-        if (const auto card = overlays_.take_card())
+        if (const auto card = overlays_.take_card()) {
+            help_shown_ = false;
             info_.show(*card); // a finished measurement follows the units
+        }
         prefs_pane_.sync(model_.prefs);
     }
     // The sidebar sits to the right of the globe pane and follows its size.
@@ -942,6 +946,11 @@ class App {
         const auto binding = binding_for_char(ch);
         if (!command)
             command = binding.command;
+        // Escape hides Help before it can quit.
+        if (help_shown_ && ch == 27) {
+            toggle_help(false);
+            return false;
+        }
         if (command)
             return apply(CommandIssued{now, *command});
         switch (binding.overlay) {
@@ -951,12 +960,23 @@ class App {
             break;
         case KeyBinding::Overlay::Measure:
             overlays_.toggle_measure();
+            if (help_shown_ && measure_replaces_help(binding.overlay, overlays_.measuring()))
+                toggle_help(false);
             reshow();
+            break;
+        case KeyBinding::Overlay::Help:
+            toggle_help(!help_shown_);
             break;
         case KeyBinding::Overlay::Nothing:
             break;
         }
         return false;
+    }
+    // The controls list takes the information pane as a card; hiding it, or any new card, puts the
+    // blank card back.
+    void toggle_help(bool show) {
+        help_shown_ = show;
+        info_.show(show ? help_card(Frontend::X11) : nothing_selected_card());
     }
 
     Display* dpy_;
@@ -1008,6 +1028,7 @@ class App {
     std::size_t verified_frames_ = 0;
     bool need_redraw_ = true;
     bool first_expose_ = false;
+    bool help_shown_ = false;
     bool frame_valid_ = false; // fb_ and image_ hold a rendered frame
     bool script_active_ = false;
     bool script_started_ = false;

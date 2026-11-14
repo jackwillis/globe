@@ -4,8 +4,8 @@ This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
 
+- Help for the controls (#40): H or ? (and Apple menu > Controls on Classic) shows the keys and gestures in the information pane on both front ends, from the one table in `globe/controls.hpp` that also defines the shortcut keys. Escape hides it. Host-tested and cross-compiled; not yet run on the G4.
 - The Classic About window displays the full project version.
-
 - The unfinished globe edge report (#74) was closed after the owner reported sustained use since the fix with no recurrence. The closure was based on regular use without a structured test.
 
 ## 0.1.0 - public preview (2026-11-13)

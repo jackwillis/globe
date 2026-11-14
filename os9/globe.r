@@ -17,7 +17,7 @@ resource 'SIZE' (-1) {
 #define DIVIDER "-", noIcon, noKey, noMark, plain
 resource 'MENU' (128, preload) {
     128, textMenuProc, allEnabled, enabled, apple,
-    { ITEM("About Poodle Earth\0xC9", noKey); DIVIDER }
+    { ITEM("About Poodle Earth\0xC9", noKey); ITEM("Controls\0xC9", "?"); DIVIDER }
 };
 resource 'MENU' (129, preload) {
     129, textMenuProc, allEnabled, enabled, "File",

@@ -64,6 +64,22 @@ bytes `.bin`); the resources are about 1 KB; no change to the SIZE partition.
 10. The cursor is the arrow over the menu bar; no stale hand afterward.
 11. Compare Tiger Classic and bare OS 9 (the Apple menu differs).
 
+## Controls help (#40)
+
+Built for PowerPC (Retro68) and host-tested (`test_controls`, `test_menus`); X11 checked on a
+private Xvfb display. **Not run on any Macintosh.** The list is `help_card()` in
+`include/globe/controls.hpp`; it fills the information pane and scrolls like any card.
+
+1. Press H, then ? (Shift-/): the pane titled Controls replaces the selection card; the Classic
+   list has Command-Q and Esc rows and no Mouse wheel or F2 row.
+2. Apple menu > Controls (Cmd-?) shows the same list; the menu is About, Controls, divider, then
+   desk accessories, and desk accessories still open.
+3. At 640x480 and the smallest window the G4 can show: the pane scrolls to the last row; nothing
+   is cut off mid-word.
+4. Esc hides the list (the blank Selection card returns) and does not quit; picking a country or
+   starting a measurement also replaces it.
+5. Repeat on bare OS 9 and on Tiger Classic (the Apple menu differs).
+
 ### Tiger Classic smoke test, 2026-11-08 (not bare OS 9)
 
 Build `18b08b5` (`GlobeFloppy` 546,172 byte application, Retro68 PowerPC), pushed as
