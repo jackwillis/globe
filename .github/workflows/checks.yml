@@ -1,9 +1,39 @@
 name: Checks
 
+# Avoid re-running expensive host/Retro68 builds for docs- and site-only changes.
+# Cover all source, build inputs, generated-atlas inputs and this workflow itself.
 on:
   pull_request:
+    paths:
+      - '.github/workflows/checks.yml'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.gitignore'
+      - 'CMakeLists.txt'
+      - 'atlas/**'
+      - 'data/**'
+      - 'include/**'
+      - 'l10n/**'
+      - 'os9/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'tools/**'
   push:
     branches: [main, v2]
+    paths:
+      - '.github/workflows/checks.yml'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.gitignore'
+      - 'CMakeLists.txt'
+      - 'atlas/**'
+      - 'data/**'
+      - 'include/**'
+      - 'l10n/**'
+      - 'os9/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'tools/**'
   workflow_dispatch:
 
 permissions:
