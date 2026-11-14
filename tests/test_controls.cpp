@@ -59,6 +59,13 @@ int main() {
     CHECK(binding_for_char('?').overlay == Overlay::Help);
     CHECK(!binding_for_char('h').command);
 
+    // Starting a measurement (not leaving it, not another overlay) replaces Help.
+    CHECK(measure_replaces_help(Overlay::Measure, true));
+    CHECK(!measure_replaces_help(Overlay::Measure, false));
+    CHECK(!measure_replaces_help(Overlay::Night, true) &&
+          !measure_replaces_help(Overlay::Help, true));
+    CHECK(!measure_replaces_help(Overlay::Nothing, true));
+
     // What each front end shows is its own: the wheel, F2 and bare Q/Esc are X11; Command-Q is
     // Classic. Shared keys are in both.
     const auto mac = help_card(Frontend::ClassicMac), x11 = help_card(Frontend::X11);

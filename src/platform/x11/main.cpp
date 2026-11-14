@@ -960,6 +960,8 @@ class App {
             break;
         case KeyBinding::Overlay::Measure:
             overlays_.toggle_measure();
+            if (help_shown_ && measure_replaces_help(binding.overlay, overlays_.measuring()))
+                toggle_help(false);
             reshow();
             break;
         case KeyBinding::Overlay::Help:

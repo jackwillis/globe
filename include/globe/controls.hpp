@@ -25,6 +25,11 @@ struct Control {
 const Control* controls();
 unsigned control_count();
 bool applies_to(const Control& control, Frontend frontend);
+// Starting a measurement replaces the Help card (the measurement's own cards use the pane next);
+// leaving it, and the other overlays, leave Help as it is.
+constexpr bool measure_replaces_help(KeyBinding::Overlay which, bool measuring_after) {
+    return which == KeyBinding::Overlay::Measure && measuring_after;
+}
 // Help as an information card for `frontend`: the title and one line per applicable control,
 // "keys: what". Text is static, so the card may be kept as long as wanted.
 InfoCard help_card(Frontend frontend);

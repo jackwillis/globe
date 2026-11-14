@@ -600,6 +600,8 @@ class Application {
         } else if (which == KeyBinding::Overlay::Measure) {
             overlays_.toggle_measure();
             hover_valid_ = false; // measuring makes the whole globe clickable
+            if (help_shown_ && measure_replaces_help(which, overlays_.measuring()))
+                toggle_help(false);
             reshow();
         } else if (which == KeyBinding::Overlay::Help) {
             toggle_help(!help_shown_);
