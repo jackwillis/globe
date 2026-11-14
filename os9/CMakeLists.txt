@@ -39,7 +39,7 @@ add_application(${APP} CREATOR PdlE
   ${ROOT}/src/platform/os9/menu_bar.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
-  ${ROOT}/src/core/app.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp
+  ${ROOT}/src/core/app.cpp ${ROOT}/src/core/controls.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp
   ${ROOT}/src/data/grid_codec.cpp ${ROOT}/src/data/landclasses.cpp
   ${ROOT}/src/data/atlas.cpp ${ROOT}/src/data/elevation.cpp ${ROOT}/src/data/crc32.cpp
   ${ROOT}/src/data/countries.cpp ${ROOT}/src/data/places.cpp

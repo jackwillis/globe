@@ -12,7 +12,7 @@
 namespace globe {
 struct InfoCard {
     std::string_view title;
-    std::array<std::string_view, 12> lines{};
+    std::array<std::string_view, 20> lines{};
     unsigned line_count = 0;
 };
 struct CountryRecord {
