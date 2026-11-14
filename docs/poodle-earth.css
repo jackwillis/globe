@@ -2,14 +2,19 @@
 
 :root {
   color-scheme: light;
-  font: 112.5%/1.55 "Archivo", "Geneva", "Lucida Grande", "Lucida Sans Unicode", "Tahoma", "Verdana", "DejaVu Sans", sans-serif;
+  font: 112.5%/1.55 "Archivo", "Geneva", "Lucida Grande", "Lucida Sans Unicode", Verdana, system-ui, sans-serif;
   color: #171717;
   background: #fffefa;
 }
 
 * { box-sizing: border-box; }
 body { margin: 0; }
-.wrap { width: min(100% - 2rem, 39rem); margin-inline-start: clamp(1rem, 4vw, 3rem); }
+.wrap {
+  --gutter: clamp(.5rem, 4vw, 3rem);
+  max-width: 39rem;
+  margin-inline: var(--gutter);
+  overflow-wrap: anywhere;
+}
 a { color: #000099; text-underline-offset: .14em; }
 a:visited { color: #551a8b; }
 a:hover { text-decoration-thickness: .13em; }
@@ -36,12 +41,12 @@ a:hover { text-decoration-thickness: .13em; }
 .project-links a { display: inline-block; padding-block: .35rem; }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
-h1 { font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
+h1 { font-family: "Leckerli One", Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
 h2 { font-size: 1.45rem; margin: 0; }
 p, ol { margin: .65rem 0 0; }
 .intro { font-size: 1.15rem; }
 .actions { margin-top: 1rem; }
-.button { display: inline-block; padding-block: .55rem; }
+.button { display: inline-block; max-width: 100%; padding-block: .55rem; }
 .primary, .primary:visited {
   background: #e8ebf5;
   color: #000080;
