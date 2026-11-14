@@ -68,7 +68,7 @@ void AboutWindow::draw() {
     // The card borrows this buffer through wrapping and drawing.
     static_assert(kVersion.size() < 255);
     constexpr std::size_t kMaxVersionLabel = 255 - 1 - kVersion.size();
-    const auto label = tr(Str::AboutVersion).substr(0, kMaxVersionLabel);
+    const auto label = std::string_view(tr(Str::AboutVersion)).substr(0, kMaxVersionLabel);
     char version_line[255];
     auto* version_start = std::copy(label.begin(), label.end(), version_line);
     *version_start++ = ' ';
