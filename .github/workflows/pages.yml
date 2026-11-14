@@ -1,7 +1,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 name: Publish website
 
+# GitHub Pages must use Settings -> Pages -> Source: GitHub Actions.
+# Publish only when site files or this workflow change; manual runs remain available.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
