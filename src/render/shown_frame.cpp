@@ -35,7 +35,7 @@ const Framebuffer& ShownFrame::begin(Overlays& overlays, Framebuffer& fb, const 
             shown = &fb;
         }
         if (scale_rows > 0)
-            draw_center_scale(*shown, camera);
+            draw_center_scale(*shown, camera, label_);
         if (bar_)
             draw_progress_bar(*shown, progress);
     }

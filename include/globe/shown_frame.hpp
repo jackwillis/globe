@@ -9,6 +9,7 @@
 #include "globe/framebuffer.hpp"
 #include "globe/overlays.hpp"
 #include "globe/render.hpp"
+#include "globe/scale_overlay.hpp"
 #include <cstdint>
 #include <vector>
 namespace globe {
@@ -26,6 +27,9 @@ class ShownFrame {
     // call end() once the frame has been converted. Valid until end().
     const Framebuffer& begin(Overlays& overlays, Framebuffer& fb, const Camera& camera,
                              std::int64_t unix_seconds, bool settled, double progress);
+    // A label for the scale drawn by the front end with a system font, or null for the built-in
+    // digits. Not owned; keep it alive while frames are built.
+    void set_scale_label(const LabelBitmap* label) { label_ = label; }
     // Puts the frame back as it was rendered.
     void end();
     // The last begin() drew overlays on a cheap (quick) copy: a settled frame should replace it.
@@ -38,5 +42,6 @@ class ShownFrame {
     Rgb565* rows_ = nullptr; // where the stashed rows go back
     bool quick_ = false;
     bool bar_ = false;
+    const LabelBitmap* label_ = nullptr;
 };
 } // namespace globe
