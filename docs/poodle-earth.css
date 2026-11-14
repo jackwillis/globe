@@ -52,6 +52,8 @@ p, ol { margin: .65rem 0 0; }
 }
 .release { margin-top: .85rem; }
 
+kbd { font-size: 1.08em; }
+
 img { display: block; max-width: 100%; height: auto; }
 
 .content { padding-block: clamp(2rem, 5vw, 3rem); }
