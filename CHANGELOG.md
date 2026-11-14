@@ -4,6 +4,7 @@ This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
 
+- Classic Controls lists the Command equivalents alongside plain shortcuts and identifies plain-only and Command-only keys (#144).
 - Help for the controls (#40): H or ? (and Apple menu > Controls on Classic) shows the keys and gestures in the information pane on both front ends, from the one table in `globe/controls.hpp` that also defines the shortcut keys. Escape hides it. Host-tested and cross-compiled; not yet run on the G4.
 - The Classic About window displays the full project version.
 - Scale at the center of the map (#81, with #133, #134, #139): a bar of a round distance (1, 2 or 5 times a power of ten) with long end ticks, medium ticks at whole decade units, small ticks between, and a label above it, bottom center above the progress bar, on every frame including drags. It follows the units preference (km and m, or mi and ft). The Classic label is drawn in Monaco; X11 uses built-in digits. Owner-observed on the G4 in experimental builds; the compass rose is #140.

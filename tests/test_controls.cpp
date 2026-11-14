@@ -3,6 +3,10 @@
 #include "check.hpp"
 #include "globe/controls.hpp"
 #include "globe/wrap.hpp"
+#include <algorithm>
+#include <fstream>
+#include <iterator>
+#include <regex>
 #include <string>
 using namespace globe;
 namespace {
@@ -11,6 +15,19 @@ bool has(const InfoCard& card, std::string_view text) {
         if (card.lines[i].find(text) != std::string_view::npos)
             return true;
     return false;
+}
+std::string read_file(const char* path) {
+    std::ifstream input(path);
+    return {std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
+}
+
+std::string menu_keys(const std::string& source, const std::regex& pattern) {
+    std::string keys;
+    for (auto it = std::sregex_iterator(source.begin(), source.end(), pattern);
+         it != std::sregex_iterator(); ++it)
+        keys += (*it)[1].str();
+    std::sort(keys.begin(), keys.end());
+    return keys;
 }
 } // namespace
 int main() {
@@ -37,7 +54,7 @@ int main() {
     }
     for (unsigned i = 0; i < control_count(); ++i) {
         const auto& row = controls()[i];
-        CHECK(!row.keys.empty() && !row.what.empty());
+        CHECK((!row.keys.empty() || !row.classic_commands.empty()) && !row.what.empty());
         CHECK(row.classic_mac || row.x11);
         // A row that lists characters does something with them, and in lower case.
         CHECK(row.chars.empty() || row.command || row.overlay != Overlay::Nothing);
@@ -71,9 +88,47 @@ int main() {
     // Classic. Shared keys are in both.
     const auto mac = help_card(Frontend::ClassicMac), x11 = help_card(Frontend::X11);
     CHECK(mac.title == "Controls" && x11.title == "Controls");
-    for (const auto* both : {"Drag", "Double-click", "H or ?", "G: graticule", "D: night side",
-                             "M: measure", "S: switch Map / Relief", "Page Up / Page Down"}) {
+    for (const auto* both : {"Drag", "Double-click", "Page Up / Page Down"})
         CHECK(has(mac, both) && has(x11, both));
+    CHECK(has(x11, "H or ?: show") && has(x11, "G: graticule") && has(x11, "D: night side") &&
+          has(x11, "M: measure") && has(x11, "S: switch Map / Relief") && !has(x11, "Command-"));
+    for (const auto* line :
+         {"+ or = or Command-+ or Command-=: zoom in", "G or Command-G: graticule",
+          "S (plain only): switch Map / Relief",
+          "H (plain only) or ? or Command-?: show or hide this help", "Command-W: close window",
+          "Command-Q: quit", "Command-,: preferences", "Command-C: copy information"})
+        CHECK(has(mac, line));
+
+    // Compare the displayed keys against both menu implementations. Z/X/V belong to desk
+    // accessories, and the Classic event handler routes Command-= to the menu's Command-+.
+    {
+        const auto rez = read_file("os9/globe.r"),
+                   menu = read_file("src/platform/os9/menu_bar.cpp"),
+                   main = read_file("src/platform/os9/main.cpp");
+        const auto resource_keys = menu_keys(rez, std::regex(R"key(ITEM\("[^"]*", "([^"])")key"));
+        const auto rebuilt_keys =
+            menu_keys(menu, std::regex(R"key(add_item\([^\n]*tr\(Str::\w+\), '([^'])')key"));
+        CHECK(!resource_keys.empty() && resource_keys == rebuilt_keys);
+
+        std::string shown_keys;
+        for (unsigned i = 0; i < mac.line_count; ++i) {
+            const auto keys = mac.lines[i].substr(0, mac.lines[i].find(": "));
+            constexpr std::string_view prefix = "Command-";
+            for (auto pos = keys.find(prefix); pos != std::string_view::npos;
+                 pos = keys.find(prefix, pos + prefix.size())) {
+                CHECK(pos + prefix.size() < keys.size());
+                if (pos + prefix.size() < keys.size())
+                    shown_keys += keys[pos + prefix.size()];
+            }
+        }
+        CHECK(main.find("if (key_char == '=')") != std::string::npos &&
+              main.find("key_char = '+';") != std::string::npos);
+        std::sort(shown_keys.begin(), shown_keys.end());
+        auto expected_keys = resource_keys + '=';
+        for (const char key : {'Z', 'X', 'V'})
+            std::erase(expected_keys, key);
+        std::sort(expected_keys.begin(), expected_keys.end());
+        CHECK(shown_keys == expected_keys);
     }
     CHECK(has(x11, "Mouse wheel") && has(x11, "F2") && has(x11, "Q or Esc"));
     CHECK(!has(mac, "Mouse wheel") && !has(mac, "F2") && !has(mac, "Q or Esc"));

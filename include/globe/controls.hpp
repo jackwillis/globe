@@ -20,6 +20,8 @@ struct Control {
     std::string_view chars;         // typed characters bound to it (any case); empty if none
     std::optional<Command> command; // sent through update()
     KeyBinding::Overlay overlay;    // or an overlay or window the front end handles itself
+    std::string_view classic_commands = ""; // effective Command keys, including aliases
+    std::string_view classic_keys = "";     // optional Classic wording for the plain form
 };
 // The whole table, in the order Help lists it.
 const Control* controls();

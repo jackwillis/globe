@@ -71,7 +71,9 @@ private Xvfb display. **Not run on any Macintosh.** The list is `help_card()` in
 `include/globe/controls.hpp`; it fills the information pane and scrolls like any card.
 
 1. Press H, then ? (Shift-/): the pane titled Controls replaces the selection card; the Classic
-   list has Command-Q and Esc rows and no Mouse wheel or F2 row.
+   list distinguishes dual forms (G or Command-G, + or = or Command-+ or Command-=), plain-only
+   S and H, and Command-only W, Q, comma and C. It includes Esc and omits Mouse wheel and F2.
+   See the [README controls summary](../README.md#build-and-use) for the shortcut rule.
 2. Apple menu > Controls (Cmd-?) shows the same list; the menu is About, Controls, divider, then
    desk accessories, and desk accessories still open.
 3. At 640x480 and the smallest window the G4 can show: the pane scrolls to the last row; nothing

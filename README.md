@@ -69,8 +69,11 @@ dependencies; use `ctest --test-dir build -N` to list registered tests, then run
 execution and pass results.
 
 Drag to rotate north-up; T switches to trackball mode. Wheel, Page Up/Down or +/- zooms, double-click centers
-and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits (Command-Q on Classic). H or ? lists the controls in the information
-pane (Classic: also Apple menu > Controls; Escape hides it); the list is built from the same table as the key bindings.
+and zooms, arrows turn, N aligns north, G/B toggle the graticule and borders, and R resets the view.
+H or ? opens the Controls list in the information pane. On Classic, the list shows where plain
+and Command forms both work, such as G or Command-G. S and H are plain only. Closing a window,
+quitting, opening Preferences and copying information use Command-W, Command-Q, Command-comma
+and Command-C. Escape hides Controls. On X11, Q or Escape quits (Escape closes Controls first).
 S switches the look (Map or Relief) and P (X11) opens a looks palette window; A click without dragging preserves the view; on X11 it identifies a
 country (outlined and dither-filled in orange) or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
 toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.
