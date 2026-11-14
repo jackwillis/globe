@@ -75,5 +75,5 @@ int main() {
     for (int i = 0; i < 120; ++i)
         update(model, CommandIssued{3000u + i, Command::ZoomOut});
     CHECK(state(kZoomInItem).enabled && !state(kZoomOutItem).enabled);
-    return 0;
+    return TEST_MAIN_RESULT();
 }
