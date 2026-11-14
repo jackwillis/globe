@@ -69,7 +69,8 @@ dependencies; use `ctest --test-dir build -N` to list registered tests, then run
 execution and pass results.
 
 Drag to rotate north-up; T switches to trackball mode. Wheel, Page Up/Down or +/- zooms, double-click centers
-and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits.
+and zooms, arrows turn, N aligns north, G/B toggle graticule/borders, R resets and Q/Escape quits (Command-Q on Classic). H or ? lists the controls in the information
+pane (Classic: also Apple menu > Controls; Escape hides it); the list is built from the same table as the key bindings.
 S switches the look (Map or Relief) and P (X11) opens a looks palette window; A click without dragging preserves the view; on X11 it identifies a
 country (outlined and dither-filled in orange) or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
 toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.

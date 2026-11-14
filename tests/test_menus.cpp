@@ -8,7 +8,10 @@ int main() {
     const auto choice = [](short menu, short item, TerrainStyle look = TerrainStyle::Map) {
         return menu_choice(menu, item, look);
     };
-    CHECK(choice(kAppleMenu, kAboutItem).about);
+    CHECK(choice(kAppleMenu, kAboutItem).about && !choice(kAppleMenu, kAboutItem).help);
+    CHECK(choice(kAppleMenu, kHelpItem).help && !choice(kAppleMenu, kHelpItem).about &&
+          !choice(kAppleMenu, kHelpItem).command);
+    CHECK(!choice(kAppleMenu, kHelpItem + 1).help); // the divider and the desk accessories
     CHECK(choice(kFileMenu, kQuitItem).command == Command::Quit);
     CHECK(choice(kViewMenu, kZoomInItem).command == Command::ZoomIn);
     CHECK(choice(kViewMenu, kZoomOutItem).command == Command::ZoomOut);
