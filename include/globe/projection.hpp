@@ -42,6 +42,15 @@ struct ScreenPoint {
     double y;
 };
 
+struct CenterScaleBar {
+    double distance_km;
+    int width_px;
+};
+
+// Uses the local orthographic scale at the view center. Selects the largest 1–2–5
+// distance that fits max_width_px, and rounds the resulting length to the nearest pixel.
+std::optional<CenterScaleBar> center_scale_bar(double radius_px, int max_width_px);
+
 // True if both cameras show the same view of the globe at the same viewport and center, at any
 // radius: only the zoom differs.
 bool same_orientation(const Camera& a, const Camera& b);
