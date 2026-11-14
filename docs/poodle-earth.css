@@ -24,23 +24,17 @@ a:hover { text-decoration-thickness: .13em; }
 }
 .skip:not(:focus) { clip-path: inset(50%); }
 
-.masthead, nav, .actions, .project-links {
+.actions, .project-links {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: .25rem 1rem;
 }
-.masthead {
-  justify-content: space-between;
-  padding-block: .55rem;
-  border-bottom: 1px solid #888;
-}
-.wordmark { font-weight: bold; }
-nav, .actions, .release, .preview, .project-links {
+.actions, .release, .preview, .project-links {
   font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", system-ui, sans-serif;
   font-size: .85rem;
 }
-nav a, .project-links a { display: inline-block; padding-block: .35rem; }
+.project-links a { display: inline-block; padding-block: .35rem; }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
 h1, h2 { line-height: 1.12; }
 h1 { font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
@@ -87,6 +81,9 @@ p, ol { margin: .65rem 0 0; }
 img { display: block; max-width: 100%; height: auto; }
 
 .content { padding-block: 1.25rem; }
+nav ul { margin: 0; padding-inline-start: 1.5rem; }
+nav a { display: inline-block; padding-block: .2rem; }
+hr { border: 0; border-top: 1px solid #888; margin-block: 1rem; }
 .content section + section { margin-top: 1.25rem; }
 ol { padding-inline-start: 1.5rem; }
 .footer .wrap { border-top: 1px solid #888; padding-block: 1rem 1.5rem; }
