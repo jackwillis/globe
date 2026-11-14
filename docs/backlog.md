@@ -22,7 +22,7 @@ Structured facts and readable linked articles are both eventual goals. Search, f
 
 ## Release themes
 
-These are the four GitHub milestones (v0.1 to v0.4), created without due dates and restructured on 2026-11-10 (owner decision): v0.1 is the app as built on `main`, and the old v0.2 was split by theme. The epics (#1–#6) span releases and carry no milestone. Parked experiments (#15, #16, #19, #21, #22) have no milestone.
+These are the four **thematic** milestones (v0.1 through v0.4), established without due dates and restructured on 2026-11-10 (owner decision). Separate **patch-release** milestones v0.1.1 and v0.1.2 now capture incremental work; they do not replace the broader v0.2 outcome. v0.1.0 was published on 2026-11-13. The epics (#1–#6) span releases and carry no milestone. Parked experiments (#15, #16, #19, #21, #22) have no milestone.
 
 | Milestone | Outcome | Practical gate |
 | --- | --- | --- |
@@ -30,6 +30,24 @@ These are the four GitHub milestones (v0.1 to v0.4), created without due dates a
 | **v0.2 — The Atlas on the Map** | Text, labels, pointer readout, scale bar and compass, city symbols, help overlay, render performance | Placement function and label rules (#36, #38), measured cost on the G4, hardware acceptance for the release |
 | **v0.3 — Memory and Packs** | Memory ledger and budget, low-memory handling, stable resource handles, versioned packs, external packs on Classic Mac OS, Preferences handling | Memory regression gate, tested degradation ladder, safe pack lifecycle (#55, #56, #58, #26, #31, #48, #49) |
 | **v0.4 — The Expandable Atlas** | Richer optional data and editions | Full-edition data and volume layout (#50, #51), a third look (#75), optional acquisition (#28), CD-ROM research (#72) |
+
+### Incremental releases and milestone graduation (owner decision, 2026-11-13)
+
+**Ship useful slices frequently; graduate milestones deliberately.** While Poodle Earth is pre-1.0, `0.1.x` releases may include compatible new features as well as fixes, documentation and polish. Each patch must be independently usable, versioned and packaged, with applicable CI, native-hardware acceptance, documentation, attribution and explicit owner publication approval. This is the project's documented pre-1.0 convention, **not a claim of strict post-1.0 Semantic Versioning patch semantics**.
+
+A **minor release** (`0.2.0`, `0.3.0`) means that its broader product milestone's *agreed* acceptance criteria work together and have been verified, not that a large number of new features must first land in that release. Completing or deferring scope is an owner decision with an issue record; merely exhausting a planned patch sequence does not authorize a minor release. Keep hardware acceptance and release scope explicit for **every published version**, including patches.
+
+| Version | Incremental outcome | Status and ownership |
+| --- | --- | --- |
+| **v0.1.0** | First public Classic Mac atlas | Published 2026-11-13; preserve its historical claims and artifacts |
+| **v0.1.1** | Public-facing polish: README, real OS 9 images and guide, project website, changelog, agent cold-start validation and repo rename; visible low-memory resize feedback | Existing patch milestone, issues [#118](https://github.com/jackwillis/globe/issues/118), [#129](https://github.com/jackwillis/globe/issues/129), [#125](https://github.com/jackwillis/globe/issues/125), [#121](https://github.com/jackwillis/globe/issues/121), [#124](https://github.com/jackwillis/globe/issues/124) and [#116](https://github.com/jackwillis/globe/issues/116) |
+| **v0.1.2** | Text/layout foundation, installed-font roles and **settled-frame country labels** | Existing patch milestone, issues [#36](https://github.com/jackwillis/globe/issues/36), [#61](https://github.com/jackwillis/globe/issues/61) and [#119](https://github.com/jackwillis/globe/issues/119) |
+| **v0.1.3+** | Candidate slices: city labels/symbol hierarchy, pointer readout, map scale and compass, help, cards, Preferences, accessibility and frontend coherence | **Provisional examples only**—no versions, milestones, issue moves or feature gates approved; choose slices from measured progress after v0.1.2 |
+| **v0.2.0** | **The Atlas on the Map**: integrated, understandable geographic UI with accepted v0.2 requirements, performance and real-hardware evidence | Thematic milestone graduation, tracked through [#35](https://github.com/jackwillis/globe/issues/35) and the v0.2 milestone; not merely another arbitrary patch |
+
+After v0.2.0, **v0.2.x** patches can incrementally build toward **v0.3.0 — Memory and Packs** under the same policy; do not promise the number or content of those future patches.
+
+**GitHub tracking:** An issue can have only one milestone. Assign concrete deliverables to the *specific approved release milestone* when ready; use the cross-release epic ([#35](https://github.com/jackwillis/globe/issues/35) for v0.2 usability), issue links and the thematic milestone's remaining integration/acceptance work to track the full outcome. Avoid double-counting issues or insisting that every exploratory idea must ship before graduation. The release roadmap is explanatory; GitHub issues, labels and milestones are the live state. **This policy does not assign work, set `status: ready`, move issues, change release scope, create release tags or authorize hardware access.**
 
 **Hardware acceptance per release (owner decision, 2026-11-10).** Each release gets one "Hardware acceptance: vX.Y" issue with a fixed checklist, a run record (hardware, OS, build, StuffIt Expander version) and evidence per item. #8 was closed and its open items carried into the v0.1 issue. #9 and #10 stay as measurement issues that feed it. Proposal, not adopted: use the Classic Mac `vers` resource stages (for example 0.2b1) to label candidate builds, and run the acceptance issue against each candidate.
 
@@ -143,7 +161,7 @@ Ruby scripting, fantasy cartography and a separate flat-map editor; native 68k s
 
 ## Tracker conventions
 
-1. **Milestones:** v0.1 to v0.4, with no dates. An issue's milestone follows the **Release theme** line in its body. The original six epics (#1–#6) and the cross-cutting atlas-production epic #52 span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
+1. **Milestones:** v0.1 to v0.4 are the thematic outcomes, with patch milestones (currently v0.1.1 and v0.1.2) for deliverable increments; no dates. An issue belongs to only one release milestone, and the epic/issue links retain its broader theme. The original six epics (#1–#6) and the cross-cutting atlas-production epic #52 span releases and carry no milestone. Avoid an evergreen catch-all Future milestone.
 2. **Labels in use:** priority `P0`–`P3` (`P3` is reserved and unused so far); area labels `area: classic-mac`, `area: rendering`, `area: architecture`, `area: discovery-design`, `area: data` and `area: release`, used across the original six epic areas and the new data-production epic #52; `epic`. The first research issue #53 is labeled `P1` and `area: data`. Some newer issues also carry `enhancement` or `bug`.
 3. **Epics:** each epic's body lists its tracked issues. The nested epic [#35](https://github.com/jackwillis/globe/issues/35) (usability) sits under #4 and is also linked from #1 and #2.
 4. Optionally convert epic checklists into native GitHub sub-issue relationships. The issue cross-references already provide usable navigation and will remain stable.
