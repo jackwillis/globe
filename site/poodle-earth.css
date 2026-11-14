@@ -47,6 +47,12 @@ p, ol { margin: .65rem 0 0; }
 .intro { font-size: 1.15rem; }
 .actions { margin-top: 1rem; }
 .button { display: inline-block; max-width: 100%; padding-block: .55rem; }
+.button.primary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.download-icon { flex: 0 0 auto; }
 .primary, .primary:visited {
   background: #e8ebf5;
   color: #000080;
@@ -60,6 +66,14 @@ p, ol { margin: .65rem 0 0; }
 kbd { font-size: 1.08em; }
 
 img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+.hero-shot { margin-top: 1.5rem; }
+.hero-shot img, .look-gallery img { border: 1px solid #c0c0c0; }
+figcaption { font-size: .78rem; line-height: 1.4; color: #4a4a4a; margin-top: .4rem; }
+.look-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+@media (max-width: 32rem) {
+  .look-gallery { grid-template-columns: 1fr; }
+}
 
 .content { padding-block: clamp(2rem, 5vw, 3rem); }
 .content section + section { margin-top: clamp(2rem, 5vw, 3rem); }
