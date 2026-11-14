@@ -54,6 +54,7 @@ void rebuild_menu_bar() {
     const unsigned char apple_title[] = {1, kApple};
     apple = make(kAppleMenu, apple_title);
     add_item(apple, tr(Str::AboutTitle), 0, true);
+    add_item(apple, tr(Str::ItemControls), '?', true);
     add_divider(apple);
     titled(kFileMenu, tr(Str::MenuFile), &file);
     add_item(file, tr(Str::ItemClose), 'W');

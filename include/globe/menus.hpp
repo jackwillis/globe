@@ -10,7 +10,8 @@
 #include <optional>
 namespace globe {
 constexpr short kAppleMenu = 128, kFileMenu = 129, kEditMenu = 130, kViewMenu = 131;
-constexpr short kAboutItem = 1; // Apple; desk accessories follow the divider
+constexpr short kAboutItem = 1; // Apple: About, Controls, divider; desk accessories follow
+constexpr short kHelpItem = 2;  // Apple: shows the same controls list as the H key
 constexpr short kCloseItem = 1; // File: closes the About or Preferences window in front
 constexpr short kQuitItem = 3;  // File: Close, divider, Quit
 constexpr short kCopyItem = 4;  // Edit: copies the information card (or goes to a desk accessory)
@@ -36,6 +37,7 @@ struct MenuChoice {
     std::optional<Command> command; // sent through update()
     KeyBinding::Overlay overlay = KeyBinding::Overlay::Nothing;
     bool about = false; // the front end shows its About window
+    bool help = false;  // the front end shows the controls list (the H key's Help)
     bool close = false; // the front end closes the window in front (not the globe window)
 };
 // What choosing the item means while `current` is the look shown. Choosing the look already shown
@@ -46,6 +48,8 @@ inline MenuChoice menu_choice(short menu, short item, TerrainStyle current) {
     using Overlay = KeyBinding::Overlay;
     if (menu == kAppleMenu && item == kAboutItem)
         c.about = true;
+    else if (menu == kAppleMenu && item == kHelpItem)
+        c.help = true;
     else if (menu == kFileMenu && item == kCloseItem)
         c.close = true;
     else if (menu == kFileMenu && item == kQuitItem)

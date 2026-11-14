@@ -254,3 +254,35 @@ Linked, not duplicated: #36 (text foundation; its scope changes under the system
 #38 (labels), #37 and #39 (readout, scale bar), #45 (palette), #44 and #46 (cursor, menus), #52 and
 #53 (data and label priorities). No typography epic; this fits under #35. One focused issue covers
 font roles, lookup and fallback for platform chrome and labels, which none of the above owns.
+
+## Portable placement contract (#36)
+
+`place_labels` takes a shown-frame camera, a caller-selected batch of geographic anchors,
+and an installed-font measurement callback. Candidates carry borrowed display text and
+an area or point role. The provider resolves that role and the string for its platform,
+then returns conservative painted bounds relative to the baseline, including any
+overhang or decoration the adapter will draw. An unavailable or unrepresentable run
+returns no metrics. Font choice, glyph coverage and encoding resolution belong to #61.
+The adapter must draw the same resolved run that it measured.
+
+Each label is centered on its projected anchor, snapped to integer pixels. The layout
+rejects rear-facing and off-viewport anchors and drops whole labels if the box crosses
+the viewport or orthographic limb. Higher priorities win overlaps, with caller input
+order breaking ties. Edge contact is allowed. The output identifies each candidate,
+its baseline and its half-open painted box. A smaller output cap gives a prefix of a
+larger layout with the same candidates and metrics.
+
+The caller supplies up to 256 candidates and storage for up to 32 results. An oversized
+candidate batch is rejected so the caller controls preselection. The placer uses a
+512-byte order array and allocates no heap memory. It makes at most 256 measurement
+calls; providers remain responsible for bounding per-run measurement costs. These caps
+are starting limits to validate on the G4.
+
+For #119, use the settled-frame camera and redraw labels on exposes using placements for
+the displayed frame. X11 can prototype text after the full XPutImage, using the map
+viewport and the same font for extents and drawing. QuickDraw can try equivalent text
+after CopyBits, translating the baseline into the window port and preserving its clip
+and font state. Compare that with drawing into the native presentation copy before
+blitting. Keep both experiments outside the portable framebuffer and refinement stages.
+This slice links no label call into a frontend. Native drawing, font fallback and compact
+build size/partition measurements still need evidence.

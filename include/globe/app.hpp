@@ -209,9 +209,9 @@ constexpr std::uint64_t kDoubleClickMs = 400;
 constexpr std::uint64_t kPickDelayMs = kDoubleClickMs;
 // Shortcut keys both front ends honor, by the character typed (any case). Arrow, Page and function
 // keys are decoded by each front end; this is the part that must not drift between them. Escape
-// is character 27.
+// is character 27. The table behind it is the one in globe/controls.hpp, which also feeds Help.
 struct KeyBinding {
-    enum class Overlay : std::uint8_t { Nothing, Night, Measure };
+    enum class Overlay : std::uint8_t { Nothing, Night, Measure, Help };
     std::optional<Command> command;     // sent through update()
     Overlay overlay = Overlay::Nothing; // an overlay or window the front end handles itself
 };
