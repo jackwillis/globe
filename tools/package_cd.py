@@ -122,8 +122,10 @@ def package(build, output, epoch, verify_only):
         # cdrkit leaves the unused driver descriptor tail uninitialized.
         # This non-bootable image has no driver descriptors or MBR boot code.
         with image.open("r+b") as stream:
-            stream.seek(12)
-            stream.write(bytes(512 - 12))
+            descriptor = stream.read(12)
+            if not descriptor.startswith(b"ER\x02\x00"):
+                raise ValueError("unexpected cdrkit non-bootable driver descriptor")
+            stream.write(bytes(512 - len(descriptor)))
         verify(image, original, documents, work)
         image.replace(output)
 
