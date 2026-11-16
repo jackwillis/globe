@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from composition_ade import (FORMAT, Reads, canon, collect, decode_pack, digest,
+from composition_ade import (FORMAT, Reads, bench, canon, collect, decode_pack, digest,
                              fixture, make_manifest, publish_sealed, read_sealed,
                              resolve, scan, select_manifest, verify)
 
@@ -131,6 +131,12 @@ class CompositionTests(unittest.TestCase):
         fallback, issues = read_sealed(canon(seal))
         self.assertEqual(fallback, resolve([]))
         self.assertTrue(any(x[1] == "integrity-mismatch" for x in issues))
+
+    def test_bench_balances_three_variants_and_counts_io(self):
+        results = bench(6)
+        self.assertEqual([results[key]["runs"] for key in ("A", "D", "E")], [6, 6, 6])
+        self.assertEqual([results[key]["read_ops"] for key in ("A", "D", "E")], [6, 1, 7])
+        self.assertEqual([results[key]["directory_enumerations"] for key in ("A", "D", "E")], [1, 0, 0])
 
     def test_no_unrequested_disk_artifacts_from_consumer(self):
         manifest = make_manifest(self.paths)
