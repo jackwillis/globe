@@ -125,6 +125,13 @@ class CompositionTests(unittest.TestCase):
         self.assertEqual(atlas, resolve([]))
         self.assertTrue(issues)
 
+    def test_well_formed_sealed_mutation_is_detected(self):
+        seal = json.loads(publish_sealed(self.paths))
+        seal["atlas"]["selected"][0]["value"] = "tampered"
+        fallback, issues = read_sealed(canon(seal))
+        self.assertEqual(fallback, resolve([]))
+        self.assertTrue(any(x[1] == "integrity-mismatch" for x in issues))
+
     def test_no_unrequested_disk_artifacts_from_consumer(self):
         manifest = make_manifest(self.paths)
         sealed = publish_sealed(self.paths)
