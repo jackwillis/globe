@@ -40,7 +40,11 @@ class PackageCDTest(unittest.TestCase):
             time.sleep(1.1)  # Expose any accidental use of whole-second wall time.
             package(build, second, epoch, False)
             original = image.read_bytes()
-            self.assertEqual(original, second.read_bytes())
+            rebuilt = second.read_bytes()
+            self.assertEqual(len(original), len(rebuilt))
+            if original != rebuilt:
+                offsets = [i for i, (a, b) in enumerate(zip(original, rebuilt)) if a != b]
+                self.fail(f"{len(offsets)} different bytes; first offsets: {offsets[:60]}")
             partition = hybrid_partition(original)
             for label, before, after in (
                 ("missing document", b"DataCredit", b"LostCredit"),

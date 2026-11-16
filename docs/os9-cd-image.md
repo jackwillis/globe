@@ -57,7 +57,8 @@ of cdrkit. To repeat the structural verification on an existing file, add
 ISO view separately, run `isoinfo -d -i IMAGE` and `isoinfo -f -i IMAGE`.
 
 The staging dates and cdrkit clock use `SOURCE_DATE_EPOCH` (default: commit
-time) in UTC. CI compares two builds from the same input binary, text and epoch.
+time) in UTC. The packager clears the unused driver descriptor bytes left
+uninitialized by cdrkit. CI compares two builds from the same input binary, text and epoch.
 Expect identical output within the same Linux toolchain. Cross-version cdrkit
 reproducibility and fresh Retro68 binary reproducibility are separate checks.
 `RELEASE.json` records revision, epoch, byte counts and SHA-256, and

@@ -119,6 +119,11 @@ def package(build, output, epoch, verify_only):
         run("faketime", "-f", stamp, "genisoimage", "-hfs", "-part", "--macbin", "-mac-name",
             "-no-desktop",
             "-V", "POODLE_EARTH", "-hfs-volid", APP, "-o", image, staging)
+        # cdrkit leaves the unused driver descriptor tail uninitialized.
+        # This non-bootable image has no driver descriptors or MBR boot code.
+        with image.open("r+b") as stream:
+            stream.seek(12)
+            stream.write(bytes(512 - 12))
         verify(image, original, documents, work)
         image.replace(output)
 
