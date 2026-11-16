@@ -253,14 +253,18 @@ def verify():
             a, issues = scan(paths, Reads())
             e, mi = read_manifest_file(folder, manifest_path, Reads())
             d, di = read_sealed_file(sealed_path, Reads())
-            assert not issues and not mi and not di and a == e == d
-            assert len(a["conflicts"]) == 1 and a["conflicts"][0]["slot"] == "hydro:middle"
-            assert any(c["entity"] == "gamma.example:shared" for c in a["selected"])
-            assert any(c["entity"] == "delta.example:shared" for c in a["selected"])
+            if issues or mi or di or a != e or e != d:
+                raise AssertionError("A/D/E consumer outputs differ or valid inputs fail")
+            if len(a["conflicts"]) != 1 or a["conflicts"][0]["slot"] != "hydro:middle":
+                raise AssertionError("expected ambiguous river slot")
+            if not all(any(c["entity"] == name for c in a["selected"])
+                       for name in ("gamma.example:shared", "delta.example:shared")):
+                raise AssertionError("publisher-scoped identities unexpectedly conflated")
             before = sorted((p.name, digest(p.read_bytes())) for p in folder.iterdir())
             scan(paths, Reads()); read_manifest_file(folder, manifest_path, Reads()); read_sealed_file(sealed_path, Reads())
             after = sorted((p.name, digest(p.read_bytes())) for p in folder.iterdir())
-            assert before == after
+            if before != after:
+                raise AssertionError("consumer modified read-only fixture")
             return {"fixture_count": 6, "permutations": 720,
                     "unique_results": {"A": len(a_hashes), "D": len(d_hashes), "E": len(e_hashes)},
                     "unique_manifest_bytes": len(manifest_hashes),
