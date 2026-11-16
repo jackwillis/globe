@@ -9,9 +9,9 @@ parts and DataCredit. It contains no system software.
 
 cdrkit's `genisoimage -hfs -part --macbin` decodes MacBinary into the HFS
 catalog and shares payload extents with the ISO view. The ISO view is accessible
-The build suppresses cdrkit’s empty Desktop files to keep the image compact.
 with standard ISO readers, while Finder needs the HFS view to copy the
-application with its resource fork. [cdrkit options](https://manpages.debian.org/testing/genisoimage/genisoimage.1.en.html)
+application with its resource fork. The build suppresses cdrkit's empty Desktop
+files to keep the image compact. [cdrkit options](https://manpages.debian.org/testing/genisoimage/genisoimage.1.en.html)
 
 ClassicMac's Tools script uses a classic HFS partition in an Apple-partitioned
 raw disk image. Its `.iso` name and integration with ClassicMac do not establish
