@@ -63,6 +63,8 @@ jobs:
         run: tools/check-policy.sh
       - name: Release manifest unit tests (stdlib)
         run: python3 -m unittest discover -s tests -p test_release_manifest.py -v
+      - name: Synthetic atlas composition conformance (stdlib)
+        run: python3 -B -m unittest discover -s atlas/research -p 'test_composition_ade.py' -v
       - name: Format check (clang-format 22.1.8)
         run: |
           git ls-files '*.cpp' '*.hpp' | xargs clang-format --dry-run --Werror
