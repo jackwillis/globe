@@ -1,0 +1,5 @@
+{"variant":"1","result":{"cameras":1764,"lines_drawn":42469546,"inverse_length_calls":34316338,"chain_hash":"27e910248a6a1aff","frames_differing":0,"pixels_differing":0,"worst_frame_pixels":0,"render_seconds_total":1.314733}}
+{"variant":"2","result":{"cameras":1764,"lines_drawn":42469546,"inverse_length_calls":34316338,"chain_hash":"e4d9ff7229c9202f","frames_differing":17,"pixels_differing":72,"worst_frame_pixels":12,"render_seconds_total":1.358168}}
+{"variant":"3","result":{"cameras":1764,"lines_drawn":42469546,"inverse_length_calls":34316338,"chain_hash":"27e910248a6a1aff","frames_differing":0,"pixels_differing":0,"worst_frame_pixels":0,"render_seconds_total":1.242757}}
+{"variant":"4","result":{"cameras":1764,"lines_drawn":42469546,"inverse_length_calls":34316338,"chain_hash":"27e910248a6a1aff","frames_differing":0,"pixels_differing":0,"worst_frame_pixels":0,"render_seconds_total":1.383226}}
+{"variant":"6","result":{"cameras":1764,"lines_drawn":42469546,"inverse_length_calls":34316338,"chain_hash":"27e910248a6a1aff","frames_differing":0,"pixels_differing":0,"worst_frame_pixels":0,"render_seconds_total":1.404083}}

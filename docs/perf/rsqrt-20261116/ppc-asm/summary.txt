@@ -1,0 +1,53 @@
+== -mcpu=generic
+  f_exact           11 ins  calls=['sqrt']  fp={'fdiv': 1}
+  f_current         24 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_current_raw     13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_newton1         36 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 2, 'fmul': 3, 'fneg': 2, 'fsub': 1}
+  f_taylor3         42 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 4, 'fmul': 3, 'fneg': 1, 'fsub': 2}
+  f_seeded2         35 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 3, 'fmr': 1, 'fmul': 5, 'fneg': 3}
+  f_core_current    13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_core_newton1     9 ins  calls=[]  fp={'fmadd': 1, 'fneg': 1}
+  f_core_taylor3    15 ins  calls=[]  fp={'fmadd': 3, 'fsub': 1}
+  f_core_seeded2    22 ins  calls=[]  fp={'fmadd': 3, 'fmul': 5, 'fneg': 3}
+== -mcpu=603e
+  f_exact           11 ins  calls=['sqrt']  fp={'fdiv': 1}
+  f_current         24 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_current_raw     13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_newton1         36 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 2, 'fmul': 3, 'fneg': 2, 'fsub': 1}
+  f_taylor3         42 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 4, 'fmul': 3, 'fneg': 1, 'fsub': 2}
+  f_seeded2         35 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 3, 'fmr': 1, 'fmul': 5, 'fneg': 3}
+  f_core_current    13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_core_newton1     9 ins  calls=[]  fp={'fmadd': 1, 'fneg': 1}
+  f_core_taylor3    15 ins  calls=[]  fp={'fmadd': 3, 'fsub': 1}
+  f_core_seeded2    22 ins  calls=[]  fp={'fmadd': 3, 'fmul': 5, 'fneg': 3}
+  f_frsqrte_raw      4 ins  calls=[]  fp={'frsqrte': 1}
+  f_frsqrte_n2      17 ins  calls=[]  fp={'fmadd': 2, 'fmul': 5, 'fneg': 2, 'frsqrte': 1}
+  f_frsqrte_n3      21 ins  calls=[]  fp={'fmadd': 3, 'fmul': 7, 'fneg': 3, 'frsqrte': 1}
+== -mcpu=750
+  f_exact           11 ins  calls=['sqrt']  fp={'fdiv': 1}
+  f_current         24 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_current_raw     13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_newton1         36 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 2, 'fmul': 3, 'fneg': 2, 'fsub': 1}
+  f_taylor3         42 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 4, 'fmul': 3, 'fneg': 1, 'fsub': 2}
+  f_seeded2         35 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 3, 'fmr': 1, 'fmul': 5, 'fneg': 3}
+  f_core_current    13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_core_newton1     9 ins  calls=[]  fp={'fmadd': 1, 'fneg': 1}
+  f_core_taylor3    15 ins  calls=[]  fp={'fmadd': 3, 'fsub': 1}
+  f_core_seeded2    22 ins  calls=[]  fp={'fmadd': 3, 'fmul': 5, 'fneg': 3}
+  f_frsqrte_raw      4 ins  calls=[]  fp={'frsqrte': 1}
+  f_frsqrte_n2      17 ins  calls=[]  fp={'fmadd': 2, 'fmul': 5, 'fneg': 2, 'frsqrte': 1}
+  f_frsqrte_n3      21 ins  calls=[]  fp={'fmadd': 3, 'fmul': 7, 'fneg': 3, 'frsqrte': 1}
+== -mcpu=7400
+  f_exact           11 ins  calls=['sqrt']  fp={'fdiv': 1}
+  f_current         24 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_current_raw     13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_newton1         36 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 2, 'fmul': 3, 'fneg': 2, 'fsub': 1}
+  f_taylor3         42 ins  calls=['sqrt']  fp={'fcmpu': 2, 'fdiv': 1, 'fmadd': 4, 'fmul': 3, 'fneg': 1, 'fsub': 2}
+  f_seeded2         35 ins  calls=['sqrt']  fp={'fcmpu': 1, 'fdiv': 1, 'fmadd': 3, 'fmr': 1, 'fmul': 5, 'fneg': 3}
+  f_core_current    13 ins  calls=[]  fp={'fmadd': 1, 'fmul': 3, 'fneg': 1, 'fsub': 1}
+  f_core_newton1     9 ins  calls=[]  fp={'fmadd': 1, 'fneg': 1}
+  f_core_taylor3    15 ins  calls=[]  fp={'fmadd': 3, 'fsub': 1}
+  f_core_seeded2    22 ins  calls=[]  fp={'fmadd': 3, 'fmul': 5, 'fneg': 3}
+  f_frsqrte_raw      4 ins  calls=[]  fp={'frsqrte': 1}
+  f_frsqrte_n2      17 ins  calls=[]  fp={'fmadd': 2, 'fmul': 5, 'fneg': 2, 'frsqrte': 1}
+  f_frsqrte_n3      21 ins  calls=[]  fp={'fmadd': 3, 'fmul': 7, 'fneg': 3, 'frsqrte': 1}

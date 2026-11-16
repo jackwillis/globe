@@ -1,0 +1,5 @@
+{"mode":"frsqrte","flags":"powerpc-linux-gnu-g++-12 -O2 -mcpu=7400 (fp-contract=fast default)","NOTE":"under qemu-user the frsqrte model is NOT the 7400 hardware table","ranges":[
+ {"l2":[0.5,1],"frsqrte_raw":1.107e-16,"frsqrte_n2":2.042e-16,"frsqrte_n3":2.216e-16,"B_current":0.01944},
+ {"l2":[0.99,1],"frsqrte_raw":1.11e-16,"frsqrte_n2":1.665e-16,"frsqrte_n3":2.219e-16,"B_current":2.124e-09},
+ {"l2":[0.9975,1],"frsqrte_raw":1.11e-16,"frsqrte_n2":1.66e-16,"frsqrte_n3":2.22e-16,"B_current":8.253e-12}
+]}

@@ -115,3 +115,245 @@ Retro68 `-Os` code generation, bare OS 9 anything. Host timing is **not** G4 evi
 Native-G4 performance, Retro68 behaviour, `frsqrte` accuracy on a real 7400 (qemu's `frsqrte` model
 is not the hardware table), or OS 9 behaviour. If the Retro68 and NetBSD toolchains cannot be
 reached from this environment, the report says so and gives the exact owner-side commands.
+
+---
+
+# Part 2 — Results (appended after measurement; Part 1 is unchanged)
+
+Platform for everything below unless stated: x86-64 Intel Xeon 2.10 GHz, 2 vCPUs (shared cloud VM),
+Linux 6.18, g++ 13.3 and clang++ 18.1.3, `-O2 -DNDEBUG`, base commit `0b5b16d`. PowerPC evidence is
+**GCC 12.4 `powerpc-linux-gnu` cross-compilation and qemu-user 8.2.2 only**. None of it is G4,
+NetBSD, Retro68 or OS 9 evidence. Raw data: `docs/perf/rsqrt-20261116/` (index in its README);
+code: `tools/rsqrt-research/`. Full provenance: `docs/perf/rsqrt-20261116/PROVENANCE.txt`.
+
+## 2.0 What ran and what did not
+
+| Item | Result |
+| --- | --- |
+| Baseline host suite, unmodified main (GCC 13, `-O2`) | 68/68 pass |
+| Same suite with each scratch variant of `inverse_length` (exact, one-step, Taylor, seeded, guard-moved) | 68/68 pass for the four variants run in full (A, C1, C2, C4); B2 compared by frame sweep only |
+| ASan+UBSan (`-O1`), focused tests (render, line_layer, refine, terrain, projection, shaded, zoom, raster, framebuffer, app: 10 tests) + frame sweep, variants C2 and C4 | 10/10 pass, sweep hash equals baseline, no reports |
+| ASan+UBSan on the numerical harness (`audit`) | clean; output identical to the unsanitized build |
+| Pixel goldens | pass for every variant, **including C1, which changes pixels (see 2.5)** |
+| Numerical audit, dense (4.2M points per candidate, long-double reference) and on 34.3M logged production arguments | done |
+| Micro-benchmark: g++ `-O2`, `-O2 -fno-math-errno`, `-O3`, clang `-O2` | done (quiet-machine medians, 21 interleaved blocks, order reversed on alternate blocks) |
+| Whole-render instruction counts (callgrind), wall time A/B/B/A | done; wall time too noisy to resolve effects under about 5% (ranges of 10-20%) |
+| PowerPC assembly probes, GCC 12.4, `-mcpu` generic/603e/750/7400 | done |
+| Real renderer TUs compiled for PPC32 (`render`, `raster`, `terrain`, `projection`) | done (library-call census) |
+| PPC32 frame sweep under qemu-user versus x86 | done |
+| AltiVec/SSE autovectorization probe for batch projection | done (compile only) |
+| **Retro68 PowerPC and 68k compile probes** | **not run.** No container runtime, `ghcr.io` and GitHub release downloads return 000/403 from this environment. Commands for the owner in 2.9 |
+| **NetBSD/macppc GCC 12.5 cross toolchain** | **not available.** Ubuntu's GCC 12.4 `powerpc-linux-gnu` was used as the nearest proxy (same GCC series; Linux ABI, glibc) |
+| **Anything on the G4** | **not run, not authorized.** No G4 access was attempted |
+
+## 2.1 A. Numerical audit
+
+**P1 confirmed exactly.** `inverse_length(0.5)` returns `1.38671875`; exact is `1.4142135623730951`;
+relative error -1.94418%. One Newton step gives `1.25` (-11.61%), so the comment's "under 2e-3 after one"
+is also wrong at the edge of its own domain. The first step is `s0 = 1.5 - 0.5*l2`; the second reduces the
+error by `e' = -(3/2)e^2 - (1/2)e^3`.
+
+**Reachable domain (P3 confirmed).** With `l2 = |(1-t)a + t b|^2 >= cos^2(phi/2)`:
+
+* Bundled atlas (`tools/rsqrt-research/atlas_arc_stats.py data/atlas.gatl`): 7,653 segments, longest
+  **5.696 deg**, 99.9th percentile 4.11 deg, median 0.57 deg, none over 10 deg. The graticule is sampled at 3 deg.
+* Measured, not just derived: 34,316,338 `inverse_length` calls over 1,764 camera frames (7 radii from 55 to 2560 px,
+  7 latitudes, 18 longitudes, 2 headings, all layers), with the argument logged. **Minimum `l2` = 0.997530894114 (= cos^2 of the
+  longest arc), maximum 0.99999965, zero calls below 0.5.** The `1/std::sqrt` fallback is dead code for shipped data.
+* The format permits any arc under 180 deg (docs/atlas-format.md), so a different atlas could reach the
+  whole documented domain. That is the only way to meet the 2% error.
+
+**Error (relative; negative = result too small).**
+
+| Range of `l2` | Meaning | Worst relative error of B | At radius 440 / 2560 |
+| --- | --- | --- | --- |
+| 0.5 | 90 deg arc midpoint | -1.944e-2 | 8.6 px / 49.8 px |
+| 0.704 | 66 deg | -2e-3 | 0.9 px / 5.1 px |
+| 0.856 | 44.6 deg | -1e-4 | 0.04 px / 0.26 px |
+| 0.918 | **33.2 deg** | **-1e-5** | 0.004 px / 0.026 px |
+| 0.9917 | 10.4 deg | -1e-9 | 4e-7 px |
+| **0.99753 (shipped data)** | **5.7 deg** | **-7.85e-12 (dense and logged)** | **3.5e-9 px / 2e-8 px** |
+
+* **Bias:** one-signed. Over 1,048,577 samples of [0.5, 1] the result was never above the exact value and
+  never below 1. The drawn point therefore always lies between its chord point and the sphere; it can
+  neither cross the horizon nor leave the chord's hull. (Positive values of 1e-16 in the tables are rounding.)
+* **The comment's claims** (P2): "under 1e-5 after two" holds only for arcs up to 33.2 deg; "under 2e-3 after one" only up to
+  31.2 deg. Both hold for every arc the bundled data produces, so the **claim is true of the reachable domain and
+  false of the stated domain [0.5, 1]**: model M1 (documentation describes the wrong domain) is supported, M2
+  (visibly wrong arcs) is not, for shipped data.
+* **`band_margin_px`'s comment** ("a Newton step good to 1e-5 of the radius", P5): the 1e-4 R margin is met up to
+  44.6 deg, as predicted. At 90 deg the error (4.3 px at R 220) exceeds `2 + 1e-4 R`. But, because the error is one-signed, the
+  drawn point lies on the segment between the chord point and the true arc point and is covered by the separate
+  `0.31 R |a-b|^2` slack term, so band rejection is safe regardless. The comment is inaccurate but harmless (hop-two reasoning
+  below; I did not build a new exhaustive band test).
+* **Exceptional inputs** (identical to exact where it matters): `0` gives `+inf` and `-0` gives `-inf`; negative and NaN give NaN; subnormals
+  agree. Outside the domain, B is wrong: `B(2) = 0.625` (exact 0.7071), `B(1e308) = +inf`, `B(+inf) = +inf` (exact 0). `l2` cannot exceed
+  `1 + 2e-16` in the renderer, so none of this is reachable.
+
+**Propagation trace** (`propagation-trace`, two hops). Change: the value returned by `inverse_length`.
+Hop one (grep: one definition, one use): `draw_arc`, `render.cpp:84`. It scales an interior point which `to_screen`
+turns into a coordinate for `draw_line`. Hop two: `draw_line` pixels; `RenderStats::lines_drawn` (the step count is computed from `len2` before
+`inverse_length` is called, so the count is independent of its value: confirmed, 42,469,546 lines for all variants); callers
+`draw_graticule`, `draw_atlas_layer`, `RefinementJob::step` (line layer). `clip_arc_to_front`, the visibility
+decision and `arc_misses_band` do not read it. **Structurally compatible but behaviourally sensitive only through pixel
+rounding at line coordinates.** That is what 2.5 measures; visibility cannot change by construction and no frame changed visibility in the sweep.
+
+## 2.2 Predictions against observations
+
+| ID | Observed | Verdict |
+| --- | --- | --- |
+| P1 | 1.38671875, -1.944% | confirmed |
+| P2 | 1e-5 bound holds to 33.2 deg (predicted about 34); one-step 2e-3 holds to 31.2 deg | confirmed |
+| P3 | longest shipped arc 5.70 deg; logged minimum `l2` 0.99753 | confirmed |
+| P4 | 7.85e-12 (predicted 8e-12 estimate, bound 1e-10); always negative; 2e-8 px worst at R 2560 | confirmed |
+| P5 | 1e-4 R margin holds to 44.6 deg | confirmed |
+| P6 | exact `1/sqrt` gives 0 differing pixels in 541.9M | confirmed |
+| P7 | throughput: B 3.4x faster than A (raw), latency only **1.5x** (1.7x net of loop overhead); I predicted 4-5x for latency | **partly refuted** (latency advantage is smaller on this host) |
+| P8 | callgrind: exact is **0.47%** fewer instructions at R 220/440 and 1.4% fewer over all radii (x86 has a hardware `sqrtsd`). Wall time within noise | confirmed in direction (effect under 2%) |
+| P9 | `frsqrte` seed worse than constant seed 1 on the reachable domain: analytic (error up to 1/32 against 1.2e-3); not measurable under qemu (2.4) | confirmed analytically, hardware-unverified |
+| P10 | host/G4 bit-identity risk: **the more immediate hazard was found elsewhere (2.4, fused multiply-add)** | not testable for `frsqrte`; see 2.4 |
+| P11 | C1 (one step) is **not** pixel-identical (72 px in 17 frames); C2 is identical with 3 fewer flops than B | **partly refuted**: C1 fails the checksum rule |
+| P12 | no double lanes in AltiVec; GCC 12.4 did not vectorize the double loop at `-mcpu=7400 -O3`, did vectorize the float loops | confirmed |
+| P13 | "a few thousand calls per frame": true at R 220 (2,962) and 440 (8,615), but **up to 62,098 per frame at R 2560** | **partly refuted** (high zoom is far above my estimate) |
+
+## 2.3 B. Comparative benchmark (host x86-64, g++ 13.3 `-O2`, ns per call, medians of 21 blocks)
+
+Inputs: the 34.3M logged production arguments (sampled), and uniform [0.5, 1]. "Net" subtracts the loop that does only
+the identity function (0.61 ns throughput, 1.82 ns latency). Throughput = independent inputs; latency = results feed the next input.
+
+| Candidate | Production-domain throughput (net) | Latency (net) | Full-domain throughput | Max rel. error, shipped domain | Max rel. error, [0.5, 1] | Pixels vs baseline (1,764 frames) | PPC hot-path instructions (GCC 12.4) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| A `1.0/std::sqrt` | 3.09 (2.48) | 11.93 (10.11) | 3.13 | 1.7e-16 | 1.7e-16 | identical | call to libm `sqrt` + `fdiv` |
+| **B current** | **0.92 (0.31)** | **7.76 (5.94)** | 0.91 | 7.9e-12 | **1.9e-2** | (baseline) | 13 (5 FP ops) |
+| B2 guard moved 0.5 to 0.92 | 0.91 | 7.78 | 2.64 (exact path for arcs over 33 deg) | 7.9e-12 | **1e-5** | identical | B plus compare and call |
+| C1 one Newton step, domain >= 0.99 | 0.61 (0.00) | 3.79 (1.97) | 1.22 | 2.3e-6 | 1.9e-2 (outside 0.99 falls back to B) | **72 px differ in 17 frames** | 9 (2 FP ops) |
+| C2 cubic Taylor, domain >= 0.99 | 0.98 (0.38) | 8.05 (6.23) | 1.21 | 1.0e-11 | 1.9e-2 (outside falls back to B) | identical | 15 (4 FP ops) |
+| C4 linear seed + 2 full Newton, [0.5, 1] | 1.55 (0.95) | 11.67 (9.85) | 1.56 | 1.3e-9 | **1.9e-6** | identical | 22 (11 FP ops) |
+| D `frsqrte` + 2 steps (PPC only) | not measurable | not measurable | | see 2.4 | | not run on a host | 17 |
+| D `frsqrte` + 3 steps (PPC only) | not measurable | not measurable | | see 2.4 | | not run on a host | 21 |
+
+Other compilers (raw data in the JSON): clang 18 `-O2` agrees within 5% on every ratio; `-O3` changes nothing;
+**`-fno-math-errno` changes A by under 1% (3.08 against 3.09 ns)**. GCC already inlines `sqrtsd` with a cheap errno guard,
+so the "errno" cost presumed in E is not there on x86. Run-to-run range per cell is up to 2x in the raw min/max columns because the VM is shared; the medians
+are stable to about 2%. The throughput loops of C1 collapse onto the identity loop: the compiler hides C1 behind the loop's other
+work, so C1's throughput advantage is not informative.
+
+## 2.4 PowerPC and toolchain constraints (compile and qemu only)
+
+* **No scalar hardware sqrt on any G4-class CPU in GCC's model.** `-mcpu=603e/750/7400` define `_ARCH_PPCGR` but
+  never `_ARCH_PPCSQ`; `std::sqrt` compiles to `bl sqrt` at every setting, so the repository's inference
+  (docs/perf/README.md, 1,233 ns per sqrt on the G4, about 576 cycles) matches the emitted code.
+* **`frsqrte` needs a capability test, not `__powerpc__`.** `_ARCH_PPCGR` is set by `-mcpu=603e/604/750/7400/7450` and **not by the
+  generic default** that the project's NetBSD toolchain file uses (no `-mcpu`). On GCC 12.4 there is no scalar builtin
+  (`__builtin_ppc_rsqrte` is undeclared); only inline assembly reaches it (`rsqrt_ppc.hpp`, behind `_ARCH_PPCGR`), or
+  `-ffast-math -mrecip=rsqrtd`, which the project forbids. A generic PPC build therefore must not assume it.
+* **Accuracy is unverifiable here.** Under qemu `frsqrte` is accurate to 1e-16, which is **not** the 7400's table (the architecture
+  guarantees only about 1/32). qemu's number says nothing about hardware. With a 1/32 start, Newton needs three
+  steps for about 1.6e-11, one more than B's two (B starts from 1 with a 1.2e-3 error on the shipped domain).
+  This is arithmetic, not a measurement.
+* **Static cost.** Hot-path instruction counts above include loading constants and a stack adjustment because the probe functions are
+  not inlined; in a loop the constants hoist. FP-op counts are the comparable column. B has 5 dependent FP operations on
+  its critical path; D with 3 steps has about 13 plus the estimate.
+* **Cross-target numerics: the important result.** GCC on PowerPC contracts `a*b+c` into `fmadd` by default
+  (`__FP_FAST_FMA`), x86-64 baseline has no FMA. For B, **24,576 of 262,145 grid points differ from the host by up to 2 ulp**
+  (A differs in none); with `-ffp-contract=off` the PPC results are bit-identical to x86 for every candidate.
+  This matters to the renderer as a whole, not only to this helper: **the full 1,764-frame sweep, PPC32 under qemu against x86, differs
+  in 80 frames and 7,287 of 541,900,800 pixels (worst frame 786 px)** with default flags, and is **bit-identical in all frames
+  with `-ffp-contract=off`**. Replacing `inverse_length` by A, C2 or C4 leaves the PPC frames identical to the PPC baseline; C1 changes the same 72 px in 17 frames
+  on PPC as on x86. Caveats: qemu, glibc `sin/cos`, Linux ABI, GCC 12.4, not NetBSD GCC 12.5 on a 7400. The repository's own G4
+  checks report matching hashes for their scenes, which are a small sample of what the sweep exercises.
+  This is unrelated to the question asked in #145, so it is a **separate follow-up for the owner**, not a recommendation to change flags (turning
+  contraction off would also forfeit `fmadd` on the G4).
+* **Real renderer TUs on PPC32 (GCC 12.4, `-O2`, identical at generic and 7400).** `raster.cpp`: 4 `__fixdfdi`, 4 `__floatdidf`, 2 `__divdi3`,
+  2 `__moddi3`, 2 `ceil`, 3 `floor`; `render.cpp`: 4 `sqrt`, 1 `ceil`; `terrain.cpp`: 4 `ceil`; `projection.cpp`: 2 `atan2`, 2 `sin`.
+  This **confirms #97's clang snippet result on the real GCC translation unit** (64-bit integer conversions and divides are library calls). It is a
+  more promising instruction-level target than any reciprocal square root (2.6).
+
+## 2.5 Rendering consequences (host, 1,764 frames, 640x480, lines only)
+
+* **Frames:** A, B2, C2 and C4 produce frames **bit-identical** to baseline in all 1,764 frames (541.9M pixels) on x86, and A, C2, C4 on PPC32/qemu.
+  **C1 changes 72 pixels in 17 frames** (worst frame 12 px) on both. Its displacement is up to 0.0059 px; the existing 68-test suite, including pixel goldens, passes
+  it. **The existing goldens cannot detect sub-0.01-pixel displacement**; the sweep (504 frames at R 220/440, 0.33 s on the host) can.
+* **Geographic/limb:** visibility is decided by `clip_arc_to_front` before `inverse_length` runs, so no feature can change visibility; no frame changed `lines_drawn`.
+* **Instruction counts (callgrind, whole process, including my harness's checksum reads, about 36% of all instructions):**
+
+  | R 220/440 | instructions | against baseline | all radii | against baseline |
+  | --- | --- | --- | --- | --- |
+  | baseline | 7,286,546,377 | | 28,909,892,091 | |
+  | A exact | 7,252,294,789 | -0.47% | 28,499,263,740 | -1.42% |
+  | C1 | 7,274,289,216 | -0.17% | 28,746,464,139 | -0.57% |
+  | C2 | 7,299,579,791 | +0.18% | 29,028,464,255 | +0.41% |
+  | C4 | 7,312,214,677 | +0.35% | 29,192,572,543 | +0.98% |
+
+  Relative to the renderer alone (`render_globe` is 38% of the process) these are about 2.6x larger: A -1.2%, C4 +0.9% at R 220/440.
+  The function profile of the baseline at R 220/440 (inclusive): `draw_line` 36% of `render_globe`, `clip_arc_to_front` 7%, the rest of `draw_arc`
+  (projection, subdivision, normalization) about 22%, clear and disc fill about 25%.
+* **Wall time** (interleaved A/B/B/A, fresh processes, core pinned): every variant within 3.5% of baseline at R 220/440 and within 7% over all radii, with
+  per-variant ranges of 10-20%. **No difference is resolvable** (I do not claim C1 is faster even though its median was lower).
+* **Call counts per frame** (`host-counts-by-radius.json`): R 220: 2,962 calls; R 440: 8,615; R 880: 19,900; R 1760: 41,925; R 2560: 62,098.
+  The separate `std::sqrt` that sets the subdivision count (`render.cpp:74`) runs only for arcs over 24 px: 0 per frame at R 220, 16 at R 440, 643 at R 880, 1,737 at R 1760, 2,774 at R 2560.
+* **G4 model, not a measurement.** Using the repository's measured 1,233 ns `sqrt` and #97's 18.6 ms moving frame: replacing B by A would add about
+  `2,962 x (1,233 + about 70 ns fdiv)` = 3.9 ms per frame at R 220 (about 20% of 18.6 ms) and 11 ms at R 440. B itself costs about
+  `5 dependent FP ops x about 5 cycles` = 25-30 cycles, about 0.18 ms per frame at R 220 (the cycle count is my recollection of 7400 double-precision FP latency and **needs checking
+  against the MPC7400 manual**). So the **upper bound on anything that makes B free** is about 1% of a moving frame at R 220 and about 0.1% of the 280 ms settle; the
+  accurate path would cost 20x more than B. The subdivision `sqrt` is about 2% of line-drawing time at the highest zoom (2,774 x 1.23 us = 3.4 ms against about 210 ms of line work).
+
+## 2.6 SIMD as a separate hypothesis
+
+* **Batched orthographic projection.** What would be vectorized: `x,y,z` dot products with the camera basis and `to_screen`, about 22% of the CPU frame's instructions at R 220/440
+  (above), and only the part that can use whole batches of independent vertices. Layout: `Scene::vertices()` is AoS `Vec3` of `double` (24 bytes); `draw_arc` projects each
+  vertex lazily as it walks a polyline, interleaved with `clip_arc_to_front` and line drawing, so a batch would first need a restructured loop (hoist all projections of a polyline,
+  then draw) and gather/scatter back. **Precision:** AltiVec has no double lanes, so a 4-wide kernel must use float. A float unit vector carries about 6e-8 relative error, up to about 1.5e-4 px at R 2560; unlike the one-signed Newton error this is two-signed, and by comparison C1's 2.3e-6 relative error already flipped 72 pixels, so I expect a float kernel to flip pixels too (not measured). The repository's invariant is pixel identity with the host (#64, #97). Autovectorization (compile-only, GCC 12.4 `-O3`): **the double AoS loop is not vectorized for `-mcpu=7400 -maltivec`; the float AoS and SoA loops are**; at `-O2`
+  and for generic PPC nothing is. x86 GCC `-O3` vectorizes all three with 2-wide SSE2. **A hand-written kernel is therefore not needed to get vector code, but the precision change is the blocker.**
+  Justifying an experiment would take: (a) a profile showing projection above 15% of a G4 frame, (b) a decision that float projection is acceptable or a double-precision method, and (c) a sweep showing no visible pixel flips. None holds today.
+* **Terrain shading / spans.** Evidence in the repository (#64, #97) and this experiment's GCC census agree: cells are about 4 px wide, 38-47% of scanlines are empty after setup, per-scanline setup has 3 `fdiv` and
+  `ceil`, and `raster.cpp` makes `__fixdfdi/__divdi3` library calls. **The bottleneck is algorithmic and instruction-selection** (int32 fast paths, fewer divisions, #97's slices), before vector width. I did not write or time a
+  terrain kernel. A palette-gather span would need a scatter/gather AltiVec does not have. RGB555 conversion is the one natural integer fit and SWAR covers most of it (#64).
+* **Recommendation:** do not implement either on current evidence. Reconsider only after #97's scalar slices are measured on the G4 and projection or conversion is still large.
+
+## 2.7 C. Architecture assessment
+
+| Option | Verdict |
+| --- | --- |
+| One purely scalar CPU renderer | **Recommended**, with the documentation corrected |
+| Scalar renderer with selected specialized math routines | Not warranted: the only candidate operation (this helper) has no beneficial replacement; C2 ties B, C4 is slower, C1 changes pixels, D is unverifiable and a worse seed |
+| Optional architecture-specific SIMD kernels | Not now (2.6); revisit after #97 scalar slices |
+| No changes at all | Acceptable, but the comment is wrong in two places and nothing pins the error contract |
+
+Costs: code size: all portable candidates are 9-22 instructions, within a few bytes of B. Maintenance: any CPU path adds a capability probe, an assembly source and a second numerical contract; `frsqrte` cannot be tested for accuracy without hardware, and its estimate table is implementation-defined within a bound, so it
+puts the host/G4 bit-identity the project relies on at risk. Portability: the portable code compiles under C++20 without exceptions/RTTI and uses only `std::sqrt`; nothing probed here requires an optional CPU feature. Reproducibility: B2, C2, C4 give identical frames on x86 and PPC32; the FMA effect (2.4) is the larger cross-target risk.
+
+## 2.8 E. Decision recommendation
+
+1. **Immediate: option 1, keep the current approach and correct its documentation.** Two comments are inaccurate: `inverse_length` (domain and error bounds) and `band_margin_px` ("Newton step good to 1e-5").
+   Proposed wording is in `docs/perf/rsqrt-20261116/proposed/01-comment-only.patch`. **Not applied to production.** Both patches apply cleanly to `0b5b16d`.
+2. **Optional, owner's choice: patch `02-comment-and-guard.patch` also moves the exact-path guard from 0.5 to 0.92** (candidate B2), so the code satisfies its own 1e-5 claim over its whole domain. Frames are bit-identical for all
+   1,764 sweep frames; no shipped arc reaches the new exact path. Its cost is a G4 `sqrt` (about 1.2 us) for arcs over 33 deg that do not exist today. I would take it only if
+   other atlases are expected.
+3. **Do not**: add `globe::math` (rule 4: one operation, one call site; a single internal helper is enough), adopt `frsqrte` or any `_ARCH_PPCGR` path, or implement AltiVec projection/shading.
+4. **Option 5 (defer pending hardware) for the PowerPC question only.** Nothing here needs G4 time. If the owner still wants `frsqrte` characterised, the minimal experiment is in 2.9.
+5. **Separate follow-ups, for the owner to file or decline** (not in this PR): (a) fused multiply-add contraction changes 80/1,764 sweep frames between x86 and PPC32 (qemu) and may bear on host/G4 golden identity; decide whether to
+   check this on NetBSD GCC 12.5 and what, if anything, to do about `fmadd`; (b) add a deterministic camera-sweep checksum test (the existing goldens miss sub-0.01 px changes); (c) a contract test for the helper's error bound would need the helper exposed in an internal header.
+   A sqrt-free exact subdivision step count (`render.cpp:74`) is **not** worth doing (about 2% of line time at the highest zoom, model only).
+
+## 2.9 What remains unverified, and exact commands
+
+Unverified on G4 or by any target toolchain: native speed of every candidate; `frsqrte` accuracy and the interaction of its estimate table with host/G4 bit identity; whether NetBSD GCC 12.5 contracts to `fmadd` exactly as GCC 12.4 does
+and whether the sweep differences reproduce there; Retro68 `-Os` code for any candidate; Retro68 68k behaviour (`std::sqrt` is software there); the MPC7400 FP latencies used in the model.
+
+**Owner-run Retro68 probes** (compile only; inspect every `FAIL` line, do not suppress):
+
+```sh
+tools/probe-retro68.sh                       # existing script; needs podman or CONTAINER=docker, ghcr.io/autc04/retro68
+# then, inside the same container, for each of powerpc-apple-macos-g++ and m68k-apple-macos-g++:
+$TC/bin/$cxx -O2 -std=c++20 -fno-exceptions -fno-rtti -Itools/rsqrt-research -S tools/rsqrt-research/ppc_probe.cpp -o /tmp/probe.s
+$TC/bin/$cxx -dM -E -x c++ /dev/null | grep -E '_ARCH_PPC|ALTIVEC|FP_FAST_FMA'   # does the default CPU set _ARCH_PPCGR?
+```
+
+**Minimal owner-authorized G4 experiment, only if wanted** (cross-build on the host per docs/g4-benchmark.md; fresh names; no compiling on the G4):
+`powerpc-...-g++ -O2 -static -std=c++20 -mcpu=7400 tools/rsqrt-research/rsqrt_lab.cpp -o rsqrt-lab-SHA` (adjust to the NetBSD toolchain file), then `./rsqrt-lab-SHA bench` x 9 fresh processes and `./rsqrt-lab-SHA frsqrte`
+(the second reports the real estimate's error; it is only meaningful on hardware), plus A/B/B/A of `rsqrt-trace` variants base, 3, 4 and 1 for the frame hashes (needs the scratch-build scripts). No decision above depends on its result.
+
+**Reproduce** (host): `tools/rsqrt-research/build_variants.sh <rev> /tmp base 0 1 2 3 4 5 6`, then `rsqrt-trace --write` for base and `--compare` for the others;
+`g++ -O2 -std=c++20 tools/rsqrt-research/rsqrt_lab.cpp -o lab && lab audit args.bin && lab bench args.bin` (`args.bin` is variant 5's `--log`; 549 MB, not committed);
+`tools/rsqrt-research/ppc_asm_report.py powerpc-linux-gnu-g++-12 out/`; `tools/rsqrt-research/simd_probe_report.sh out/`; `tools/rsqrt-research/count_instructions.sh /tmp 220,440 base 1 2 3 4`.

@@ -1,0 +1,12 @@
+Linux 6.18.44-fc-v470 x86_64
+model name	: Intel(R) Xeon(R) Processor @ 2.10GHz
+2
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Ubuntu clang version 18.1.3 (1ubuntu1)
+powerpc-linux-gnu-g++-12 (Ubuntu 12.4.0-2ubuntu1~24.04.1) 12.4.0
+qemu-ppc version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)
+valgrind-3.22.0
+Python 3.13.18
+globe base commit: 0b5b16d54abacabb358e7ea48e5eb21a4cfd43c5
+claude-plugins commit: a34f0e14af4a1494571402cd6beb762b879413af
+host cmake flags: -O2 -DNDEBUG (Release); ppc: -O2 -DNDEBUG -static; x86 baseline ISA (no FMA)
