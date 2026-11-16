@@ -43,18 +43,18 @@ python3 atlas/research/composition_ade.py bench
 | Conflicting hydro slot | One explicit `ambiguous` record; embedded river retained | No silent precedence or spatial union |
 | Publisher-qualified identifiers | `gamma.example:shared` and `delta.example:shared` remain distinct | No accidental ID join |
 | E selecting five of six | Hydro conflict removed by **explicitly excluding one pack**, while A still sees both | E offers a functional selection benefit beyond automatic scan; D must republish to achieve it |
-| Corrupt/missing/incompatible/duplicate packs | Classified in 13 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
+| Corrupt/missing/incompatible/duplicate packs | Classified in 14 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
 | Read-only operation | Consumers perform no writes; file hashes unchanged, fixture permissions set read-only | No real Classic volume/file APIs tested |
 
 **Warm Python microbenchmark (80 trials/variant, median; illustrative only):**
 
 | Variant | Consumer file reads | Consumer bytes | Median ms | Median traced Python allocation peak |
 | --- | ---: | ---: | ---: | ---: |
-| A: scan | 6 | 1,134 | 0.5172 | 11,086 bytes |
-| D: sealed | 1 | 792 | 0.0535 | 5,596 bytes |
-| E: manifest | 7 | 1,865 | 0.7612 | 14,214 bytes |
+| A: scan | 6 (+1 directory enumeration) | 1,134 | 0.5638 | 14,008 bytes |
+| D: sealed | 1 | 792 | 0.0517 | 5,596 bytes |
+| E: manifest | 7 | 1,865 | 0.6293 | 14,214 bytes |
 
-The Python timings were not cold-cache controlled, CPU-pinned, or replicated on Classic; they measure JSON parsing, hash computation and Python bookkeeping on tiny fixtures. Traced peaks exclude interpreter/runtime and OS memory and are **not** C++/G4 peak data. D deliberately shifts work to publishing; publishing cost is *excluded* from the consumer columns. File-op counts reflect this fixture and implementation, not actual HFS/CD performance. Source-line counts are crude: shared decode/collect/resolve ~72 source lines, A-specific ~3, D publisher+consumer ~14, E manifest producer+consumer ~22. These are localized function counts, **not** total engineering maintenance complexity.
+The Python timings were not cold-cache controlled, CPU-pinned, or replicated on Classic; they measure JSON parsing, hash computation and Python bookkeeping on tiny fixtures. Traced peaks exclude interpreter/runtime and OS memory and are **not** C++/G4 peak data. D deliberately shifts work to publishing; publishing cost is *excluded* from the consumer columns. File-op counts reflect this fixture and implementation, not actual HFS/CD performance; A additionally enumerates the directory once. Source-line counts are crude: shared decode/collect/resolve ~72 source lines, A-specific ~6, D publisher+consumer ~14, E manifest producer+consumer ~22. These are localized function counts, **not** total engineering maintenance complexity.
 
 ## Observe → update / decision
 
