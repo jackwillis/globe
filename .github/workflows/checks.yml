@@ -149,3 +149,9 @@ jobs:
             build-os9-floppy/PoodleEarth-1440.dsk
             build-os9-floppy/size-report.*
             build-os9-floppy/hfs-*.txt
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: poodle-earth-emulator-test
+          path: build-os9-floppy/release/*
+          if-no-files-found: error
