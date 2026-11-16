@@ -34,6 +34,7 @@ The public preview `v0.1.0` was published on **2026-11-13**; the historical prot
 - [ ] Record exceptions, documentation debts and security follow-ups in existing issue owners rather than leaving misleading claims or creating duplicate trackers.
 
 ## 4. Release artifacts and publication
+- [ ] For the [Classic CD image](os9-cd-image.md), verify the image with the host packager and record a virtual CD mount, Finder copy to a writable volume and launch on an identified PowerPC guest before publication.
 
 - [ ] Produce complete corresponding GPL-3.0-or-later source and build scripts from the **same revision** as each executable; a GitHub URL by itself is not an adequate substitute for an appropriate physical-media source-compliance plan.
 - [ ] Include license and data credits and all required third-party notices; do not include proprietary OS/ROM images or credentials.

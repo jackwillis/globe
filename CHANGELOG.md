@@ -3,6 +3,7 @@
 This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
+- The Classic release packager builds a hybrid ISO-9660/HFS CD image candidate alongside StuffIt (#171). Emulator acceptance is pending.
 
 - Classic Controls lists the Command equivalents alongside plain shortcuts and identifies plain-only and Command-only keys (#144).
 - Help for the controls (#40): H or ? (and Apple menu > Controls on Classic) shows the keys and gestures in the information pane on both front ends, from the one table in `globe/controls.hpp` that also defines the shortcut keys. Escape hides it. Host-tested and cross-compiled; not yet run on the G4.
