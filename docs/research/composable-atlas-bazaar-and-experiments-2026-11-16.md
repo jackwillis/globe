@@ -251,3 +251,79 @@ All tests require predeclared baseline, task/data fixture, expected observable r
 Keep this document as the **research synthesis**, not a shadow issue tracker. Link to it from #52 and relevant ownership issues. Future implementation proposals should include a specific falsifiable hypothesis, tiny fixture, resource/parity constraints, test plan, explicit owner authorization, and the actual issue owning the slice. Revise this note with dated addenda if major assumptions change; do not silently rewrite old experiment results. Preserve the independent reviewers' limitations and distinguish literature precedent from demonstrated Poodle Earth behavior.
 
 **The central experiment:** Can an independent contributor transform a licensed GIS dataset into a semantically validated, reproducible Poodle Earth pack, inspect it in a WebAssembly Reader, and load it on a native historical platform **without** turning the native Reader into a GIS/database engine? The journey is an eventual integration test, not a prerequisite for earlier small experiments.
+
+
+## 11. Research portfolio housekeeping: separate learning from shipping (2026-11-16 follow-up)
+
+**Owner idea / proposal, not an adopted workflow or label mutation.** Release milestones describe *shippable outcomes and verification gates*. Research tracks describe *uncertainties, learning goals and candidate experiments* that can proceed without changing release scope. A single issue may contribute evidence to a future milestone, but research work should not automatically block that release.
+
+**Why the bazaar matters without external community adoption:** Today's atlas already combines independently sourced geography, different layers, conventions, names, resolutions and provenance. A clean third-party interoperability contract could help **our own internal production** even if no community pack is ever published. The value hypothesis is reduced coupling between source adapters, curated identities, produced packs and the Reader; community use is an additional upside.
+
+### Minimal proposed labeling taxonomy
+
+Preserve existing **P0–P3**, **area:**, **status:**, **needs:**, **idea**, and milestone authority. Don't use labels to redefine release priority or allow an agent to self-authorize work. Existing repository already has a research issue template; reuse it.
+
+- **One type marker:** \`kind: research\`, distinct from \`idea\` (an unpromoted suggestion) and \`status: ready\` (owner-authorized work). An idea may be research in topic but not approved to execute.
+- **Three cross-cutting optional tracks:** \`track: composition\` (identity, format, runtime resources), \`track: publishing\` (GIS imports, QA, licenses, community workflow), \`track: platform-lab\` (WASM, WebGL, cross-platform feasibility). Existing \`area:\` still describes where code belongs.
+- **Priority without another P0–P3 series:** Put a single \`Research horizon: now | next | later\` field **in the research issue body at first**, with *decision enabled*, uncertainty, smallest discriminating test, expected effort, stop condition, and owner. Introduce \`research: now\` or a Project field only if query/filter pain proves a need. Don't make three overlapping priority systems.
+- **Keep stages in issue text:** question → model/alternatives → predicted observation → experiment/evidence → decision. Research findings are evidence, not automatic authorization to implement.
+
+Suggested review rhythm: a **brief optional research-lane review** at release planning or when an experiment finishes, not an additional mandatory release ceremony. Limit simultaneous deep research to one or two independent experiments while milestone issues progress; let a finished result free a slot. An experiment is independently reviewable if it states a bounded question, fixture, prediction, objective observation and decision gate.
+
+**Proposed organization without a second backlog:**
+
+| Track | Existing home(s) | First question to investigate | Horizon proposal |
+| --- | --- | --- | --- |
+| Composition | #26, #31, #48, #52 | Does permutation-invariant pack composition require anything larger than a small resolver? | Now |
+| Publishing | #29, #52/#53 | Can a Python GeoJSON importer produce a traceable validated pack without a C++ edit? | Now |
+| Platform lab | #178, #114 | Can existing \`globe_core\` produce a draggable WebAssembly CPU Reader with minimal native impact? | Next/parallel |
+| Storage/media (part of composition) | #49/#54–57/#72 | What happens to read, decode and replacement peaks on real media? | Before container freeze |
+| Nix-like publication model (part of composition) | #31/#52, possibly #26 | Can immutable pack sets, activation generations and rollback stay simple/read-only? | Next |
+
+**No new epic tree**: #52 is the existing atlas-production research epic; #166 already covers tracker hygiene automation and #121 the project-state workflow. Only create new research issues where the question has no existing owner and can be tested independently. Always preserve current milestone metadata even when older issue body text conflicts with the current roadmap.
+
+### What to record on each research issue (template proposal)
+
+- **Question / product decision affected:** one sentence.
+- **Two competing models:** what would each predict differently?
+- **Smallest falsifiable intervention:** controlled fixture, comparison and negative cases.
+- **Evidence:** code revision, data/source hashes, OS/CPU, memory/time measurements, test commands and limitations.
+- **Decision gate:** adopt / revise / abandon / defer; owner accepts any consequential architecture or scope change.
+- **Research horizon:** now / next / later, distinct from P priority and release milestone.
+- **Links:** one owning issue, related work and current research documents; avoid duplicate backlog entries.
+
+## 12. Nix / NixOS as a precedent for an open atlas (2026-11-16 follow-up)
+
+**Worth studying; do not adopt Nix as an on-device runtime or publishing requirement.** Distinguish Nix (functional package manager/build/store ideas), Nixpkgs (package collection), and NixOS (declarative OS distribution). The architecture of the *Nix store*, derivations and profiles is more relevant than NixOS configuration modules.
+
+Primary reading:
+- [Nix language and derivations — nix.dev](https://nix.dev/tutorials/nix-language)
+- [Store derivations — Nix manual](https://nix.dev/manual/nix/2.28/store/derivation/)
+- [Store closures and references — Nix manual](https://nix.dev/manual/nix/2.33/glossary.html)
+- [Profiles / generations / atomic activation — Nix manual](https://nix.dev/manual/nix/2.31/package-management/profiles)
+- [Reproducible-build caveats — NixOS](https://reproducible.nixos.org/)
+
+**Potential transfer patterns (analogies, not protocol requirements):**
+
+| Nix concept | Possible atlas analogy | Limits |
+| --- | --- | --- |
+| Derivation / precisely declared inputs | Locked source/version/license + builder configuration + QA decisions + toolchain revision produce one edition/pack | Build reproducibility is not geographic semantic correctness; geographic source acquisition can have external terms and ambiguities |
+| Immutable store object | Immutable validated pack bytes, with digest separate from logical pack name/version | Do **not** use a byte hash as a durable geographic entity ID |
+| Store references and dependency closure | Explicit small set of pack/identity-contract dependencies for a published edition | Full transitive solver unnecessary until real data needs it; on Classic CPU/RAM keep closure calculation at publishing/install time |
+| Profile | One selected active pack set / small derived resolved-catalog recipe | Profile is a *selection*, not source truth or a user-visible thematic layer |
+| Generation and atomic switch | Candidate pack set validated first, then active catalog switched; prior set retained for rollback | Classic Mac File Manager has different rename/atomicity/symlink guarantees; use appropriate tested filesystem primitives rather than copying Nix mechanics |
+| Garbage collection | Removing no-longer-used inactive pack versions | Deletion/retention requires explicit consent; read-only CDs and external volumes cannot be cleaned |
+| Reproducible dev shell / pinned Nixpkgs | Optional modern-host build/development environment for atlas publisher | Do not require Nix, Linux, store paths, daemon or Nix language for ordinary Python/CLI/community publishing |
+
+**Crucial separation of three identities:**
+1. **Artifact digest** — exact published bytes / integrity.
+2. **Publisher + pack ID + version** — distributable lineage and compatibility.
+3. **Geographic entity reference** — durable concept surviving changed bytes and publication revisions.
+
+An installable *edition* is closer to a Nix **profile** selecting a set of immutable inputs than to a mutable overwritten database, while a data-publication \`YYYY.MM\` is a human release name rather than a content hash. A specific distribution may include the Reader, pack files, profiles, attribution and user-consented installer. An index may be regenerated from active packs; installing Wisconsin then USA should yield the same active catalog as the reverse order under identical explicit policies.
+
+**Proposed discriminating experiment (research-only):** Implement a toy \`packs/\` collection of immutable synthetic artifacts and a declarative active-set file. Evaluate three variants on the host only: (A) scan valid files and resolve on startup, (B) derive and cache a compiled active catalog, (C) prepare new active generations with reversible activation. Test partial write, duplicate version, corrupt manifest/index, missing external volume, removal, upgrade/rollback, and no-writable-storage mode. Measure startup, peak memory, file operations, recovery behavior and implementation/code complexity. **Compare before selecting a generation mechanism.**
+
+**What not to copy:** Nix daemon, requirement for \`/nix/store\`, Unix symlinks/atomic profile switching, derivation evaluator, transitive repository/dependency solver, mandatory hashed path layout, GC semantics, user-facing Nix syntax, or a hosted binary-cache requirement. The Reader should not know *why* a GIS publication was built, only how to validate and use the resulting bounded resource.
+
+**Research implication:** Nix gives an architectural precedent for immutable inputs and reversible activation, but it does not solve geographic identity equivalence, geopolitical assertions, geometry seam reconciliation or the governance of conflicting publisher claims. Those require their own source-aware decisions. Nix itself also does not automatically guarantee bit-identical outputs: nondeterministic builders still need independent checks.
