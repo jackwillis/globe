@@ -132,6 +132,8 @@ jobs:
           GLOBE_RELEASE_STRICT=1 tools/package-release.sh build-os9-floppy
           cd build-os9-floppy/release
           sha256sum -c SHA256SUMS
+          isoinfo -d -i PoodleEarth-*-hfs.iso
+          isoinfo -f -i PoodleEarth-*-hfs.iso
           tar -tzf PoodleEarth-*-source.tar.gz >/dev/null
           cat SHA256SUMS >> "$GITHUB_STEP_SUMMARY"
           wc -c PoodleEarth-*-hfs.iso >> "$GITHUB_STEP_SUMMARY"

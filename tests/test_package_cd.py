@@ -8,6 +8,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
@@ -36,6 +37,7 @@ class PackageCDTest(unittest.TestCase):
                 (build / "license" / f"License-{part}.txt").write_bytes(f"Part {part}\n".encode())
             image, second = build / "first.iso", build / "second.iso"
             package(build, image, epoch, False)
+            time.sleep(1.1)  # Expose any accidental use of whole-second wall time.
             package(build, second, epoch, False)
             original = image.read_bytes()
             self.assertEqual(original, second.read_bytes())

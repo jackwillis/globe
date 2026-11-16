@@ -9,6 +9,7 @@ parts and DataCredit. It contains no system software.
 
 cdrkit's `genisoimage -hfs -part --macbin` decodes MacBinary into the HFS
 catalog and shares payload extents with the ISO view. The ISO view is accessible
+The build suppresses cdrkit’s empty Desktop files to keep the image compact.
 with standard ISO readers, while Finder needs the HFS view to copy the
 application with its resource fork. [cdrkit options](https://manpages.debian.org/testing/genisoimage/genisoimage.1.en.html)
 

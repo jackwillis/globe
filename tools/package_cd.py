@@ -117,6 +117,7 @@ def package(build, output, epoch, verify_only):
         stamp = datetime.fromtimestamp(epoch, timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
         image = work / "candidate.iso"
         run("faketime", "-f", stamp, "genisoimage", "-hfs", "-part", "--macbin", "-mac-name",
+            "-no-desktop",
             "-V", "POODLE_EARTH", "-hfs-volid", APP, "-o", image, staging)
         verify(image, original, documents, work)
         image.replace(output)
