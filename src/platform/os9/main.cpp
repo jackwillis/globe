@@ -60,17 +60,19 @@ constexpr short kStartupAlert = 128;
 // Classic QuickDraw cursors keep the same intent policy without version-specific APIs.
 // 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
 // Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
+// Preserve the explicitly authored 16-bit bitmap rows and hotspots.
+// clang-format off
 Cursor kOpenHandCursor = {
     {
-        static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1248), static_cast<short>(0x1248), 
-        static_cast<short>(0x1248), static_cast<short>(0x16DA), static_cast<short>(0x1002), static_cast<short>(0x1002), 
-        static_cast<short>(0x7002), static_cast<short>(0x8002), static_cast<short>(0x8002), static_cast<short>(0x4002), 
+        static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1248), static_cast<short>(0x1248),
+        static_cast<short>(0x1248), static_cast<short>(0x16DA), static_cast<short>(0x1002), static_cast<short>(0x1002),
+        static_cast<short>(0x7002), static_cast<short>(0x8002), static_cast<short>(0x8002), static_cast<short>(0x4002),
         static_cast<short>(0x2004), static_cast<short>(0x1008), static_cast<short>(0x0FF0), static_cast<short>(0x0000)
     },
     {
-        static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1B6C), static_cast<short>(0x1B6C), 
-        static_cast<short>(0x1B6C), static_cast<short>(0x1FFE), static_cast<short>(0x1FFE), static_cast<short>(0x1FFE), 
-        static_cast<short>(0x7FFE), static_cast<short>(0xFFFE), static_cast<short>(0xFFFE), static_cast<short>(0x7FFE), 
+        static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1B6C), static_cast<short>(0x1B6C),
+        static_cast<short>(0x1B6C), static_cast<short>(0x1FFE), static_cast<short>(0x1FFE), static_cast<short>(0x1FFE),
+        static_cast<short>(0x7FFE), static_cast<short>(0xFFFE), static_cast<short>(0xFFFE), static_cast<short>(0x7FFE),
         static_cast<short>(0x3FFC), static_cast<short>(0x1FF8), static_cast<short>(0x0FF0), static_cast<short>(0x0000)
     },
     {7, 7}
@@ -80,15 +82,15 @@ Cursor kOpenHandCursor = {
 // Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
 Cursor kClosedHandCursor = {
     {
-        static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x2008), 
-        static_cast<short>(0x2008), static_cast<short>(0x2008), static_cast<short>(0x4004), static_cast<short>(0x4004), 
-        static_cast<short>(0x4004), static_cast<short>(0x4004), static_cast<short>(0x2008), static_cast<short>(0x2008), 
+        static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x2008),
+        static_cast<short>(0x2008), static_cast<short>(0x2008), static_cast<short>(0x4004), static_cast<short>(0x4004),
+        static_cast<short>(0x4004), static_cast<short>(0x4004), static_cast<short>(0x2008), static_cast<short>(0x2008),
         static_cast<short>(0x1010), static_cast<short>(0x0FE0), static_cast<short>(0x0000), static_cast<short>(0x0000)
     },
     {
-        static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x3FF8), 
-        static_cast<short>(0x3FF8), static_cast<short>(0x3FF8), static_cast<short>(0x7FFC), static_cast<short>(0x7FFC), 
-        static_cast<short>(0x7FFC), static_cast<short>(0x7FFC), static_cast<short>(0x3FF8), static_cast<short>(0x3FF8), 
+        static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x3FF8),
+        static_cast<short>(0x3FF8), static_cast<short>(0x3FF8), static_cast<short>(0x7FFC), static_cast<short>(0x7FFC),
+        static_cast<short>(0x7FFC), static_cast<short>(0x7FFC), static_cast<short>(0x3FF8), static_cast<short>(0x3FF8),
         static_cast<short>(0x1FF0), static_cast<short>(0x0FE0), static_cast<short>(0x0000), static_cast<short>(0x0000)
     },
     {7, 7}
@@ -98,20 +100,21 @@ Cursor kClosedHandCursor = {
 // Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
 Cursor kPointingHandCursor = {
     {
-        static_cast<short>(0x0300), static_cast<short>(0x0280), static_cast<short>(0x0280), static_cast<short>(0x0280), 
-        static_cast<short>(0x0280), static_cast<short>(0x02E0), static_cast<short>(0x023C), static_cast<short>(0x0202), 
-        static_cast<short>(0x3A02), static_cast<short>(0x4602), static_cast<short>(0x4002), static_cast<short>(0x2002), 
+        static_cast<short>(0x0300), static_cast<short>(0x0280), static_cast<short>(0x0280), static_cast<short>(0x0280),
+        static_cast<short>(0x0280), static_cast<short>(0x02E0), static_cast<short>(0x023C), static_cast<short>(0x0202),
+        static_cast<short>(0x3A02), static_cast<short>(0x4602), static_cast<short>(0x4002), static_cast<short>(0x2002),
         static_cast<short>(0x1004), static_cast<short>(0x0808), static_cast<short>(0x07F0), static_cast<short>(0x0000)
     },
     {
-        static_cast<short>(0x0300), static_cast<short>(0x0380), static_cast<short>(0x0380), static_cast<short>(0x0380), 
-        static_cast<short>(0x0380), static_cast<short>(0x03E0), static_cast<short>(0x03FC), static_cast<short>(0x03FE), 
-        static_cast<short>(0x3BFE), static_cast<short>(0x7FFE), static_cast<short>(0x7FFE), static_cast<short>(0x3FFE), 
+        static_cast<short>(0x0300), static_cast<short>(0x0380), static_cast<short>(0x0380), static_cast<short>(0x0380),
+        static_cast<short>(0x0380), static_cast<short>(0x03E0), static_cast<short>(0x03FC), static_cast<short>(0x03FE),
+        static_cast<short>(0x3BFE), static_cast<short>(0x7FFE), static_cast<short>(0x7FFE), static_cast<short>(0x3FFE),
         static_cast<short>(0x1FFC), static_cast<short>(0x0FF8), static_cast<short>(0x07F0), static_cast<short>(0x0000)
     },
     {0, 6}
 };
 
+// clang-format on
 void set_classic_cursor(CursorIntent intent) {
     if (intent == CursorIntent::OpenHand)
         SetCursor(&kOpenHandCursor);
