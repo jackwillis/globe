@@ -3,7 +3,7 @@
 **Research synthesis / product-planning proposal — 2026-11-16**  
 **Status: non-normative.** This note preserves owner discussion, independent reviews, the Pass 1 decision audit, and the Pass 2 causal research plan. It does **not** accept an ADR, establish a public pack contract, change any issue's owner/priority/milestone, approve a new source/license, authorize hardware access, or add release gates. GitHub Issues remain the live tracker. This note deliberately distinguishes **accepted project principles**, **current implementation**, **owner's emerging product direction**, **provisional hypotheses**, and **open decisions**.
 
-**Source context:** [ADR 0003](../adr/0003-atlas-production-boundary.md) (accepted boundary, formats not accepted), [draft ADR 0005](../adr/0005-entity-identity-and-navigation.md), [CD-ROM atlas research](cd-rom-atlas-architecture.md), [catalog prototype](../../atlas/catalog/README.md), [backlog](../backlog.md), the current issue bodies, and two independent reviews (Claude's read-only repository audit at commit \`1f2dfe3\`, dated 2026-11-14, supplied by the owner; a Gemini prior-art/design response supplied by the owner). The two reviews are **advisory**, not approval or hardware evidence. This note also incorporates the later discussion of Python/GIS publishing, WebAssembly, WebGL, and cathedral versus bazaar. Exact issue and code details should be rechecked against \`main\` before assigning an implementation task.
+**Source context:** [ADR 0003](../adr/0003-atlas-production-boundary.md) (accepted boundary, formats not accepted), [draft ADR 0005](../adr/0005-entity-identity-and-navigation.md), [CD-ROM atlas research](cd-rom-atlas-architecture.md), [catalog prototype](../../atlas/catalog/README.md), [backlog](../backlog.md), the current issue bodies, and two independent reviews (Claude's read-only repository audit at commit `1f2dfe3`, dated 2026-11-14, supplied by the owner; a Gemini prior-art/design response supplied by the owner). The two reviews are **advisory**, not approval or hardware evidence. This note also incorporates the later discussion of Python/GIS publishing, WebAssembly, WebGL, and cathedral versus bazaar. Exact issue and code details should be rechecked against `main` before assigning an implementation task.
 
 ## 1. Product thesis: a bazaar of atlases, a small dependable Reader
 
@@ -18,9 +18,9 @@ AI agents are potential accelerants for source processing, documentation, QA and
 | Term | Suggested meaning | Example |
 | --- | --- | --- |
 | **Reader release** | Version of application/runtime and supported decoders | Poodle Earth 0.2.0 |
-| **Data publication** | Dated snapshot/release of geographic data, independently versioned from the app | Atlas \`2027.02\` |
+| **Data publication** | Dated snapshot/release of geographic data, independently versioned from the app | Atlas `2027.02` |
 | **Edition** | Curated human-facing product identity, not a binary serialization unit | Wisconsin Edition |
-| **Distribution** | Packaging/delivery of Reader + optional data for platform/media | Classic Mac CD, \`.sit\`, pkgsrc \`.tgz\`, web |
+| **Distribution** | Packaging/delivery of Reader + optional data for platform/media | Classic Mac CD, `.sit`, pkgsrc `.tgz`, web |
 | **Pack** | Immutable, versioned, identifiable data artifact | Wisconsin Rivers pack v3 |
 | **Layer** | User-viewable type/theme of content | Hydrography, places, elevation |
 | **Source dataset** | Identified/pinned upstream evidence with distinct license and publication details | A particular Natural Earth extract |
@@ -29,7 +29,7 @@ AI agents are potential accelerants for source processing, documentation, QA and
 | **Catalog** | Identity concordances and/or the small derived index of eligible pack resources; distinguish the two meanings explicitly | An identity authority table vs a resolved-resource table |
 | **Manifest** | Authored or compiled description of a publication/pack and compatibility | Text publishing input; compact runtime metadata |
 
-A calendar-style data publication name \`YYYY.MM\` is appealing but has *no special semantic authority*: later dates do not mean higher geographic truth, compatible data, or automatic precedence. Multiple releases in a month and backwards-compatible reader constraints remain unsettled. The existing \`atlas/editions/recipes.json\` compact/standard/expanded terms are **research recipes**, not mandatory user modes, product branding, or committed releases.
+A calendar-style data publication name `YYYY.MM` is appealing but has *no special semantic authority*: later dates do not mean higher geographic truth, compatible data, or automatic precedence. Multiple releases in a month and backwards-compatible reader constraints remain unsettled. The existing `atlas/editions/recipes.json` compact/standard/expanded terms are **research recipes**, not mandatory user modes, product branding, or committed releases.
 
 ## 2. What is settled, and what is not
 
@@ -39,14 +39,14 @@ A calendar-style data publication name \`YYYY.MM\` is appealing but has *no spec
 3. Stable entity identity is distinct from source record, geometry, name, label, and visibility. The precise production encoding remains draft.
 4. Versioned strict, bounded readers; deterministic core behavior; no unmeasured migration to universal GIS/SQL.
 5. Provenance, data license review, reproducibility, semantic QA and explicitly documented omissions.
-6. Adaptive memory and safe replacement; no drag-time I/O, no assumption of \`mmap\` on Classic Mac.
+6. Adaptive memory and safe replacement; no drag-time I/O, no assumption of `mmap` on Classic Mac.
 7. Independent, community-friendly publishing is an owner *product aspiration*, not an already-approved protocol.
 8. Pack availability must not be confused with thematic layer visibility or user memory-quality preferences.
 
 **Leading technical hypotheses, not decisions:**
 - Immutable self-describing packs with a small envelope around existing payload bytes rather than rewriting GATL/GELV/GPOL/GPLC immediately.
 - A deterministic resolver deriving a small active resource table from the valid pack set; optional, recoverable installation-time index cache, not an authoritative mutable database.
-- Publisher-qualified external identities with explicit concordances into existing project \`gcat:\` IDs, resolved into bounded compact handles; no blind equivalence by name/coordinate/QID.
+- Publisher-qualified external identities with explicit concordances into existing project `gcat:` IDs, resolved into bounded compact handles; no blind equivalence by name/coordinate/QID.
 - Human-readable publishing manifests (TOML or another simple format) compiled into bounded runtime metadata.
 - Mostly builder/install-time semantic validation; runtime performs small typed selection/lookup with safe failure statuses.
 - Additive packs before arbitrary overlapping-geometry replacements.
@@ -54,7 +54,7 @@ A calendar-style data publication name \`YYYY.MM\` is appealing but has *no spec
 - An Emscripten/WebAssembly software Reader as a third frontend and possible future WebGL/native accelerated rendering laboratory.
 
 **High-irreversibility unresolved decisions:**
-1. Persistent \`EntityRef\` representation; project IDs vs community authority/local IDs; redirects, splits, retirement and namespace collision strategy.
+1. Persistent `EntityRef` representation; project IDs vs community authority/local IDs; redirects, splits, retirement and namespace collision strategy.
 2. Location/evolution of the canonical identity catalog: embedded, external versioned catalog, or hybrid; avoid confusing with derived pack mount index.
 3. Pack IDs, versions, compatibility (Reader API, payload schema, identity contract, coverage and lineage); unsupported unknown reader-format versions must be rejected safely.
 4. Geometry refinement semantics by type: feature, cell, segment, published composite; seam/topology validation; disputed sources and competing claims.
@@ -67,13 +67,13 @@ A calendar-style data publication name \`YYYY.MM\` is appealing but has *no spec
 
 - The repo has strict little-endian, versioned GATL/GELV/GPOL/GPLC readers with checksums and bounds; none is a general independently identified community pack.
 - X11 imports some external data (notably elevation) via whole-file loading, whereas the Classic Mac frontend still uses embedded data. The initial Classic external-file path is #48.
-- \`ElevationPacks::add\` appends resolution levels in registration order; \`for_model\` resolves by index. This is a candidate correctness test/fix, **not** evidence that generic multi-pack composition already works.
+- `ElevationPacks::add` appends resolution levels in registration order; `for_model` resolves by index. This is a candidate correctness test/fix, **not** evidence that generic multi-pack composition already works.
 - Regional GELV coverage may be representable at the binary level but is rejected by the current pack-registration policy.
-- The \`atlas/\` research inventory contains 808 allocated *source concepts*, not 808 adjudicated geographic identities. \`atlas/catalog/review-decisions.json\` had no approved individual decisions at the reviewed checkpoint. No runtime canonical catalog is integrated.
+- The `atlas/` research inventory contains 808 allocated *source concepts*, not 808 adjudicated geographic identities. `atlas/catalog/review-decisions.json` had no approved individual decisions at the reviewed checkpoint. No runtime canonical catalog is integrated.
 - The current app has no runtime hydrography layer, so the Mississippi/Wisconsin overlap is initially a synthetic *thought experiment*, not an existing end-to-end feature.
-- Existing \`MemoryLedger\`, generation/invalidation and typed resource patterns provide useful starting seams; whole-file reads and lifetime/low-memory behavior still require evidence.
+- Existing `MemoryLedger`, generation/invalidation and typed resource patterns provide useful starting seams; whole-file reads and lifetime/low-memory behavior still require evidence.
 
-**Review caution:** Claude's audit was at \`1f2dfe3\` and could not read issue comments; Gemini provided broad precedents but made unsupported claims about zero-RAM/memory-mapped Classic I/O, deterministic regional override solving geometry, and exact historical implementations. Neither is a production specification. PR #175 was merged later and concerns Classic QuickDraw cursors, not pack semantics.
+**Review caution:** Claude's audit was at `1f2dfe3` and could not read issue comments; Gemini provided broad precedents but made unsupported claims about zero-RAM/memory-mapped Classic I/O, deterministic regional override solving geometry, and exact historical implementations. Neither is a production specification. PR #175 was merged later and concerns Classic QuickDraw cursors, not pack semantics.
 
 ## 3. Alternative architectures worth keeping visible
 
@@ -95,16 +95,16 @@ Raster levels, places, lines, boundaries and factual assertions require **differ
 
 Illustrative, non-existing CLI:
 
-\`\`\`sh
+```sh
 poodle-atlas import wisconsin.geojson
 poodle-atlas validate wisconsin/
 poodle-atlas build wisconsin/
 poodle-atlas inspect wisconsin.pack
-\`\`\`
+```
 
 Candidate pipeline:
 
-\`\`\`text
+```text
 GeoJSON / other GIS input
   → parsing and CRS/axis normalization
   → declared target feature/layer semantics
@@ -114,11 +114,11 @@ GeoJSON / other GIS input
   → deterministic versioned pack build + compatibility report
   → same-renderer preview on desktop/browser
   → user-controlled publication/distribution
-\`\`\`
+```
 
 **Format input priorities are experiments, not approvals:** GeoJSON is the easiest point/line starter. Shapefile, GeoPackage, GeoTIFF, OSM-family extracts and others may be valuable later, each with dependencies, coordinate/encoding quirks, topology concerns and *individual* source-data licensing. Support for a file format never implies permission to redistribute the contained data.
 
-Prefer a Python API and a small CLI initially because \`atlas/\` already uses Python for reproducible builder research and because it supports automation, packaging, and AI agents. Benchmark dependency footprint and modern OS usability. Future options: one reusable Rust/C++ core for validation or codec reuse if measured, JS browser editor, WASM compiler, a local GUI. Do not implement duplicate divergent pack validators merely to support several languages.
+Prefer a Python API and a small CLI initially because `atlas/` already uses Python for reproducible builder research and because it supports automation, packaging, and AI agents. Benchmark dependency footprint and modern OS usability. Future options: one reusable Rust/C++ core for validation or codec reuse if measured, JS browser editor, WASM compiler, a local GUI. Do not implement duplicate divergent pack validators merely to support several languages.
 
 Separate **syntactic import** (coordinates/fields can be parsed) from **semantic publishing** (correct feature identity, claims, time, source, license, topology). Require explicit unavailable/unknown statuses, not guessed identity matches. Provide actionable diagnostics with stable codes, traceable source rows, negative fixtures and deterministic output. AI suggestions are attributed, reviewable proposals, never silent accepted assertions.
 
@@ -131,7 +131,7 @@ There are **two separate hypotheses**:
 - Developing a WebGL backend in that browser can bootstrap a portable native accelerated renderer.
 
 Recommended *experimental* order:
-1. Emscripten compile of the existing platform-neutral C++20 \`globe_core\`, using embedded atlas and existing deterministic \`Model/Msg/update/Effects\`.
+1. Emscripten compile of the existing platform-neutral C++20 `globe_core`, using embedded atlas and existing deterministic `Model/Msg/update/Effects`.
 2. Minimal browser event-loop adaptation; mouse/keyboard/touch where feasible; software-produced framebuffer displayed with Canvas. Compare output/trace parity and code size/memory to native.
 3. Optional browser local-file pack load/preview and inspection with controlled resource bounds; do not require cloud hosting or upload a user's GIS data to a server.
 4. Distinguish **GPU presentation** (uploading a CPU-rendered framebuffer as a texture) from **actual GPU geographic rendering** (projecting and drawing geographic primitives via shader/buffers).
@@ -146,7 +146,7 @@ Strategic analogy: **NetBSD/X11 was a productive bootstrap for Classic Mac; WebA
 
 **Rung 2 (intervention) question:** For prospective independent atlas publishers, what is the causal effect of a supported CLI/toolkit versus the current bespoke-script workflow on the probability of completing a *semantically reviewed, reproducible, redistribution-compliant* pack within a specified task window?
 
-\`\`\`text
+```text
 Contributor skill ─→ toolkit adoption
              └────→ semantic correctness ───→ useful pack
 Dataset difficulty ─→ toolkit adoption
@@ -155,7 +155,7 @@ Motivation (partly unobserved) ─→ adoption, completion, useful pack
 Toolkit adoption ─→ import effort ─→ completion
 Toolkit adoption ─→ validation feedback ─→ correctness
 Source rights/licensing ─→ publishability
-\`\`\`
+```
 
 **Causal caveat:** Toolkit users self-select. Contributor skill, motivation and dataset difficulty can cause both adoption and outcomes. Counting only submitted packs also conditions on selection influenced by completion and motivation; it can bias comparisons. A graph/backdoor check is valid only under its assumed edges; it doesn't prove the edges. Observational correlations should not be promoted to causal effects. To estimate broader contributor impact, use task assignment or randomization where possible; single-owner/agent pilot results mainly establish feasibility, not community adoption.
 
@@ -185,7 +185,7 @@ All tests require predeclared baseline, task/data fixture, expected observable r
 
 ## 8. Pass 3 product-management mapping: reuse issues, protect milestones
 
-**Planning rule:** Preserve the present milestone and issue ownership, do not create a parallel backlog, and do not upgrade a research hypothesis to \`status: ready\` or a release gate without the owner's later explicit decision. The existing \`docs/backlog.md\` and some issue bodies use differing *historic release-theme descriptions* (e.g. #48/#49 vs the newer "v0.3 Memory and Packs" roadmap). Treat live milestone metadata and owner decisions as authoritative; report this drift, do not silently retarget.
+**Planning rule:** Preserve the present milestone and issue ownership, do not create a parallel backlog, and do not upgrade a research hypothesis to `status: ready` or a release gate without the owner's later explicit decision. The existing `docs/backlog.md` and some issue bodies use differing *historic release-theme descriptions* (e.g. #48/#49 vs the newer "v0.3 Memory and Packs" roadmap). Treat live milestone metadata and owner decisions as authoritative; report this drift, do not silently retarget.
 
 ### Work packages and decision gates
 
@@ -209,7 +209,7 @@ All tests require predeclared baseline, task/data fixture, expected observable r
 2. **Unmilestoned research queue:** multi-pack conformance hypothesis; importer usability; identity authority stress; WebAssembly CPU browser frontend. The first three may be recorded as scoped updates to existing owning issues; WebAssembly genuinely lacks a dedicated issue.
 3. **Future product options, not gates:** public pack publishing protocol, community/official trust model, full browser editor, WebGL/native acceleration, physical CD as a product, cross-platform package matrix, alternative geometric worldviews. Do not attach them to v0.1.x/v0.2/v0.3/v0.4 merely because they are attractive.
 
-**Existing overlap to avoid:** #29 owns source adapters/conversion, #31 the format/index, #52 the atlas publishing epic, #53 geographic QA, #48 Classic external reading, #49/#51 media/preferences/layout, #54–#57 memory, #72 optical research, #122 Unix/pkgrc packaging research, #165 proposed parser fuzzing/schema pilot, #114 portable presentation semantics, #23 user-facing layers, #63 optional scripting. A separate general "community publishing epic" would duplicate #52 today.
+**Existing overlap to avoid:** #29 owns source adapters/conversion, #31 the format/index, #52 the atlas publishing epic, #53 geographic QA, #48 Classic external reading, #49/#51 media/preferences/layout, #54–#57 memory, #72 optical research, #122 Unix/pkgsrc packaging research, #165 proposed parser fuzzing/schema pilot, #114 portable presentation semantics, #23 user-facing layers, #63 optional scripting. A separate general "community publishing epic" would duplicate #52 today.
 
 ### Candidate milestone gates (not changes to the repository)
 
