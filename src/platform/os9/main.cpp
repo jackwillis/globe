@@ -60,7 +60,7 @@ constexpr short kStartupAlert = 128;
 // Classic QuickDraw cursors keep the same intent policy without version-specific APIs.
 // 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
 // Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
-const Cursor kOpenHandCursor = {
+Cursor kOpenHandCursor = {
     {
         static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1248), static_cast<short>(0x1248), 
         static_cast<short>(0x1248), static_cast<short>(0x16DA), static_cast<short>(0x1002), static_cast<short>(0x1002), 
@@ -78,7 +78,7 @@ const Cursor kOpenHandCursor = {
 
 // 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
 // Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
-const Cursor kClosedHandCursor = {
+Cursor kClosedHandCursor = {
     {
         static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x2008), 
         static_cast<short>(0x2008), static_cast<short>(0x2008), static_cast<short>(0x4004), static_cast<short>(0x4004), 
@@ -96,7 +96,7 @@ const Cursor kClosedHandCursor = {
 
 // 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
 // Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
-const Cursor kPointingHandCursor = {
+Cursor kPointingHandCursor = {
     {
         static_cast<short>(0x0300), static_cast<short>(0x0280), static_cast<short>(0x0280), static_cast<short>(0x0280), 
         static_cast<short>(0x0280), static_cast<short>(0x02E0), static_cast<short>(0x023C), static_cast<short>(0x0202), 
