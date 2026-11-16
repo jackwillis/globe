@@ -327,3 +327,63 @@ An installable *edition* is closer to a Nix **profile** selecting a set of immut
 **What not to copy:** Nix daemon, requirement for \`/nix/store\`, Unix symlinks/atomic profile switching, derivation evaluator, transitive repository/dependency solver, mandatory hashed path layout, GC semantics, user-facing Nix syntax, or a hosted binary-cache requirement. The Reader should not know *why* a GIS publication was built, only how to validate and use the resulting bounded resource.
 
 **Research implication:** Nix gives an architectural precedent for immutable inputs and reversible activation, but it does not solve geographic identity equivalence, geopolitical assertions, geometry seam reconciliation or the governance of conflicting publisher claims. Those require their own source-aware decisions. Nix itself also does not automatically guarantee bit-identical outputs: nondeterministic builders still need independent checks.
+
+
+## 13. Independent review protocol and next-session handoff (2026-11-16)
+
+**Purpose:** Close this long exploratory conversation cleanly and open a focused experiment/research session. No implementation authorization or milestone change is implied.
+
+### Comparative precedents to investigate (beyond Nix)
+
+| Precedent | Testable mechanism relevant to Poodle Earth | Boundary |
+| --- | --- | --- |
+| **GNU Guix** | Declarative package manifests, profiles, reversible generations; compare whether composition recipes make research reproducible | The Scheme language, daemon and full Guix package model are **not** Classic requirements |
+| **OSTree / libostree** | Immutable precomposed filesystem trees, atomic deployment and rollback; a useful **contrast** with Nix's component-level composition | OS filesystem deployment is not a spatial/semantic merge algorithm; copying hardlinks/Unix semantics is inappropriate for Classic |
+| **OCI image/artifact descriptors** | Media type, digest, byte length and a manifest referencing independently identified immutable objects | Container images/registry/overlayfs are overkill; do not make historical Reader fetch image layers |
+| **The Update Framework (TUF)** | Role/delegation and snapshot consistency ideas for *future optional network updates* and publisher authority | Not relevant to offline-only pack discovery yet; signatures never establish geographic truth |
+| **Existing atlas formats (PMTiles, FlatGeobuf, GeoPackage)** | Compare geographic spatial indexing, independent data blocks and GIS interchange against pack access costs | A geospatial file format does not define authority, revisions, or cross-publisher identity |
+
+Grounding references for reviewers (read directly; verify present content before claiming specific support):
+- [GNU Guix manual, profiles/generations](https://guix.gnu.org/manual/en/html_node/Invoking-guix-package.html)
+- [OSTree introduction](https://ostreedev.github.io/ostree/introduction/)
+- [OCI content descriptors](https://specs.opencontainers.org/image-spec/descriptor/)
+- [TUF metadata and roles](https://theupdateframework.org/docs/metadata/)
+- [Nix profiles](https://nix.dev/manual/nix/2.34/package-management/profiles)
+
+**Scope discipline:** This is a shortlist for focused comparative reading, not a demand to investigate six ecosystems before running a tiny experiment. Prioritize **Nix vs Guix vs OSTree** for immutable composition/activation; OCI is a later metadata comparison; TUF only if optional authenticated distribution becomes real.
+
+### A fourth comparator for the A/B/C experiment
+
+Previously proposed:
+- **A:** Scan immutable pack files and derive active table at startup.
+- **B:** Cache a derived active catalog/index.
+- **C:** Validate/install new immutable pack-set generations with rollback.
+
+Add a control:
+- **D:** Precompose a sealed edition entirely at publishing time and ship one manifest plus ready-to-read files, no installer-level composition.
+
+D may outperform the others when distribution is CD/read-only and bundles are curated. A normal installer/activation model is only needed if optional writable pack-set changes actually pay for the extra complexity. If running on an unwritable Classic volume, generations may need to be built elsewhere (modern host, user-owned disk) or not exist at all.
+
+**Initial prediction to preregister:** D/A should cover a large share of current requirements with lowest complexity; B becomes attractive if many-pack discovery is measurably costly; C becomes attractive if users frequently change pack sets and want reversible activation. Explicitly seek evidence **against** those expectations. Measure peak memory, startup time, read/write operations, corrupt/missing file response, install-order invariance, rollback, resource-lifetime safety and implementation LOC/maintainability. Keep the identity catalog and geometric assertions synthetic.
+
+### Protocol for two independent advisory reviewers
+
+**Recommended sequence in a fresh ChatGPT session:**
+1. Re-read live **AGENTS.md**, ADR 0003, draft ADR 0005, #26/#29/#31/#48/#52/#72, current PR #177 and this file. Check whether the PR has been merged or changed. Do not assume summaries are current.
+2. **Have ChatGPT write two *different*, read-only prompts**, one for Claude and one for Gemini, plus an explicit synthesis rubric. Do not send either reviewer's conclusions to the other before the independent pass. Each gets the same product requirements and A/B/C/D experiment question so results are comparable.
+3. **Claude: repository-specific feasibility review.** Verify current code, file/volume behaviors, resource accounting, pack readers and tests; identify the smallest host-only A/B/C/D experiment, exact affected APIs, traps and acceptance/falsification gates. No branch, implementation, GitHub edits, Classic access or source changes.
+4. **Gemini: independent systems/prior-art review.** Use primary documentation for Nix, Guix, OSTree, OCI and (only if useful) TUF; distinguish mechanisms and limitations; challenge the need for a package-manager-like layer; propose at least one simpler architecture and an experiment that distinguishes models. Cite direct sources, record unknowns and negative findings; no repository modifications.
+5. **Synthesis only after both:** disagreement matrix (claim, exact evidence, conflicting assumption, cheapest discriminating experiment, decision owner), update the issue/research note on a draft branch if needed. Do not seek fake consensus or treat research advice as format approval.
+6. If more experiments remain, break them into one-question issues **using existing owners first**; separate planning from authorized implementation.
+
+Possible counter-hypotheses:
+- Our small precomposed data **distribution** does not need an installer/activation mechanism at all.
+- Stable geographic identity and source semantics dominate complexity; package managers illuminate only byte provenance.
+- A simple explicit *pack-set manifest* yields most of the benefits of generations without storing multiple physical installations.
+- Read-only media and limited Classic RAM make a host-side catalog compiler more useful than an in-app cache.
+
+### Suggested new-chat opening prompt
+
+> Continue the Poodle Earth composable-atlas research. Repository: https://github.com/jackwillis/globe. Start by reading AGENTS.md, draft research PR #177 (including the archived Claude review and Gemini synopsis), and existing issues #26, #29, #31, #48, #52, #72 and #178. The earlier conversation completed Pass 1 (settled/open decisions), Pass 2 (causal experiments), Pass 3 (issue mapping) and proposed a research-label taxonomy; none of that accepted a new format or milestone. We want to test whether Nix-inspired immutable packs and reversible active atlas configurations are genuinely worth adopting, comparing A: scan-on-startup, B: derived cache, C: validated generations, and D: precomposed sealed edition. Also consider Guix, OSTree, OCI and TUF selectively. First generate two complementary **read-only advisory prompts** for Claude (repository-grounded implementation feasibility) and Gemini (independent systems/prior-art research), with explicit assumptions, source/evidence rules, falsification criteria and a planned synthesis rubric. Do not run experiments, change labels/milestones, implement a store, accept an ADR, or merge PRs unless I authorize those actions. Keep the Classic offline fallback, small memory partition, read-only media and reproducible Python/GIS publishing workflow central.
+
+**Open state at handoff (verify afresh):** draft PR #177 is unmerged; research issue #178 remains exploratory; proposed research labels have **not** been created or applied; owner must decide whether and when to merge research documents, implement experiments or promote research labels. Avoid turning the four presentation/elevator-pitch ideas into new release blockers; website and Infinite Mac demos are parallel product opportunities, not a prerequisite for composition research.
