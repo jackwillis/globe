@@ -245,7 +245,9 @@ def verify():
                 path.chmod(0o644)
 
 
-def bench(iterations=80):
+def bench(iterations=84):
+    # Block/balance execution order across all 3! designs to avoid fixed-batch time confounding.
+    # Each design is measured once per block. Use a multiple of 6 for exactly balanced order.
     with tempfile.TemporaryDirectory() as tmp:
         folder = Path(tmp)
         paths = fixture(folder)
@@ -253,10 +255,11 @@ def bench(iterations=80):
         sealed = folder / "SEALED.mockatlas"
         manifest.write_bytes(make_manifest(paths))
         sealed.write_bytes(publish_sealed(paths))
-        output = {}
-        for variant in ("A", "D", "E"):
-            timings, peaks, ops, bytes_read, enumerations = [], [], [], [], []
-            for _ in range(iterations):
+        labels = ("A", "D", "E")
+        trials = {v: {"timings": [], "peaks": [], "ops": [], "bytes": [], "enumerations": []} for v in labels}
+        orders = list(itertools.permutations(labels))
+        for block in range(iterations):
+            for variant in orders[block % len(orders)]:
                 reads = Reads()
                 tracemalloc.start()
                 t = time.perf_counter_ns()
@@ -270,23 +273,26 @@ def bench(iterations=80):
                 _, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
                 assert not issues and len(snap["conflicts"]) == 1
-                timings.append(elapsed / 1e6)
-                peaks.append(peak)
-                ops.append(reads.ops)
-                bytes_read.append(reads.bytes)
-                enumerations.append(reads.enumerations)
-            output[variant] = {"runs": iterations, "median_ms": round(statistics.median(timings), 4),
-                               "median_python_alloc_peak_bytes": int(statistics.median(peaks)),
-                               "read_ops": ops[0], "read_bytes": bytes_read[0],
-                               "directory_enumerations": enumerations[0]}
-        # Lines for named routines, NOT a total maintenance-cost estimate.
+                entry = trials[variant]
+                entry["timings"].append(elapsed / 1e6)
+                entry["peaks"].append(peak)
+                entry["ops"].append(reads.ops)
+                entry["bytes"].append(reads.bytes)
+                entry["enumerations"].append(reads.enumerations)
+        output = {}
+        for variant in labels:
+            entry = trials[variant]
+            output[variant] = {"runs": iterations, "median_ms": round(statistics.median(entry["timings"]), 4),
+                               "median_python_alloc_peak_bytes": int(statistics.median(entry["peaks"])),
+                               "read_ops": entry["ops"][0], "read_bytes": entry["bytes"][0],
+                               "directory_enumerations": entry["enumerations"][0]}
         output["routine_source_lines"] = {
             "shared": sum(len(inspect.getsourcelines(f)[0]) for f in (decode_pack, collect, resolve)),
             "A": len(inspect.getsourcelines(scan)[0]),
             "D": sum(len(inspect.getsourcelines(f)[0]) for f in (publish_sealed, read_sealed)),
             "E": sum(len(inspect.getsourcelines(f)[0]) for f in (make_manifest, select_manifest)),
         }
-        output["scope"] = "Python 3 host warm-page-cache microbenchmark, not OS 9 launch or G4 I/O"
+        output["scope"] = "Python 3 balanced-order warm-page-cache microbenchmark; not OS 9 launch or G4 I/O"
         return output
 
 
