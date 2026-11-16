@@ -164,7 +164,9 @@ def publish_sealed(paths):  # D publisher: precompose; never a Reader action
     packs, issues = collect(paths, reads)
     if issues:
         raise ValueError("publication-refused:" + repr(issues))
-    return canon({"format": "mock-sealed/1", "atlas": resolve(packs)})
+    atlas = resolve(packs)
+    return canon({"format": "mock-sealed/1", "atlas": atlas,
+                  "atlas_sha256": digest(canon(atlas))})
 
 
 def read_sealed(raw):  # D consumer: only check the sealed object's shape
@@ -172,8 +174,12 @@ def read_sealed(raw):  # D consumer: only check the sealed object's shape
         obj = json.loads(raw)
         if obj.get("format") != "mock-sealed/1" or not isinstance(obj.get("atlas"), dict):
             raise ValueError("bad-seal")
+        if obj.get("atlas_sha256") != digest(canon(obj["atlas"])):
+            raise ValueError("integrity-mismatch")
         return obj["atlas"], []
-    except (ValueError, TypeError, AttributeError, json.JSONDecodeError):
+    except ValueError as exc:
+        return resolve([]), [["sealed", str(exc) if str(exc) == "integrity-mismatch" else "invalid-seal"]]
+    except (TypeError, AttributeError):
         return resolve([]), [["sealed", "invalid-seal"]]
 
 
