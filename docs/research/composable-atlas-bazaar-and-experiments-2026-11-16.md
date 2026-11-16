@@ -387,3 +387,76 @@ Possible counter-hypotheses:
 > Continue the Poodle Earth composable-atlas research. Repository: https://github.com/jackwillis/globe. Start by reading AGENTS.md, draft research PR #177 (including the archived Claude review and Gemini synopsis), and existing issues #26, #29, #31, #48, #52, #72 and #178. The earlier conversation completed Pass 1 (settled/open decisions), Pass 2 (causal experiments), Pass 3 (issue mapping) and proposed a research-label taxonomy; none of that accepted a new format or milestone. We want to test whether Nix-inspired immutable packs and reversible active atlas configurations are genuinely worth adopting, comparing A: scan-on-startup, B: derived cache, C: validated generations, and D: precomposed sealed edition. Also consider Guix, OSTree, OCI and TUF selectively. First generate two complementary **read-only advisory prompts** for Claude (repository-grounded implementation feasibility) and Gemini (independent systems/prior-art research), with explicit assumptions, source/evidence rules, falsification criteria and a planned synthesis rubric. Do not run experiments, change labels/milestones, implement a store, accept an ADR, or merge PRs unless I authorize those actions. Keep the Classic offline fallback, small memory partition, read-only media and reproducible Python/GIS publishing workflow central.
 
 **Open state at handoff (verify afresh):** draft PR #177 is unmerged; research issue #178 remains exploratory; proposed research labels have **not** been created or applied; owner must decide whether and when to merge research documents, implement experiments or promote research labels. Avoid turning the four presentation/elevator-pitch ideas into new release blockers; website and Infinite Mac demos are parallel product opportunities, not a prerequisite for composition research.
+
+
+## 14. Independent Nix/Guix/OSTree/OCI reconciliation and experiment preregistration (2026-11-16)
+
+**Non-normative owner-requested research addendum, not an ADR or pack specification.** Two further independent reviews were supplied in conversation by the owner on 2026-11-16: Claude's repository-specific read-only audit at \`main 0b5b16d\` and PR #177 head \`78f3f1c\`, and Gemini's systems/prior-art report. This section is a **faithful synthesis of owner-provided reports**, not a verbatim archival copy or fresh hardware measurement. Earlier archived Claude/Gemini review files under \`reviews/\` document their *previous* reviews; do not confuse these later reports with those files. Both assessments are advisory. Code findings were partly cross-checked against current \`main\` by ChatGPT; no application code changed.
+
+### Five alternatives (not mutually exclusive)
+
+| ID | Mechanism | Value hypothesis | Main additional cost / uncertainty |
+| --- | --- | --- | --- |
+| **A** | Stateless discovery of valid packs and deterministic resolution | Drop-in independent packs, no persistent index or writes | Header scans, explicit overlap/compatibility rules, media latency |
+| **B** | Derived, disposable cached resource catalog | Avoid repeat scanning for many packs | Staleness, verification, cache lifecycle; could be *publisher-generated and read-only*, not necessarily a Reader write |
+| **C** | Validated selected-set generations and rollback | Persisted prior selection and recovery | Requires defining activation semantics; **restart-time manifest selection** is distinct from *live replacement of decoded scenes* |
+| **D** | Publisher-composed sealed edition | Tiny Reader, prevalidated assets, natural read-only/CD distribution | Adding an external pack requires producing/selecting another edition |
+| **E** | Sealed embedded baseline plus explicit manifest-selected add-ons | Independent publishers and explicit activation without general dependency solving | Manifest integrity/compatibility, missing refs, version/identity conflict handling; not inherently signed |
+
+A sealed **distribution** need not be a monolithic file or single-publisher monopoly. An independent publisher can produce a sealed multi-file edition with FOSS tools. E is not automatically superior to D. Conversely, if A and E use the same selected set and explicit policy, neither should silently choose a disputed geographic representation.
+
+### Claude's repository-specific review (owner-supplied)
+
+- \`ElevationPacks::add\` admits duplicate same-resolution packs until the resource budget/capacity refuses more. Width-based quality selection makes distinct-width behavior more stable than the previous archived review suggested, **but equal-width ties and capacity rejection can depend on arrival order**. Existing test \`tests/test_elevation_packs.cpp\` explicitly imports the same fine file twice. This motivates an isolated determinism test, not a new Reader framework.
+- X11 accepts \`--atlas FILE\` for direct external atlas replacement as well as \`--elevation FILE\` for the elevation collection; Classic OS 9 currently parses embedded data. \`read_pack_file\` performs whole-file reads to owned bytes; it does not establish streamed/CD access.
+- \`Model.generation\` invalidates rendering work; it is **not a pack-set generation or safe resource-lifetime protocol**. \`RefinementJob\` can reference \`TerrainScene\` through a pointer; retaining/cancelling/retiring scenes safely remains #26 work.
+- The memory ledger's \`OwnedPack\` category exists without complete production accounting. The \`kTerrainCacheBudget\` constant is 32 MiB, while the Classic app's \`SIZE\` has 24 MiB preferred and 12 MiB minimum; this does **not** demonstrate that today's OS 9 app actually allocates 32 MiB of terrain. Claude's ~14.3 MiB (0.5°) and ~3.85 MiB (1°) scene figures are **derived estimates**, not peak measurements.
+- Correction to the reviewer's claim that the partition was never tested: the **bare OS 9.2.2 G4 hardware acceptance** in [#95](https://github.com/jackwillis/globe/issues/95#issuecomment-6840673231) records a memory-workout pass and a 12 MiB partition pass. Exact \`FreeMem\`, \`MaxBlock\`, and transient heap peaks remain unknown. The 24/12 MiB shipping baseline stays; 32 MiB preferred remains only a separately measurable proposal, not a scope change.
+- Claude recommends **D as default, A or an explicit active-set manifest if useful, B only on measured scanning cost, and no Reader package manager or C-style live activation now**. Defer public ID width, schema, cell grid, source authority, format and Classic filesystem atomicity.
+
+### Gemini's independent comparative review (owner-supplied)
+
+- Recommended a fifth option **E**, sealed embedded baseline plus flat manifest-selected independently published packs, as a way to keep consumer-side selection simple.
+- Cited Nix profiles/derivations, Guix manifests/generations, OSTree complete-tree deployments, OCI content descriptors and TUF role/delegation as **mechanism precedents**. Strongest transferable lessons: reproducible declared inputs, immutable bytes, explicit selection, checksummed descriptors, precomposed read-only distributions.
+- **Corrections, not implementation evidence:** A does not inherently require graph solving or high RAM; B can use a precompiled read-only index; C need not use Unix symlinks or simultaneous decoded scenes for restart-time selection; D does not prohibit independent publishers; E need not require publisher signatures; runtime composition is not a generic deterministic *spatial union*. Signed bytes do not assert geographic truth.
+- The claim that Nix *necessarily* needs a multi-user daemon is too strong (single-user operation exists). The claim that Classic Mac hardware or HFS performance is established by a simulated 2× CD is unsupported. Gemini's high confidence is design opinion, not measured Reader feasibility.
+
+**Primary references supporting *the external mechanisms*, not Poodle Earth performance:**
+- [Nix profiles/generations/rollback (Nix manual)](https://nix.dev/manual/nix/2.31/package-management/profiles)
+- [GNU Guix profiles and generations (Guix manual)](https://guix.gnu.org/manual/en/html_node/Invoking-guix-package.html) (source link; no independent on-device assessment)
+- [OSTree introduction and package-manager comparison](https://ostreedev.github.io/ostree/introduction/)
+- [OCI content descriptors: media type, digest and size](https://github.com/opencontainers/image-spec/blob/main/descriptor.md)
+- [TUF roles, snapshot consistency and target checks](https://theupdateframework.org/docs/metadata/)
+
+### Reviewer agreement, disagreement and unresolved facts
+
+| Topic | Agreement | Real disagreement / research implication |
+| --- | --- | --- |
+| Full Nix/Guix/OCI/TUF runtime | Both reject it | The exact subset of metadata/selection mechanics remains open |
+| Reader/builder boundary | Complex work belongs with the publisher | E emphasizes independent add-on selection; D emphasizes publisher-composed control |
+| Scanning | Requires bounded parsing and explicit conflicts | Claude treats A as plausible; Gemini assumed unmeasured prohibitive cost |
+| Manifest | Explicit list can improve reproducibility | Must compare with stateless A, and distinguish editable publishing input from compact Reader contract |
+| Rollback | No adoption of Unix profile symlinks | Restart-time selection may supply the useful guarantee without runtime generations |
+| Geographic provenance/identity | Package bytes cannot establish geographic truth | Conflicts and publisher-qualified IDs need separate semantics |
+| Classic resource budget | No mandatory writable cache, bounded RAM, embedded fallback | Native optical seek latency, peak allocations, activation atomicity and removed-volume semantics remain **unmeasured** |
+
+**Internal value even without community adoption:** immutable source snapshots, editorial decisions and publication recipes allow the project itself to reconcile disparate providers and editions reproducibly. A pack/manifest can keep source rights, identities, representation policy and published bytes inspectable. Community publishers are upside, not the sole value case; published artifact checksums are **not** canonical entity identities.
+
+### Preregistered controlled synthetic experiment (research only)
+
+**Question (Pearl Rung 2 / intervention):** Holding synthetic pack bytes, declared active pack IDs, version support and a single explicit conflict policy constant, how does choosing **A versus D versus E** affect deterministic outcomes, recovery classification, read operations, measured host time/memory and code complexity?
+
+**Represent:** Host Python scripts model six invented, immutable add-on resources, a sealed embedded fallback, publisher-scoped identity, and an explicit ambiguous-overlap policy. The resource set and rule remain constant. **Alternative explanation** for any speed difference: one design reads a precomposed result while another validates individual components; report this as the real mechanism, not a generalized platform speedup.
+
+**Predict before intervention:**
+1. On the same six valid add-ons, **all 720 permutations** yield byte-identical resolved output and explicit ambiguity; a violation falsifies the proposed rule.
+2. D uses one ready-to-read published object; E uses a manifest plus selected packs, and A discovers candidate packs. D should have fewer consumer read operations; whether that affects G4 startup is **not identified** by host Python.
+3. E can exclude a conflicting add-on by explicit selection without deleting it from storage; A with automatic discovery will see both. D can do likewise only by publishing another sealed edition.
+4. Missing, corrupt, incompatible and duplicate identities must be classified without hiding a conflict, crashing, writing into a read-only volume or invalidating the fallback.
+
+**Intervene:** Randomize/balance model execution and enumerate input permutations; run checks with a fixed dataset/host/platform and separately report deterministic conformance from noisy microbenchmarks. Outcome selection is predeclared (not chosen from whichever design looks fastest). DAG: design → selection/verification work → file reads and parse time; input size, pack count, filesystem cache and machine load → time; explicit policy and input bytes → semantic outcome. Controlled paired fixtures block cross-design dataset confounding. Host results do not identify Classic optical performance or correctness on real geography.
+
+**Success / stop:** If D and E meet all invariants and E uniquely permits independent *explicit* add-on selection, retain E as a candidate publication/selection model; do not standardize a manifest. If A matches correctness and setup cost with acceptable operations, do not add cache B. If D alone satisfies the intended product scope, a package subsystem is unnecessary. Do not infer C/rollback need without an installation/activation failure case. Retain negative results.
+
+**Owned within existing work:** #31 (synthetic pack conformance), #52 (publication/identity semantics), #26/#48/#72 (later resource, Classic I/O, media checks). No new epic. No data-source/license change. Any executable work requires a separate authorized task branch, isolated host test, independent evidence and review, **not implementation via this documentation PR**.
+
