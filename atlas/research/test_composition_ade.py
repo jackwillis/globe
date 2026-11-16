@@ -7,7 +7,8 @@ import unittest
 
 from composition_ade import (FORMAT, Reads, bench, canon, collect, decode_pack, digest,
                              fixture, make_manifest, publish_sealed, read_sealed,
-                             resolve, scan, select_manifest, verify)
+                             read_manifest_file, read_sealed_file, resolve, scan,
+                             select_manifest, verify)
 
 
 class CompositionTests(unittest.TestCase):
@@ -37,6 +38,24 @@ class CompositionTests(unittest.TestCase):
         injected, other_issues = scan(list(reversed(self.paths)), Reads())
         self.assertEqual((issues, other_issues), ([], []))
         self.assertEqual(discovered, injected)
+
+    def test_manifest_is_byte_identical_across_pack_order(self):
+        # Selection AND publication artifacts must be deterministic.
+        self.assertEqual(make_manifest(self.paths), make_manifest(list(reversed(self.paths))))
+        self.assertEqual(verify()["unique_manifest_bytes"], 1)
+
+    def test_missing_optional_folder_uses_embedded_fallback(self):
+        atlas, issues = scan(self.folder / "Data-not-present", Reads())
+        self.assertEqual(atlas, resolve([]))
+        self.assertEqual(issues[0][1], "optional-folder-unavailable")
+
+    def test_missing_manifest_and_sealed_file_are_optional(self):
+        e, ei = read_manifest_file(self.folder, self.folder / "absent.mockmanifest", Reads())
+        d, di = read_sealed_file(self.folder / "absent.mockatlas", Reads())
+        self.assertEqual(e, resolve([]))
+        self.assertEqual(d, resolve([]))
+        self.assertEqual(ei[0][1], "manifest-unavailable")
+        self.assertEqual(di[0][1], "sealed-unavailable")
 
     def test_manifest_explicit_selection_where_scan_cannot(self):
         full, _ = scan(self.paths, Reads())
