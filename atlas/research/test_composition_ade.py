@@ -39,6 +39,24 @@ class CompositionTests(unittest.TestCase):
         self.assertEqual((issues, other_issues), ([], []))
         self.assertEqual(discovered, injected)
 
+    def test_fixture_has_independently_expected_selection_and_conflict(self):
+        # A structural oracle independent of comparing three uses of resolve().
+        result, issues = scan(self.paths, Reads())
+        self.assertEqual(issues, [])
+        self.assertEqual({r["slot"]: r["value"] for r in result["selected"]}, {
+            "hydro:middle": "embedded-river",
+            "places:center": "town",
+            "places:south": "village",
+            "relief:north": "hill",
+            "relief:west": "plain",
+        })
+        self.assertEqual(result["conflicts"], [{
+            "slot": "hydro:middle", "status": "ambiguous", "candidates": [
+                {"entity": "alpha.example:river", "value": "line-A", "source": "alpha.example/river"},
+                {"entity": "beta.example:river", "value": "line-B", "source": "beta.example/river"},
+            ],
+        }])
+
     def test_manifest_is_byte_identical_across_pack_order(self):
         # Selection AND publication artifacts must be deterministic.
         self.assertEqual(make_manifest(self.paths), make_manifest(list(reversed(self.paths))))
