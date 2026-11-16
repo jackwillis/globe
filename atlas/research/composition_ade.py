@@ -126,17 +126,22 @@ def resolve(packs):
 
 
 def scan(paths, reads):  # A: discover files from a folder or inject an enumeration order
-    if isinstance(paths, (str, Path)) and Path(paths).is_dir():
+    if isinstance(paths, (str, Path)):
+        folder = Path(paths)
+        if not folder.is_dir():
+            return resolve([]), [[folder.name, "optional-folder-unavailable"]]
         reads.enumerations += 1
-        paths = sorted(Path(paths).glob("*.mockpack"))
+        paths = sorted(folder.glob("*.mockpack"))
     packs, issues = collect(paths, reads)
     return resolve(packs), issues
 
 
-def make_manifest(paths):  # E: publisher / user selects active paths explicitly
-    return canon({"format": "mock-active-set/1", "packs": [
-        {"file": Path(p).name, "size": len(Path(p).read_bytes()),
-         "digest": digest(Path(p).read_bytes())} for p in paths]})
+def make_manifest(paths):  # E publisher: canonical order, read each artifact exactly once
+    entries = []
+    for path in sorted(paths, key=lambda p: Path(p).name):
+        raw = Path(path).read_bytes()
+        entries.append({"file": Path(path).name, "size": len(raw), "digest": digest(raw)})
+    return canon({"format": "mock-active-set/1", "packs": entries})
 
 
 def select_manifest(folder, raw, reads):  # E consumer: flat, explicitly selected set
@@ -157,6 +162,14 @@ def select_manifest(folder, raw, reads):  # E consumer: flat, explicitly selecte
         return resolve(packs), issues
     except (ValueError, TypeError, AttributeError, json.JSONDecodeError) as exc:
         return resolve([]), [["manifest", "invalid-manifest:" + type(exc).__name__]]
+
+
+def read_manifest_file(folder, path, reads):
+    # E optional input: no manifest must still leave a useful embedded atlas.
+    try:
+        return select_manifest(folder, reads.get(path), reads)
+    except (OSError, ValueError):
+        return resolve([]), [[Path(path).name, "manifest-unavailable"]]
 
 
 def publish_sealed(paths):  # D publisher: precompose; never a Reader action
@@ -181,6 +194,14 @@ def read_sealed(raw):  # D consumer: only check the sealed object's shape
         return resolve([]), [["sealed", str(exc) if str(exc) == "integrity-mismatch" else "invalid-seal"]]
     except (TypeError, AttributeError):
         return resolve([]), [["sealed", "invalid-seal"]]
+
+
+def read_sealed_file(path, reads):
+    # D optional publication: missing media must not abort the embedded Reader.
+    try:
+        return read_sealed(reads.get(path))
+    except (OSError, ValueError):
+        return resolve([]), [[Path(path).name, "sealed-unavailable"]]
 
 
 def fixture(folder):
@@ -215,30 +236,36 @@ def verify():
             path.chmod(0o444)
         folder.chmod(0o555)
         try:
-            a_hashes, e_hashes, d_hashes = set(), set(), set()
+            a_hashes, e_hashes, d_hashes, manifest_hashes = set(), set(), set(), set()
             for perm in itertools.permutations(paths):
                 a, ai = scan(perm, Reads())
                 m = make_manifest(perm)  # Publisher-side permutation, not a consumer disk write.
                 e, ei = select_manifest(folder, m, Reads())
                 d = publish_sealed(perm)
-                assert not ai and not ei
+                if ai or ei:
+                    raise AssertionError("valid fixtures unexpectedly rejected")
                 a_hashes.add(digest(canon(a)))
                 e_hashes.add(digest(canon(e)))
                 d_hashes.add(digest(d))
-            assert len(a_hashes) == len(e_hashes) == len(d_hashes) == 1
+                manifest_hashes.add(digest(m))
+            if not all(len(hashes) == 1 for hashes in (a_hashes, e_hashes, d_hashes, manifest_hashes)):
+                raise AssertionError("permutation or publication instability")
             a, issues = scan(paths, Reads())
-            e, mi = select_manifest(folder, manifest_path.read_bytes(), Reads())
-            d, di = read_sealed(sealed_path.read_bytes())
+            e, mi = read_manifest_file(folder, manifest_path, Reads())
+            d, di = read_sealed_file(sealed_path, Reads())
             assert not issues and not mi and not di and a == e == d
             assert len(a["conflicts"]) == 1 and a["conflicts"][0]["slot"] == "hydro:middle"
             assert any(c["entity"] == "gamma.example:shared" for c in a["selected"])
             assert any(c["entity"] == "delta.example:shared" for c in a["selected"])
             before = sorted((p.name, digest(p.read_bytes())) for p in folder.iterdir())
-            scan(paths, Reads()); select_manifest(folder, manifest_path.read_bytes(), Reads()); read_sealed(sealed_path.read_bytes())
+            scan(paths, Reads()); read_manifest_file(folder, manifest_path, Reads()); read_sealed_file(sealed_path, Reads())
             after = sorted((p.name, digest(p.read_bytes())) for p in folder.iterdir())
             assert before == after
-            return {"fixture_count": 6, "permutations": 720, "unique_results": {"A": len(a_hashes), "D": len(d_hashes), "E": len(e_hashes)},
-                    "snapshot_sha256": digest(canon(a)), "explicit_conflicts": len(a["conflicts"]), "read_only_unchanged": before == after}
+            return {"fixture_count": 6, "permutations": 720,
+                    "unique_results": {"A": len(a_hashes), "D": len(d_hashes), "E": len(e_hashes)},
+                    "unique_manifest_bytes": len(manifest_hashes),
+                    "snapshot_sha256": digest(canon(a)), "explicit_conflicts": len(a["conflicts"]),
+                    "read_only_unchanged": before == after}
         finally:
             folder.chmod(0o755)
             for path in folder.iterdir():
@@ -266,9 +293,9 @@ def bench(iterations=84):
                 if variant == "A":
                     snap, issues = scan(folder, reads)
                 elif variant == "E":
-                    snap, issues = select_manifest(folder, reads.get(manifest), reads)
+                    snap, issues = read_manifest_file(folder, manifest, reads)
                 else:
-                    snap, issues = read_sealed(reads.get(sealed))
+                    snap, issues = read_sealed_file(sealed, reads)
                 elapsed = time.perf_counter_ns() - t
                 _, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
