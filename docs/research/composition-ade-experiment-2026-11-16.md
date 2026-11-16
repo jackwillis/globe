@@ -30,7 +30,7 @@ python3 atlas/research/composition_ade.py verify
 python3 atlas/research/composition_ade.py bench
 ```
 
-`verify` prints deterministic JSON and checks 720 permutations for A, E and D, plus a read-only source-fingerprint comparison. The unit tests exercise incompatible versions, corrupt/mutated bytes, missing files, conflicting versus byte-identical duplicate pack identities, no invented upgrade precedence, publisher-qualified local IDs, invalid manifests, explicit selection and fallback. No generated pack or manifest is committed. `bench` reports 80 per-design warm Python trials with `perf_counter_ns` and `tracemalloc`; its measurements are intentionally nondeterministic and must not be used as pinned CI thresholds.
+`verify` prints deterministic JSON and checks 720 permutations for A, E and D, plus a read-only source-fingerprint comparison. The unit tests exercise incompatible versions, corrupt/mutated bytes, missing files, conflicting versus byte-identical duplicate pack identities, no invented upgrade precedence, publisher-qualified local IDs, invalid manifests, explicit selection and fallback. No generated pack or manifest is committed. `bench` now reports 84 per-design warm Python trials balanced across all six A/D/E execution orders, with `perf_counter_ns` and `tracemalloc`; its measurements are intentionally nondeterministic and must not be used as pinned CI thresholds.
 
 ## Observed results
 
@@ -43,7 +43,7 @@ python3 atlas/research/composition_ade.py bench
 | Conflicting hydro slot | One explicit `ambiguous` record; embedded river retained | No silent precedence or spatial union |
 | Publisher-qualified identifiers | `gamma.example:shared` and `delta.example:shared` remain distinct | No accidental ID join |
 | E selecting five of six | Hydro conflict removed by **explicitly excluding one pack**, while A still sees both | E offers a functional selection benefit beyond automatic scan; D must republish to achieve it |
-| Corrupt/missing/incompatible/duplicate packs | Classified in 15 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
+| Corrupt/missing/incompatible/duplicate packs | Classified in 16 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
 | Read-only operation | Consumers perform no writes; file hashes unchanged, fixture permissions set read-only | No real Classic volume/file APIs tested |
 
 **Initial warm Python microbenchmark, before a sealed-file integrity control was added (80 trials/variant, median; retained as historical evidence, not the current executable version):**
@@ -63,6 +63,16 @@ python3 atlas/research/composition_ade.py bench
 | E: manifest | 7 | 1,865 | 1.0782 | 14,214 bytes |
 
 The shifted A/E medians across host runs (A 0.5638→0.9289 ms, E 0.6293→1.0782 ms) demonstrate sensitivity to shared host load/cache and instrumentation. **Do not infer a stable speed ratio, nor infer that E must be slower than A.** The count of reads and bytes is deterministic for this fixed fixture, but not representative of optical CD/HFS costs. Source-line counts on the current functions are: shared parsing/collect/resolution ~72, A ~6, D including publisher and integrity check ~20, E including publisher ~22. None is an estimate of total lifecycle maintenance cost.
+
+**Balanced-order follow-up, final current measurement:** the preceding two 80-trial batches ran A, then D, then E, so temporal load and cache drift could confound timing. The current benchmark uses 84 blocks, cycling all six A/D/E execution orders exactly 14 times, with one trial per design in each block. A 16th test checks its per-variant counts and file operations. This run produced:
+
+| Variant | Consumer file reads | Consumer bytes | Median ms (84 balanced trials) | Median traced Python allocation peak |
+| --- | ---: | ---: | ---: | ---: |
+| A: scan | 6 (+1 directory enumeration) | 1,134 | 0.6305 | 14,080 bytes |
+| D: sealed + SHA-256 | 1 | 874 | 0.1502 | 5,678 bytes |
+| E: manifest | 7 | 1,865 | 0.6259 | 14,214 bytes |
+
+The A/E medians are essentially indistinguishable at this scale, and no statistical performance claim is made. The current executable reports balanced-order results; the two earlier tables remain for transparency as explicitly superseded diagnostic runs.
 
 The Python timings were not cold-cache controlled, CPU-pinned, or replicated on Classic; they measure JSON parsing, hash computation and Python bookkeeping on tiny fixtures. Traced peaks exclude interpreter/runtime and OS memory and are **not** C++/G4 peak data. D deliberately shifts work to publishing; publishing cost is *excluded* from the consumer columns. File-op counts reflect this fixture and implementation, not actual HFS/CD performance; A additionally enumerates the directory once. Earlier routine source-line totals (D ~14 before its checksum verifier) are superseded by the updated figures above.
 
