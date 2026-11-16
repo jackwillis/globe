@@ -32,6 +32,12 @@ class CompositionTests(unittest.TestCase):
         self.assertEqual(a["selected"][0]["source"], "embedded")
         self.assertEqual(len(a["conflicts"]), 1)
 
+    def test_directory_discovery_agrees_with_supplied_inventory(self):
+        discovered, issues = scan(self.folder, Reads())
+        injected, other_issues = scan(list(reversed(self.paths)), Reads())
+        self.assertEqual((issues, other_issues), ([], []))
+        self.assertEqual(discovered, injected)
+
     def test_manifest_explicit_selection_where_scan_cannot(self):
         full, _ = scan(self.paths, Reads())
         selected, problems = select_manifest(self.folder, make_manifest(self.paths[:3] + self.paths[4:]), Reads())
