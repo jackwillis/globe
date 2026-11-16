@@ -61,4 +61,4 @@ if(GLOBE_TIMING_TITLE)
 endif()
 target_include_directories(${APP} PRIVATE ${ROOT}/include ${ROOT}/src/platform/common)
 target_compile_options(${APP} PRIVATE -Os -Wall -Wextra -Wpedantic -fno-exceptions -fno-rtti)
-target_link_libraries(${APP} AppearanceLib)
+# No AppearanceLib: required theme-cursor imports prevent startup on Mac OS 8.1.
