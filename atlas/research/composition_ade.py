@@ -35,6 +35,7 @@ class Reads:
     def __init__(self):
         self.ops = 0
         self.bytes = 0
+        self.enumerations = 0
 
     def get(self, path):
         # This is the *only* read path. No writes occur in any consumer function.
@@ -124,7 +125,10 @@ def resolve(packs):
     return {"selected": [selected[k] for k in sorted(selected)], "conflicts": conflicts}
 
 
-def scan(paths, reads):  # A: no manifest or persistent state
+def scan(paths, reads):  # A: discover files from a folder or inject an enumeration order
+    if isinstance(paths, (str, Path)) and Path(paths).is_dir():
+        reads.enumerations += 1
+        paths = sorted(Path(paths).glob("*.mockpack"))
     packs, issues = collect(paths, reads)
     return resolve(packs), issues
 
@@ -245,13 +249,13 @@ def bench(iterations=80):
         sealed.write_bytes(publish_sealed(paths))
         output = {}
         for variant in ("A", "D", "E"):
-            timings, peaks, ops, bytes_read = [], [], [], []
+            timings, peaks, ops, bytes_read, enumerations = [], [], [], [], []
             for _ in range(iterations):
                 reads = Reads()
                 tracemalloc.start()
                 t = time.perf_counter_ns()
                 if variant == "A":
-                    snap, issues = scan(paths, reads)
+                    snap, issues = scan(folder, reads)
                 elif variant == "E":
                     snap, issues = select_manifest(folder, reads.get(manifest), reads)
                 else:
@@ -264,9 +268,11 @@ def bench(iterations=80):
                 peaks.append(peak)
                 ops.append(reads.ops)
                 bytes_read.append(reads.bytes)
+                enumerations.append(reads.enumerations)
             output[variant] = {"runs": iterations, "median_ms": round(statistics.median(timings), 4),
                                "median_python_alloc_peak_bytes": int(statistics.median(peaks)),
-                               "read_ops": ops[0], "read_bytes": bytes_read[0]}
+                               "read_ops": ops[0], "read_bytes": bytes_read[0],
+                               "directory_enumerations": enumerations[0]}
         # Lines for named routines, NOT a total maintenance-cost estimate.
         output["routine_source_lines"] = {
             "shared": sum(len(inspect.getsourcelines(f)[0]) for f in (decode_pack, collect, resolve)),
