@@ -94,3 +94,34 @@ The Python timings were not cold-cache controlled, CPU-pinned, or replicated on 
 - Existing **24 MiB preferred / 12 MiB minimum** Classic partition remains the baseline; 32 MiB preferred was **not evaluated or adopted**.
 
 **Work boundary:** This report is for review, not a commitment to A, D or E. Nothing touched production GATL/GELV/GPOL/GPLC, Reader behavior, milestones, accepted ADRs, new data licenses, owner hardware or supported platforms. A failed result would have been retained; no thresholds were tuned after observing the data.
+
+
+## Independent code review, corrected revision (2026-11-16)
+
+**Attribution:** ChatGPT independently reviewed the actual experiment code and CI on PR #179 at \`42c57c1e\`; the corrections below are new research-only commits on the same task branch, not a change to the preregistered question or a production format. The earlier 16-test, 84-trial results and corresponding measurements above are historical evidence for the *pre-review* revision.
+
+**What the 720 permutations really establish:** Each permutation injects a differently ordered list of the **same six valid mock files**. A and E both call the same \`collect/resolve\` function; D calls it on the publisher side and emits a seal. Exactly one logical snapshot per design verifies **permutation-invariance conditional on this shared policy**. It does *not* independently establish semantic truth, real filesystem install-order behavior, a general composition algorithm, or correctness of all possible inputs. One added **independent fixture oracle** now asserts the expected five visible slots and the exact two attributed conflicting river candidates, rather than relying only on cross-design agreement.
+
+**Material defects found and reproduced before correction:**
+1. \`make_manifest(reversed(paths))\` produced different bytes from \`make_manifest(paths)\`. Logical E output was invariant, but its published manifest was **not reproducible from an unordered pack set**. The publisher now sorts the flat file list and reads each file once when forming the size/digest pair. All 720 publisher input permutations now produce exactly **one manifest byte digest**, in addition to the one A/E/D logical snapshot.
+2. A missing optional scan folder raised \`TypeError\`; missing manifest/sealed files raised \`FileNotFoundError\` at the consumer read boundary. A missing external source must not invalidate the useful embedded fallback. A now classifies an absent optional directory, and D/E have minimal file-entry-point wrappers that classify missing/read failures and return the embedded result.
+3. The previous oracle mostly compared designs that called one shared resolver. The new independent fixture expectation makes a common-mode mistake more observable. Malformed arbitrary geospatial data and publisher semantics remain out of scope.
+
+**Retest — current corrected branch:** Linux 6.18.57 x86_64, Python 3.13.5; source/test GitHub blob digests verified against the isolated local review worktree. Commands and outcomes:
+
+\`\`\`sh
+python3 -B -m unittest discover -s atlas/research -p test_composition_ade.py -q
+# 20 tests: OK
+python3 -B atlas/research/composition_ade.py verify
+# 720 permutations, one A/D/E output hash, one manifest hash, fallback unchanged
+python3 -O -B atlas/research/composition_ade.py verify
+# same results: the primary permutation check is not disabled by Python optimization
+python3 -B atlas/research/composition_ade.py bench
+# 84 balanced warm host trials; A 0.5591 ms, D 0.1479 ms, E 0.5697 ms
+\`\`\`
+
+In the corrected run, file read counts remain A six plus directory enumeration; D one; E seven. Median Python-traced peaks were A 14,297 B, D 5,678 B, E 14,214 B. These are **illustrative warm host measurements only**: a fixture-specific design advantage in operations is not a G4 startup result, and C++ allocation, HFS seek costs, and native screen/partition budgets were not measured.
+
+**Remaining review caveats:** The "sealed" reader verifies a checksum over the snapshot and basic shape, not independent authenticity or comprehensive schema/semantic correctness; a self-consistent malicious publication cannot be distinguished from a legitimate one by a self-contained digest. E's digest pins selected mock bytes but does not authenticate a publisher. D shifts validation/composition to the publisher, so its one-file consumer timing is not a comparable whole-system cost. \`chmod\` plus fingerprint checks are not a physical read-only HFS mount. Synthetic conflicts have no topology, longitude/latitude, identity concordance, provenance/rights decision or political interpretation. No need for B, C or package management has been demonstrated.
+
+**Decision after review:** the bounded test is suitable as **research-only evidence** for #31/#52 once CI on the corrected head is verified. Preserve D as the simple baseline; reserve E for genuinely useful explicit add-on selection; do not require A. The next production work remains #48's safe single existing optional external file, without any dependency on this mock format or a manifest. No owner hardware, production Reader, public contract, \`SIZE\` value, release milestone or accepted ADR was changed.
