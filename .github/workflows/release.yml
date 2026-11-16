@@ -2,9 +2,17 @@ name: Release build
 
 # Builds the Poodle Earth release files from one commit in the pinned toolchain containers.
 # It uploads them as a workflow artifact and publishes nothing: tagging and creating the GitHub
-# release stay manual steps. Run it from the Actions tab (choose the branch or tag) or push a v* tag.
+# release stay manual steps. PRs changing Classic app inputs also get reviewable preview archives.
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/release.yml'
+      - 'os9/**'
+      - 'src/platform/os9/**'
+      - 'include/**'
+      - 'tools/**'
+      - 'data/**'
   push:
     tags: ['v*']
 

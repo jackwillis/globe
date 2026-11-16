@@ -39,11 +39,6 @@
 #include <cstring>
 #include <optional>
 #include <vector>
-// These Appearance Manager declarations are absent from the installed Multiversal interfaces.
-// AppearanceLib exports the function (checked with nm on libAppearanceLib.a); OS 9 provides
-// arrow=0, closed hand=8, open hand=9, pointing hand=10 (Appearance Manager reference, not in the
-// headers).
-extern "C" std::int32_t SetThemeCursor(std::uint32_t cursor);
 using namespace globe;
 static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Relief);
 static_assert(next_terrain_style(TerrainStyle::Relief) == TerrainStyle::Map);
@@ -60,6 +55,76 @@ constexpr unsigned kSuspendResumeMessage = 1;
 constexpr unsigned kResumeFlag = 1;
 // 'ALRT' id in os9/globe.r: shown when the application cannot start.
 constexpr short kStartupAlert = 128;
+// The Mac OS 8.1 loader cannot resolve SetThemeCursor from AppearanceLib; a failed
+// function call fallback is too late, because required imports resolve before main().
+// Classic QuickDraw cursors keep the same intent policy without version-specific APIs.
+// 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
+// Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
+// Preserve the explicitly authored 16-bit bitmap rows and hotspots.
+// clang-format off
+Cursor kOpenHandCursor = {
+    {
+        static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1248), static_cast<short>(0x1248),
+        static_cast<short>(0x1248), static_cast<short>(0x16DA), static_cast<short>(0x1002), static_cast<short>(0x1002),
+        static_cast<short>(0x7002), static_cast<short>(0x8002), static_cast<short>(0x8002), static_cast<short>(0x4002),
+        static_cast<short>(0x2004), static_cast<short>(0x1008), static_cast<short>(0x0FF0), static_cast<short>(0x0000)
+    },
+    {
+        static_cast<short>(0x0000), static_cast<short>(0x1B6C), static_cast<short>(0x1B6C), static_cast<short>(0x1B6C),
+        static_cast<short>(0x1B6C), static_cast<short>(0x1FFE), static_cast<short>(0x1FFE), static_cast<short>(0x1FFE),
+        static_cast<short>(0x7FFE), static_cast<short>(0xFFFE), static_cast<short>(0xFFFE), static_cast<short>(0x7FFE),
+        static_cast<short>(0x3FFC), static_cast<short>(0x1FF8), static_cast<short>(0x0FF0), static_cast<short>(0x0000)
+    },
+    {7, 7}
+};
+
+// 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
+// Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
+Cursor kClosedHandCursor = {
+    {
+        static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x2008),
+        static_cast<short>(0x2008), static_cast<short>(0x2008), static_cast<short>(0x4004), static_cast<short>(0x4004),
+        static_cast<short>(0x4004), static_cast<short>(0x4004), static_cast<short>(0x2008), static_cast<short>(0x2008),
+        static_cast<short>(0x1010), static_cast<short>(0x0FE0), static_cast<short>(0x0000), static_cast<short>(0x0000)
+    },
+    {
+        static_cast<short>(0x0000), static_cast<short>(0x0000), static_cast<short>(0x1FF0), static_cast<short>(0x3FF8),
+        static_cast<short>(0x3FF8), static_cast<short>(0x3FF8), static_cast<short>(0x7FFC), static_cast<short>(0x7FFC),
+        static_cast<short>(0x7FFC), static_cast<short>(0x7FFC), static_cast<short>(0x3FF8), static_cast<short>(0x3FF8),
+        static_cast<short>(0x1FF0), static_cast<short>(0x0FE0), static_cast<short>(0x0000), static_cast<short>(0x0000)
+    },
+    {7, 7}
+};
+
+// 16x16 monochrome QuickDraw cursor: data (black outline), mask (opaque palm), hotspot.
+// Uses only InterfaceLib cursor routines, available before Appearance Manager theme cursors.
+Cursor kPointingHandCursor = {
+    {
+        static_cast<short>(0x0300), static_cast<short>(0x0280), static_cast<short>(0x0280), static_cast<short>(0x0280),
+        static_cast<short>(0x0280), static_cast<short>(0x02E0), static_cast<short>(0x023C), static_cast<short>(0x0202),
+        static_cast<short>(0x3A02), static_cast<short>(0x4602), static_cast<short>(0x4002), static_cast<short>(0x2002),
+        static_cast<short>(0x1004), static_cast<short>(0x0808), static_cast<short>(0x07F0), static_cast<short>(0x0000)
+    },
+    {
+        static_cast<short>(0x0300), static_cast<short>(0x0380), static_cast<short>(0x0380), static_cast<short>(0x0380),
+        static_cast<short>(0x0380), static_cast<short>(0x03E0), static_cast<short>(0x03FC), static_cast<short>(0x03FE),
+        static_cast<short>(0x3BFE), static_cast<short>(0x7FFE), static_cast<short>(0x7FFE), static_cast<short>(0x3FFE),
+        static_cast<short>(0x1FFC), static_cast<short>(0x0FF8), static_cast<short>(0x07F0), static_cast<short>(0x0000)
+    },
+    {0, 6}
+};
+
+// clang-format on
+void set_classic_cursor(CursorIntent intent) {
+    if (intent == CursorIntent::OpenHand)
+        SetCursor(&kOpenHandCursor);
+    else if (intent == CursorIntent::ClosedHand)
+        SetCursor(&kClosedHandCursor);
+    else if (intent == CursorIntent::PointingHand)
+        SetCursor(&kPointingHandCursor);
+    else
+        InitCursor();
+}
 std::uint64_t now_ms() {
     return monotonic_ns() / 1000000;
 }
@@ -383,12 +448,7 @@ class Application {
                                     : CursorIntent::Arrow;
             if (foreground_ && intent != cursor_) {
                 cursor_ = intent;
-                const auto native = intent == CursorIntent::OpenHand       ? 9U
-                                    : intent == CursorIntent::ClosedHand   ? 8U
-                                    : intent == CursorIntent::PointingHand ? 10U
-                                                                           : 0U;
-                if (SetThemeCursor(native) != 0)
-                    InitCursor();
+                set_classic_cursor(intent);
             }
         }
     }
