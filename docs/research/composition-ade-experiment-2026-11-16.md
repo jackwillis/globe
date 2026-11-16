@@ -34,7 +34,7 @@ python3 atlas/research/composition_ade.py bench
 
 ## Observed results
 
-**Host:** Linux 6.18.57 x86_64, Python 3.13.5, 2026-11-16. **Version/context:** source introduced in the separate experiment task branch based on GitHub `main 0b5b16d`. Test script is self-contained and does not compile the repository's C++.
+**Host:** Linux 6.18.57 x86_64, Python 3.13.5, 2026-11-16. **Version/context:** remote experiment task branch was created directly from GitHub `main 0b5b16d`; an isolated local fixture-only Git worktree was used because direct `git clone` was unavailable in the runner (DNS blocked). It was **not** a complete local `origin/main` checkout. Published code/test/report blob hashes were checked byte-for-byte against the tested local files. Test script is self-contained and does not compile the repository's C++.
 
 | Check | Observation | Interpretation |
 | --- | --- | --- |
@@ -43,10 +43,10 @@ python3 atlas/research/composition_ade.py bench
 | Conflicting hydro slot | One explicit `ambiguous` record; embedded river retained | No silent precedence or spatial union |
 | Publisher-qualified identifiers | `gamma.example:shared` and `delta.example:shared` remain distinct | No accidental ID join |
 | E selecting five of six | Hydro conflict removed by **explicitly excluding one pack**, while A still sees both | E offers a functional selection benefit beyond automatic scan; D must republish to achieve it |
-| Corrupt/missing/incompatible/duplicate packs | Classified in 14 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
+| Corrupt/missing/incompatible/duplicate packs | Classified in 15 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
 | Read-only operation | Consumers perform no writes; file hashes unchanged, fixture permissions set read-only | No real Classic volume/file APIs tested |
 
-**Warm Python microbenchmark (80 trials/variant, median; illustrative only):**
+**Initial warm Python microbenchmark, before a sealed-file integrity control was added (80 trials/variant, median; retained as historical evidence, not the current executable version):**
 
 | Variant | Consumer file reads | Consumer bytes | Median ms | Median traced Python allocation peak |
 | --- | ---: | ---: | ---: | ---: |
@@ -54,7 +54,17 @@ python3 atlas/research/composition_ade.py bench
 | D: sealed | 1 | 792 | 0.0517 | 5,596 bytes |
 | E: manifest | 7 | 1,865 | 0.6293 | 14,214 bytes |
 
-The Python timings were not cold-cache controlled, CPU-pinned, or replicated on Classic; they measure JSON parsing, hash computation and Python bookkeeping on tiny fixtures. Traced peaks exclude interpreter/runtime and OS memory and are **not** C++/G4 peak data. D deliberately shifts work to publishing; publishing cost is *excluded* from the consumer columns. File-op counts reflect this fixture and implementation, not actual HFS/CD performance; A additionally enumerates the directory once. Source-line counts are crude: shared decode/collect/resolve ~72 source lines, A-specific ~6, D publisher+consumer ~14, E manifest producer+consumer ~22. These are localized function counts, **not** total engineering maintenance complexity.
+**Integrity-control follow-up, same day (current executable revision):** A reviewer could otherwise mistake D's very fast, shape-only read for equal validation. The D publisher now records SHA-256 of the resolved atlas and the D consumer checks it; a 15th test mutates valid sealed JSON without updating that checksum and verifies safe fallback. These are **internal integrity checks, not publisher authentication**: an attacker with write access could change bytes *and* the untrusted checksum. The earlier D result must not be used as an equivalent-integrity comparison. A separate run of 80 warm trials on this revision gave:
+
+| Variant | Consumer file reads | Consumer bytes | Median ms | Median traced Python allocation peak |
+| --- | ---: | ---: | ---: | ---: |
+| A: scan | 6 (+1 directory enumeration) | 1,134 | 0.9289 | 14,008 bytes |
+| D: sealed + SHA-256 | 1 | 874 | 0.1725 | 5,678 bytes |
+| E: manifest | 7 | 1,865 | 1.0782 | 14,214 bytes |
+
+The shifted A/E medians across host runs (A 0.5638→0.9289 ms, E 0.6293→1.0782 ms) demonstrate sensitivity to shared host load/cache and instrumentation. **Do not infer a stable speed ratio, nor infer that E must be slower than A.** The count of reads and bytes is deterministic for this fixed fixture, but not representative of optical CD/HFS costs. Source-line counts on the current functions are: shared parsing/collect/resolution ~72, A ~6, D including publisher and integrity check ~20, E including publisher ~22. None is an estimate of total lifecycle maintenance cost.
+
+The Python timings were not cold-cache controlled, CPU-pinned, or replicated on Classic; they measure JSON parsing, hash computation and Python bookkeeping on tiny fixtures. Traced peaks exclude interpreter/runtime and OS memory and are **not** C++/G4 peak data. D deliberately shifts work to publishing; publishing cost is *excluded* from the consumer columns. File-op counts reflect this fixture and implementation, not actual HFS/CD performance; A additionally enumerates the directory once. Earlier routine source-line totals (D ~14 before its checksum verifier) are superseded by the updated figures above.
 
 ## Observe → update / decision
 
