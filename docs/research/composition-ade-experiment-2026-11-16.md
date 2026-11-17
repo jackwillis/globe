@@ -43,7 +43,7 @@ python3 atlas/research/composition_ade.py bench
 | Conflicting hydro slot | One explicit `ambiguous` record; embedded river retained | No silent precedence or spatial union |
 | Publisher-qualified identifiers | `gamma.example:shared` and `delta.example:shared` remain distinct | No accidental ID join |
 | E selecting five of six | Hydro conflict removed by **explicitly excluding one pack**, while A still sees both | E offers a functional selection benefit beyond automatic scan; D must republish to achieve it |
-| Corrupt/missing/incompatible/duplicate packs | Classified in 16 host unit tests; fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
+| Corrupt/missing/incompatible/duplicate packs | Classified in 16 host unit tests **at this historical revision** (20 in the corrected review revision below); fallback retained | Only toy error semantics tested; E detects well-formed byte tampering via manifest digest; A lacks external digest commitment |
 | Read-only operation | Consumers perform no writes; file hashes unchanged, fixture permissions set read-only | No real Classic volume/file APIs tested |
 
 **Initial warm Python microbenchmark, before a sealed-file integrity control was added (80 trials/variant, median; retained as historical evidence, not the current executable version):**
