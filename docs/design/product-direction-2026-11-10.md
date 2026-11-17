@@ -190,7 +190,7 @@ Back/Forward should restore the relevant entity and camera state.
 
 Cities remain individually selectable point features. Country and administrative region labels are independently interactive, while polygon picking can remain a fallback.
 
-Prefer the existing native single-window interface with contextual information in the sidebar. Search, longer articles and optional developer facilities may use additional native windows when justified.
+**2026-11-13 owner revision:** the earlier preference for an integrated single-window globe/sidebar is superseded by [#148](https://github.com/jackwillis/globe/issues/148). The planned primary interface is **one coherent native multi-window workspace**: a globe document window, a separate selection/Information window and a small Looks/Tools palette. Do not create both docked and detached modes; protect the usability, focus rules and on-screen placement originally sought by #79, including at 640×480. Search, longer articles and developer facilities may use additional native windows when justified. The first slice is a pre-v0.2 patch candidate, not a committed version or release gate.
 
 Avoid permanent controls that substantially reduce the globe's visible area at 640×480.
 
