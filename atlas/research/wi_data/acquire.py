@@ -47,7 +47,7 @@ SOURCES = [
      'url': 'https://publications.newberry.org/ahcb/downloads/gis/WI_AtlasHCB.zip',
      'max_bytes': 26 * 1024 * 1024,  # smallest Wisconsin file offered (24,535,249 bytes by HEAD)
      'version': 'Atlas of Historical County Boundaries, Wisconsin GIS download',
-     'license_status': 'unreviewed; bespoke statement "reused for any lawful purpose ... without licensing or permission fees", not on the allowed list',
+     'license_status': 'conflicting: the download page says the data may be "reused for any lawful purpose, commercial or non-commercial, without licensing or permission fees" and calls older licences out of date, but the bundled READ ME and deed say CC BY-NC-SA 2.5 (NC is on the policy hold list). Research-only until the owner reviews',
      'terms_url': 'https://digital.newberry.org/ahcb/download'},
     {'id': 'wdnr_24k_waterbody_dane', 'path': 'wdnr_24k_waterbody_dane.json',
      'url': DNR_BASE + '?' + urllib.parse.urlencode(DNR_QUERY),
