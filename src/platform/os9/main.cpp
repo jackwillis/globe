@@ -22,6 +22,7 @@
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
 #include "menu_bar.hpp"
+#include "optional_atlas_file.hpp"
 #include "pixel_format.hpp"
 #include "prefs_window.hpp"
 #include "scale_label.hpp"
@@ -162,12 +163,12 @@ class Application {
         if (window_)
             DisposeWindow(window_);
     }
-    bool init() {
-        auto atlas = Atlas::parse(kEmbeddedAtlasData, kEmbeddedAtlasSize);
-        if (!atlas)
-            return false;
-        scene_ = Scene::create(*atlas);
-        if (!scene_)
+    bool uses_external_atlas() const { return atlas_->bytes != nullptr; }
+    bool init(bool try_external, const char* fallback_reason = nullptr) {
+        atlas_.emplace(with_embedded_fallback(try_external ? load_optional_atlas()
+                                                           : StartupAtlas{{}, {}, fallback_reason},
+                                              {kEmbeddedAtlasData, kEmbeddedAtlasSize}));
+        if (!atlas_->scene)
             return false;
         auto elevation = Elevation::parse(kEmbeddedElevationData, kEmbeddedElevationSize);
         if (!elevation)
@@ -188,17 +189,28 @@ class Application {
         overlays_.attach(countries_ ? &*countries_ : nullptr,
                          country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
                          place_scene_ ? &*place_scene_ : nullptr);
-        runner_.set_scene(*scene_);
+        runner_.set_scene(*atlas_->scene);
         runner_.set_places(place_scene_ ? &*place_scene_ : nullptr);
         Rect bounds = window_content();
         fit_to_memory(bounds);
         const unsigned char title[] = {12,  'P', 'o', 'o', 'd', 'l', 'e',
                                        ' ', 'E', 'a', 'r', 't', 'h'};
-        window_ = NewCWindow(nullptr, &bounds, title, true, documentProc,
+        window_ = NewCWindow(nullptr, &bounds, title, false, documentProc,
                              reinterpret_cast<WindowPtr>(-1), true, 0);
         mouse_region_ = NewRgn();
         if (!window_ || !mouse_region_)
             return false;
+        if (atlas_->diagnostic != nullptr) {
+            unsigned char notice[96];
+            constexpr char prefix[] = "Poodle Earth (embedded): ";
+            const auto prefix_len = sizeof(prefix) - 1;
+            const auto reason_len =
+                std::min(std::strlen(atlas_->diagnostic), sizeof(notice) - 1 - prefix_len);
+            notice[0] = static_cast<unsigned char>(prefix_len + reason_len);
+            std::memcpy(notice + 1, prefix, prefix_len);
+            std::memcpy(notice + 1 + prefix_len, atlas_->diagnostic, reason_len);
+            SetWTitle(window_, notice);
+        }
         SetPortWindowPort(window_);
         const int width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
         const int globe_width = width - Sidebar::kWidth;
@@ -207,6 +219,7 @@ class Application {
         sidebar_.layout(static_cast<short>(width), static_cast<short>(height));
         sidebar_.sync(model_.terrain_style);
         sidebar_.show(nothing_selected_card());
+        ShowWindow(window_);
         if (globe_width != model_.camera.width || height != model_.camera.height)
             apply(Resize{globe_width, height});
         apply(Tick{now_ms()});
@@ -828,7 +841,7 @@ class Application {
     GWorldPtr world_ = nullptr;
     RgnHandle mouse_region_ = nullptr;
     Model model_ = initial_model(640, 480);
-    std::optional<Scene> scene_;
+    std::optional<StartupAtlas> atlas_; // outlives runner_ and any borrowing job
     std::optional<LandClasses> classes_;
     std::optional<TerrainScene> terrain_;
     std::optional<Countries> countries_;
@@ -877,10 +890,15 @@ int main() {
     InitCursor();
     bool started = false;
     {
-        Application app;
-        started = app.init();
+        std::optional<Application> app(std::in_place);
+        started = app->init(true);
+        if (!started && app->uses_external_atlas()) {
+            // Tear down the entire candidate before retrying mandatory UI allocations.
+            app.emplace();
+            started = app->init(false, "External atlas startup failed");
+        }
         if (started)
-            app.run();
+            app->run();
     } // the partly built application releases its memory before the alert needs some
     if (!started) {
         SysBeep(10);

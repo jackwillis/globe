@@ -51,6 +51,7 @@ target_compile_options(globe_core PRIVATE -Wall -Wextra -Wpedantic -Wconversion 
 # Platform-neutral helpers shared by every front end (pixel layout conversion, timing summaries,
 # command-line parsing). No OS headers, so they are tested anywhere and reusable for Mac OS 9.
 add_library(globe_platform_common
+  src/platform/common/startup_atlas.cpp
   src/platform/common/elevation_packs.cpp
   src/platform/common/pixel_format.cpp
   src/platform/common/frame_stats.cpp
@@ -206,7 +207,7 @@ if(GLOBE_BUILD_TESTS)
   add_test(NAME version COMMAND test_version "${PROJECT_VERSION}")
   target_include_directories(test_terrain PRIVATE src/render)
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
-  foreach(name pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)
+  foreach(name startup_atlas pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_platform_common globe_clock_posix)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

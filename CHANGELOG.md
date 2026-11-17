@@ -4,6 +4,8 @@ This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
 
+- Classic startup can read one optional GATL v1 coastline and border atlas from `Data/atlas.gatl` beside the application, with an embedded fallback (#48).
+
 - Classic Controls lists the Command equivalents alongside plain shortcuts and identifies plain-only and Command-only keys (#144).
 - Help for the controls (#40): H or ? (and Apple menu > Controls on Classic) shows the keys and gestures in the information pane on both front ends, from the one table in `globe/controls.hpp` that also defines the shortcut keys. Escape hides it. Host-tested and cross-compiled; not yet run on the G4.
 - The Classic About window displays the full project version.
