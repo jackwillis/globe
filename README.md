@@ -91,6 +91,12 @@ elevation, countries and cities; no X11 toolbar; native menus/palette are implem
   folder of packs ([#47](https://github.com/jackwillis/globe/issues/47),
   [#48](https://github.com/jackwillis/globe/issues/48)).
 
+On Classic, an optional `Data/atlas.gatl` beside the application supplies the entire
+coastline and border atlas at launch. The shipped `data/atlas.gatl` is a compatible
+GATL v1 file and displays the same map as the embedded copy. The file must be at most
+64 KiB. If loading fails, the app uses the embedded atlas and shows the reason in the
+window title. Elevation, land classes, country picking and cities still use their embedded data.
+
 Both use the same portable core and strict pack formats. Terrain is currently raw embedded v1
 data; [compression has been measured](docs/perf/compression.md), with runtime adoption still open.
 There is no fetch implementation yet; [the fetch design](docs/fetch-design.md) is for review.

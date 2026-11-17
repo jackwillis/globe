@@ -38,6 +38,8 @@ add_application(${APP} CREATOR PdlE
   ${ROOT}/src/platform/os9/scale_label.cpp
   ${ROOT}/src/platform/os9/prefs_window.cpp
   ${ROOT}/src/platform/os9/menu_bar.cpp
+  ${ROOT}/src/platform/os9/optional_atlas_file.cpp
+  ${ROOT}/src/platform/common/startup_atlas.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
   ${ROOT}/src/core/app.cpp ${ROOT}/src/core/controls.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp
