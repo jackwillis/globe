@@ -160,7 +160,7 @@ def select_manifest(folder, raw, reads):  # E consumer: flat, explicitly selecte
         expected = {e["file"]: e for e in entries}
         packs, issues = collect([folder / e["file"] for e in entries], reads, expected)
         return resolve(packs), issues
-    except (ValueError, TypeError, AttributeError, json.JSONDecodeError) as exc:
+    except (ValueError, UnicodeError, TypeError, AttributeError, json.JSONDecodeError) as exc:
         return resolve([]), [["manifest", "invalid-manifest:" + type(exc).__name__]]
 
 
@@ -190,7 +190,7 @@ def read_sealed(raw):  # D consumer: only check the sealed object's shape
         if obj.get("atlas_sha256") != digest(canon(obj["atlas"])):
             raise ValueError("integrity-mismatch")
         return obj["atlas"], []
-    except ValueError as exc:
+    except (ValueError, UnicodeError) as exc:
         return resolve([]), [["sealed", str(exc) if str(exc) == "integrity-mismatch" else "invalid-seal"]]
     except (TypeError, AttributeError):
         return resolve([]), [["sealed", "invalid-seal"]]
