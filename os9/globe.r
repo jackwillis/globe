@@ -34,7 +34,7 @@ resource 'MENU' (131, preload) {
       ITEM("Align North", "N"); DIVIDER;
       ITEM("Graticule", "G"); ITEM("Borders", "B"); ITEM("Trackball Drag", "T"); DIVIDER;
       ITEM("Map", noKey); ITEM("Relief", noKey); DIVIDER;
-      ITEM("Night Side", "D"); ITEM("Measure", "M") }
+      ITEM("Night Side", "D"); ITEM("Measure", "M"); ITEM("Country Names", noKey) }
 };
 resource 'MBAR' (128, preload) { { 128, 129, 130, 131 } };
 

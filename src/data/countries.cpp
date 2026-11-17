@@ -6,6 +6,13 @@
 #include <cstring>
 namespace globe {
 namespace {
+struct Anchor {
+    std::int32_t lat, lon;
+    std::uint8_t rank;
+};
+#include "country_anchors.inc"
+static_assert(std::size(kCountryAnchors) <= kMaxLabelCandidates);
+
 std::int32_t signed32(const std::uint8_t* p) {
     const auto n = load_le32(p);
     return n <= 0x7fffffffU ? static_cast<std::int32_t>(n) : -1 - static_cast<std::int32_t>(~n);
@@ -64,6 +71,18 @@ std::optional<Countries> Countries::parse(const std::uint8_t* b, std::size_t siz
             return std::nullopt;
     }
     return out;
+}
+std::vector<LabelCandidate> Countries::label_candidates() const {
+    if (count_ != std::size(kCountryAnchors) || load_le32(data_ + 28) != kLabelEdition)
+        return {};
+    std::vector<LabelCandidate> labels;
+    labels.reserve(count_);
+    for (std::uint32_t i = 0; i < count_; ++i) {
+        const auto& anchor = kCountryAnchors[i];
+        labels.push_back({to_unit_vector({anchor.lat / 1e4, anchor.lon / 1e4}), name(i),
+                          LabelRole::area, -anchor.rank});
+    }
+    return labels;
 }
 CountryRecord Countries::country(std::uint32_t id) const {
     if (id >= count_)

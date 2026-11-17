@@ -44,3 +44,4 @@ ItemBorders = Borders
 ItemTrackball = Trackball Drag
 ItemNight = Night Side
 ItemMeasure = Measure
+ItemCountryNames = Country Names

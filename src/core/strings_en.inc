@@ -43,3 +43,4 @@
 "Trackball Drag",
 "Night Side",
 "Measure",
+"Country Names",
