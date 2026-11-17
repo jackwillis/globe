@@ -146,6 +146,19 @@ code: `tools/rsqrt-research/`. Full provenance: `docs/perf/rsqrt-20261116/PROVEN
 | **NetBSD/macppc GCC 12.5 cross toolchain** | **not available.** Ubuntu's GCC 12.4 `powerpc-linux-gnu` was used as the nearest proxy (same GCC series; Linux ABI, glibc) |
 | **Anything on the G4** | **not run, not authorized.** No G4 access was attempted |
 
+### 2.0.1 Post-registration items (not in Part 1)
+
+Part 1 (committed in `4429b88` before any measurement) is unchanged by this revision. The following were **added after seeing data** and are
+exploratory, not tests of a pre-registered prediction. Where they appear below they are tagged **[post-reg]**.
+
+| Item | Where it came from | Status of the evidence |
+| --- | --- | --- |
+| **B2** (guard moved from `l2 < 0.5` to `l2 < 0.92`, scratch variant 6) | Chosen after the audit showed the 1e-5 bound crosses at `l2` 0.918. Part 1 lists treatments A-E and C2 only; B2 is not among them, and 0.92 was picked by me from measured data. | Host x86-64 only: 1,764-frame sweep identical to baseline; full suite **not** run with B2; **not run on PPC32/qemu**. Its decision-rule-1 checksum condition is therefore met on x86 only. |
+| **FMA contraction difference** (x86 vs PPC32) | Found while checking cross-target bit identity for P10, which predicted a `frsqrte`-table hazard, not contraction. | qemu-user, GCC 12.4, glibc, Linux ABI. Not reproduced on NetBSD GCC 12.5 or a 7400. |
+| **Band-margin safety argument** (one-signed error stays inside the `0.31 R |a-b|^2` slack) | P5 predicted only where the `1e-4 R` margin holds (confirmed). The argument that band rejection is therefore still safe at larger arcs was added afterwards. | Reasoning from one-signed error, **not** an exhaustive test of `arc_misses_band`; no such test was built. For shipped data (arcs <= 5.7 deg) the margin itself holds, so the argument is only needed for arcs the data does not contain. |
+| **G4 cost model** (2.5) | Written after the call counts were known. | Arithmetic on a repository-measured `sqrt` time and my recollection of 7400 FP latency, which is **unchecked against the MPC7400 manual**. A model, not a measurement. |
+| C1 and C4 as named variants | Part 1 says only "improved portable". | Their rows in 2.3 are exploratory. |
+
 ## 2.1 A. Numerical audit
 
 **P1 confirmed exactly.** `inverse_length(0.5)` returns `1.38671875`; exact is `1.4142135623730951`;
@@ -183,9 +196,9 @@ error by `e' = -(3/2)e^2 - (1/2)e^3`.
   (visibly wrong arcs) is not, for shipped data.
 * **`band_margin_px`'s comment** ("a Newton step good to 1e-5 of the radius", P5): the 1e-4 R margin is met up to
   44.6 deg, as predicted. At 90 deg the error (4.3 px at R 220) exceeds `2 + 1e-4 R`. But, because the error is one-signed, the
-  drawn point lies on the segment between the chord point and the true arc point and is covered by the separate
-  `0.31 R |a-b|^2` slack term, so band rejection is safe regardless. The comment is inaccurate but harmless (hop-two reasoning
-  below; I did not build a new exhaustive band test).
+  drawn point lies on the segment between the chord point and the true arc point, which I **argue** (**[post-reg]**, reasoning only) is covered by the separate
+  `0.31 R |a-b|^2` slack term, so band rejection should be safe regardless. The comment is inaccurate, and I found no harm for shipped data (arcs <= 5.7 deg,
+  where the margin holds), but I did **not** build an exhaustive band test, so the claim for longer arcs is unverified.
 * **Exceptional inputs** (identical to exact where it matters): `0` gives `+inf` and `-0` gives `-inf`; negative and NaN give NaN; subnormals
   agree. Outside the domain, B is wrong: `B(2) = 0.625` (exact 0.7071), `B(1e308) = +inf`, `B(+inf) = +inf` (exact 0). `l2` cannot exceed
   `1 + 2e-16` in the renderer, so none of this is reachable.
@@ -210,8 +223,8 @@ rounding at line coordinates.** That is what 2.5 measures; visibility cannot cha
 | P6 | exact `1/sqrt` gives 0 differing pixels in 541.9M | confirmed |
 | P7 | throughput: B 3.4x faster than A (raw), latency only **1.5x** (1.7x net of loop overhead); I predicted 4-5x for latency | **partly refuted** (latency advantage is smaller on this host) |
 | P8 | callgrind: exact is **0.47%** fewer instructions at R 220/440 and 1.4% fewer over all radii (x86 has a hardware `sqrtsd`). Wall time within noise | confirmed in direction (effect under 2%) |
-| P9 | `frsqrte` seed worse than constant seed 1 on the reachable domain: analytic (error up to 1/32 against 1.2e-3); not measurable under qemu (2.4) | confirmed analytically, hardware-unverified |
-| P10 | host/G4 bit-identity risk: **the more immediate hazard was found elsewhere (2.4, fused multiply-add)** | not testable for `frsqrte`; see 2.4 |
+| P9 | `frsqrte` is only **guaranteed** to about 1/32 relative error (architecture bound as I recall it, not re-read in the 7400 manual), against 1.2e-3 for the constant seed 1 on the reachable domain. The real table may be better than its bound; its actual error is not measurable under qemu (2.4) | **not confirmed**: a worst-case-bound argument only; hardware-unverified |
+| P10 | host/G4 bit-identity risk: not testable for `frsqrte`. A different hazard (fused multiply-add contraction, **[post-reg]**, 2.4) turned up in the same check | `frsqrte` part untestable; FMA part is a post-registration observation |
 | P11 | C1 (one step) is **not** pixel-identical (72 px in 17 frames); C2 is identical with 3 fewer flops than B | **partly refuted**: C1 fails the checksum rule |
 | P12 | no double lanes in AltiVec; GCC 12.4 did not vectorize the double loop at `-mcpu=7400 -O3`, did vectorize the float loops | confirmed |
 | P13 | "a few thousand calls per frame": true at R 220 (2,962) and 440 (8,615), but **up to 62,098 per frame at R 2560** | **partly refuted** (high zoom is far above my estimate) |
@@ -225,7 +238,7 @@ the identity function (0.61 ns throughput, 1.82 ns latency). Throughput = indepe
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | A `1.0/std::sqrt` | 3.09 (2.48) | 11.93 (10.11) | 3.13 | 1.7e-16 | 1.7e-16 | identical | call to libm `sqrt` + `fdiv` |
 | **B current** | **0.92 (0.31)** | **7.76 (5.94)** | 0.91 | 7.9e-12 | **1.9e-2** | (baseline) | 13 (5 FP ops) |
-| B2 guard moved 0.5 to 0.92 | 0.91 | 7.78 | 2.64 (exact path for arcs over 33 deg) | 7.9e-12 | **1e-5** | identical | B plus compare and call |
+| B2 guard moved 0.5 to 0.92 **[post-reg]** | 0.91 | 7.78 | 2.64 (exact path for arcs over 33 deg) | 7.9e-12 | **1e-5** | identical (x86 only) | B plus compare and call |
 | C1 one Newton step, domain >= 0.99 | 0.61 (0.00) | 3.79 (1.97) | 1.22 | 2.3e-6 | 1.9e-2 (outside 0.99 falls back to B) | **72 px differ in 17 frames** | 9 (2 FP ops) |
 | C2 cubic Taylor, domain >= 0.99 | 0.98 (0.38) | 8.05 (6.23) | 1.21 | 1.0e-11 | 1.9e-2 (outside falls back to B) | identical | 15 (4 FP ops) |
 | C4 linear seed + 2 full Newton, [0.5, 1] | 1.55 (0.95) | 11.67 (9.85) | 1.56 | 1.3e-9 | **1.9e-6** | identical | 22 (11 FP ops) |
@@ -240,28 +253,29 @@ work, so C1's throughput advantage is not informative.
 
 ## 2.4 PowerPC and toolchain constraints (compile and qemu only)
 
-* **No scalar hardware sqrt on any G4-class CPU in GCC's model.** `-mcpu=603e/750/7400` define `_ARCH_PPCGR` but
-  never `_ARCH_PPCSQ`; `std::sqrt` compiles to `bl sqrt` at every setting, so the repository's inference
-  (docs/perf/README.md, 1,233 ns per sqrt on the G4, about 576 cycles) matches the emitted code.
+* **No scalar hardware sqrt on any G4-class CPU in GCC 12.4's model.** `-mcpu=603e/750/7400` define `_ARCH_PPCGR` but
+  never `_ARCH_PPCSQ`; `std::sqrt` compiles to `bl sqrt` at every setting. That is consistent with the repository's own
+  figure (docs/perf/README.md, 1,233 ns per sqrt on the G4, about 576 cycles), which I took as given and did not re-measure. It is a statement about GCC's target model and
+  emitted code, not an independent check of the 7400's instruction set.
 * **`frsqrte` needs a capability test, not `__powerpc__`.** `_ARCH_PPCGR` is set by `-mcpu=603e/604/750/7400/7450` and **not by the
   generic default** that the project's NetBSD toolchain file uses (no `-mcpu`). On GCC 12.4 there is no scalar builtin
   (`__builtin_ppc_rsqrte` is undeclared); only inline assembly reaches it (`rsqrt_ppc.hpp`, behind `_ARCH_PPCGR`), or
   `-ffast-math -mrecip=rsqrtd`, which the project forbids. A generic PPC build therefore must not assume it.
 * **Accuracy is unverifiable here.** Under qemu `frsqrte` is accurate to 1e-16, which is **not** the 7400's table (the architecture
-  guarantees only about 1/32). qemu's number says nothing about hardware. With a 1/32 start, Newton needs three
-  steps for about 1.6e-11, one more than B's two (B starts from 1 with a 1.2e-3 error on the shipped domain).
-  This is arithmetic, not a measurement.
+  guarantees only about 1/32). qemu's number says nothing about hardware, and **nothing in this report establishes how accurate the real `frsqrte` is**. If its error were at the full 1/32 bound (a worst case),
+  Newton would need three steps for about 1.6e-11, one more than B's two (B starts from 1 with a 1.2e-3 error on the shipped domain).
+  This is worst-case arithmetic, not a measurement and not a statement that `frsqrte` is worse than B on a real G4. The instruction counts for D are static GCC output for a function that was never executed on PowerPC hardware.
 * **Static cost.** Hot-path instruction counts above include loading constants and a stack adjustment because the probe functions are
   not inlined; in a loop the constants hoist. FP-op counts are the comparable column. B has 5 dependent FP operations on
   its critical path; D with 3 steps has about 13 plus the estimate.
-* **Cross-target numerics: the important result.** GCC on PowerPC contracts `a*b+c` into `fmadd` by default
+* **Cross-target numerics: an important exploratory result (**[post-reg]**, see 2.0.1).** GCC on PowerPC contracts `a*b+c` into `fmadd` by default
   (`__FP_FAST_FMA`), x86-64 baseline has no FMA. For B, **24,576 of 262,145 grid points differ from the host by up to 2 ulp**
   (A differs in none); with `-ffp-contract=off` the PPC results are bit-identical to x86 for every candidate.
   This matters to the renderer as a whole, not only to this helper: **the full 1,764-frame sweep, PPC32 under qemu against x86, differs
-  in 80 frames and 7,287 of 541,900,800 pixels (worst frame 786 px)** with default flags, and is **bit-identical in all frames
-  with `-ffp-contract=off`**. Replacing `inverse_length` by A, C2 or C4 leaves the PPC frames identical to the PPC baseline; C1 changes the same 72 px in 17 frames
-  on PPC as on x86. Caveats: qemu, glibc `sin/cos`, Linux ABI, GCC 12.4, not NetBSD GCC 12.5 on a 7400. The repository's own G4
-  checks report matching hashes for their scenes, which are a small sample of what the sweep exercises.
+  in 80 frames and 7,287 of 541,900,800 pixels (worst frame 786 px)** with default flags, and is **bit-identical in every frame of this sweep
+  with `-ffp-contract=off`** (one sweep, lines only, 640x480, 1,764 cameras; not a proof for other scenes or layers). Replacing `inverse_length` by A, C2 or C4 leaves the PPC frames identical to the PPC baseline; C1 changes the same 72 px in 17 frames
+  on PPC as on x86. B2 was **not** run on PPC. Caveats: qemu (software FP, not a 7400), glibc `sin/cos`, Linux ABI, GCC 12.4, not NetBSD GCC 12.5. I did not check what the repository's own G4 runs
+  record about host/G4 hash agreement, so I make no claim about whether this difference is visible there; this is a hypothesis for the owner to test on the real toolchain.
   This is unrelated to the question asked in #145, so it is a **separate follow-up for the owner**, not a recommendation to change flags (turning
   contraction off would also forfeit `fmadd` on the G4).
 * **Real renderer TUs on PPC32 (GCC 12.4, `-O2`, identical at generic and 7400).** `raster.cpp`: 4 `__fixdfdi`, 4 `__floatdidf`, 2 `__divdi3`,
@@ -271,7 +285,7 @@ work, so C1's throughput advantage is not informative.
 
 ## 2.5 Rendering consequences (host, 1,764 frames, 640x480, lines only)
 
-* **Frames:** A, B2, C2 and C4 produce frames **bit-identical** to baseline in all 1,764 frames (541.9M pixels) on x86, and A, C2, C4 on PPC32/qemu.
+* **Frames:** in this sweep (lines only, 640x480, 1,764 cameras; terrain, shading and other resolutions untested), A, B2 **[post-reg]**, C2 and C4 produce frames **bit-identical** to baseline in all 1,764 frames (541.9M pixels) on x86, and A, C2, C4 on PPC32/qemu (B2 not run there). "Identical" means identical on those frames, not proven for every possible input.
   **C1 changes 72 pixels in 17 frames** (worst frame 12 px) on both. Its displacement is up to 0.0059 px; the existing 68-test suite, including pixel goldens, passes
   it. **The existing goldens cannot detect sub-0.01-pixel displacement**; the sweep (504 frames at R 220/440, 0.33 s on the host) can.
 * **Geographic/limb:** visibility is decided by `clip_arc_to_front` before `inverse_length` runs, so no feature can change visibility; no frame changed `lines_drawn`.
@@ -292,11 +306,11 @@ work, so C1's throughput advantage is not informative.
   per-variant ranges of 10-20%. **No difference is resolvable** (I do not claim C1 is faster even though its median was lower).
 * **Call counts per frame** (`host-counts-by-radius.json`): R 220: 2,962 calls; R 440: 8,615; R 880: 19,900; R 1760: 41,925; R 2560: 62,098.
   The separate `std::sqrt` that sets the subdivision count (`render.cpp:74`) runs only for arcs over 24 px: 0 per frame at R 220, 16 at R 440, 643 at R 880, 1,737 at R 1760, 2,774 at R 2560.
-* **G4 model, not a measurement.** Using the repository's measured 1,233 ns `sqrt` and #97's 18.6 ms moving frame: replacing B by A would add about
+* **G4 model, not a measurement (**[post-reg]**).** Using the repository's measured 1,233 ns `sqrt` and #97's 18.6 ms moving frame: replacing B by A would add about
   `2,962 x (1,233 + about 70 ns fdiv)` = 3.9 ms per frame at R 220 (about 20% of 18.6 ms) and 11 ms at R 440. B itself costs about
   `5 dependent FP ops x about 5 cycles` = 25-30 cycles, about 0.18 ms per frame at R 220 (the cycle count is my recollection of 7400 double-precision FP latency and **needs checking
-  against the MPC7400 manual**). So the **upper bound on anything that makes B free** is about 1% of a moving frame at R 220 and about 0.1% of the 280 ms settle; the
-  accurate path would cost 20x more than B. The subdivision `sqrt` is about 2% of line-drawing time at the highest zoom (2,774 x 1.23 us = 3.4 ms against about 210 ms of line work).
+  against the MPC7400 manual**). So, if those inputs hold, the **modelled upper bound on anything that makes B free** is about 1% of a moving frame at R 220 and about 0.1% of the 280 ms settle, and the
+  accurate path would be modelled at roughly 20x B's cost. No native G4 measurement supports either figure. The subdivision `sqrt` is about 2% of line-drawing time at the highest zoom (2,774 x 1.23 us = 3.4 ms against about 210 ms of line work).
 
 ## 2.6 SIMD as a separate hypothesis
 
@@ -316,25 +330,28 @@ work, so C1's throughput advantage is not informative.
 | Option | Verdict |
 | --- | --- |
 | One purely scalar CPU renderer | **Recommended**, with the documentation corrected |
-| Scalar renderer with selected specialized math routines | Not warranted: the only candidate operation (this helper) has no beneficial replacement; C2 ties B, C4 is slower, C1 changes pixels, D is unverifiable and a worse seed |
+| Scalar renderer with selected specialized math routines | Not warranted: the only candidate operation (this helper) has no beneficial replacement; C2 ties B, C4 is slower on the host (G4 speed unmeasured), C1 changes pixels, D is unverifiable here and not shown better than B |
 | Optional architecture-specific SIMD kernels | Not now (2.6); revisit after #97 scalar slices |
 | No changes at all | Acceptable, but the comment is wrong in two places and nothing pins the error contract |
 
 Costs: code size: all portable candidates are 9-22 instructions, within a few bytes of B. Maintenance: any CPU path adds a capability probe, an assembly source and a second numerical contract; `frsqrte` cannot be tested for accuracy without hardware, and its estimate table is implementation-defined within a bound, so it
-puts the host/G4 bit-identity the project relies on at risk. Portability: the portable code compiles under C++20 without exceptions/RTTI and uses only `std::sqrt`; nothing probed here requires an optional CPU feature. Reproducibility: B2, C2, C4 give identical frames on x86 and PPC32; the FMA effect (2.4) is the larger cross-target risk.
+puts the host/G4 bit-identity the project relies on at risk. Portability: the portable code compiles under C++20 without exceptions/RTTI and uses only `std::sqrt`; nothing probed here requires an optional CPU feature. Reproducibility: C2 and C4 (and A) give frames identical to their own baseline on x86 and on PPC32/qemu in the sweep; B2 was checked on x86 only; the FMA effect (2.4, post-registration) is the larger cross-target risk and is unverified on the real toolchain.
 
 ## 2.8 E. Decision recommendation
 
 1. **Immediate: option 1, keep the current approach and correct its documentation.** Two comments are inaccurate: `inverse_length` (domain and error bounds) and `band_margin_px` ("Newton step good to 1e-5").
    Proposed wording is in `docs/perf/rsqrt-20261116/proposed/01-comment-only.patch`. **Not applied to production.** Both patches apply cleanly to `0b5b16d`.
-2. **Optional, owner's choice: patch `02-comment-and-guard.patch` also moves the exact-path guard from 0.5 to 0.92** (candidate B2), so the code satisfies its own 1e-5 claim over its whole domain. Frames are bit-identical for all
-   1,764 sweep frames; no shipped arc reaches the new exact path. Its cost is a G4 `sqrt` (about 1.2 us) for arcs over 33 deg that do not exist today. I would take it only if
+2. **Optional, owner's choice: patch `02-comment-and-guard.patch` also moves the exact-path guard from 0.5 to 0.92** (candidate B2), so the code satisfies its own 1e-5 claim over its whole domain. This is a post-registration variant (2.0.1). Frames are bit-identical for all
+   1,764 sweep frames on x86 only (not run on PPC32, full suite not run with it); no shipped arc reaches the new exact path. Its cost is a G4 `sqrt` (about 1.2 us) for arcs over 33 deg that do not exist today. I would take it only if
    other atlases are expected.
 3. **Do not**: add `globe::math` (rule 4: one operation, one call site; a single internal helper is enough), adopt `frsqrte` or any `_ARCH_PPCGR` path, or implement AltiVec projection/shading.
 4. **Option 5 (defer pending hardware) for the PowerPC question only.** Nothing here needs G4 time. If the owner still wants `frsqrte` characterised, the minimal experiment is in 2.9.
 5. **Separate follow-ups, for the owner to file or decline** (not in this PR): (a) fused multiply-add contraction changes 80/1,764 sweep frames between x86 and PPC32 (qemu) and may bear on host/G4 golden identity; decide whether to
    check this on NetBSD GCC 12.5 and what, if anything, to do about `fmadd`; (b) add a deterministic camera-sweep checksum test (the existing goldens miss sub-0.01 px changes); (c) a contract test for the helper's error bound would need the helper exposed in an internal header.
    A sqrt-free exact subdivision step count (`render.cpp:74`) is **not** worth doing (about 2% of line time at the highest zoom, model only).
+
+**Recommendation on the proposed patches (2026-11-16 review).** Submit `01-comment-only.patch` as its own small PR if the owner agrees: it touches only two comments, changes no behaviour, and the corrected statements are
+supported by the audit (exact error table, longest shipped arc 5.7 deg). Do **not** submit `02-comment-and-guard.patch` on current evidence: it changes executable code on the strength of an x86-only sweep and a post-registration variant, for arcs the shipped data does not contain. Neither patch is applied here, and a separate PR needs the owner's go-ahead.
 
 ## 2.9 What remains unverified, and exact commands
 
@@ -357,3 +374,21 @@ $TC/bin/$cxx -dM -E -x c++ /dev/null | grep -E '_ARCH_PPC|ALTIVEC|FP_FAST_FMA'  
 **Reproduce** (host): `tools/rsqrt-research/build_variants.sh <rev> /tmp base 0 1 2 3 4 5 6`, then `rsqrt-trace --write` for base and `--compare` for the others;
 `g++ -O2 -std=c++20 tools/rsqrt-research/rsqrt_lab.cpp -o lab && lab audit args.bin && lab bench args.bin` (`args.bin` is variant 5's `--log`; 549 MB, not committed);
 `tools/rsqrt-research/ppc_asm_report.py powerpc-linux-gnu-g++-12 out/`; `tools/rsqrt-research/simd_probe_report.sh out/`; `tools/rsqrt-research/count_instructions.sh /tmp 220,440 base 1 2 3 4`.
+
+## 2.10 Review pass, 2026-11-16 (after draft PR #180 CI failure)
+
+* **CI failure:** job "Host build, lint and tests", step "Format check (clang-format 22.1.8)" failed (exit 123): the six first-party files under
+  `tools/rsqrt-research/` that this PR added were not clang-formatted. No pre-existing file failed. Cause: I validated with the distribution's clang-format 18.1.3, not the pinned 22.1.8.
+* **Fix:** `clang-format -i` (22.1.8, in a venv) on exactly those six files; no other file touched. Whitespace only; recorded data was not regenerated (see PROVENANCE.txt).
+* **Commands run, Linux x86-64 (2 vCPU VM), after the fix:**
+
+  | Command | Result |
+  | --- | --- |
+  | `git ls-files '*.cpp' '*.hpp' \| xargs clang-format --dry-run --Werror` (clang-format 22.1.8) | pass (before the fix: exit 123, same six files as CI) |
+  | `tools/check-policy.sh` | `policy: ok` |
+  | `python3 -m unittest discover -s tests -p test_release_manifest.py` | 4 tests OK |
+  | `cmake -S . -B build -G Ninja -DGLOBE_SANITIZE=ON`, build, `ctest` (g++ 13.3.0, cmake 3.28.3) | 68/68 pass |
+  | `g++ -O2 -std=c++20 -Wall -Wextra tools/rsqrt-research/rsqrt_lab.cpp`; `lab audit` | compiles clean; audit values match committed JSON |
+  | `powerpc-linux-gnu-g++-12 -O2 -mcpu=7400 -S tools/rsqrt-research/ppc_probe.cpp` (GCC 12.4.0) | compiles |
+* **Not run in this pass:** clang-tidy 22.1.8 (CI lints `src/` only, which this PR does not touch; CI is the authority), frame sweeps, benchmarks, callgrind, qemu runs, Retro68, NetBSD toolchain, anything on the G4. CI results are recorded on PR #180, not here.
+* **Wording corrections made in this pass:** B2, the FMA observation, the band-margin argument and the G4 cost model are labelled post-registration (2.0.1); P9 changed from "confirmed" to "not confirmed" (it rests on a worst-case bound); the statement that the repository's G4 runs show matching hashes was removed because I had not checked it; "identical frames" claims are scoped to the lines-only sweep, and B2 is stated as x86-only.

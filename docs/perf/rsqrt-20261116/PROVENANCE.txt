@@ -10,3 +10,12 @@ Python 3.13.18
 globe base commit: 0b5b16d54abacabb358e7ea48e5eb21a4cfd43c5
 claude-plugins commit: a34f0e14af4a1494571402cd6beb762b879413af
 host cmake flags: -O2 -DNDEBUG (Release); ppc: -O2 -DNDEBUG -static; x86 baseline ISA (no FMA)
+
+2026-11-16 review pass (after commit 5b48250)
+- tools/rsqrt-research/*.cpp|hpp (six files) were reformatted with clang-format 22.1.8 to satisfy CI. Whitespace and line breaks only.
+- The recorded data in this directory was produced from the pre-format sources at 5b48250. Line numbers inside
+  simd/*.vec.txt (GCC vectorizer notes) refer to the pre-format simd_probe.cpp and no longer match the file; the
+  loops and results are unchanged. The data was not regenerated.
+- After the reformat: rsqrt_lab.cpp (g++ 13.3 -O2 -Wall -Wextra), simd_probe.cpp (g++ 13.3) and ppc_probe.cpp
+  (powerpc-linux-gnu-g++-12 12.4.0, -mcpu=7400, -S) compile cleanly; `rsqrt-lab audit` reproduces the committed
+  host-audit values (P1 1.38671875, -0.0194418). The frame sweeps and benchmarks were not re-run.

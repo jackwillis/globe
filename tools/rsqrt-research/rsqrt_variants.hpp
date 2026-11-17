@@ -31,9 +31,9 @@ inline double current_raw(double l2) {
 }
 
 // B2: the current helper with its exact-path guard moved from 0.5 to 0.92, the point where the
-// two-step error first drops below the 1e-5 the original comment promises (about 33 degrees of arc).
-// Identical arithmetic for every arc the shipped data can produce; arcs longer than ~33 degrees take
-// the accurate path (slow on a G4, but no such arc is drawn today).
+// two-step error first drops below the 1e-5 the original comment promises (about 33 degrees of
+// arc). Identical arithmetic for every arc the shipped data can produce; arcs longer than ~33
+// degrees take the accurate path (slow on a G4, but no such arc is drawn today).
 inline double guarded(double l2) {
     if (l2 < 0.92)
         return 1.0 / std::sqrt(l2);
