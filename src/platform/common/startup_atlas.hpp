@@ -10,7 +10,7 @@ namespace globe {
 
 // A startup I/O budget, independent of the GATL format limits. Bounds the
 // derived Scene too: each vertex costs four file bytes, each line table entry four.
-inline constexpr std::size_t kStartupAtlasMaxBytes = 64 * 1024;
+inline constexpr std::size_t kStartupAtlasMaxBytes = std::size_t{64} * 1024U;
 
 struct StartupAtlas {
     // Reverse destruction order keeps the zero-copy view valid.
