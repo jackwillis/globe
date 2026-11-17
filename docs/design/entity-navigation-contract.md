@@ -11,6 +11,8 @@ This document is the single definition of (a) the minimum shared entity/navigati
 
 No separate tracking issue is proposed. Work is owned by the existing issues: #52/#53 (identity, concordance and data review), #35/#36/#38/#61 (usable native text and label interaction), #114 (presentation parity), #24 (future search), #54 (budgets), and #26/#31/#48/#49 (later resource lifetimes and persistence). Related: #4 (discovery), #23 (interaction parity), #41 (animated recentre, not a prerequisite), #42 (remembered view), #84 (encoding), #87 (copyable card text), #91 (settlement policy).
 
+**Edition-selection research (2026-11-16):** [EXP-EDSEL-01](../research/edition-selection-semantics-2026-11-16.md) proposes, for review only, contextual versus source-qualified queries, additional resolution statuses, provenance, generation-stamped completions and source-configuration snapshots. None of it is part of this contract until the owner adopts it; its open decisions are listed in that note's §7.
+
 ## Responsibilities
 
 Architectural responsibilities, independent of who implements them:

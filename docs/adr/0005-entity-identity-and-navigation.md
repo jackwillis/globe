@@ -2,6 +2,8 @@
 
 **Status:** Draft, 2026-11-10. Owner principles come from the [product brief](../design/product-direction-2026-11-10.md); concrete runtime representation and migration require prototype evidence and review of the shared interfaces by the portable-core and native-frontend owners. No runtime behavior is implemented by this ADR, and it stays a draft until the owner accepts it. Numeric limits are **provisional prototype constraints** in the [contract](../design/entity-navigation-contract.md#provisional-prototype-constraints), not decisions here; the acceptance journey is defined once, in the contract.
 
+**Related research (2026-11-16, non-normative, decides nothing here):** [EXP-EDSEL-01](../research/edition-selection-semantics-2026-11-16.md) tests, on a synthetic fixture, how references behave across edition and source-priority changes; its proposals are for owner review and are not adopted by this draft.
+
 ## Context
 
 [ADR 0003](0003-atlas-production-boundary.md) separates atlas production from runtime. The existing [research catalog](../../atlas/catalog/README.md) already allocates opaque project IDs, preserves source evidence and requires explicit review. Its 808 proposed source concepts are not an approved canonical political inventory. Existing GPOL/GPLC row indices support current picking but cannot identify a place across editions.
