@@ -1,0 +1,33 @@
+--- a/src/render/render.cpp	2026-11-16 16:27:00.736772219 -0600
++++ b/src/render/render.cpp	2026-11-16 16:27:00.710760293 -0600
+@@ -28,12 +28,13 @@
+     ++stats.lines_drawn;
+ }
+ 
+-// 1 / sqrt(l2) for l2 in [0.5, 1]: two Newton steps from 1 (relative error under 2e-3 after one,
+-// under 1e-5 after two), far cheaper than a square root on CPUs without a hardware one. Callers
+-// pass the squared length of a point on a chord, which only dips below 0.5 for arcs over 90
+-// degrees; those take the exact path.
++// 1 / sqrt(l2) for l2 >= 0.92: two Newton steps from 1, relative error at most 1e-5 on that range,
++// always low, and about 8e-12 for the arcs the bundled atlas produces (at most 5.7 degrees, so
++// l2 >= 0.9975). Far cheaper than a square root on CPUs without a hardware one. Callers pass the
++// squared length of a point on a chord of an arc of angle phi (l2 >= cos^2(phi / 2)); arcs over
++// about 33 degrees take the exact path.
+ double inverse_length(double l2) {
+-    if (l2 < 0.5) {
++    if (l2 < 0.92) {
+         return 1.0 / std::sqrt(l2);
+     }
+     double s = 1.5 - 0.5 * l2;
+@@ -97,8 +98,9 @@
+ // are conservative: they may keep an arc that draws nothing in the band, never drop one that
+ // would draw a pixel, so the finished frame equals the single-pass frame bit for bit.
+ //
+-// Margin: lines cover rows floor(ymin)..floor(ymax); interior points of a subdivided arc are
+-// normalized with a Newton step good to 1e-5 of the radius.
++// Margin: lines cover rows floor(ymin)..floor(ymax). Interior points of a subdivided arc are
++// scaled by inverse_length, which is always low, so each lies between its chord point and the
++// sphere; the margin is a safety allowance, not a bound on that error.
+ double band_margin_px(const Camera& cam) {
+     return 2.0 + 1.0e-4 * cam.radius_px;
+ }

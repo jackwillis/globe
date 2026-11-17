@@ -1,0 +1,31 @@
+--- b/src/render/render.cpp	2026-11-16 16:27:00.724761322 -0600
++++ b/src/render/render.cpp	2026-11-16 16:27:00.710591015 -0600
+@@ -28,10 +28,12 @@
+     ++stats.lines_drawn;
+ }
+ 
+-// 1 / sqrt(l2) for l2 in [0.5, 1]: two Newton steps from 1 (relative error under 2e-3 after one,
+-// under 1e-5 after two), far cheaper than a square root on CPUs without a hardware one. Callers
+-// pass the squared length of a point on a chord, which only dips below 0.5 for arcs over 90
+-// degrees; those take the exact path.
++// 1 / sqrt(l2): two Newton steps from 1, far cheaper than a square root on CPUs without a hardware
++// one. Callers pass the squared length of a point on a chord of an arc of angle phi, so
++// l2 >= cos^2(phi / 2). The result is always slightly low. Measured relative error (#145): about
++// 2e-2 at l2 = 0.5 (phi = 90 degrees), 1e-5 at l2 = 0.918 (33 degrees), 8e-12 at l2 = 0.9975, the
++// limit of the bundled atlas (longest arc 5.7 degrees; the graticule uses 3). Below l2 = 0.5 the
++// exact path is taken.
+ double inverse_length(double l2) {
+     if (l2 < 0.5) {
+         return 1.0 / std::sqrt(l2);
+@@ -97,8 +99,9 @@
+ // are conservative: they may keep an arc that draws nothing in the band, never drop one that
+ // would draw a pixel, so the finished frame equals the single-pass frame bit for bit.
+ //
+-// Margin: lines cover rows floor(ymin)..floor(ymax); interior points of a subdivided arc are
+-// normalized with a Newton step good to 1e-5 of the radius.
++// Margin: lines cover rows floor(ymin)..floor(ymax). Interior points of a subdivided arc are
++// scaled by inverse_length, which is always low, so each lies between its chord point and the
++// sphere; the margin is a safety allowance, not a bound on that error.
+ double band_margin_px(const Camera& cam) {
+     return 2.0 + 1.0e-4 * cam.radius_px;
+ }

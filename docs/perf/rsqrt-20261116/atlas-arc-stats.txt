@@ -1,0 +1,3 @@
+segments 7653  max 5.696412 deg  p99.9 4.110  p99 2.000  median 0.565
+over 10 deg: 0  over 20 deg: 0  over 33 deg: 0  over 90 deg: 0
+min l2 at the longest arc (cos^2(phi/2)): 0.997530894114

@@ -1,0 +1,7 @@
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:13:23: optimized: loop vectorized using 16 byte vectors
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:13:23: optimized:  loop versioned for vectorization because of possible aliasing
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:24:23: optimized: loop vectorized using 16 byte vectors
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:24:23: optimized:  loop versioned for vectorization because of possible aliasing
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:24:23: optimized: loop vectorized using 8 byte vectors
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:36:23: optimized: loop vectorized using 16 byte vectors
+/home/claude/wt-145/tools/rsqrt-research/simd_probe.cpp:36:23: optimized: loop vectorized using 8 byte vectors

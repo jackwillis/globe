@@ -1,0 +1,1 @@
+{"mode":"bits","flags":"powerpc-linux-gnu-g++-12 -O2 -mcpu=7400 (fp-contract=fast default)","grid":262145,"fnv":{"A_exact":"e04a20c065c7ab74","B_current":"2cf086ab1e7184b2","B2_guarded92":"f60ef43b0f381ffe","C1_newton1":"ddac973865648915","C2_taylor3":"bb7de9a698db6734","C4_seeded2":"a723c10de6e8f742"}}

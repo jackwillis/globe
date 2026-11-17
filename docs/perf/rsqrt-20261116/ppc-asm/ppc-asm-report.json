@@ -1,0 +1,546 @@
+{
+ "compiler": "powerpc-linux-gnu-g++-12 (Ubuntu 12.4.0-2ubuntu1~24.04.1) 12.4.0",
+ "cpus": {
+  "generic": {
+   "flags": "-O2 -std=c++20 -fno-exceptions -fno-rtti -S -I /home/claude/wt-145/tools/rsqrt-research",
+   "functions": {
+    "f_exact": {
+     "instructions": 11,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fdiv": 1
+     }
+    },
+    "f_current": {
+     "instructions": 24,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_current_raw": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_newton1": {
+     "instructions": 36,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 2,
+      "fmul": 3,
+      "fneg": 2,
+      "fsub": 1
+     }
+    },
+    "f_taylor3": {
+     "instructions": 42,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 4,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 2
+     }
+    },
+    "f_seeded2": {
+     "instructions": 35,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 3,
+      "fmr": 1,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_core_current": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_core_newton1": {
+     "instructions": 9,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fneg": 1
+     }
+    },
+    "f_core_taylor3": {
+     "instructions": 15,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fsub": 1
+     }
+    },
+    "f_core_seeded2": {
+     "instructions": 22,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 5,
+      "fneg": 3
+     }
+    }
+   }
+  },
+  "603e": {
+   "flags": "-O2 -std=c++20 -fno-exceptions -fno-rtti -S -I /home/claude/wt-145/tools/rsqrt-research -mcpu=603e",
+   "functions": {
+    "f_exact": {
+     "instructions": 11,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fdiv": 1
+     }
+    },
+    "f_current": {
+     "instructions": 24,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_current_raw": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_newton1": {
+     "instructions": 36,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 2,
+      "fmul": 3,
+      "fneg": 2,
+      "fsub": 1
+     }
+    },
+    "f_taylor3": {
+     "instructions": 42,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 4,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 2
+     }
+    },
+    "f_seeded2": {
+     "instructions": 35,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 3,
+      "fmr": 1,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_core_current": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_core_newton1": {
+     "instructions": 9,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fneg": 1
+     }
+    },
+    "f_core_taylor3": {
+     "instructions": 15,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fsub": 1
+     }
+    },
+    "f_core_seeded2": {
+     "instructions": 22,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_frsqrte_raw": {
+     "instructions": 4,
+     "calls": [],
+     "fp_ops": {
+      "frsqrte": 1
+     }
+    },
+    "f_frsqrte_n2": {
+     "instructions": 17,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 2,
+      "fmul": 5,
+      "fneg": 2,
+      "frsqrte": 1
+     }
+    },
+    "f_frsqrte_n3": {
+     "instructions": 21,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 7,
+      "fneg": 3,
+      "frsqrte": 1
+     }
+    }
+   }
+  },
+  "750": {
+   "flags": "-O2 -std=c++20 -fno-exceptions -fno-rtti -S -I /home/claude/wt-145/tools/rsqrt-research -mcpu=750",
+   "functions": {
+    "f_exact": {
+     "instructions": 11,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fdiv": 1
+     }
+    },
+    "f_current": {
+     "instructions": 24,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_current_raw": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_newton1": {
+     "instructions": 36,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 2,
+      "fmul": 3,
+      "fneg": 2,
+      "fsub": 1
+     }
+    },
+    "f_taylor3": {
+     "instructions": 42,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 4,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 2
+     }
+    },
+    "f_seeded2": {
+     "instructions": 35,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 3,
+      "fmr": 1,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_core_current": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_core_newton1": {
+     "instructions": 9,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fneg": 1
+     }
+    },
+    "f_core_taylor3": {
+     "instructions": 15,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fsub": 1
+     }
+    },
+    "f_core_seeded2": {
+     "instructions": 22,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_frsqrte_raw": {
+     "instructions": 4,
+     "calls": [],
+     "fp_ops": {
+      "frsqrte": 1
+     }
+    },
+    "f_frsqrte_n2": {
+     "instructions": 17,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 2,
+      "fmul": 5,
+      "fneg": 2,
+      "frsqrte": 1
+     }
+    },
+    "f_frsqrte_n3": {
+     "instructions": 21,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 7,
+      "fneg": 3,
+      "frsqrte": 1
+     }
+    }
+   }
+  },
+  "7400": {
+   "flags": "-O2 -std=c++20 -fno-exceptions -fno-rtti -S -I /home/claude/wt-145/tools/rsqrt-research -mcpu=7400",
+   "functions": {
+    "f_exact": {
+     "instructions": 11,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fdiv": 1
+     }
+    },
+    "f_current": {
+     "instructions": 24,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_current_raw": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_newton1": {
+     "instructions": 36,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 2,
+      "fmul": 3,
+      "fneg": 2,
+      "fsub": 1
+     }
+    },
+    "f_taylor3": {
+     "instructions": 42,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 2,
+      "fdiv": 1,
+      "fmadd": 4,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 2
+     }
+    },
+    "f_seeded2": {
+     "instructions": 35,
+     "calls": [
+      "sqrt"
+     ],
+     "fp_ops": {
+      "fcmpu": 1,
+      "fdiv": 1,
+      "fmadd": 3,
+      "fmr": 1,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_core_current": {
+     "instructions": 13,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fmul": 3,
+      "fneg": 1,
+      "fsub": 1
+     }
+    },
+    "f_core_newton1": {
+     "instructions": 9,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 1,
+      "fneg": 1
+     }
+    },
+    "f_core_taylor3": {
+     "instructions": 15,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fsub": 1
+     }
+    },
+    "f_core_seeded2": {
+     "instructions": 22,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 5,
+      "fneg": 3
+     }
+    },
+    "f_frsqrte_raw": {
+     "instructions": 4,
+     "calls": [],
+     "fp_ops": {
+      "frsqrte": 1
+     }
+    },
+    "f_frsqrte_n2": {
+     "instructions": 17,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 2,
+      "fmul": 5,
+      "fneg": 2,
+      "frsqrte": 1
+     }
+    },
+    "f_frsqrte_n3": {
+     "instructions": 21,
+     "calls": [],
+     "fp_ops": {
+      "fmadd": 3,
+      "fmul": 7,
+      "fneg": 3,
+      "frsqrte": 1
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,5 @@
+# GCC 12.4 powerpc-linux-gnu: scalar frsqrte access (compile probes, 2026-11-16)
+__builtin_ppc_rsqrte(double): not declared at -O2, nor with -mcpu=7400 (error: did you mean __builtin_vec_rsqrte). frsqrte is reachable only through inline asm.
+1.0/std::sqrt(x), -O2 -mcpu=7400, NO fast-math: bl sqrt + fdiv
+1.0/std::sqrt(x), -O2 -mcpu=7400 -ffast-math -mrecip=rsqrtd: frsqrte (diagnostic only; project forbids -ffast-math)
+GCC defines _ARCH_PPCGR (frsqrte/fres/fsel) for -mcpu=603e,604,750,7400,7450 but not for the generic default; no fsqrt (_ARCH_PPCSQ) for any of them: std::sqrt is a library call everywhere.

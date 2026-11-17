@@ -1,0 +1,16 @@
+== x86_64_O3 (g++ )
+   vectorized loops reported: 5
+   line 13:23: optimized: loop vectorized using 16 byte vectors
+   line 24:23: optimized: loop vectorized using 16 byte vectors
+   line 24:23: optimized: loop vectorized using 8 byte vectors
+   line 36:23: optimized: loop vectorized using 16 byte vectors
+   line 36:23: optimized: loop vectorized using 8 byte vectors
+   vector insns: 979
+== ppc32_O3_7400_altivec (powerpc-linux-gnu-g++-12 -mcpu=7400 -maltivec -mabi=altivec)
+   vectorized loops reported: 2
+   line 24:23: optimized: loop vectorized using 16 byte vectors
+   line 36:23: optimized: loop vectorized using 16 byte vectors
+   vector insns: 300
+== ppc32_O3_generic (powerpc-linux-gnu-g++-12 )
+   vectorized loops reported: 0
+   vector insns: 0

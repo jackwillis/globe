@@ -1,0 +1,8 @@
+== generic render: 118 calls; libcalls:       1 ceil       4 sqrt 
+== generic raster: 24 calls; libcalls:       2 __divdi3       4 __fixdfdi       4 __floatdidf       2 __moddi3       2 ceil       3 floor       1 sqrt 
+== generic terrain: 84 calls; libcalls:       4 ceil       1 sqrt 
+== generic projection: 23 calls; libcalls:       2 atan2       1 ceil       1 floor       2 sin 
+== 7400 render: 118 calls; libcalls:       1 ceil       4 sqrt 
+== 7400 raster: 24 calls; libcalls:       2 __divdi3       4 __fixdfdi       4 __floatdidf       2 __moddi3       2 ceil       3 floor       1 sqrt 
+== 7400 terrain: 84 calls; libcalls:       4 ceil       1 sqrt 
+== 7400 projection: 23 calls; libcalls:       2 atan2       1 ceil       1 floor       2 sin 

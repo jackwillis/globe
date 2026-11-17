@@ -1,0 +1,1 @@
+{"mode":"bits","flags":"powerpc-linux-gnu-g++-12 -O2 generic -ffp-contract=off","grid":262145,"fnv":{"A_exact":"e04a20c065c7ab74","B_current":"bff14a9815a348c2","B2_guarded92":"5e16726e313ff308","C1_newton1":"da4669d581ffa94f","C2_taylor3":"25a5529a188bdce0","C4_seeded2":"3b9feac39f5a5e10"}}
