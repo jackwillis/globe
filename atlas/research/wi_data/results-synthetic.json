@@ -1,0 +1,263 @@
+{
+ "_fingerprints": {
+  "A-lean": "006e429d330d3d5e7816f3e76804b16a2eb9ae2a7d1ebc71a76ada97083490f5",
+  "A-wide": "47778321f2458fa73e553766b2f3f89c96dedbbd986eee599656eb0fa9cfae46",
+  "counties": "ea6b519fdfa0f48a31cf3c6d61a5b593a8e065d7fbf832a93a1f0dfc5f6338ab",
+  "descriptors": "67b88d11d177c0cdcc1db747154590a9f4ccf4801be79d482f7af3b72cceb137",
+  "stats": "f20a32c1c7f6aba4f23a6c8ec6785cf066b0e7fdca6400408054f24f6a10d7ce",
+  "tracts": "602b33cb7e352847bf59814987ae5beac5b35540add6dab2c40ab10ae62fc286",
+  "water": "d6f191fb8453821bd6d7614f0f709125b48334c2a6bfbda58c559247f8df2e20"
+ },
+ "catalog_fit": [
+  {
+   "attempt": "identity, time-qualified names, successor assertion, once the lock lists the sources",
+   "result": "accepted"
+  },
+  {
+   "attempt": "same document against the real lock directory (sources not locked there)",
+   "result": "rejected: source differs from lock"
+  },
+  {
+   "attempt": "entity kind \"tract\"",
+   "result": "rejected: entity kind"
+  },
+  {
+   "attempt": "an ACS estimate carried as a name with role \"estimate\"",
+   "result": "rejected: name role"
+  },
+  {
+   "attempt": "a statistic as an assertion with relation \"statistic\"",
+   "result": "rejected: relation type"
+  },
+  {
+   "attempt": "a new top-level \"statistics\" table with invalid content",
+   "result": "accepted"
+  },
+  {
+   "attempt": "geometry carried by reference (entity to source record)",
+   "result": "accepted"
+  }
+ ],
+ "code": {
+  "A_backend_lines": 33,
+  "A_shared_fraction": 0.801,
+  "B_native_shared_fraction": 0.0,
+  "C_backend_lines": 87,
+  "C_shared_fraction": 0.605,
+  "codec_lines": 80,
+  "model_lines": 142,
+  "readers_lines": 119,
+  "shared_inspector_lines": 133,
+  "store_a_lines": 199,
+  "store_b_lines": 193,
+  "store_b_polygon_layouts_lines": 94
+ },
+ "counts": {
+  "acs_cells": 24,
+  "claims": 63,
+  "county_entities": 4,
+  "county_versions": 7,
+  "county_vertices": 36,
+  "entities": 12,
+  "tract_vertices": 30,
+  "tracts": 6,
+  "waterbody_features": 2,
+  "waterbody_vertices": 15
+ },
+ "decode_accounting": {
+  "A-lean": {
+   "edges_tested_one_suite": 154,
+   "points_decoded_one_suite": 154
+  },
+  "A-wide": {
+   "edges_tested_one_suite": 154,
+   "points_decoded_one_suite": 154
+  },
+  "C": {
+   "edges_tested_one_suite": 154,
+   "points_decoded_one_suite": 154
+  },
+  "largest_single_feature_bytes_if_decoded_as_int32_pairs": 80,
+  "largest_single_feature_points": 10
+ },
+ "describe": {
+  "entities": 12,
+  "max_bytes": 448,
+  "max_lines": 10,
+  "missing_provenance_line": 0,
+  "truncated": 0
+ },
+ "geometry_integrity": {
+  "counties": {
+   "collapsed_vertices": 0,
+   "max_abs_error_degrees": 0.0,
+   "rings": 7,
+   "rings_checked_simple": 7,
+   "rings_made_nonsimple_by_quantization": 0,
+   "rings_nonsimple_in_source": 0,
+   "vertices": 29
+  },
+  "lakes": {
+   "collapsed_vertices": 0,
+   "max_abs_error_degrees": 0.0,
+   "rings": 3,
+   "rings_checked_simple": 3,
+   "rings_made_nonsimple_by_quantization": 0,
+   "rings_nonsimple_in_source": 0,
+   "vertices": 12
+  },
+  "tracts": {
+   "collapsed_vertices": 0,
+   "max_abs_error_degrees": 1.4210854715202004e-14,
+   "rings": 6,
+   "rings_checked_simple": 6,
+   "rings_made_nonsimple_by_quantization": 0,
+   "rings_nonsimple_in_source": 0,
+   "vertices": 24
+  }
+ },
+ "host_timing": {
+  "A-lean": {
+   "python_peak_bytes_host": 5528,
+   "query_suite_ms_host": 41.4
+  },
+  "A-wide": {
+   "python_peak_bytes_host": 5504,
+   "query_suite_ms_host": 19.9
+  },
+  "C": {
+   "python_peak_bytes_host": 4936,
+   "query_suite_ms_host": 2.4
+  }
+ },
+ "lookups": {
+  "A-lean full": {
+   "compare_per_lookup": 3.67,
+   "decode_per_lookup": 7.0,
+   "lookups": 24
+  },
+  "A-lean stats-only": {
+   "compare_per_lookup": 3.0,
+   "decode_per_lookup": 5.0,
+   "lookups": 24
+  },
+  "A-wide full": {
+   "compare_per_lookup": 6.29,
+   "decode_per_lookup": 0.0,
+   "lookups": 24
+  },
+  "A-wide stats-only": {
+   "compare_per_lookup": 5.0,
+   "decode_per_lookup": 0.0,
+   "lookups": 24
+  },
+  "B stats (binary search on refs)": {
+   "compare_per_lookup": 3.0,
+   "decode_per_lookup": 0.0,
+   "lookups": 24
+  },
+  "B stats (dense refs, direct index; assumption)": {
+   "compare_per_lookup": 1.0,
+   "decode_per_lookup": 0.0,
+   "lookups": 24
+  }
+ },
+ "mode": "synthetic",
+ "queries": {
+  "county_probes": 41,
+  "disagreements": [],
+  "models_compared": [
+   "A-wide",
+   "A-lean",
+   "C"
+  ],
+  "oracle": "raw float winding + closed source dates"
+ },
+ "reproducible_byte_identical": true,
+ "sentinels": {
+  "classes": {
+   "insufficient-sample|moe-insufficient-sample|-": 2,
+   "ok|moe-open-interval|censored": 1,
+   "ok|ok|-": 21
+  },
+  "estimates_that_would_print_a_false_exact_value_if_collapsed": 1
+ },
+ "sizes_bytes": {
+  "by_category": {
+   "counties": {
+    "A-lean": 1004,
+    "A-lean/B": 1.166,
+    "A-wide": 1451,
+    "A-wide/B": 1.685,
+    "A-wide_without_entity_kind_rows/B": 1.537,
+    "B": 861,
+    "gzip": {
+     "A-lean": 388,
+     "A-wide": 431,
+     "B": 307
+    }
+   },
+   "stats": {
+    "A-lean": 506,
+    "A-lean/B": 2.008,
+    "A-wide": 976,
+    "A-wide/B": 3.873,
+    "A-wide_without_entity_kind_rows/B": 3.111,
+    "B": 252,
+    "gzip": {
+     "A-lean": 242,
+     "A-wide": 303,
+     "B": 211
+    }
+   },
+   "tract-geometry": {
+    "A-lean": 662,
+    "A-lean/B": 1.204,
+    "A-wide": 1054,
+    "A-wide/B": 1.916,
+    "A-wide_without_entity_kind_rows/B": 1.567,
+    "B": 550,
+    "gzip": {
+     "A-lean": 262,
+     "A-wide": 294,
+     "B": 221
+    }
+   },
+   "water": {
+    "A-lean": 309,
+    "A-lean/B": 1.288,
+    "A-wide": 486,
+    "A-wide/B": 2.025,
+    "A-wide_without_entity_kind_rows/B": 1.758,
+    "B": 240,
+    "gzip": {
+     "A-lean": 200,
+     "A-wide": 224,
+     "B": 162
+    }
+   }
+  },
+  "inspection_blocks": {
+   "descriptors": 331,
+   "identity_table": 370,
+   "provenance": 323
+  },
+  "inspection_blocks_as_percent_of_B_bulk": 53.8098,
+  "totals": {
+   "A-lean": 2335,
+   "A-lean_with_inspection_blocks": 3359,
+   "A-wide": 3727,
+   "A-wide_with_inspection_blocks": 4751,
+   "B_layers_only": 1903,
+   "C_total": 2927
+  }
+ },
+ "source_quirks_recorded": {
+  "acs:sentinel:-222222222": 2,
+  "acs:sentinel:-333333333": 1,
+  "acs:sentinel:-666666666": 2,
+  "ahcb:cnty-type:Proposal": 1,
+  "ahcb:end-2000-12-31-is-data-horizon": 2
+ },
+ "temporal_gaps": 1
+}
