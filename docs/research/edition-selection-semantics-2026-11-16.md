@@ -159,3 +159,33 @@ Additions to the [entity/navigation contract](../design/entity-navigation-contra
 ## 8. Not done, by design
 
 No interpreter, production resolver, pack-format change or edition UI; no data source or licence; no G4 or hardware access; no overlap with #48 (nothing loads a file). Release scope, milestones, labels and ADR statuses are unchanged; ADR 0005 stays Draft.
+
+## 9. Post-review addendum (2026-11-16): order-independence of selection
+
+**Provenance of this section.** Sections 1–8 above are the original experiment and are not rewritten. An [independent review of PR #182](https://github.com/jackwillis/globe/pull/182) at `dac0114` found two defects that the original predictions did not cover (the original P1–P10 held on the fixture as written; they did not test these inputs). This section is a *second* preregistration, committed before the harness was changed. Items below are labelled **[review]** where they exist only because of that review.
+
+### 9.1 The two defects (both reproduced from reading the code, not yet from a test)
+
+- **[review] Defect A, installation order as priority.** `make_config()` ends with `ids = [s.id for s in installed]` and uses it as the default priority for every datatype. Installing `(wisc, census)` versus `(census, wisc)` therefore changes which Madison population wins with no user choice. The original `test_snapshot_id_is_order_independent` avoided this by passing equivalent explicit priorities.
+- **[review] Defect B, first-match inside a source.** `query()` collects every approved record of one source for the entity and takes `claims[0]`; the pinned path likewise returns the first matching record. Two local records in one source, both approved for one entity with different values, collapse to whichever comes first, and the `conflicts` field never sees it.
+
+### 9.2 Policies under comparison (tested; none adopted)
+
+Finding A: **A** explicit priority required whenever overlapping claims disagree; **B** a default derived from declared publication metadata (here a `supersedes` relation, not publisher-name sorting); **C** overlap without precedence stays unresolved. Two controls: the legacy install-order default (known defective) and alphabetical source-ID order (deterministic but arbitrary).
+Finding B: **A** builder-side rejection of conflicting records before publication; **B** query-time refusal that lists all candidates; both compared on the same inputs.
+
+### 9.3 Predictions and failure criteria
+
+| # | Prediction | Failure criterion |
+| --- | --- | --- |
+| P11 | **Control:** the legacy install-order default is order-dependent (the review is right), reproduced in a test. | The legacy default is order-independent on the Madison fixture, which would mean the review's claim is wrong. |
+| P12 | With no implicit priority, every permutation of the same installed set gives identical results, provenance, conflicts and snapshot ID, for 3 and 4 sources. | Any difference between permutations. |
+| P13 | Disagreeing claims from several sources with no explicit priority give `precedence-unresolved` and **no value**, listing every candidate. A single claimant, or claimants that agree, resolve without a priority. | A value is returned for a disagreement without explicit precedence, or a harmless single-claimant query is refused. |
+| P14 | An explicit priority naming all disagreeing claimants picks the winner and changes the value when reordered, with the entity reference unchanged. A priority that omits a disagreeing claimant is `precedence-unresolved`, not a partial win. | Reordering leaves the value unchanged where claims disagree, the reference changes, or an incomplete priority picks a winner. |
+| P15 | A derived default from `supersedes` is install-order-independent when the relation is total and acyclic over the installed sources, and absent (falling back to unresolved) when sources are unrelated, partially related or mutually claim supersession. Alphabetical ID order is also order-independent but flips under a publisher rename, so it is not authority. | A derived default depends on install order; mutual or partial declarations pick a winner; alphabetical order is rename-stable. |
+| P16 | Within-source contradictory claims: the builder check rejects them, and the query-time check (if the builder is bypassed) returns `source-conflict` with every candidate, for contextual and pinned queries, for every ordering of that source's records. Equivalent duplicate records are accepted and give the same result in every order. | Any ordering returns a value for a contradiction, the contradiction does not appear in the result, or equal duplicates are rejected or order-sensitive. |
+| P17 | A record with only a *proposed* concordance never creates or hides a within-source conflict. | A proposed record changes a result. |
+| P18 | Two installed sources sharing an identity: byte-identical duplicates collapse to one; any other duplicate (different revision or content) is rejected at configuration construction regardless of order. Duplicate IDs in a priority list are rejected. | A duplicate is silently accepted, or acceptance depends on order. |
+| P19 | The original 47 tests, P1–P10 and seeded-mutant coverage are preserved. Only two documented test edits are expected: helper rename where a test *intends* an explicit user ranking, and one test that installed two sources with the same ID. | Any original assertion weakened, or any original mutant now surviving. |
+
+**Recommendation prediction (to be confirmed or refuted):** the smallest contract is explicit priority plus unresolved-by-default (policy A+C), with declared metadata (B) offered only as a *suggestion that the settings UI materializes into explicit, stored priority*, never computed implicitly at query time; and builder-side rejection for within-source conflicts with a cheap query-time refusal as defence in depth. No global geographic-authority ranking is proposed.
