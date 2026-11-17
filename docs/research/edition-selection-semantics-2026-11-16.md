@@ -189,3 +189,84 @@ Finding B: **A** builder-side rejection of conflicting records before publicatio
 | P19 | The original 47 tests, P1–P10 and seeded-mutant coverage are preserved. Only two documented test edits are expected: helper rename where a test *intends* an explicit user ranking, and one test that installed two sources with the same ID. | Any original assertion weakened, or any original mutant now surviving. |
 
 **Recommendation prediction (to be confirmed or refuted):** the smallest contract is explicit priority plus unresolved-by-default (policy A+C), with declared metadata (B) offered only as a *suggestion that the settings UI materializes into explicit, stored priority*, never computed implicitly at query time; and builder-side rejection for within-source conflicts with a cheap query-time refusal as defence in depth. No global geographic-authority ranking is proposed.
+
+### 9.4 Reproduce
+
+```sh
+python3 -B -m unittest discover -s atlas/research -p 'test_edition_selection.py' -v
+```
+
+### 9.5 Results (Linux x86_64, Python 3.14.8, host-only, branch `research/edition-selection-semantics-20261116`)
+
+**73 tests, 73 pass.** The original 47 are retained: 46 unchanged apart from the helper rename below, and one rewritten (see edits). New: 22 for the two findings and 3 for replay and hint consequences, plus 1 added when an original test was split in two.
+
+| Prediction | Outcome | Evidence |
+| --- | --- | --- |
+| P11 control | **Held** (the review was right) | `install_order_config((WS, C))` gives 270 and `((C, WS))` gives 280 for the same entity. Reproduced, not just read. |
+| P12 permutations | **Held** | All 6 permutations of 3 sources and all 24 of 4: identical results for every entity and datatype, identical snapshot ID, with no priority and with an explicit priority. |
+| P13 unresolved | **Held** | Madison population from World 100, Wisconsin 270, Census 280, no priority: `precedence-unresolved`, no value, all three candidates, listed sorted by source ID. A lone claimant and agreeing claimants resolve without a priority. |
+| P14 explicit priority | **Held** | All 6 rankings give the first-ranked source's value (100, 270 or 280); the reference never changes. Priorities that omit a disagreeing claimant (three cases) give `precedence-unresolved`, not a partial winner. |
+| P15 declared metadata | **Held, with a stated limit** | A total, acyclic `supersedes` chain derives the same order from all 6 install orders. An unrelated source, a mutual declaration, or no declaration yields `None` (falls back to unresolved). Alphabetical order is install-order-independent but a publisher rename flips the winner. The limit: a `supersedes` claim is publisher-asserted metadata; the toy cannot tell a legitimate refinement from a self-promotion. |
+| P16 within-source conflict | **Held** | `validate_source` rejects a contradictory source and names it; equal duplicates pass. With the builder bypassed, contextual and pinned queries return `source-conflict` listing every candidate, for all 24 and 6 orderings of the records; equal duplicates give one identical result for every ordering. A pinned query on a different, clean source is unaffected. |
+| P17 proposed concordance | **Held** | A contradicting record with only a proposed link neither creates a conflict nor hides one. |
+| P18 duplicate identity | **Held** | Same ID with a different revision or content is rejected in both orders; byte-identical duplicates collapse to one with the same snapshot ID; a priority naming a source twice is rejected. |
+| P19 preservation | **Held, with documented edits** | See below. |
+
+### 9.6 What changed in the harness
+
+- `make_config` no longer derives a priority: priorities exist only if the caller supplies them. `ranked_config` states an explicit user ranking; `install_order_config` is kept as a labelled negative control.
+- `Config` rejects duplicate source identities (collapsing byte-identical ones) and duplicate priority entries, and keeps `installed` sorted by ID, so installation order is not representable in a configuration.
+- `Source.digest` is independent of record order. `Source.supersedes` is optional metadata read only by `derive_declared_order`, never by `query`.
+- Contextual `query` ranks only by the explicit priority. New statuses: `precedence-unresolved` and `source-conflict`. A lone claimant is its own source and needs no rank.
+- Previously an installed source missing from the priority list was silently ignored. Now, if its claim disagrees, the result is unresolved.
+
+**Edits to original tests (all for stated reasons):** (1) 46 tests renamed `make_config` to `ranked_config` because they intend an explicit user ranking; (2) `test_agreeing_lower_source_is_not_a_conflict` used the same source ID twice, which is now rejected, so it uses a distinct mirror ID; (3) `test_unrelated_source_does_not_reorder` added World, which overlaps Madison, and relied on unranked sources being ignored; it now adds a genuinely non-overlapping source, and a new test asserts the overlapping case is unresolved. No assertion was weakened; the first behaviour change (3) is intentional.
+
+### 9.7 Mutation check
+
+27 seeded defects (the original 15 re-run on the new code, plus 12 new), each applied alone; **all 27 caught**. New mutants: install order as priority (5 failing tests), first-match inside a source (5), no unresolved branch (4), incomplete priority picks partial winner (2), drop duplicate-source check (1), installed tuple keeps given order (1), unsorted claims let record order decide (1), pinned query bypasses source-conflict (2), `supersedes` ignores cycles (1), digest depends on record order (1), lone claimant loses its source (3). Caveat: two of these (incomplete priority; unranked disagreeing claim ignored) are the same code mutation listed twice, so 26 are distinct, and the "no unresolved branch" mutant is caught partly by errors, not only by assertion failures.
+
+### 9.8 Negative findings and corrections made during this pass
+
+- **A real defect in my first fix, found by the new tests:** a lone claimant reported `source=None` and lost its provenance. Fixed; covered by a test and a mutant.
+- **Three of my own expectation errors** (sort order of `wisc` before `world`, twice; a catalog rebuilt without earlier approvals) were test mistakes, not contract failures.
+- **Usability cost, not a bug:** installing an overlapping edition makes previously resolved values `precedence-unresolved` until the user ranks it, and a contextual record saved before the install then replays as unresolved (with `snapshot-drift`; `strict` refuses). Pinned records are unaffected. This is the intended safety behaviour and a real UX burden.
+- **Heavy-handed by design:** a source that contradicts itself blocks the contextual query for that entity and datatype even if ranked below a clean source. That is simplest and loudest; a gentler rule (skip and report) would need a policy decision.
+- **Unresolved names produce a reference-only hint:** with unranked sources that disagree on a name, the readable form is `~ID`, still replayable.
+- **Not tested:** unresolved handling for `lookup_name` (name matching considers every installed source's names, which is order-free but not priority-aware), more than three datatypes, bounded sizes of candidate lists, and anything about real data.
+
+### 9.9 Updated recommended semantics (proposals, not accepted architecture)
+
+1. **No implicit precedence anywhere.** Installation, enumeration and record order never choose a value. `Config.installed` is a set.
+2. **Priority is explicit stored user choice** (per datatype), part of the configuration snapshot. It matters only where installed claims *disagree*. Policy A plus C.
+3. **Unresolved is a first-class result.** `precedence-unresolved` lists every candidate with source and revision and gives no value. Policy B (declared `supersedes`) is at most a *suggestion* a settings UI may offer; accepting it writes an explicit priority. It is never evaluated at query time, and a mutual or partial declaration offers nothing.
+4. **One claim per source, entity and datatype.** Builder-side `validate_source` rejects contradictions before publication (the contract); the reader refuses with `source-conflict` rather than choosing (defence in depth, a single scan, no engine). Equal duplicates are tolerated.
+5. **Duplicate source identity** is rejected unless byte-identical.
+6. **Recording:** unchanged from §6, with two additions: a contextual record stores the priority (it already does via the snapshot), and replay may return `precedence-unresolved` after an install even though no rank was changed.
+
+### 9.10 Remaining owner decisions (adds to §7; none settled here)
+
+1. Whether to adopt "explicit priority, otherwise unresolved" as the product default, or offer a *confirmed* declared-metadata default at install time. No global geographic-authority ranking is proposed and none should be implied.
+2. Who may publish `supersedes` and how it is reviewed (it is self-asserted metadata).
+3. Whether a self-contradicting low-priority source should block the entity (this toy) or be skipped with a warning.
+4. How an install flow asks the user to rank when a new edition overlaps and disagrees, and how this appears in the Listener transcript.
+5. Whether pinned records should be the default for saved tours (they survive installs; contextual records do not).
+6. Bound on candidates/provenance entries stored per result (the toy keeps all).
+7. CI (below).
+
+### 9.11 Implications for edition-selection UX and Listener replay
+
+- **Selection UX:** the first overlap between two editions needs a one-time ranking decision, per datatype; until then the product must display "sources disagree" instead of a number. Reordering is a user action and should be visibly distinct from installing.
+- **Listener:** readable forms keep their `hint~ID` shape; a replayed contextual command can come back unresolved, so the transcript needs an unresolved/drift line, not a silent different answer. Commands that must be reproducible should be pinned.
+- **Scripts and tours:** reference always; pin values the author wants frozen; contextual otherwise, accepting that an install may make it ask.
+
+### 9.12 CI
+
+Not enabled. [PR #179](https://github.com/jackwillis/globe/pull/179) is still open and edits the same workflow. After it merges, one possible step, for the owner to approve, placed next to its composition step:
+
+```yaml
+      - name: Edition-selection semantics (stdlib, research)
+        run: python3 -B -m unittest discover -s atlas/research -p 'test_edition_selection.py' -v
+```
+
+It reads and writes nothing, so it is cheap and not a release gate. The reviewer's point stands: until then GitHub Checks does not certify these 73 tests; they are author-run.

@@ -19,6 +19,8 @@ OK, DETAIL_UNAVAILABLE, ENTITY_UNKNOWN = 'ok', 'detail-unavailable', 'entity-unk
 SOURCE_MISSING, REVISION_MISSING = 'source-missing', 'revision-missing'
 AMBIGUOUS, RETIRED, SPLIT = 'ambiguous', 'retired', 'split'
 SNAPSHOT_DRIFT = 'snapshot-drift'
+PRECEDENCE_UNRESOLVED = 'precedence-unresolved'    # overlapping claims disagree; no explicit priority covers them
+SOURCE_CONFLICT = 'source-conflict'                # one source contradicts itself for this entity and datatype
 
 
 @dataclass(frozen=True)
@@ -37,11 +39,13 @@ class Source:
     id: str                      # publisher-qualified, e.g. 'wisc.example/places'
     revision: int
     records: tuple               # ((local_id, Record), ...)
+    supersedes: tuple = ()       # declared publication metadata (policy B only); never consulted by query()
 
     @property
     def digest(self):
-        blob = json.dumps([self.id, self.revision, [[k, v.name, v.lat, v.lon, list(v.claims)]
-                                                    for k, v in self.records]], sort_keys=True)
+        blob = json.dumps([self.id, self.revision, sorted(self.supersedes),
+                           sorted([k, v.name, v.lat, v.lon, list(v.claims)] for k, v in self.records)],
+                          sort_keys=True)
         return hashlib.sha256(blob.encode()).hexdigest()[:16]
 
     def get(self, local_id):
@@ -64,8 +68,19 @@ class Catalog:
 class Config:
     """Source-selection context: what the user switches. Never part of an entity's identity."""
     edition: str
-    installed: tuple             # (Source, ...)
-    priority: tuple              # ((datatype, (source id, ...)), ...)
+    installed: tuple             # (Source, ...) as a set: order carries no meaning
+    priority: tuple              # ((datatype, (source id, ...)), ...) explicit user choice only
+
+    def __post_init__(self):
+        seen = {}
+        for src in self.installed:
+            if src.id in seen and seen[src.id].digest != src.digest:
+                raise ValueError(f'duplicate source identity {src.id!r} with different content or revision')
+            seen[src.id] = src
+        object.__setattr__(self, 'installed', tuple(sorted(seen.values(), key=lambda x: x.id)))
+        for dt, order in self.priority:
+            if len(set(order)) != len(order):
+                raise ValueError(f'priority for {dt!r} lists a source twice')
 
     def source(self, source_id):
         return next((s for s in self.installed if s.id == source_id), None)
@@ -110,9 +125,40 @@ def classify(cat, ref):
     return Result(SPLIT, ref, successors=tuple(hit[1]), diagnostic='no successor chosen')
 
 
-def _records(cat, source, ref):
-    """Records of one source that an *approved* concordance ties to ref."""
-    return [r for k, r in source.records if cat.approved_refs(source.id, k) == ref]
+def _claims(cat, source, ref, datatype):
+    """Every approved local record's claim for ref: [(local id, value)], sorted so record order is irrelevant."""
+    out = [(k, r.claim(datatype)) for k, r in source.records
+           if cat.approved_refs(source.id, k) == ref and r.claim(datatype) is not None]
+    return sorted(out, key=lambda kv: (kv[0], repr(kv[1])))
+
+
+def _source_value(cat, source, ref, datatype):
+    """-> ('none', None) | ('value', v) | ('conflict', ((local id, v), ...)). Equal duplicates are one value."""
+    claims = _claims(cat, source, ref, datatype)
+    values = {repr(v): v for _, v in claims}
+    if not claims:
+        return 'none', None
+    if len(values) == 1:
+        return 'value', claims[0][1]
+    return 'conflict', tuple(claims)
+
+
+def validate_source(cat, source):
+    """Builder-side check (policy A for Finding B). Raises ValueError listing every contradiction."""
+    bad = []
+    for ref in sorted({cat.approved_refs(source.id, k) for k, _ in source.records} - {None}):
+        for dt in sorted({t for k, r in source.records if cat.approved_refs(source.id, k) == ref
+                          for t, _ in r.claims}):
+            kind, detail = _source_value(cat, source, ref, dt)
+            if kind == 'conflict':
+                bad.append((ref, dt, detail))
+    if bad:
+        raise ValueError(f'{source.id} contradicts itself: {bad}')
+
+
+def _candidates(items):
+    """Deterministic, order-free candidate list: (source id, revision, value)."""
+    return tuple(sorted(items, key=lambda c: (c[0], c[1], repr(c[2]))))
 
 
 def query(cat, cfg, ref, datatype, pin=None):
@@ -129,32 +175,60 @@ def query(cat, cfg, ref, datatype, pin=None):
         if src.revision != rev:
             return Result(REVISION_MISSING, ref, source=sid, revision=rev,
                           diagnostic=f'installed revision is {src.revision}')
-        for r in _records(cat, src, ref):
-            if r.claim(datatype) is not None:
-                return Result(OK, ref, r.claim(datatype), sid, rev, ((sid, rev, 'chosen'),))
+        kind, val = _source_value(cat, src, ref, datatype)
+        if kind == 'value':
+            return Result(OK, ref, val, sid, rev, ((sid, rev, 'chosen'),))
+        if kind == 'conflict':
+            return Result(SOURCE_CONFLICT, ref, source=sid, revision=rev,
+                          provenance=((sid, rev, 'conflict'),),
+                          conflicts=_candidates((sid, rev, v) for _, v in val),
+                          diagnostic='source contradicts itself: ' + ','.join(k for k, _ in val))
         return Result(DETAIL_UNAVAILABLE, ref, source=sid, revision=rev,
                       provenance=((sid, rev, 'no-claim'),), diagnostic='pinned source lacks detail')
-    chosen, trail, conflicts = None, [], []
-    for sid in cfg.order(datatype):
-        src = cfg.source(sid)
-        if src is None:
-            trail.append((sid, None, 'source-missing'))
-            continue
-        claims = [r.claim(datatype) for r in _records(cat, src, ref)
-                  if r.claim(datatype) is not None]
-        if not claims:
-            trail.append((sid, src.revision, 'no-claim'))
-        elif chosen is None:
-            chosen = (sid, src.revision, claims[0])
-            trail.append((sid, src.revision, 'chosen'))
-        else:
-            trail.append((sid, src.revision, 'shadowed'))
-            if claims[0] != chosen[2]:
-                conflicts.append((sid, src.revision, claims[0]))
-    if chosen is None:
-        return Result(DETAIL_UNAVAILABLE, ref, provenance=tuple(trail),
+    order = cfg.order(datatype)
+    claimants, bad_sources = [], []                    # claimants: (sid, rev, value)
+    for src in cfg.installed:                          # cfg.installed is id-sorted: no install-order leak
+        kind, val = _source_value(cat, src, ref, datatype)
+        if kind == 'conflict':
+            bad_sources.append((src.id, src.revision, val))
+        elif kind == 'value':
+            claimants.append((src.id, src.revision, val))
+
+    def trail(first=None):
+        """Explicit-priority order first (missing and claimless sources included), then unranked claimants."""
+        out, have = [], {c[0]: c for c in claimants}
+        for sid in order:
+            src = cfg.source(sid)
+            if src is None:
+                out.append((sid, None, 'source-missing'))
+            elif sid in have:
+                out.append((sid, src.revision, 'chosen' if have[sid] == first else 'shadowed'))
+            else:
+                out.append((sid, src.revision, 'no-claim'))
+        out += sorted((c[0], c[1], 'unranked') for c in claimants if c[0] not in order)
+        return tuple(out)
+
+    if bad_sources:                                    # never choose around a self-contradicting source
+        cands = _candidates((sid, rev, v) for sid, rev, vals in bad_sources for _, v in vals)
+        return Result(SOURCE_CONFLICT, ref, provenance=tuple(sorted((a, b, 'conflict') for a, b, _ in bad_sources)),
+                      conflicts=cands, diagnostic='a source contradicts itself')
+    if not claimants:
+        return Result(DETAIL_UNAVAILABLE, ref, provenance=trail(),
                       diagnostic='entity known; no installed source has this detail')
-    return Result(OK, ref, chosen[2], chosen[0], chosen[1], tuple(trail), tuple(conflicts))
+    distinct = {repr(v) for _, _, v in claimants}
+    ranked = [c for sid in order for c in claimants if c[0] == sid]
+    if len(distinct) > 1 and len(ranked) != len(claimants):          # a disagreeing claimant has no rank
+        return Result(PRECEDENCE_UNRESOLVED, ref, conflicts=_candidates(claimants), provenance=trail(),
+                      diagnostic='claims disagree and no explicit priority covers every claimant')
+    if len(claimants) == 1:                                          # lone claimant: it is the source, no rank needed
+        sid, rev, val = claimants[0]
+        return Result(OK, ref, val, sid, rev, trail(claimants[0]))
+    if len(distinct) == 1 and not ranked:                            # several agree: no precedence needed
+        return Result(OK, ref, claimants[0][2], None, None,
+                      tuple(sorted((c[0], c[1], 'agreeing') for c in claimants)))
+    first = ranked[0]
+    conflicts = tuple(c for c in ranked[1:] if repr(c[2]) != repr(first[2]))
+    return Result(OK, ref, first[2], first[0], first[1], trail(first), conflicts)
 
 
 def lookup_name(cat, cfg, name):
@@ -443,7 +517,36 @@ def fixture():
 
 
 def make_config(edition, installed, pop=None, names=None):
-    """Priority lists default to installation order; a source missing from `installed` may still be named."""
+    """Priorities exist only if the caller supplies them; installation order is never a priority."""
+    pr = tuple((t, tuple(o)) for t, o in (('name', names), ('population', pop)) if o is not None)
+    return Config(edition, tuple(installed), pr)
+
+
+def ranked_config(edition, installed, pop=None, names=None):
+    """The user explicitly ranks sources in the order given (an explicit choice, stored in the snapshot)."""
     ids = [s.id for s in installed]
-    return Config(edition, tuple(installed), (('name', tuple(names if names is not None else ids)),
-                                              ('population', tuple(pop if pop is not None else ids))))
+    return make_config(edition, installed, pop=ids if pop is None else pop, names=ids if names is None else names)
+
+
+def install_order_config(edition, installed):
+    """DEFECTIVE BASELINE (review finding A): installation order silently becomes priority. Negative control only."""
+    return ranked_config(edition, installed)
+
+
+def alphabetical_order(installed):
+    """Deterministic but arbitrary: control for 'sort the publishers and call it authoritative'."""
+    return tuple(sorted(s.id for s in installed))
+
+
+def derive_declared_order(installed):
+    """Policy B: priority from declared `supersedes`, only if it is a strict total order; else None."""
+    ids = {s.id for s in installed}
+    sup = {s.id: set(s.supersedes) & ids for s in installed}
+    for _ in ids:                                              # transitive closure
+        for a in ids:
+            sup[a] |= set().union(*[sup[b] for b in sup[a]]) if sup[a] else set()
+    if any(a in sup[a] or any(a in sup[b] for b in sup[a]) for a in ids):
+        return None                                            # cycle or mutual declaration
+    order = sorted(ids, key=lambda a: -len(sup[a]))
+    ok = all(order[j] in sup[order[i]] for i in range(len(order)) for j in range(i + 1, len(order)))
+    return tuple(order) if ok else None
