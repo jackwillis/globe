@@ -162,6 +162,17 @@ class CompositionTests(unittest.TestCase):
         self.assertEqual(atlas, resolve([]))
         self.assertTrue(issues)
 
+    def test_non_utf8_manifest_and_sealed_file_use_embedded_fallback(self):
+        # Invalid UTF-8 is a corrupt optional file, not an application exception.
+        for raw in (b"\xff", b"\xc3("):
+            with self.subTest(raw=raw):
+                e, errors = select_manifest(self.folder, raw, Reads())
+                self.assertEqual(e, resolve([]))
+                self.assertTrue(errors)
+                d, errors = read_sealed(raw)
+                self.assertEqual(d, resolve([]))
+                self.assertEqual(errors, [["sealed", "invalid-seal"]])
+
     def test_well_formed_sealed_mutation_is_detected(self):
         seal = json.loads(publish_sealed(self.paths))
         seal["atlas"]["selected"][0]["value"] = "tampered"
