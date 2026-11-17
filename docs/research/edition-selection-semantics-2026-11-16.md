@@ -198,7 +198,7 @@ python3 -B -m unittest discover -s atlas/research -p 'test_edition_selection.py'
 
 ### 9.5 Results (Linux x86_64, Python 3.14.8, host-only, branch `research/edition-selection-semantics-20261116`)
 
-**73 tests, 73 pass.** The original 47 are retained: 46 unchanged apart from the helper rename below, and one rewritten (see edits). New: 22 for the two findings and 3 for replay and hint consequences, plus 1 added when an original test was split in two.
+**73 tests, 73 pass.** The original 47 are retained: 45 unchanged apart from the helper rename below, and 2 edited (see edits). New: 22 for the two findings and 3 for replay and hint consequences, plus 1 added when an original test was split in two.
 
 | Prediction | Outcome | Evidence |
 | --- | --- | --- |
@@ -220,7 +220,7 @@ python3 -B -m unittest discover -s atlas/research -p 'test_edition_selection.py'
 - Contextual `query` ranks only by the explicit priority. New statuses: `precedence-unresolved` and `source-conflict`. A lone claimant is its own source and needs no rank.
 - Previously an installed source missing from the priority list was silently ignored. Now, if its claim disagrees, the result is unresolved.
 
-**Edits to original tests (all for stated reasons):** (1) 46 tests renamed `make_config` to `ranked_config` because they intend an explicit user ranking; (2) `test_agreeing_lower_source_is_not_a_conflict` used the same source ID twice, which is now rejected, so it uses a distinct mirror ID; (3) `test_unrelated_source_does_not_reorder` added World, which overlaps Madison, and relied on unranked sources being ignored; it now adds a genuinely non-overlapping source, and a new test asserts the overlapping case is unresolved. No assertion was weakened; the first behaviour change (3) is intentional.
+**Edits to original tests (all for stated reasons):** (1) every call to `make_config` in the original tests became `ranked_config`, because those tests intend an explicit user ranking; (2) `test_agreeing_lower_source_is_not_a_conflict` used the same source ID twice, which is now rejected, so it uses a distinct mirror ID; (3) `test_unrelated_source_does_not_reorder` added World, which overlaps Madison, and relied on unranked sources being ignored; it now adds a genuinely non-overlapping source, and a new test asserts the overlapping case is unresolved. No assertion was weakened; the behaviour change in (3) is intentional.
 
 ### 9.7 Mutation check
 
