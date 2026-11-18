@@ -40,5 +40,12 @@ int main() {
     const auto invalid = fit_classic_window_to_heap(std::numeric_limits<int>::min(),
                                                     std::numeric_limits<int>::min(), sidebar, 0);
     CHECK(invalid.width == 476 && invalid.height == 256);
+    // #116: the memory explanation is offered once per session, however often growth is refused.
+    ClassicMemoryRefusalNotice notice;
+    CHECK(notice.should_explain());
+    for (int i = 0; i < 100; ++i)
+        CHECK(!notice.should_explain());
+    ClassicMemoryRefusalNotice next_session;
+    CHECK(next_session.should_explain());
     return TEST_MAIN_RESULT();
 }
