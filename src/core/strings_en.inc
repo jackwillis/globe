@@ -43,3 +43,4 @@
 "Trackball Drag",
 "Night Side",
 "Measure",
+"This window size needs more memory. Quit Poodle Earth and increase its memory size using Get Info in the Finder.",

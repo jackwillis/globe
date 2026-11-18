@@ -30,4 +30,23 @@ constexpr ClassicWindowSize fit_classic_window_to_heap(int width, int height, in
     }
     return {width, height}; // minimum may still exceed an exhausted budget
 }
+// #116: a grow-box enlargement is refused only when the larger buffers cannot be allocated, which
+// on Classic means the application partition is too small. The first such refusal in a session
+// is worth explaining; later ones (and ordinary size limits, which never reach the allocation)
+// are not. The caller shows the alert after GrowWindow has returned, never inside the drag.
+class ClassicMemoryRefusalNotice {
+  public:
+    // A refused shrink (the new buffers are built before the old are freed, so it can fail too)
+    // is not explained: raising the partition is not the remedy the message offers. It does not
+    // use up the session's one explanation either.
+    constexpr bool should_explain(int old_width, int old_height, int new_width, int new_height) {
+        const bool enlarging = new_width > old_width || new_height > old_height;
+        const bool first = enlarging && !explained_;
+        explained_ = explained_ || enlarging;
+        return first;
+    }
+
+  private:
+    bool explained_ = false;
+};
 } // namespace globe
