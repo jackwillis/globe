@@ -6,12 +6,12 @@ repository root with `python3 -m http.server 8000 --bind 127.0.0.1` and open
 <http://127.0.0.1:8000/site/>. The stylesheet and screenshot URLs are relative to the page. The site has no
 build step or app-build dependency.
 
-The current `site/images/` previews reuse the exact existing repository image
-blobs from `docs/images/`: `os9-tiger-classic.png` is an OS 9 application
-running in **Tiger Classic on a G4** (2026-11-02); `map.png` and
-`relief.png` are **headless 640×480 renders**, not OS 9 GUI screenshots.
-Captions and alt text distinguish these sources. Do not label these images as
-bare Mac OS 9.2.2 hardware captures.
+The images in `site/images/` are cropped copies of **bare Mac OS 9.2.2 captures** from the
+Power Mac G4 (2026-11-17, Command-Shift-3, 1280×960), converted from PICT to PNG without
+scaling. They are PNG, not JPEG: the app draws flat 16-bit colour, and lossless PNG is smaller than
+JPEG at quality 85-90 and keeps the text crisp. The full-screen masters, crop boxes and
+provenance are in [images/os9/README.md](images/os9/README.md). Alt text and captions say they are
+bare OS 9 captures; do not mix in Tiger Classic captures or headless renders without saying so.
 
 Archivo and Leckerli One load from Google Fonts when available. The page falls
 back to local fonts offline.
@@ -34,10 +34,6 @@ corresponding source archive, tagged ReadMe/license/credits links, and tested
 compatibility and shipped features together. Use the asset URLs from the
 actual release. Check the live download and source archive as a visitor.
 
-When [#118](https://github.com/jackwillis/globe/issues/118) supplies authentic
-bare OS 9 captures, keep the originals and conversion history, place optimized
-copies in `site/images/`, and replace the **interim Tiger Classic hero** with
-an accurately labeled bare OS 9 screenshot. Give it an intrinsic width and height,
-descriptive alt text, and a caption naming the captured version and OS.
-Use additional supporting figures only if they show distinct features, and keep
-capture provenance with #118.
+To change a screenshot, keep the master in `docs/images/os9/`, record the crop in its README, and
+give each figure an intrinsic width and height, descriptive alt text and a caption naming the OS.
+Use additional figures only if they show distinct features.
