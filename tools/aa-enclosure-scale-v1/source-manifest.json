@@ -1,0 +1,17 @@
+{
+  "files_sha256": {
+    "EXECUTION.md": "2a7679dceab487e933ede56a7df4f6bea2c7d0d82bb5601e436509b4b0062b50",
+    "README.md": "5b36ea459a92ad40c8b5bb4bc815674647f28eb22a8d82b8f95e40f637577b88",
+    "REPORT.md": "7fede2fa75ce56fda960c8ffa8402c8f65e2585b698562e849fddd9638a7c24a",
+    "analyze.py": "c5b3abec378b4a23d06bdca76c85960962bec2ddef71754ab28f8f2241e4ca86",
+    "controls_original.py": "b7b948a00167ec6e5b9e9f8a2bbc59856bf29b4f54a05981387eb69554befcee",
+    "enclose.py": "06f2cda0efd4649426b4928908600e0a6fb80de56d70ab9fbfd0f1b98cca2f49",
+    "reliability.py": "bebc35bfc3dbe8c4503ae954a737b71ebd084205fcd47fdd8e7160e8f161db12",
+    "select_tiles.py": "eadf00bc2d45c95d5b2bdb7d95c72ea14dabc4d9ed642ae056a02e7f6f7d76f7",
+    "worker.py": "43415a0bf89cd6577fbf65bab1758289b6a039db51ef51fb182e7a4d3eef18e8"
+  },
+  "baseline": "33d7d09f41697744440f95dfddf7fbe0f1b2fd7e",
+  "original_protocol_amended": false,
+  "pre_stage2_freeze_sha256": "9c181233d82a41cbc7182c1251eeb463161d27ffb190e43008d8ea4a81b20fb9",
+  "selection_sha256": "04eb3761453e9dd815fee2f818258d6f2322f077de6e6b99d7ffab717998747a"
+}
