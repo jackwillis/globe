@@ -10,8 +10,9 @@ The images in `site/images/` are cropped copies of **bare Mac OS 9.2.2 captures*
 Power Mac G4 (2026-11-17, Command-Shift-3, 1280×960), converted from PICT to PNG without
 scaling. They are PNG, not JPEG: the app draws flat 16-bit colour, and lossless PNG is smaller than
 JPEG at quality 85-90 and keeps the text crisp. The full-screen masters, crop boxes and
-provenance are in [images/os9/README.md](images/os9/README.md). Alt text and captions say they are
-bare OS 9 captures; do not mix in Tiger Classic captures or headless renders without saying so.
+provenance are in [images/os9/README.md](images/os9/README.md). The page keeps captions short (the hero
+says "On a Power Mac G4."); the OS and build details live in that README. Do not mix in Tiger Classic
+captures or headless renders without saying so.
 
 Archivo and Leckerli One load from Google Fonts when available. The page falls
 back to local fonts offline.
