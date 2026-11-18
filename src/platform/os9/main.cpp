@@ -336,11 +336,13 @@ class Application {
                                                 static_cast<short>(height));
                                 apply(Resize{globe_width, height});
                                 InvalRect(&window_->portRect); // the sidebar moved: redraw it
-                            } else {
+                            } else if (resize_notice_.should_explain(
+                                           window_->portRect.right - window_->portRect.left,
+                                           window_->portRect.bottom - window_->portRect.top, width,
+                                           height))
+                                explain_resize_refusal(); // the alert's own sound is the beep
+                            else
                                 SysBeep(10); // no memory for the larger buffers: keep the old size
-                                if (resize_notice_.should_explain())
-                                    explain_resize_refusal();
-                            }
                         }
                     }
                 } else if (hit && hit == prefs_window_.window()) {

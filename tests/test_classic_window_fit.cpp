@@ -42,10 +42,14 @@ int main() {
     CHECK(invalid.width == 476 && invalid.height == 256);
     // #116: the memory explanation is offered once per session, however often growth is refused.
     ClassicMemoryRefusalNotice notice;
-    CHECK(notice.should_explain());
+    CHECK(!notice.should_explain(800, 600, 800, 600)); // unchanged size
+    CHECK(!notice.should_explain(800, 600, 640, 480)); // a refused shrink neither explains...
+    CHECK(!notice.should_explain(800, 600, 800, 500));
+    CHECK(notice.should_explain(800, 600, 900, 600)); // ...nor spends the explanation
     for (int i = 0; i < 100; ++i)
-        CHECK(!notice.should_explain());
-    ClassicMemoryRefusalNotice next_session;
-    CHECK(next_session.should_explain());
+        CHECK(!notice.should_explain(800, 600, 1000, 700));
+    ClassicMemoryRefusalNotice height_only, next_session;
+    CHECK(height_only.should_explain(800, 600, 700, 700)); // one dimension growing is enlarging
+    CHECK(next_session.should_explain(800, 600, 801, 600));
     return TEST_MAIN_RESULT();
 }

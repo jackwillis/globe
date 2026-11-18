@@ -36,9 +36,13 @@ constexpr ClassicWindowSize fit_classic_window_to_heap(int width, int height, in
 // are not. The caller shows the alert after GrowWindow has returned, never inside the drag.
 class ClassicMemoryRefusalNotice {
   public:
-    constexpr bool should_explain() {
-        const bool first = !explained_;
-        explained_ = true;
+    // A refused shrink (the new buffers are built before the old are freed, so it can fail too)
+    // is not explained: raising the partition is not the remedy the message offers. It does not
+    // use up the session's one explanation either.
+    constexpr bool should_explain(int old_width, int old_height, int new_width, int new_height) {
+        const bool enlarging = new_width > old_width || new_height > old_height;
+        const bool first = enlarging && !explained_;
+        explained_ = explained_ || enlarging;
         return first;
     }
 
