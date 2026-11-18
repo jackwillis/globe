@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(GLOBE_SANITIZE "Build with AddressSanitizer and UBSan (host only)" OFF)
 option(GLOBE_BUILD_TESTS "Build the unit tests" ON)
+option(GLOBE_BUILD_FLTK "Build the experimental FLTK 1.4 workbench" OFF)
 
 # The core targets old, small systems: no exceptions, no RTTI, anywhere.
 add_library(globe_core
@@ -141,18 +142,33 @@ if(Python3_FOUND)
 endif()
 
 find_package(X11)
-if(X11_FOUND AND TARGET globe_embedded_atlas)
+if((X11_FOUND OR GLOBE_BUILD_FLTK) AND TARGET globe_embedded_atlas)
   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/embed_atlas.py
       ${CMAKE_SOURCE_DIR}/data/elevation-0.5deg.gelv ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp FineElevation
     DEPENDS data/elevation-0.5deg.gelv tools/embed_atlas.py)
   add_library(globe_embedded_fineelevation ${CMAKE_BINARY_DIR}/embedded_fineelevation.cpp)
   target_link_libraries(globe_embedded_fineelevation PUBLIC globe_core)
+endif()
+
+if(X11_FOUND AND TARGET globe_embedded_atlas)
   add_executable(globe-x11 src/platform/x11/main.cpp src/platform/x11/info_window.cpp src/platform/x11/style_window.cpp src/platform/x11/prefs_pane.cpp)
   target_include_directories(globe-x11 PRIVATE ${X11_INCLUDE_DIR})
   target_link_libraries(globe-x11 PRIVATE globe_embedded_fineelevation globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+if(GLOBE_BUILD_FLTK)
+  if(NOT TARGET globe_embedded_atlas)
+    message(FATAL_ERROR "The FLTK workbench requires Python 3 to embed the atlas")
+  endif()
+  find_package(FLTK 1.4 CONFIG REQUIRED)
+  add_executable(globe-fltk src/platform/fltk/main.cpp)
+  target_link_libraries(globe-fltk PRIVATE fltk::fltk globe_embedded_fineelevation
+      globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation
+      globe_platform_common globe_clock_posix)
+  target_compile_options(globe-fltk PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 if(GLOBE_SANITIZE)
