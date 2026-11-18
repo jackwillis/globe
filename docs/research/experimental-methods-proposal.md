@@ -31,10 +31,15 @@ High-value open questions include the semantic truth of sourced fact cards ([#13
 1. **Frame the decision.** Name the question, relevant user or system goal, and meaningful alternatives (including no change). Use Goal–Question–Metric where applicable.
 2. **Model and predict.** State a favored and competing explanation; a predeclared primary outcome, guardrails and failure criterion. For a causal claim, define treatment, counterfactual, experimental unit and the estimand; use a DAG when causal identification is genuinely at issue. A deterministic parser test does not need a causal DAG.
 3. **Choose the cheapest distinguishing test.** Consider an independent oracle, small reviewed or synthetic fixture, targeted mutation, metamorphic property, property-based generator, matched host benchmark, factorial experiment, cognitive walkthrough or observed human task. Method follows uncertainty, not vice versa.
-4. **Predeclare the protocol.** Specify inputs, controlled factors, randomization/blocking where useful, thresholds, stopping rule, failure/missing-data policy, exact toolchain and environmental restrictions *before observing the outcome*.
-5. **Run and preserve evidence.** Record commit, reproducible commands, input hashes, seed, OS/compiler/hardware/emulation, individual observations including failures and outliers, and independent correctness checks. Do not access the G4, acquire a new source, or alter another agent's work without authorization.
-6. **Analyze with limits.** Report paired differences and uncertainty where appropriate, guardrail failures, counterexamples and alternative explanations. Repeated frames on one computer are not independent machines; a host test is not an OS 9 acceptance test. Do not infer causality from unmatched before/after runs.
-7. **Recommend, then obtain an owner decision.** Outcomes: *adopt*, *reject*, *revise and repeat*, or *defer*. A successful experiment does not authorize implementation, merges, source approval or release-scope changes.
+4. **Check instrument feasibility before the final freeze, where warranted.** For an expensive or approximate reference, run a bounded, candidate-blind preflight on representative inputs at the *actual proposed decision precision*, coverage, computation/memory ceilings and stop rules. Verify the measurement boundary, known-answer controls and error or uncertainty justification. A looser preflight does not establish feasibility at a stricter final tolerance. If the instrument fails, redesign or report infeasibility *before* freezing; a preflight is not a scored candidate comparison. Simple deterministic tests need only a proportionate oracle check.
+5. **Predeclare and freeze the protocol.** Specify inputs, controlled factors, randomization/blocking where useful, decision margin, reference uncertainty requirements, admission gates, thresholds, stopping rule, missing/failed-trial policy, exact toolchain and environmental restrictions *before scored observations*. No post-hoc relaxation, cherry-picked fixture subsets or unrecorded amendment.
+6. **Run and preserve evidence.** Record commit, reproducible commands, input hashes, seed, OS/compiler/hardware/emulation, individual observations including failures, outliers and incomplete runs, and independent correctness checks. Do not access the G4, acquire a new source, or alter another agent's work without authorization.
+7. **Classify validity before analyzing effects.** First establish that the instrument and protocol support the intended inference. Distinguish valid evidence that supports/refutes the hypothesis, valid but insufficient evidence, instrument-limited reference/convergence failures and protocol-invalid runs. The last two are *not* evidence against the candidate. Where valid, report paired differences and uncertainty, guardrail failures, counterexamples and alternative explanations. Repeated frames on one computer are not independent machines; host tests are not OS 9 acceptance.
+8. **Recommend, then obtain an owner decision.** Outcomes: *adopt*, *reject*, *revise and repeat*, or *defer*; always record the evidence-validity classification separately from the decision. A successful experiment does not authorize implementation, merges, source approval or release-scope changes.
+
+### Proportionality check
+
+Before adding an independent implementation, statistical procedure, review round, or expensive control, name the specific failure mode it would detect, the cheapest credible alternative, and what observation would make further effort unnecessary. Use the smallest method that can support the decision. A demanding reference can be less scientific if its precision is infeasible and the limitation is discovered only after the protocol freeze.
 
 ### Choosing a method
 
@@ -53,13 +58,19 @@ Every substantive experiment's owning issue or PR should link a small protocol a
 
 - **Identity:** experiment ID, owning issue, status, date, investigator, commit.
 - **Question:** decision, hypotheses and alternative, method, experimental unit, population/domain.
-- **Protocol:** treatment/control, fixed and varied conditions, random seed, primary outcome, guardrails, predeclared threshold, stop rule, missing/failed trial policy.
+- **Protocol and feasibility:** treatment/control, fixed and varied conditions, random seed, primary outcome, guardrails, decision margin, instrument-validation preflight where needed (representative input, tolerance, precision, resource ceiling and known-answer checks), admission conditions, stop rule, missing/failed-trial policy.
 - **Provenance:** input fixture/source licenses and hashes, exact commands, relevant build and toolchain, machine/OS/emulation, authorization boundaries.
-- **Observations:** full raw results and failures, independently checked expected behaviors, analysis instructions, actual versus predicted.
-- **Interpretation:** uncertainty, counterexamples, alternative explanations, generalization limits, recommended next step.
+- **Observations:** full raw results, nonconvergent/partial/invalid trials and reasons, independently checked expected behaviors, analysis instructions, actual versus predicted.
+- **Interpretation:** evidence classification (*supported/refuted on valid evidence*, *valid but insufficient*, *instrument-limited*, or *protocol-invalid*); uncertainty, counterexamples, alternative explanations, generalization limits, recommended next step. An incomplete measurement cannot become a negative candidate verdict.
 - **Decision:** *recorded separately by the authorized owner*, not embedded as an automatic conclusion.
 
 Simple Markdown/JSON/CSV is enough. No general database, telemetry service, new runtime dependency, or second issue tracker.
+
+### Cross-session case: PE-AA-01 (#25)
+
+A November 18 interagent peer review of the antialiasing experiment identified a specific process failure: an initial numerical-reference preflight demonstrated a tolerance of 1/1024, but the later approved decision margin required a convergence delta of 0.00009765625 without validating that stricter target on representative geographic geometry. The first 15 geographic references reached the fixed 1024-sample ceiling inconclusively. Exact A replay, independent instruments and blinding protected against a false renderer verdict; the infeasibility was nevertheless discovered late. This is an **instrument-feasibility finding**, not evidence for or against AA renderer B.
+
+The PE-AA-01 steering session retains ownership of the experiment. This note records its transferable methodological lesson only: validate reference feasibility at the *actual* intended precision before a scoring freeze, preserve inconclusive runs, and obtain separate approval for any new protocol. Do not change #25's thresholds, ownership, artifacts or existing acceptance criteria from this document.
 
 ## Proposed, optional tooling
 
@@ -67,9 +78,9 @@ Simple Markdown/JSON/CSV is enough. No general database, telemetry service, new 
 
 **Reusable Claude plugin (separate possible PR):** Candidate narrowly triggered skills *design-experiment* and *review-evidence* should extend, not restate, the existing systems-analysis and break-things skills. Test them against matched unassisted prompts on known-answer and adversarial cases. Use blinded or independently scored outcomes where feasible. Skill text is not evidence of skill effectiveness.
 
-## First recommended pilot: #137 geographic-facts correctness
+## First pilot: #137 geographic-facts correctness
 
-**Research only.** Before work, recheck #137 assignment, comments and related PRs. Use existing permitted or entirely synthetic facts; no source acquisition or production-pack migration. Ask whether changes in entity identity, population date/definition, qualified missing values, conflicting assertions, or malformed provenance can silently create confident false cards. Check independent expected outputs and deterministic fail-closed behavior; record adversarial cases and what the current software does versus what a future contract should require.
+**Research only.** A bounded synthetic pilot now exists as draft [PR #191](https://github.com/jackwillis/globe/pull/191); it does not establish runtime geographic truth. Before further work, recheck #137 assignment, comments and related PRs. Use existing permitted or entirely synthetic facts; no source acquisition or production-pack migration. Ask whether changes in entity identity, population date/definition, qualified missing values, conflicting assertions, or malformed provenance can silently create confident false cards. Check independent expected outputs and deterministic fail-closed behavior; record adversarial cases and what the current software does versus what a future contract should require.
 
 **Potential result:** a bounded facts-validation specification and list of missing test guards for #137. **Not established by this pilot:** global geographic correctness, approval of source rights or geographic identities, G4 performance, OS 9 acceptance, or completion of #137.
 
