@@ -93,3 +93,5 @@ operation counts. `statistics_plan.py` fixes paired geometry bootstrap mechanics
 private directory. Do not give reviewers the old mixed raw-image package or original identity key.
 A complete timed comparison runner remains subject to implementation/review before any timed run;
 this correction supplies a frozen measurement specification, not a claim that it was executed.
+
+Final quality-only preparation and exact future commands: [FINAL-PRE-SCORING.md](FINAL-PRE-SCORING.md). No geographic scores have been run.

@@ -26,7 +26,7 @@ for i,row in enumerate(rows,1):
         (a.review/filename).write_bytes(png565(a.fixtures/(row['fixture']+'-'+arm+'.rgb565')))
         key[filename]=dict(fixture=row['fixture'],arm=arm)
         page.append(f'<h3>{label}</h3><img width="640" height="480" src="{filename}" alt="{pair} {label}">')
-    judgments.append(pair+',,,,,,,,')
+    judgments.append(pair+',,,,,,,')
 (a.review/'review.html').write_text('\n'.join(page)+'\n')
 (a.review/'judgments.csv').write_text('\n'.join(judgments)+'\n')
 a.private_key.write_text(json.dumps(key,indent=2)+'\n');a.private_key.chmod(0o600)

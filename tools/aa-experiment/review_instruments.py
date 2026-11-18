@@ -30,9 +30,13 @@ def feature_metrics(candidate, reference, background, source, support, probe_pix
         if np.max(refratios[y0:y1,x0:x1])>=.1:
             reference_hits+=1
             hits+=bool(np.max(ratios[y0:y1,x0:x1])>=.1)
-    return dict(peak_contrast=float(contrast[eligible].max()) if eligible.any() else 0,
-                reference_peak_contrast=float(refcontrast[eligible].max()) if eligible.any() else 0,
-                peak_retention=float(ratios[eligible].max()) if eligible.any() else 0,
+    peak=float(contrast[eligible].max()) if eligible.any() else 0
+    reference_peak=float(refcontrast[eligible].max()) if eligible.any() else 0
+    return dict(peak_contrast=peak,
+                reference_peak_contrast=reference_peak,
+                peak_ratio_to_source=float(ratios[eligible].max()) if eligible.any() else 0,
+                reference_peak_ratio_to_source=float(refratios[eligible].max()) if eligible.any() else 0,
+                peak_retention=peak/reference_peak if reference_peak>0 else None,
                 visibility_eligible=reference_hits,visibility_hits=hits,
                 visibility_fraction=hits/reference_hits if reference_hits else None)
 
@@ -71,6 +75,14 @@ def self_test():
     m=feature_metrics(out,ref,bg,0xffff,support,[(2.5,2.5)])
     assert m['peak_contrast']==1 and m['visibility_fraction']==1
     assert feature_metrics(bg,ref,bg,0xffff,support,[(2.5,2.5)])['visibility_fraction']==0
-    print('PASS peak/visibility analytical controls')
+    half=bg.copy();half[2,2]=0x8410
+    m=feature_metrics(half,ref,bg,0xffff,support,[(2.5,2.5)])
+    expected=(132+130+132)/(3*255)
+    assert abs(m['peak_contrast']-expected)<1e-15
+    assert m['reference_peak_contrast']==1
+    assert m['peak_ratio_to_source']==m['peak_retention']==expected
+    assert m['reference_peak_ratio_to_source']==1
+    assert feature_metrics(bg,np.zeros_like(ref),bg,0xffff,support,[])['peak_retention'] is None
+    print('PASS peak/visibility analytical controls, half-intensity retention and zero reference')
 
 if __name__=='__main__': self_test()

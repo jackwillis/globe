@@ -1,3 +1,5 @@
+**Final correction record:** [FINAL-PRE-SCORING.md](FINAL-PRE-SCORING.md) supersedes conflicting metric, bootstrap, control and readiness claims.
+
 # PE-AA-01 Phase 3B — original A/B implementation and measurement plan
 
 **Review correction:** [REVIEW-AMENDMENT.md](REVIEW-AMENDMENT.md) supersedes conflicting

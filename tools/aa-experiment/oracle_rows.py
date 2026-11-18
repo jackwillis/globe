@@ -167,6 +167,8 @@ class Oracle:
         if bg.shape!=(self.height,self.width):
             raise ValueError('background dimensions')
         rgb=expand(bg)/255.; quant=bg.copy(); floor=bg.copy(); log=[]
+        if margin is not None and (not math.isfinite(margin) or margin<=0):
+            raise ValueError('finite positive decision margin required')
         limit=min(1/1024, .05*margin) if margin is not None else 1/1024
         if limit<=0:
             raise ValueError('positive decision margin required')
