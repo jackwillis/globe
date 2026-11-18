@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-18",
+  "files_sha256": {
+    "DESIGN.md": "4f818a76fea0da115fba6d28684c40c5591ebc14f036069bed5f798456bb5900",
+    "README.md": "7643a225be4ef673210d3510ca29c900b48fdb23f7c12c877d56e2e7ce235ea8",
+    "REPORT.md": "fbf76a86e19fc184d437486e731ccc1bbc2e8b64371a2be556a1b3364e9b8647",
+    "controls.py": "27a8e2d4e783acba8d9e5bde004494503b534a272c2e183b1965c4b9ef94b56a",
+    "enclose.py": "e7ea4daf588256e2b6fe443c60259e6ab471e6016de3eecc4b12d91d61b57215",
+    "pre-geographic-source-freeze.json": "531816d0f28712f7cabd0f378aaa9e7d7319e83a05575c0dcb176b1b74ffc434",
+    "run_pilot.py": "047abb64e0106afe560534c8bdd79b32676efc6950ac1abe5d91d4c890272569",
+    "validate_results.py": "b1aa8c3ccbc0b8de609d6bcf15f6a0a176ef7e3283fd1241c96b1f13b88faaf9"
+  },
+  "producer_freeze": "pre-geographic-source-freeze.json",
+  "producer_modified_after_results": false,
+  "post_result_additions": "independent rational result/constant checker and feasibility report only",
+  "frozen_scored_experiment": "5dd566d942b01b8b8e92e0cb1cc3507910681532",
+  "protocol_amended": false
+}
