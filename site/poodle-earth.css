@@ -2,6 +2,8 @@
 
 :root {
   color-scheme: light;
+  --small: .8rem;
+  --muted: #4a4a4a;
   font: 112.5%/1.55 "Archivo", "Geneva", "Lucida Grande", "Lucida Sans Unicode", Verdana, system-ui, sans-serif;
   color: #171717;
   background: #fffefa;
@@ -35,7 +37,9 @@ a:hover { text-decoration-thickness: .13em; }
   align-items: center;
   gap: .25rem 1rem;
 }
-.actions, .release { font-size: .85rem; }
+/* One small size for secondary text: buttons row, release line, captions, footer. */
+.actions, .release, figcaption, .footer { font-size: var(--small); line-height: 1.45; }
+.release, figcaption, .footer { color: var(--muted); }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
 h1 { font-family: "Leckerli One", Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
@@ -67,7 +71,7 @@ img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
 .hero-shot { margin-top: 1.5rem; }
 .hero-shot img, .look-gallery img, .select-shot img { border: 1px solid #c0c0c0; }
-figcaption { font-size: .78rem; line-height: 1.4; color: #4a4a4a; margin-top: .4rem; }
+figcaption { margin-top: .4rem; }
 .select-shot { margin-top: 1rem; }
 .look-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
 @media (max-width: 32rem) {
