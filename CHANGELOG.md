@@ -4,7 +4,7 @@ This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
 
-- Classic: when a grow-box enlargement is refused for lack of memory, an alert now explains it and points to Get Info, once per session (#116). Host-tested and cross-built; not yet run on the G4.
+- Classic: when a grow-box enlargement is refused for lack of memory, an alert now explains it and points to Get Info, once per session (#116). Host-tested, and checked on the G4 under Mac OS 9.2.2 at a 12 MB partition: one alert and one beep, no repeat in a session, alert again after relaunch.
 - Classic Controls lists the Command equivalents alongside plain shortcuts and identifies plain-only and Command-only keys (#144).
 - Help for the controls (#40): H or ? (and Apple menu > Controls on Classic) shows the keys and gestures in the information pane on both front ends, from the one table in `globe/controls.hpp` that also defines the shortcut keys. Escape hides it. Host-tested and cross-compiled; not yet run on the G4.
 - The Classic About window displays the full project version.
