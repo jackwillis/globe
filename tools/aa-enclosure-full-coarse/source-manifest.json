@@ -1,0 +1,26 @@
+{
+  "baseline_commit": "7ab358f2ca6006f65d6bdea41acecc8de8d8791d",
+  "baseline_tree": "c313a92ce62ccde27814631f26bf42bca8211a04",
+  "original_scored_protocol_amended": false,
+  "candidate_results_opened": false,
+  "files_sha256": {
+    "EXECUTION.md": "9a4102c829b18848d7a6ac63b2e4e78cf8a89f157ff21ad6769d8557f66af416",
+    "README.md": "f72e838389d8045637e03c0ec61023010af7a89c48fa3cca67ac723688eefc5f",
+    "REPORT.md": "f936f09e7fa6b63870940787dbd58023ecc6d086af815c0d98f141a416b81612",
+    "account_resources.py": "0080f09f638909835b36a09be62fd1511b611ea42a3b3a71a6489f47c5df6d8d",
+    "analyze.py": "e03eef7c02b0430b284ea4111b03a7e67c2a3eae13a9635a5f1c594649035193",
+    "check_recovery.py": "7cae19534c05bcfd1d8c1eebb9b150c31131393df01e5f6f912f30e33ebb6fe7",
+    "cost_diagnostics.py": "02490486af7b1cf86bf72983fc2342310ece19e62cb26eb6203b2cad3e8b5c87",
+    "geometry_diagnostics.py": "10b133fdacf0b0d4f1771445699afe74706226b373fd91382cfd1c1191088230",
+    "retained.py": "f28be04ca8244365318dc95814e0c1068cf82ffaa04abec7195d65641467606b",
+    "revise_projection.py": "c99ea7a3a872ec2c3f2cd6726426e855c4c51836b4ca5d0daad2e7e7eefff3ba",
+    "run.py": "692bbb76786954b99e26376199bbcea5f4724e9a6751cbdc9667fbfbba703314",
+    "supervise.py": "b3748fa672c38dfcb5cf0a402ccd3bbc60feff677100bd3953b8036fed964e8b",
+    "verify.py": "25f3af5b64aee2a7798504e0e5dc666dfd887d993dcd9b933aebd84f6005e490",
+    "write_report.py": "04ff62cc42cc2aad0e53f4686f64b04c5b7bd11b2bcbf3b3e00cf7a3bce252ce"
+  },
+  "evidence_freezes_sha256": {
+    "source-freeze.json": "d7c3c3d0c6760d116837764f7914821d2291dae77d5b1b408ac60be0b8422a10",
+    "continuation-freeze.json": "07bdf694a44b7fea71d5998a19dcd0d5ca8d1646ade17b413c479a621a74cc23"
+  }
+}

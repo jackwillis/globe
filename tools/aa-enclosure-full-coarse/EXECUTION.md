@@ -35,3 +35,20 @@ source-freeze.json before the first whole-fixture tile. Geometry/BVH constructed
 Report measured setup,tile,checkpoint/orchestration overhead, CPU/wall/RSS/storage,
 precision state, unresolved area,predicates/cells/depth and discrete RGB565 ranges.
 Comparison uses preserved scale-v1 cost model; no outcomes inform selection or stopping.
+
+## Recorded operational repair, before continuation
+
+Supervisor1 statted a temporary path after atomic rename and raised FileNotFoundError.
+The worker was terminated with1326 complete tiles and48 completed pixels of tile1326.
+Terminal worker rusage is missing; do not invent it. interruption1 retains the original
+log, checkpoint and incident. A conservative phase1 CPU upper bound uses elapsed wall
+since budget-start (single-thread worker, earlier than launch). Phase2 CPUsoft995/hard1000,
+clean990, plus300 allowance and that recorded upper bound stay below1800. Absolute elapsed
+budget guard remains unchanged. No numerical producer, target, traversal or quotas changed.
+Supervisor tolerates disappearing temporary files. Continuation verifies every completed
+payload hash/complete flag and skips exactly0..1325; only interrupted tile1326 is recomputed.
+Its original partial bounds remain separately retained, not upgraded to complete certificates.
+This is recovery within the same owner-authorized experiment, not a second fixture/run or
+relaxed resource envelope. This operational repair supersedes the initial no-retry statement
+only for the interrupted tile and is fully recorded before continuation. No scored protocol
+is amended. run.py initial version remains in the source freeze and git history.

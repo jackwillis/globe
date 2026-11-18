@@ -7,6 +7,15 @@ from pathlib import Path
 from retained import Retained,read_geometry
 out=Path(sys.argv[1]).resolve();out.mkdir(exist_ok=True);(out/'tiles').mkdir(exist_ok=True)
 start=time.monotonic();cpu=time.process_time();stored=0;finished=0;current=None;progress=[]
+# Resume only this same bounded experiment after recorded supervisor failure.
+existing=[]
+if (out/'completed.jsonl').exists():
+ for line in (out/'completed.jsonl').read_text().splitlines():
+  rec=json.loads(line);i=rec['index'];assert i==len(existing)
+  payload=(out/'tiles'/f'{i:04d}.json.gz').read_bytes();assert hashlib.sha256(payload).hexdigest()==rec['sha256']
+  cert=json.loads(gzip.decompress(payload));assert cert['complete'] and len(cert['pixels'])==64 and cert['tile_index']==i
+  existing.append(rec);stored+=len(payload)
+finished=len(existing)
 def atomic(path,raw):
  global stored
  if stored+len(raw)>900*1024**2:raise RuntimeError('storage budget stop')
@@ -15,7 +24,7 @@ def atomic(path,raw):
  os.replace(temp,path)
 def abort(sig,frame):raise RuntimeError('resource signal '+str(sig))
 signal.signal(signal.SIGXCPU,abort);signal.signal(signal.SIGALRM,abort)
-resource.setrlimit(resource.RLIMIT_AS,(384*1024**2,)*2);resource.setrlimit(resource.RLIMIT_CPU,(1445,1450));signal.alarm(2090)
+resource.setrlimit(resource.RLIMIT_AS,(384*1024**2,)*2);resource.setrlimit(resource.RLIMIT_CPU,(995,1000));signal.alarm(2090)
 root=Path('/tmp/pe-aa-phase3b-fixtures');gp=root/'view5-r220-relief.geometry';bp=root/'view5-r220-relief-background.rgb565';allowed={str(gp),str(bp)};opened=set()
 def audit(event,args):
  if event=='open' and isinstance(args[0],(str,bytes)):
@@ -29,10 +38,10 @@ status='unknown';error=None
 try:
  t=time.process_time();w=time.monotonic();raw=gp.read_bytes();ff=read_geometry(gp);data=bp.read_bytes();a=Retained(ff,data)
  setup={'cpu_seconds':time.process_time()-t,'wall_seconds':time.monotonic()-w,'primitive_count':sum(len(p) for _,_,p in a.geometry.features),'input_sha256':{gp.name:hashlib.sha256(raw).hexdigest(),bp.name:hashlib.sha256(data).hexdigest()}}
- atomic(out/'setup.json',json.dumps(setup).encode())
- for idx in range(4800):
+ atomic(out/'setup-continuation.json',json.dumps(setup).encode())
+ for idx in range(finished,4800):
   # 5 CPU / 10 wall seconds reserved for clean exit. Per-pixel limits unchanged.
-  if time.process_time()-cpu>=1440 or time.monotonic()-start>=2080:raise RuntimeError('clean resource budget stop')
+  if time.process_time()-cpu>=990 or time.monotonic()-start>=2080:raise RuntimeError('clean resource budget stop')
   current=idx;progress=[];tx,ty=idx%80,idx//80
   def checkpoint(p):
    progress.append(p)
@@ -51,5 +60,5 @@ try:
 except BaseException as e:status='stopped';error=type(e).__name__+': '+str(e)
 finally:
  signal.alarm(0)
- summary={'status':status,'error':error,'completed_tiles':finished,'interrupted_tile':current,'interrupted_pixels':len(progress) if current is not None else 0,'unstarted_tiles':4800-finished-(current is not None),'cpu_seconds':time.process_time()-cpu,'wall_seconds':time.monotonic()-start,'peak_rss_kib':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'compressed_tile_bytes':stored,'opened_inputs':sorted(opened),'candidate_results_opened':False}
+ summary={'status':status,'error':error,'completed_tiles':finished,'interrupted_tile':current,'interrupted_pixels':len(progress) if current is not None else 0,'unstarted_tiles':4800-finished-(current is not None),'continued_from_tile':len(existing),'cpu_seconds':time.process_time()-cpu,'wall_seconds':time.monotonic()-start,'peak_rss_kib':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'compressed_tile_bytes':stored,'opened_inputs':sorted(opened),'candidate_results_opened':False}
  atomic(out/'execution.json',json.dumps(summary,indent=2).encode());print(json.dumps(summary),flush=True)

@@ -5,12 +5,16 @@ import json,subprocess,sys,time,resource,os,signal
 from pathlib import Path
 out=Path(sys.argv[1]);b=json.loads((out/'budget-start.json').read_text());start=time.monotonic();r0=resource.getrusage(resource.RUSAGE_CHILDREN)
 with (out/'worker.log').open('w') as log,(out/'worker.stderr').open('w') as err:
+ (out/'supervisor-start.json').write_text(json.dumps({'epoch':time.time(),'monotonic':time.monotonic()}))
  p=subprocess.Popen([sys.executable,str(Path(__file__).with_name('run.py')),str(out)],stdout=log,stderr=err,start_new_session=True)
  reason=None
  while p.poll() is None:
   if time.monotonic()-start>2100 or time.monotonic()>b['start_monotonic']+2370:reason='parent elapsed limit'
   # Includes all outputs in this experiment, not just compressed bounds.
-  size=sum(f.stat().st_size for f in out.rglob('*') if f.is_file())
+  size=0
+  for f in out.rglob('*'):
+   try:size+=f.stat().st_size if f.is_file() else 0
+   except FileNotFoundError:pass
   if size>950*1024**2:reason='parent storage limit'
   if reason:
    os.killpg(p.pid,signal.SIGALRM)
