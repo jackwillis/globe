@@ -46,8 +46,8 @@ h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
 h1 { font-family: "Leckerli One", Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
 h2 { font-size: 1.45rem; margin: 0; }
 p, ol { margin: .65rem 0 0; }
-.intro { font-size: 1.15rem; }
-.actions { margin-top: 1rem; }
+.intro { font-size: 1.15rem; margin-top: .3rem; }
+.actions { margin-top: 2rem; }
 .button { display: inline-block; max-width: 100%; padding-block: .55rem; }
 .button.primary {
   display: inline-flex;
@@ -70,7 +70,7 @@ abbr[title] { cursor: help; }
 
 img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
-.hero-shot { margin-top: 1.5rem; }
+.hero-shot { margin-top: 2rem; }
 .hero-shot img, .look-gallery img, .select-shot img { border: 1px solid #c0c0c0; }
 figcaption { margin-top: .4rem; }
 .select-shot { margin-top: 1rem; }
