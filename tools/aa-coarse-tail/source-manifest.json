@@ -1,0 +1,19 @@
+{
+  "baseline_commit": "8951cec392b13f3cff5c54574f876ca9e55734c0",
+  "baseline_tree": "ce17dd9c52f37bef097a32df9bbebddd0a951c6f",
+  "engine_sha256": "06f2cda0efd4649426b4928908600e0a6fb80de56d70ab9fbfd0f1b98cca2f49",
+  "files_sha256": {
+    "EXECUTION.md": "868b64bfc0a1f808dd499701c58b43e79363b90df7b61ed6786981498c126c75",
+    "REPORT.md": "0e7ff1d15ec5deea13dde0ae54388fb65265c11902953ebbb26d88532ce35607",
+    "accounting.py": "cbe5dc92b300fbf7ab565aeda4d142bb2db88741b8704ef55854bfc8e4c9ba2b",
+    "admission.py": "6fd26340a05574359781d6e0ea387e3f6d82dbf59f9db5e639d9c94d4422883c",
+    "finalize.py": "673ea4e23660d3d5d51de9c3254cec072c6a4d8331292ca5435032f6d6be825c",
+    "preflight.py": "b33e6a3fd074ecfd93ee579148480ae6f40761b01c029abcb65737f54a7c66f6",
+    "report.py": "f1f18003787152fc4a52a11fa94d1cd1306449e10abf259d7842dd51e046bedb",
+    "supervise.py": "b0c3617dc29d7cd377aa3404e6fc862398f491a0249f33a41f89986da03c0ff2",
+    "test_accounting.py": "c8dff4a702e6a6fd438fe3af9644d0aa095b5c663743b32cdad79a7456fb70e7",
+    "worker.py": "b2e6a7dbd9bf5ab059eb82fbe22c8848501e487eb01a2c61e0e9c8acc87a3cdf"
+  },
+  "producer_freeze_sha256": "0968e2ec59b645f2f3f371cb646bfe1d206eb32554beb1970da78e6968df6a14",
+  "original_protocol_amended": false
+}
