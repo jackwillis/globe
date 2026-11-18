@@ -39,7 +39,7 @@ a:hover { text-decoration-thickness: .13em; }
 }
 /* One small size for secondary text: buttons row, release line, captions, footer. */
 .actions, .release, figcaption, .footer { font-size: var(--small); line-height: 1.45; }
-.release, figcaption, .footer { color: var(--muted); }
+.release, figcaption { color: var(--muted); }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
 h1 { font-family: "Leckerli One", Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
@@ -81,4 +81,5 @@ figcaption { margin-top: .4rem; }
 .content { padding-block: clamp(2rem, 5vw, 3rem); }
 .content section + section { margin-top: clamp(2rem, 5vw, 3rem); }
 ol { padding-inline-start: 1.5rem; }
-.footer .wrap { border-top: 1px solid #888; padding-block: 1.5rem 2rem; }
+.footer .wrap { border-top: 1px solid #888; padding-block: 1.25rem 2rem; }
+.footer ul { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: 0; padding: 0; list-style: none; }
