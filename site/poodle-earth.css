@@ -2,6 +2,8 @@
 
 :root {
   color-scheme: light;
+  --small: .8rem;
+  --muted: #4a4a4a;
   font: 112.5%/1.55 "Archivo", "Geneva", "Lucida Grande", "Lucida Sans Unicode", Verdana, system-ui, sans-serif;
   color: #171717;
   background: #fffefa;
@@ -35,14 +37,17 @@ a:hover { text-decoration-thickness: .13em; }
   align-items: center;
   gap: .25rem 1rem;
 }
-.actions, .release { font-size: .85rem; }
+/* One small size for secondary text: buttons row, release line, captions, footer. */
+.actions, .release, .source, figcaption, .footer { font-size: var(--small); line-height: 1.45; }
+.release, figcaption { color: var(--muted); }
+.release { flex: 1 1 12rem; }
 .hero-grid { padding-top: clamp(1.5rem, 5vw, 2.75rem); }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.12; }
 h1 { font-family: "Leckerli One", Georgia, "Times New Roman", serif; font-weight: 400; font-size: clamp(2.25rem, 8vw, 3.5rem); margin: 0; }
 h2 { font-size: 1.45rem; margin: 0; }
 p, ol { margin: .65rem 0 0; }
-.intro { font-size: 1.15rem; }
-.actions { margin-top: 1rem; }
+.intro { font-size: 1.15rem; margin-top: .3rem; }
+.actions { margin-top: 2rem; }
 .button { display: inline-block; max-width: 100%; padding-block: .55rem; }
 .button.primary {
   display: inline-flex;
@@ -58,15 +63,17 @@ p, ol { margin: .65rem 0 0; }
   padding-inline: .85rem;
   font-weight: bold;
 }
-.release { margin-top: .85rem; }
+.source { margin-top: .6rem; }
 
 kbd { font-size: 1.08em; }
+abbr[title] { cursor: help; }
 
 img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
-.hero-shot { margin-top: 1.5rem; }
-.hero-shot img, .look-gallery img { border: 1px solid #c0c0c0; }
-figcaption { font-size: .78rem; line-height: 1.4; color: #4a4a4a; margin-top: .4rem; }
+.hero-shot { margin-top: 2rem; }
+.hero-shot img, .look-gallery img, .select-shot img { border: 1px solid #c0c0c0; }
+figcaption { margin-top: .4rem; }
+.select-shot { margin-top: 1rem; }
 .look-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
 @media (max-width: 32rem) {
   .look-gallery { grid-template-columns: 1fr; }
@@ -75,4 +82,5 @@ figcaption { font-size: .78rem; line-height: 1.4; color: #4a4a4a; margin-top: .4
 .content { padding-block: clamp(2rem, 5vw, 3rem); }
 .content section + section { margin-top: clamp(2rem, 5vw, 3rem); }
 ol { padding-inline-start: 1.5rem; }
-.footer .wrap { border-top: 1px solid #888; padding-block: 1.5rem 2rem; }
+.footer .wrap { border-top: 1px solid #888; padding-block: 1.25rem 2rem; }
+.footer ul { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: 0; padding: 0; list-style: none; }
