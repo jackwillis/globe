@@ -80,3 +80,16 @@ lost/faint detail, poor motion behavior, >25% line-path median overhead, resourc
 portable behavior. Do not revise thresholds or tune B after scored results without a dated amendment.
 The future oracle needs full colored-geography convergence verification and the timed runner needs
 independent review before execution. No G4/Classic compatibility follows from host tests.
+
+## 2026-11-18 review corrections
+
+[REVIEW-AMENDMENT.md](REVIEW-AMENDMENT.md) is authoritative over conflicting original text above.
+`oracle_rows.py` is the full-color bounded tile/sample-row reference (host NumPy required).
+`validate_oracle.py` runs only synthetic numerical controls against the compiled unchanged B.
+`run_reference.py` can generate geographic references in a **later authorized** run; it was not
+executed on geography. `review_instruments.py` defines peak/visibility metrics and structural
+operation counts. `statistics_plan.py` fixes paired geometry bootstrap mechanics.
+`prepare_blind.py` creates a fresh review-only package and writes its secret mapping to a different
+private directory. Do not give reviewers the old mixed raw-image package or original identity key.
+A complete timed comparison runner remains subject to implementation/review before any timed run;
+this correction supplies a frozen measurement specification, not a claim that it was executed.

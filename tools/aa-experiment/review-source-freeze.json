@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-18",
+  "geographic_scores_run": false,
+  "performance_run": false,
+  "files_sha256": {
+    "CMakeLists.txt": "ddeaf424ee33a63ab89a26e426167181ab791a1e1fe5900290bfb4f9fa4aced5",
+    "CORRECTION-COMMANDS.md": "def05ec33e2397df7aac22c0ee1829f0ad69ca9147eacf5a78aa77ffd02c79f7",
+    "PROTOCOL.md": "d85a916401a08b945fc455cdac63f41c67118c2abd72efdc336baf85b48f3a3f",
+    "README.md": "4aa5d8f3962ba1868ea18a73c40462e577376028ff77d03db4c58cc5f55c55ab",
+    "RESULTS.md": "cbcb8daba54a34e952f55ad2d333ed916270d43726abb4bb82784c137182b0ec",
+    "REVIEW-AMENDMENT.md": "883248cf803304ad52586407811344a5a65d06e740aaaa739561a7de79bc9886",
+    "REVIEW-RESULTS.md": "e14525c8564ea21ac932a062836a340d8bf3dd4a132efb466331411cef6833af",
+    "aa.cpp": "57bba35a92042e8a324f48ba65022ca4c1b81ec255261c417e77ca6c34db8f71",
+    "aa.hpp": "3370db5572dc9aa47990b20cc412b993b2df77c8c67303ab9d8e5f0d2830af9e",
+    "fixtures.cpp": "bdeb70ea88630235aa479bedd3d7ca2af3424f738510f3e943878188b582cc04",
+    "images.py": "bf9fffd293f4f8b3c025a09c18e15c79778d69d86f4f4788cf4537cba3a864ae",
+    "oracle_rows.py": "540b8e93034ff48e0a86956519ef07c845470e2ad56a5fdcd65ac051499cdd1b",
+    "prepare_blind.py": "5bbe272893fa98e41beba131c236302c299ed4d0e277c5648da8431c49a2886a",
+    "reference.py": "c8adee30e7552fe3d07f2801a470aa508034b4ef5e0d2cd88d6852b11fc7c685",
+    "review_instruments.py": "06fc6761f6e6f6c31c5da6a1e4fabb1cf8cda2d7f05d8561edafbd38520f4792",
+    "run_reference.py": "ea90eff383af499d96245e62c19faba709885460a7b9ba4faba2f9c7d0d382d3",
+    "statistics_plan.py": "455cde3928a470a42ea5e6bea1474b4e57a7740f7400117c90cebeca622ba7f2",
+    "synthetic_driver.cpp": "ad177f9d928ca0786cbeb89bddeaef36b67f2fb92f2d14e94bc1dfeffa0e1132",
+    "test_aa.cpp": "030d4f9b381f171e648b0ac86513b3e554d470095763f3bfcefcf20162b4ddab",
+    "validate_oracle.py": "9299b6e44ecf3101b597b43f2c3299e7a136f4bd65e339ba0042600ce6cef00c"
+  }
+}

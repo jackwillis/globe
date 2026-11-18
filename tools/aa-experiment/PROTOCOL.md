@@ -1,4 +1,8 @@
-# PE-AA-01 Phase 3B — frozen A/B implementation and measurement plan
+# PE-AA-01 Phase 3B — original A/B implementation and measurement plan
+
+**Review correction:** [REVIEW-AMENDMENT.md](REVIEW-AMENDMENT.md) supersedes conflicting
+reference, metrics, statistics, timing interpretation and blinding text below.
+The original freeze remains preserved in the original evidence and parent commit.
 
 2026-11-18. Owner-authorized host prototype/correctness/fixture verification/images only.
 **Do not run scored image comparisons or performance measurements before independent review.**
