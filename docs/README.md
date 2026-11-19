@@ -30,6 +30,7 @@
 - [Architecture decisions](adr/0001-m2-to-m5-decisions.md) · [atlas builder boundary](adr/0003-atlas-production-boundary.md)
 - [Shared presentation](design/shared-presentation-architecture.md) · [rendering backends and execution](research/rendering-backends-and-execution.md) (exploratory, nonbinding)
 - [CD-ROM atlas research](research/cd-rom-atlas-architecture.md)
+- [Publication, edition composition and Reader boundary](research/atlas-publication-composition-runtime.md) (nonbinding research synthesis and experiment gates)
 - [Cross-platform frontends and distribution](research/cross-platform-frontends-and-distribution.md) (exploratory, nonbinding)
 - [v0.2 repository modernization proposal](design/repository-modernization-v0.2.md) (planning only; no approved moves or release gate)
 
