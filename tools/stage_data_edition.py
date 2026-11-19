@@ -9,7 +9,6 @@ manifest specification, or a package-manager backend. Nothing is installed.
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path, PurePosixPath
 import re
 import tempfile
