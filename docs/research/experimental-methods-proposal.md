@@ -41,6 +41,22 @@ High-value open questions include the semantic truth of sourced fact cards ([#13
 
 Before adding an independent implementation, statistical procedure, review round, or expensive control, name the specific failure mode it would detect, the cheapest credible alternative, and what observation would make further effort unnecessary. Use the smallest method that can support the decision. A demanding reference can be less scientific if its precision is infeasible and the limitation is discovered only after the protocol freeze.
 
+### Minimum sufficient evidence contract
+
+A consequential conclusion needs six **core obligations**, scaled to the claim: (1) a precise measurement target and its actual domain; (2) a justified validity argument for the instrument; (3) controls capable of detecting consequential defects; (4) propagation of relevant measurement uncertainty through the decision, preserving consequential dependencies; (5) prespecified PASS, FAIL, and INCONCLUSIVE semantics, including threshold equality, missing/undefined outcomes and selection rules; and (6) traceable evidence and reproducibility.
+
+Apply three levels of safeguard rather than replaying every past research campaign:
+
+| Level | Requirement | Examples |
+| --- | --- | --- |
+| **Core obligations** | Every consequential conclusion must support the six claims above, proportionately | Defined quantity; independent check appropriate to the risk; frozen decision rule; provenance |
+| **Conditional controls** | Activate only for a named uncertainty, failure mode or cost of being wrong | Shared-reference/quantization analysis, targeted mutations, bootstrap sensitivity, selection analysis, checkpointing for long-running work |
+| **Discovery tools** | Use to find a credible model/instrument; retain the resulting targeted guards, not necessarily every exploratory procedure | Large synthetic matrices, alternative reference prototypes, repeated independent reviews, CPU scaling studies |
+
+**Stop rule for investigation itself:** Ask whether the current validity argument and bounded uncertainty are already strong enough to support the specific decision. If yes, record the conclusion and its limits; additional precision or review should have a named failure mode and an expected chance of changing that decision. If not, run only the next cheapest discriminating check. Do not impose a universal precision, a mandatory mutation count or a generic review quota.
+
+For numerical instruments, **VALID** is about justified measurement; **PRECISE** and **DECISION-RESOLVED** answer different questions about that valid measurement. They are **not three sequential promotions**. Numerical resolution also does not establish statistical generalizability. Keep the measured quantity and acceptance semantics fixed when changing instruments.
+
 ### Choosing a method
 
 | Decision problem | Useful first method | Key limitation |
