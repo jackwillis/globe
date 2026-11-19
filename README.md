@@ -5,20 +5,22 @@ cities, switch between **Map** and **Relief**, shade the night side and measure
 great-circle distances. All geographic data are built in; no network connection
 is used.
 
-**[Download v0.1.0 public preview](https://github.com/jackwillis/globe/releases/tag/v0.1.0)**
-— the published Classic application is a StuffIt (`.sit`) archive, with matching
-source. [Website](https://jackwillis.github.io/globe/) ·
+**[Download Poodle Earth v0.1.1](https://github.com/jackwillis/globe/releases/tag/v0.1.1)**
+
+Choose a StuffIt (`.sit`) archive or a hybrid CD image (`.iso`). The release page also includes matching source and checksums.
+
+[Website](https://jackwillis.github.io/globe/) ·
 [User guide](docs/user-guide.md) · [Changelog](CHANGELOG.md)
 
 ![Poodle Earth in Map look, with the globe and information sidebar on a Classic Mac desktop](site/images/os9-hero-map.png)
 
-Captured by Jack on a Power Mac G4 under **bare Mac OS 9.2.2** on November 17,
-2026, using development build `110a197`, not the published v0.1.0 binary.
+Captured on a Power Mac G4 under **bare Mac OS 9.2.2** on November 17,
+2026, using development build `110a197`.
 [Original captures and conversion provenance](docs/images/os9/README.md).
 
 ## Install and explore
 
-1. Download the `.sit` from the v0.1.0 release and expand it with **StuffIt Expander
+1. Download the `.sit` from the release page and expand it with **StuffIt Expander
    on the Mac**. Keep the application, ReadMe, both License files and DataCredit
    together in a folder on your hard disk.
 2. Double-click **Poodle Earth**. Drag to turn the globe, double-click to center
@@ -27,11 +29,9 @@ Captured by Jack on a Power Mac G4 under **bare Mac OS 9.2.2** on November 17,
    `D` for night shading and `M`, then two clicks, to measure a distance.
 
 Use Finder to copy the application: it needs both its data and resource forks.
-For a compatible PowerPC emulator, the planned ISO download provides a second
-path: attach it as a **CD-ROM**, open the volume in Finder, drag the application
+For a compatible PowerPC emulator, use the ISO download: attach it as a **CD-ROM**, open the volume in Finder, drag the application
 and accompanying documents to the guest hard disk, and launch the copy. This
-avoids StuffIt. **The ISO test image is accepted; a versioned release ISO is
-still pending.** See [installation and troubleshooting](docs/user-guide.md)
+avoids StuffIt. See [installation and troubleshooting](docs/user-guide.md)
 and the [CD guide and exact test evidence](docs/os9-cd-image.md).
 
 ## Platforms and limits
