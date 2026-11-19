@@ -29,9 +29,9 @@ Keep qualification evidence next to an existing platform issue whenever possible
 
 ## Shared versus edition-specific guarantees
 
-- **Shared:** validated atlas/pack formats and stable geographic identity semantics; portable core behavior and deterministic/regression contracts for supported operations.
+- **Shared Reader baseline:** each publicly supported edition launches offline with a usable embedded globe and essential navigation, validates resources safely, and preserves stable geographic identity/action meaning for features it exposes. A target below an approved minimum stays experimental or needs an explicit owner-approved limitation; do not silently redefine “Reader.”
 - **Frontend-specific:** native windows, menus, layout, fonts, controls, controller/touch support, optional productivity tools. Document capabilities without automatic UI-feature parity debt (e.g. FLTK gamepad controls are not an Xlib requirement).
-- **Release-specific:** only the **editions explicitly included in that release** must meet their declared capabilities, packaging, relevant tests, and authorized target acceptance. A release milestone is *not* a promise for every buildable frontend or OS family.
+- **Release-specific:** only the **editions explicitly included in that release** must meet their declared capabilities, packaging, relevant tests, and authorized target acceptance. A release milestone does *not* promise every buildable frontend or certify an entire OS family; support is bounded to named artifacts/versions and maintenance expectations.
 - **Regression guard:** continue the relevant shared-core, Classic, Xlib and other maintained build/test checks even when those targets are not distributed in a release. Do not confuse a green cross-build with native acceptance.
 
 The owner approves changes to supported-platform declarations, release scope, milestone readiness, hardware access, merges and publication under [AGENTS.md](../AGENTS.md). An edition may lag the latest product version without becoming an automatic blocker; document its **actual** product version instead of inventing a parallel port version.
