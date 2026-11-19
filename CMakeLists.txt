@@ -153,6 +153,8 @@ if(X11_FOUND AND TARGET globe_embedded_atlas)
   target_link_libraries(globe-x11 PRIVATE globe_embedded_fineelevation globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
+  # Keep the internal target name for CMake/tests, but install a stable public Unix command.
+  set_target_properties(globe-x11 PROPERTIES OUTPUT_NAME poodle-earth)
 
   # The executable embeds its atlas and elevation data, so it needs no data files at run time.
   # Only the notices that must accompany it are installed.
