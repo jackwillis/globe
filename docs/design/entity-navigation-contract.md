@@ -7,7 +7,7 @@
 This document is the single definition of (a) the minimum shared entity/navigation seam and (b) the **geographic navigation acceptance journey**. It does not define a presentation architecture.
 
 - **Geographic navigation (this document):** what an entity reference is, how selection differs from navigation, how history restores state, and the journey *United States → Wisconsin → Madison → Back to Wisconsin*.
-- **Frontend presentation parity ([#114](https://github.com/jackwillis/globe/issues/114), [PR #112](https://github.com/jackwillis/globe/pull/112)):** whether a shared presentation model reduces duplicated menu/action/card decisions between frontends. #114's vertical slice reuses the journey below rather than defining a second one, and any presentation snapshot is derived from the resolver results defined here.
+- **Frontend presentation parity ([#114](https://github.com/jackwillis/poodle-earth/issues/114), [PR #112](https://github.com/jackwillis/poodle-earth/pull/112)):** whether a shared presentation model reduces duplicated menu/action/card decisions between frontends. #114's vertical slice reuses the journey below rather than defining a second one, and any presentation snapshot is derived from the resolver results defined here.
 
 No separate tracking issue is proposed. Work is owned by the existing issues: #52/#53 (identity, concordance and data review), #35/#36/#38/#61 (usable native text and label interaction), #114 (presentation parity), #24 (future search), #54 (budgets), and #26/#31/#48/#49 (later resource lifetimes and persistence). Related: #4 (discovery), #23 (interaction parity), #41 (animated recentre, not a prerequisite), #42 (remembered view), #84 (encoding), #87 (copyable card text), #91 (settlement policy).
 

@@ -46,15 +46,15 @@ On November 19, 2026, Jack reported results for the local PR #172 test image:
   desktop and successfully launched the copy.
 
 These are owner-reported tests, not agent-observed runs. The
-[native record](https://github.com/jackwillis/globe/issues/171#issuecomment-7001544331)
-and [emulator acceptance and waiver](https://github.com/jackwillis/globe/issues/171#issuecomment-7002974798)
+[native record](https://github.com/jackwillis/poodle-earth/issues/171#issuecomment-7001544331)
+and [emulator acceptance and waiver](https://github.com/jackwillis/poodle-earth/issues/171#issuecomment-7002974798)
 supersede the earlier pending-test statements. Jack approved carrying both tests
 forward without retest **only for subsequent text-only changes**. The waiver
 excludes changes to the executable, Finder metadata or packaging behavior.
 Neither this evidence nor the waiver establishes QEMU/SheepShaver acceptance or
 compatibility with every guest OS.
 
-The [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1) publishes the hybrid ISO alongside StuffIt,
+The [v0.1.1 release](https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1) publishes the hybrid ISO alongside StuffIt,
 matching source, the release manifest and SHA-256 checksums. Use the published
 checksums to verify the release image.
 

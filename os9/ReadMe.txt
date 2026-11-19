@@ -69,8 +69,8 @@ LICENSE AND CREDITS
 
 SOURCE CODE
  Matching source is published beside each released application at:
- https://github.com/jackwillis/globe/releases
+ https://github.com/jackwillis/poodle-earth/releases
  Use the release manifest for the matching source revision and checksums.
  Repository and user guide:
- https://github.com/jackwillis/globe
- https://github.com/jackwillis/globe/blob/main/docs/user-guide.md
+ https://github.com/jackwillis/poodle-earth
+ https://github.com/jackwillis/poodle-earth/blob/main/docs/user-guide.md

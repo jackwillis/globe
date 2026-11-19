@@ -5,11 +5,11 @@ cities, switch between **Map** and **Relief**, shade the night side and measure
 great-circle distances. All geographic data are built in; no network connection
 is used.
 
-**[Download Poodle Earth v0.1.1](https://github.com/jackwillis/globe/releases/tag/v0.1.1)**
+**[Download Poodle Earth v0.1.1](https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1)**
 
 Choose a StuffIt (`.sit`) archive or a hybrid CD image (`.iso`). The release page also includes matching source and checksums.
 
-[Website](https://jackwillis.github.io/globe/) ·
+[Website](https://jackwillis.github.io/poodle-earth/) ·
 [User guide](docs/user-guide.md) · [Changelog](CHANGELOG.md)
 
 ![Poodle Earth in Map look, with the globe and information sidebar on a Classic Mac desktop](site/images/os9-hero-map.png)
@@ -37,14 +37,14 @@ and the [CD guide and exact test evidence](docs/os9-cd-image.md).
 ## Platforms and limits
 
 The published v0.1.0 preview was tested on a **Power Mac G4 AGP, 467 MHz,
-256 MB, bare Mac OS 9.2.2** ([acceptance #95](https://github.com/jackwillis/globe/issues/95)).
+256 MB, bare Mac OS 9.2.2** ([acceptance #95](https://github.com/jackwillis/poodle-earth/issues/95)).
 Its application memory settings are 24 MB preferred and 12 MB minimum. Quit the
 app before changing these in Finder's Get Info > Memory; larger windows need
 more memory.
 
 Later QuickDraw-cursor previews were smoke-tested by Jack in Infinite Mac on
 PowerPC System 7.1.2, 7.5, 7.5.3 and Mac OS 7.6, 8.0, 8.1 and 8.5.
-These are [build-specific emulator observations](https://github.com/jackwillis/globe/issues/174#issuecomment-6969352476),
+These are [build-specific emulator observations](https://github.com/jackwillis/poodle-earth/issues/174#issuecomment-6969352476),
 not a compatibility certification for the original download. The application is
 PowerPC only; a 68k compile probe does not provide a 68k app. Tiger Classic runs
 are separate from bare OS 9 tests.
@@ -86,8 +86,8 @@ Start at
 [toolchains](docs/toolchain.md) for Retro68/Classic builds, and the
 [documentation index](docs/README.md) for architecture, formats and research.
 Internal names such as `globe-x11` and the `globe` namespace remain unchanged.
-The repository is `jackwillis/globe`; its rename is deferred to v0.2 in
-[#124](https://github.com/jackwillis/globe/issues/124).
+The repository is `jackwillis/poodle-earth`; the public rename is tracked in
+[#124](https://github.com/jackwillis/poodle-earth/issues/124).
 
 Free software under **GPL-3.0-or-later**. Geographic data have separate licences:
 [data sources](data/SOURCES.md), [data credits](data/DATA-CREDITS.txt).

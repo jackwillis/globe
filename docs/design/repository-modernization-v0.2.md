@@ -1,6 +1,6 @@
 # Repository modernization and developer experience — v0.2 planning proposal
 
-**Status:** Nonbinding, owner-requested planning note, 2026-11-13. **Not an accepted directory tree, release gate or refactor authorization.** Tracking issue: [#126](https://github.com/jackwillis/globe/issues/126). Related: [#118](https://github.com/jackwillis/globe/issues/118) (public documentation), [#121](https://github.com/jackwillis/globe/issues/121) (agent state), [#125](https://github.com/jackwillis/globe/issues/125) (changelog), [#114](https://github.com/jackwillis/globe/issues/114) (presentation boundary) and [#122](https://github.com/jackwillis/globe/issues/122) (Unix packaging).
+**Status:** Nonbinding, owner-requested planning note, 2026-11-13. **Not an accepted directory tree, release gate or refactor authorization.** Tracking issue: [#126](https://github.com/jackwillis/poodle-earth/issues/126). Related: [#118](https://github.com/jackwillis/poodle-earth/issues/118) (public documentation), [#121](https://github.com/jackwillis/poodle-earth/issues/121) (agent state), [#125](https://github.com/jackwillis/poodle-earth/issues/125) (changelog), [#114](https://github.com/jackwillis/poodle-earth/issues/114) (presentation boundary) and [#122](https://github.com/jackwillis/poodle-earth/issues/122) (Unix packaging).
 
 ## Why consider this now?
 
