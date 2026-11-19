@@ -159,6 +159,11 @@ if(X11_FOUND AND TARGET globe_embedded_atlas)
   # The executable embeds its atlas and elevation data, so it needs no data files at run time.
   # Only the notices that must accompany it are installed.
   include(GNUInstallDirs)
+  # The CMake project remains 'globe' for Classic packaging, but public Unix docs
+  # should live under the Poodle Earth name. Preserve a packager's custom DOCDIR.
+  if(CMAKE_INSTALL_DOCDIR STREQUAL "${CMAKE_INSTALL_DATAROOTDIR}/doc/globe")
+    set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/poodle-earth")
+  endif()
   install(TARGETS globe-x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(FILES LICENSE README.md data/DATA-CREDITS.txt data/LANDCLASS-NOTICE.txt
           DESTINATION ${CMAKE_INSTALL_DOCDIR})
