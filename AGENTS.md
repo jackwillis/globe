@@ -122,6 +122,8 @@ issues/labels/milestones as the source of truth.
   little-endian pack readers; decisions in docs/adr/ (ADR 0002 for rendering).
 - GPL-3.0-or-later headers on first-party code; data only under
   docs/licensing-policy.md.
+- For new and modified C++ code, follow [the C++20 engineering guidelines](docs/cpp-guidelines.md).
+  They document existing conventions and do not override this contract or accepted ADRs.
 - Keep platform and build attached to every benchmark or test claim. Host tests and
   cross-compilation are not hardware acceptance.
 
