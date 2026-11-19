@@ -59,26 +59,67 @@
         </ul>
       </section>
 
-      <section aria-labelledby="install">
-        <h2 id="install">Installation</h2>
-        <p>PowerPC Mac · 24 MB app memory (12 MB minimum).</p>
-        <ol>
-          <li>Open the .sit file with StuffIt Expander.</li>
-          <li>Copy the folder to your hard disk and open Poodle Earth.</li>
-        </ol>
-        <p>See the <a href="./install.html">installation guide</a> for Classic Macs, emulator setup and Unix source builds, or the <a href="https://github.com/jackwillis/globe/blob/v0.1.0/os9/ReadMe.txt">Classic ReadMe</a> for controls and troubleshooting.</p>
+      <section aria-labelledby="install" class="platform-install">
+        <h2 id="install">Install Poodle Earth</h2>
+        <p>The public preview is for PowerPC Classic Mac OS. You can run it on a real Mac, in an emulator, or build the X11 version from source on Linux or NetBSD. Choose a platform to see its instructions.</p>
+
+        <details id="classic-mac" open>
+          <summary>Classic Mac OS 7–9 (PowerPC)</summary>
+          <p>Download <a href="https://github.com/jackwillis/globe/releases/tag/v0.1.0">Poodle Earth v0.1.0</a>. The application prefers 24 MB of application memory (12 MB minimum).</p>
+          <ol>
+            <li>Download the <a href="https://github.com/jackwillis/globe/releases/download/v0.1.0/PoodleEarth-0.1.0-5e13400.sit">StuffIt archive (.sit)</a> onto your Mac or transfer it there.</li>
+            <li>Expand it with StuffIt Expander on the Classic Mac.</li>
+            <li>Copy the expanded folder to your hard disk and open Poodle Earth.</li>
+          </ol>
+          <p>The <a href="https://github.com/jackwillis/globe/blob/v0.1.0/os9/ReadMe.txt">Classic ReadMe</a> has controls, memory notes and troubleshooting.</p>
+        </details>
+
+        <details id="infinite-mac">
+          <summary>Infinite Mac — in your browser</summary>
+          <ol>
+            <li>Visit <a href="https://infinitemac.org/">Infinite Mac</a> and choose a PowerPC Mac OS environment.</li>
+            <li>Import the Poodle Earth <code>.sit</code> archive using that environment's file-import instructions. The method varies between machines.</li>
+            <li>Expand the archive inside the emulated Mac and open Poodle Earth.</li>
+          </ol>
+          <p>Poodle Earth has been tested in Infinite Mac with PowerPC Mac OS 7.1.2 and later.</p>
+        </details>
+
+        <details id="classicmac">
+          <summary>ClassicMac — desktop emulator</summary>
+          <ol>
+            <li>Download <a href="https://github.com/amcchord/ClassicMac/releases/tag/v4.7.0">ClassicMac</a> for your computer.</li>
+            <li>Follow ClassicMac's instructions to configure a PowerPC Mac OS guest using your own appropriately licensed system media.</li>
+            <li>Transfer the Poodle Earth <code>.sit</code> archive into the guest, expand it with StuffIt Expander and launch the application.</li>
+          </ol>
+          <p>Poodle Earth has been tested in ClassicMac emulating a Power Mac G4 with Mac OS 9.2.1. ClassicMac also has a separate Mac OS X Tiger profile; Poodle Earth does not currently ship a native Mac OS X version.</p>
+        </details>
+
+        <details id="systemless">
+          <summary>Systemless — experimental runtime</summary>
+          <p><a href="https://github.com/benletchford/systemless">Systemless</a> runs Classic Mac applications without an Apple ROM or System Folder. Follow its installation instructions and try passing the Poodle Earth <code>.sit</code> archive to the runtime.</p>
+          <p><strong>Poodle Earth compatibility with Systemless has not yet been verified.</strong> This is an experimental option, not a supported installation method.</p>
+        </details>
+
+        <details id="unix">
+          <summary>NetBSD and Linux — build from source (X11)</summary>
+          <p>There is no packaged desktop installer yet. With CMake, Ninja, a C++20 compiler and X11 development dependencies, follow the <a href="https://github.com/jackwillis/globe/blob/main/README.md#build-and-use">source build instructions</a>:</p>
+          <ol>
+            <li><code>cmake -S . -B build -G Ninja</code></li>
+            <li><code>cmake --build build</code></li>
+            <li><code>ctest --test-dir build --output-on-failure</code></li>
+            <li>From an X11 desktop, run <code>./build/globe-x11</code>.</li>
+          </ol>
+          <p>See the <a href="https://github.com/jackwillis/globe/blob/main/docs/toolchain.md">toolchain notes</a> for tested compiler and target evidence. Cross-compilation alone does not prove target compatibility.</p>
+        </details>
+
+        <p>Windows, a standalone browser Reader and a multi-platform CD-ROM are future possibilities, not current downloads. Third-party emulators and operating systems are not included with Poodle Earth. <a href="https://github.com/jackwillis/globe/issues">Report an installation problem</a>.</p>
       </section>
       <section aria-labelledby="map">
         <h2 id="map">About the map</h2>
         <p>This preview uses simplified coastlines and borders and a limited set of cities. Some places, including San Marino and Paris, are missing.</p>
         <p>Some territories, such as Puerto Rico, can be selected separately. Borders and selectable areas reflect the data bundled with the atlas. They do not imply a position on sovereignty or recognition.</p>
       </section>
-      <section aria-labelledby="platforms">
-        <h2 id="platforms">Platforms</h2>
-        <p>The download is for PowerPC Macs. You can also <a href="https://github.com/jackwillis/globe/blob/main/README.md">build from source for NetBSD and Linux with X11</a>.</p>
-        <p>Want to use a newer computer? Run the Classic Mac edition with <a href="https://infinitemac.org/">Infinite Mac</a> (in your browser) or <a href="https://github.com/amcchord/ClassicMac/releases/tag/v4.7.0">ClassicMac</a> (desktop Power Mac emulation). <a href="https://github.com/benletchford/systemless">Systemless</a> is a ROM-free Classic Mac application runtime, but Poodle Earth has not yet been validated with it.</p>
-        <p>Poodle Earth has been tested in Infinite Mac on PowerPC Mac OS 7.1.2 and later and in ClassicMac with Mac OS 9.2.1. See the <a href="./install.html">emulator setup notes</a>; third-party emulators are not included with the download.</p>
-      </section>
+
     </div>
   </main>
 
