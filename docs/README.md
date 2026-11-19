@@ -27,10 +27,11 @@
 - [Pack formats](atlas-format.md) · [elevation](elevation-format.md) · [places](place-format.md)
 - [Terrain](terrain.md) · [refinement](refinement.md) · [performance](perf/README.md)
 - [Rendering and portability experiment registry](research/rendering-experiment-program.md) (exploratory, nonbinding)
-- [Architecture decisions](adr/0001-m2-to-m5-decisions.md) · [atlas builder boundary](adr/0003-atlas-production-boundary.md)
+- [Architecture decisions](adr/0001-m2-to-m5-decisions.md) · [atlas builder boundary](adr/0003-atlas-production-boundary.md) · [proposed portable distribution ADR](adr/0006-portable-atlas-distribution.md)
 - [Shared presentation](design/shared-presentation-architecture.md) · [rendering backends and execution](research/rendering-backends-and-execution.md) (exploratory, nonbinding)
 - [CD-ROM atlas research](research/cd-rom-atlas-architecture.md)
 - [Cross-platform frontends and distribution](research/cross-platform-frontends-and-distribution.md) (exploratory, nonbinding)
+- [Portable atlas distribution and package staging](research/portable-atlas-distribution.md) (architecture proposal, nonbinding; includes Mermaid diagram and staging proof)
 - [v0.2 repository modernization proposal](design/repository-modernization-v0.2.md) (planning only; no approved moves or release gate)
 
 ## Historical work records
