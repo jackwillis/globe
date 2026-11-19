@@ -1,10 +1,10 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (c) 2026 Jack Willis
-# Digital-release artifacts from one build (#47): the StuffIt archive (the only download), committed
+# Digital-release artifacts from one build (#47): the StuffIt archive, hybrid CD image, committed
 # source, manifest and checksums in <build>/release/. Needs the Classic build from
 # tools/build-os9.sh (PoodleEarth-Finder.bin, the sit input, and build-info.txt), podman, the Rust
-# build image, Python 3, git and unar (round-trip verification). Publishes nothing.
+# build image, Python 3, git, unar, genisoimage, faketime and hfsutils. Publishes nothing.
 #   GLOBE_RELEASE_STRICT=1  refuse a dirty tree or a build made from any other revision.
 set -eu
 cd "$(dirname "$0")/.."
@@ -65,6 +65,8 @@ done
 # ...and the two halves are exactly the GPL text, each small enough for SimpleText.
 cat "$build_dir/license/License-1.txt" "$build_dir/license/License-2.txt" | cmp - LICENSE
 for part in "$build_dir"/license/License-*.txt; do [ "$(wc -c < "$part")" -lt 32768 ]; done
+cd_image="$out/$name-hfs.iso"
+python3 tools/package_cd.py "$build_dir" "$cd_image" "$epoch"
 # GNU tar and gzip timestamps are determined by the commit, not build wall time.
 # The complete tracked corresponding source, so the release does not rest on an online repository.
 source_archive="$out/$name-source.tar.gz"
@@ -73,6 +75,6 @@ python3 tools/release_manifest.py --output "$out/RELEASE.json" \
     --revision "$revision" --epoch "$epoch" \
     --retro68-image "${RETRO68_IMAGE:-${retro68_image:-ghcr.io/autc04/retro68}}" \
     --rust-image "$rust_ref" \
-    "$sit" "$source_archive"
-(cd "$out" && sha256sum "$name.sit" "$name-source.tar.gz" RELEASE.json > SHA256SUMS)
+    "$sit" "$cd_image" "$source_archive"
+(cd "$out" && sha256sum "$name.sit" "$name-hfs.iso" "$name-source.tar.gz" RELEASE.json > SHA256SUMS)
 echo "round trip ok (data and resource forks via .sit); artifacts, source, manifest and checksums in $out"

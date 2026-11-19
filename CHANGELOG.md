@@ -3,6 +3,7 @@
 This file will track **published releases**, not every experimental commit.
 
 ## Unreleased
+- The Classic release packager builds a hybrid ISO-9660/HFS CD image candidate alongside StuffIt (#171). Emulator acceptance is pending.
 
 - Classic: when a grow-box enlargement is refused for lack of memory, an alert now explains it and points to Get Info, once per session (#116). Host-tested, and checked on the G4 under Mac OS 9.2.2 at a 12 MB partition: one alert and one beep, no repeat in a session, alert again after relaunch.
 - Classic Controls lists the Command equivalents alongside plain shortcuts and identifies plain-only and Command-only keys (#144).
