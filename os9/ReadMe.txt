@@ -1,8 +1,6 @@
 Poodle Earth - Classic PowerPC ReadMe
 
-Development text for the next release; not a v0.1.1 announcement.
-The published v0.1.0 remains at:
-https://github.com/jackwillis/globe/releases/tag/v0.1.0
+Poodle Earth v0.1.1
 
 An offline, software-rendered globe: drag to turn it, zoom in, and click a
 country or city for its information card. Nothing is downloaded or sent;
@@ -27,7 +25,7 @@ INSTALL
  GPL in halves small enough for SimpleText) and DataCredit together in a
  folder on your writable hard disk. Double-click the application.
 
- ISO/CD path (final versioned download pending): attach the ISO as a CD-ROM
+ ISO/CD path: attach the ISO as a CD-ROM
  in a compatible PowerPC emulator, open the volume in Finder, and drag the
  application and all four text files into a folder on the guest hard disk.
  Launch the copy; StuffIt is not needed. The CD is not bootable and contains
@@ -50,7 +48,7 @@ USE
  B borders, T drag mode, D night side, M measure two points. The menus
  show the Command-key versions (Command-= also zooms in). Command-Q quits.
  Edit > Preferences sets metric or imperial units for this session only.
- Current main adds a center-distance scale, a north-following compass and
+ This version adds a center-distance scale, a north-following compass and
  Controls help: H or ? or Apple menu > Controls; Escape hides help and does
  not quit. S and H are plain keys only; use the menu Command shortcuts for
  Copy, Preferences, Close and Quit. Other listed globe keys also have Command
@@ -77,9 +75,7 @@ LICENSE AND CREDITS
 SOURCE CODE
  Matching source is published beside each released application at:
  https://github.com/jackwillis/globe/releases
- The published v0.1.0 is tagged v0.1.0. The next release date, versioned
- filenames, checksums and source revision are pending; use its actual
- release notes and manifest when available, not a preview's filename.
+ Use the release manifest for the matching source revision and checksums.
  Repository and user guide:
  https://github.com/jackwillis/globe
  https://github.com/jackwillis/globe/blob/main/docs/user-guide.md
