@@ -292,9 +292,16 @@ def decide(by_style):
     guards = {s: [local_guard(x) for x in sorted(c, key=lambda x: x.geometry_id)]
               for s, c in sorted(by_style.items())}
     flat = [g['status'] for gs in guards.values() for g in gs]
-    return {'points': points, 'guards': guards,
-            'point_conjunction': numerical_conjunction(p['status'] for p in points.values()),
-            'guard_conjunction': numerical_conjunction(flat)}
+    complete = (set(by_style) == set(STYLES) and len(flat) == len(STYLES) * GEOMETRIES
+                and all(len(c) == GEOMETRIES for c in by_style.values()))
+
+    def conjoin(statuses):
+        # A partial set can fail the experiment but can never pass it.
+        r = numerical_conjunction(statuses)
+        return r if complete or r == FAIL else INCONCLUSIVE
+    return {'points': points, 'guards': guards, 'complete': complete,
+            'point_conjunction': conjoin(p['status'] for p in points.values()),
+            'guard_conjunction': conjoin(flat)}
 
 
 def with_geometry(cond, geometry_id):

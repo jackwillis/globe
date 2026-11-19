@@ -69,7 +69,11 @@ passes), FAIL (violation) if J.lower > 0, else INCONCLUSIVE. Tightness of the re
 upper bound is not proved; no looser case was found in the author's randomized searches.
 
 `numerical_conjunction` is the three-valued AND of required numerical criteria (any
-FAIL → FAIL, all PASS → PASS, else INCONCLUSIVE). It is not acceptance of B: blinded
+FAIL → FAIL, all PASS → PASS, else INCONCLUSIVE). `decide()` makes completeness mandatory
+for the experiment-wide conjunctions: both styles, 16 geometry IDs each, 32 guards
+(`result['complete']`). An incomplete set (e.g. Map only) keeps its inspectable per-style
+decisions, but a would-be PASS conjunction is reported INCONCLUSIVE; a FAIL stays FAIL.
+It is not acceptance of B: blinded
 native legibility, material strokes and every other original requirement remain.
 
 ## Relaxations (stated, never claimed as jointly achievable extrema)

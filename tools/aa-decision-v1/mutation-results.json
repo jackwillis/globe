@@ -1,6 +1,6 @@
 {
- "baseline_tests": 26,
- "mutants_killed": 21,
+ "baseline_tests": 27,
+ "mutants_killed": 22,
  "results": [
   {
    "mutant": "ties round to the lower code",
@@ -166,7 +166,15 @@
    "killed": true,
    "failing_tests": [
     "test_map_and_relief_are_never_pooled",
+    "test_partial_conjunction_is_never_a_complete_pass",
     "test_three_valued_conjunction"
+   ]
+  },
+  {
+   "mutant": "partial conjunction may pass",
+   "killed": true,
+   "failing_tests": [
+    "test_partial_conjunction_is_never_a_complete_pass"
    ]
   },
   {

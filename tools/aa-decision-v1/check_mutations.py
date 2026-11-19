@@ -50,6 +50,7 @@ CASES = [
         "sorted(c.geometry_id for c in conditions) == list(range(GEOMETRIES))", 'True')]),
     ('styles may be mixed', [("len({c.style for c in conditions}) == 1", 'True')]),
     ('FAIL ignored in conjunction', [('if FAIL in statuses:', 'if False:')]),
+    ('partial conjunction may pass', [('return r if complete or r == FAIL else INCONCLUSIVE', 'return r')]),
     ('duplicate pixel guard omitted', [('and not seen[index],', ',')]),
 ]
 

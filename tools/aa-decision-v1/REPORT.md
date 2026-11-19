@@ -20,13 +20,13 @@ scores, reference generation, bootstrap, fine run, G4 or production.
    governs, else a labelled conservative relaxation.
 4. **Strict floor eligibility and verdicts**: D.lower > 10/1024; floor equality is
    undefined; PASS/FAIL/INCONCLUSIVE with reasons; equality at H = 0 and J = 0 passes.
-5. **Independent controls** (26 tests) and **21 in-memory mutation controls**.
+5. **Independent controls** (27 tests) and **22 in-memory mutation controls**.
 
 ## Evidence (Linux x86-64, Python 3.14.8, stdlib only)
 
 - `python3 -B -m unittest discover -s tools/aa-decision-v1 -p 'test_*.py'`: 26 tests
   pass, 6.4 s, 21.6 MB peak RSS.
-- `python3 -B tools/aa-decision-v1/check_mutations.py`: baseline passes and all 21
+- `python3 -B tools/aa-decision-v1/check_mutations.py`: baseline passes and all 22
   mutants are killed (`mutation-results.json`, about 150 s). It edits no source.
 - Controls (expected values are hand arithmetic or a lattice enumerator that never
   calls `scalar_range` or `cells`):
@@ -54,6 +54,9 @@ scores, reference generation, bootstrap, fine run, G4 or production.
     quantities agree with `aa-interval-v1.fixed_mask` on random frames.
 - One real finding: the first mutation pass left `J.lower > 0 → ≥ 0` alive. A control
   was added and the 21-mutant run then killed all.
+- **Steering correction (2026-11-19):** `decide()` now returns `complete`; a partial
+  set (e.g. Map only) can no longer yield a PASS conjunction (INCONCLUSIVE; FAIL stays
+  FAIL). Regression test and one mutant added. Thresholds unchanged.
 - `bash tools/check-policy.sh` and `sha256sum -c tools/aa-decision-v1/source-freeze.sha256`
   results are recorded in the PR.
 

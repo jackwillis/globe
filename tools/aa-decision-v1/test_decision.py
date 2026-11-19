@@ -337,12 +337,29 @@ class StyleDecisionTests(unittest.TestCase):
         self.assertEqual((result['points']['map']['status'], result['points']['relief']['status']),
                          (PASS, FAIL))
         self.assertEqual(result['point_conjunction'], FAIL)
-        self.assertEqual(decide({'map': good})['point_conjunction'], PASS)
+        self.assertEqual(decide({'map': good})['points']['map']['status'], PASS)
         self.assertEqual(result['points']['map']['H'], decide({'map': good})['points']['map']['H'])
         with self.assertRaises(ValueError):
             style_decision(good[:8] + bad[8:])
         with self.assertRaises(ValueError):
             decide({'map': bad})       # a relief-tagged frame cannot stand in for map
+
+    def test_partial_conjunction_is_never_a_complete_pass(self):
+        fr = frame([0]*3, [0]*3, [255]*3, [0]*3, 1)
+        good, also = style('map', fr), style('relief', fr)
+        full = decide({'map': good, 'relief': also})
+        self.assertTrue(full['complete'])
+        self.assertEqual((full['point_conjunction'], full['guard_conjunction']), (PASS, PASS))
+        self.assertEqual(sum(len(g) for g in full['guards'].values()), 32)
+        part = decide({'map': good})
+        self.assertFalse(part['complete'])
+        self.assertEqual(part['points']['map']['status'], PASS)      # still inspectable
+        self.assertEqual((part['point_conjunction'], part['guard_conjunction']),
+                         (INCONCLUSIVE, INCONCLUSIVE))
+        bad = style('relief', frame([0]*3, [0]*3, [255]*3, [255]*3, 1))
+        self.assertEqual(decide({'map': good, 'relief': bad})['point_conjunction'], FAIL)
+        with self.assertRaises(ValueError):    # 15 geometries cannot be a style
+            decide({'map': good[:15], 'relief': also})
 
     def test_three_valued_conjunction(self):
         self.assertEqual(numerical_conjunction([PASS, PASS]), PASS)
