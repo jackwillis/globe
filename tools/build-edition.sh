@@ -8,7 +8,7 @@ case ${1:-} in
 full)
     cmake -S . -B build-full -DCMAKE_BUILD_TYPE=Release -DGLOBE_BUILD_TESTS=OFF
     cmake --build build-full -j2 --target globe-x11
-    python3 tools/floppy_report.py --edition full --app build-full/globe-x11 \
+    python3 tools/floppy_report.py --edition full --app build-full/poodle-earth \
       --document LICENSE --document data/LANDCLASS-NOTICE.txt --output build-full/size-report.json
     ;;
 floppy) tools/build-os9.sh --floppy ;;
