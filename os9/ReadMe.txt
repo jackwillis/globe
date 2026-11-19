@@ -32,10 +32,6 @@ INSTALL
  no system software. Use Finder to preserve the resource fork and Finder
  information. Ordinary copies through non-Mac filesystems can lose them.
 
- Jack tested the PR #172 image at source 2074034 on a burned CD with a G4
- under bare Mac OS 9.2.2. In ClassicMac 4.7.0, emulated G4, Mac OS 9.2.1,
- he launched from CD, copied to the desktop and launched the copy. This is
- evidence for that test image, not a final release checksum or every emulator.
  On CD, Get Info memory settings are read-only: quit and use the disk copy.
  The app writes no preferences or other files.
 
@@ -57,8 +53,7 @@ USE
 
 KNOWN LIMITS
  - The original v0.1.0 could leave an unfinished globe edge; turn or zoom
-   to repaint. Jack later reported sustained use without recurrence, not
-   a structured test proving a permanent fix.
+   to repaint.
  - The data is small: 1:110 million-scale coastlines and borders,
    one-degree terrain, 304 large cities. Small islands, small countries
    and many cities are missing. It is a globe, not a street atlas.
