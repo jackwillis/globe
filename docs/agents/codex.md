@@ -2,6 +2,10 @@
 
 These notes add to [AGENTS.md](../../AGENTS.md).
 
+Follow [the project's C++20 guidelines](../cpp-guidelines.md) for ownership, bounded work,
+compiler portability, deterministic behavior, and review evidence. These are subordinate to
+[AGENTS.md](../../AGENTS.md) and accepted ADRs.
+
 ## Testing and quality gates
 
 Start with the smallest relevant tests, then verify the portable build and cross-target boundary:
