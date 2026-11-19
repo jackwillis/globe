@@ -53,3 +53,17 @@ resource 'DITL' (128, purgeable) {
             "its Preferred size." };
     }
 };
+
+/* Window enlargement refused for lack of memory (#116): the text is Str::ResizeNeedsMemory,
+ * passed through ParamText so that l10n/en.txt stays the only copy. */
+resource 'ALRT' (129, purgeable) {
+    {80, 60, 195, 400}, 129,
+    { OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1 },
+    alertPositionMainScreen
+};
+resource 'DITL' (129, purgeable) {
+    {
+        {83, 262, 103, 330}, Button { enabled, "OK" };
+        {10, 70, 75, 330}, StaticText { disabled, "^0" };
+    }
+};

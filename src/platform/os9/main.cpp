@@ -19,6 +19,7 @@
 #include "globe/overlays.hpp"
 #include "globe/refine_runner.hpp"
 #include "globe/shown_frame.hpp"
+#include "globe/strings.hpp"
 #include "globe/terrain.hpp"
 #include "globe/zoom.hpp"
 #include "menu_bar.hpp"
@@ -38,6 +39,7 @@
 #include <algorithm>
 #include <cstring>
 #include <optional>
+#include <string_view>
 #include <vector>
 using namespace globe;
 static_assert(next_terrain_style(TerrainStyle::Map) == TerrainStyle::Relief);
@@ -55,6 +57,7 @@ constexpr unsigned kSuspendResumeMessage = 1;
 constexpr unsigned kResumeFlag = 1;
 // 'ALRT' id in os9/globe.r: shown when the application cannot start.
 constexpr short kStartupAlert = 128;
+constexpr short kResizeMemoryAlert = 129;
 // The Mac OS 8.1 loader cannot resolve SetThemeCursor from AppearanceLib; a failed
 // function call fallback is too late, because required imports resolve before main().
 // Classic QuickDraw cursors keep the same intent policy without version-specific APIs.
@@ -335,7 +338,12 @@ class Application {
                                                 static_cast<short>(height));
                                 apply(Resize{globe_width, height});
                                 InvalRect(&window_->portRect); // the sidebar moved: redraw it
-                            } else
+                            } else if (resize_notice_.should_explain(
+                                           window_->portRect.right - window_->portRect.left,
+                                           window_->portRect.bottom - window_->portRect.top, width,
+                                           height))
+                                explain_resize_refusal(); // the alert's own sound is the beep
+                            else
                                 SysBeep(10); // no memory for the larger buffers: keep the old size
                         }
                     }
@@ -456,6 +464,18 @@ class Application {
     }
 
   private:
+    // Called after GrowWindow has finished tracking. ParamText copies the text into Dialog Manager
+    // storage; the alert resources are purgeable and the failed allocations are already released.
+    void explain_resize_refusal() {
+        unsigned char text[256];
+        const std::string_view message = tr(Str::ResizeNeedsMemory);
+        const auto length = std::min<std::size_t>(message.size(), 255);
+        text[0] = static_cast<unsigned char>(length);
+        std::memcpy(text + 1, message.data(), length);
+        ParamText(text, "\p", "\p", "\p");
+        NoteAlert(kResizeMemoryAlert, nullptr);
+        SetPortWindowPort(window_);
+    }
     bool buffers(int width, int height) {
         auto fb = Framebuffer::create(width, height);
         if (!fb)
@@ -921,6 +941,7 @@ class Application {
     ClassicPresentation presentation_;
     unsigned present_bands_ = 0;
     bool foreground_ = true;
+    ClassicMemoryRefusalNotice resize_notice_;
     std::uint64_t max_turn_ms_ = 0, max_step_ms_ = 0;
     bool redraw_ = true;
     CursorIntent cursor_ = CursorIntent::Arrow;

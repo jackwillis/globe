@@ -67,6 +67,27 @@ No due dates or fixed feature commitments have been set.
 - **Distribution is digital first:** a StuffIt archive as the headline download, with the MacBinary file and a raw HFS disk image as fallbacks ([#47](https://github.com/jackwillis/globe/issues/47), [#12](https://github.com/jackwillis/globe/issues/12)). Physical media (CD-R, floppy) come later and are optional.
 - **A larger edition ships as an application plus a data folder**, laid out like a CD and published as a disk image first: external data packs on Classic Mac OS ([#48](https://github.com/jackwillis/globe/issues/48)), running from a read-only volume ([#49](https://github.com/jackwillis/globe/issues/49)), the full-edition data ([#50](https://github.com/jackwillis/globe/issues/50)) and the volume layout ([#51](https://github.com/jackwillis/globe/issues/51)).
 
+## Release narratives and planning vocabulary (2026-11-17)
+
+A release should first tell an **independently useful product story**, not merely enumerate internal subsystems. These short descriptions explain the intended experience; they are **not new acceptance criteria, milestone assignments, platform guarantees or release authorizations**. Check live GitHub issues and milestones for committed scope and state.
+
+| Release | User-facing narrative | Standing |
+| --- | --- | --- |
+| **v0.1.0** | **A globe that works:** a small offline world on a real Classic Mac | Published 2026-11-13 |
+| **v0.1.1** | **An easier globe to obtain and use:** installation, documentation, website and release polish | Current patch milestone; actual scope is the live GitHub milestone |
+| **v0.1.2** | **A world with names:** settled-frame country labels and native text behavior | Existing next patch milestone; actual scope is the live GitHub milestone |
+| **Potential v0.1.3** | **A world worth exploring:** better-reviewed city coverage and first useful sourced place facts | **Candidate only**, building on [#151](https://github.com/jackwillis/globe/issues/151), [#152](https://github.com/jackwillis/globe/issues/152), [#153](https://github.com/jackwillis/globe/issues/153) and [#137](https://github.com/jackwillis/globe/issues/137); no approved milestone |
+| **v0.2.0** | **A coherent geographic explorer:** agreed atlas interactions are understandable and work together | Narrative for the existing *Atlas on the Map* thematic outcome; the navigation journey remains product direction, not a newly imposed release gate |
+
+Use distinct concepts when tracking the work:
+
+- **Area labels** (such as `area: data` or `area: architecture`) identify a durable field of responsibility; they are not deliverables.
+- **Epics** collect substantial multi-issue capabilities with a recognizable completion condition. Some existing historical `epic` issues also serve as long-lived coordination umbrellas; **do not automatically reorganize, relabel or close them** to enforce a taxonomy.
+- **Vertical slices** are the smallest useful, testable outcomes for a person using or developing the product. They may cross data preparation, portable model, native presentation and acceptance; they need not each be a new epic or a standalone issue.
+- **Milestones** describe what an approved release delivers and what must be accepted for publication. They are neither workstream tags nor epic-completion counters. An issue has one milestone; cross-release work can be linked through existing epics and issues. Only the owner may approve scope or readiness changes.
+
+**WebAssembly is prospective, not a committed epic or release:** [#178](https://github.com/jackwillis/globe/issues/178) is a CPU Reader feasibility investigation. If a small browser adapter can reuse the portable core and demonstrate useful interactions and tests at acceptable cost, evaluate a separate browser capability epic. The browser may become a rapid UX laboratory, but native parity, hardware acceptance and support claims remain separately governed. No work is assigned, no new frontend is promised, and the current release gates are unchanged by this note.
+
 ## Layered atlas and optical media — working strategy (2026-11-09)
 
 Full synthesis: [Layered atlas and CD-ROM research](research/cd-rom-atlas-architecture.md). Inspiration: 1990s CD-ROM geographic software, especially Microsoft Encarta World Atlas, approached as a **FOSS contemporary** with reproducible data, documented provenance and semantic integrity—not a reproduction of proprietary assets or code.

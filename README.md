@@ -1,100 +1,86 @@
 # Poodle Earth
 
-*(Public name of the project in this repository, `jackwillis/globe`; internal names such as `globe-x11` and the `globe` namespace are unchanged.)*
+An offline globe for PowerPC Classic Macs. Turn the Earth, explore countries and
+cities, switch between **Map** and **Relief**, shade the night side and measure
+great-circle distances. All geographic data are built in; no network connection
+is used.
 
-An interactive, software-rendered Earth for PowerPC G4: NetBSD/X11 and classic Mac OS 9.
-Plain vector lines while you drag; while you zoom, a scaled copy of the last finished frame keeps
-the terrain on screen. When you stop, the coastlines, borders and graticule appear first and the
-terrain refines outward from the center in circles underneath, with a thin progress bar along the
-bottom until it is done. Two looks: **Map** (land tinted by biome class on a blue sea) and
-**Relief** (a plain hypsometric tint, white at altitude). Both editions pick countries (orange
-outline and dither fill), show city markers and information cards, shade the night side (`D`) and
-measure great-circle distances (`M`); the X11 edition also has a toolbar and a looks palette
-(`P`). At higher zoom the full edition refines from one-degree to half-degree terrain; the floppy
-edition keeps one degree. [Resolution behavior and measured tradeoffs](docs/progressive-resolution-plan.md).
+**[Download Poodle Earth v0.1.1](https://github.com/jackwillis/globe/releases/tag/v0.1.1)**
 
-| Map (default) | Relief |
-| --- | --- |
-| ![Map look, Africa and Europe](docs/images/map.png) | ![Relief look, Africa and Europe](docs/images/relief.png) |
-| ![Map look, the Amazon](docs/images/amazon-map.png) | ![Relief look, the Himalaya](docs/images/himalaya-relief.png) |
+Choose a StuffIt (`.sit`) archive or a hybrid CD image (`.iso`). The release page also includes matching source and checksums.
 
-![Map look, Antarctica in white](docs/images/antarctica-map.png)
+[Website](https://jackwillis.github.io/globe/) ·
+[User guide](docs/user-guide.md) · [Changelog](CHANGELOG.md)
 
-![A picked country, dither-filled and outlined](docs/images/country-highlight.png)
+![Poodle Earth in Map look, with the globe and information sidebar on a Classic Mac desktop](site/images/os9-hero-map.png)
 
-`M` (X11) measures: click two points for the great-circle distance and bearing, with the arc drawn between them. `D` (X11) shades the night side from the system clock, with a soft twilight edge:
+Captured on a Power Mac G4 under **bare Mac OS 9.2.2** on November 17,
+2026, using development build `110a197`.
+[Original captures and conversion provenance](docs/images/os9/README.md).
 
-![Map look with the day/night terminator](docs/images/daynight-map.png)
+## Install and explore
 
-The OS 9 floppy build in Classic under Mac OS X Tiger on the G4 (2026-11-02):
+1. Download the `.sit` from the release page and expand it with **StuffIt Expander
+   on the Mac**. Keep the application, ReadMe, both License files and DataCredit
+   together in a folder on your hard disk.
+2. Double-click **Poodle Earth**. Drag to turn the globe, double-click to center
+   and zoom, and click a country or city for its information card.
+3. Choose Map or Relief in the sidebar or View menu. Use `+` / `-` to zoom,
+   `D` for night shading and `M`, then two clicks, to measure a distance.
 
-![OS 9 build in Tiger Classic, Map look](docs/images/os9-tiger-classic.png)
+Use Finder to copy the application: it needs both its data and resource forks.
+For a compatible PowerPC emulator, use the ISO download: attach it as a **CD-ROM**, open the volume in Finder, drag the application
+and accompanying documents to the guest hard disk, and launch the copy. This
+avoids StuffIt. See [installation and troubleshooting](docs/user-guide.md)
+and the [CD guide and exact test evidence](docs/os9-cd-image.md).
 
-The other screenshots are headless renders of the bundled data at 640x480 (`docs/images`).
+## Platforms and limits
 
-**Version 0.1 (public preview).** The Mac OS 9 application "Poodle Earth" is distributed as a StuffIt
-archive from the [v0.1.0 release](https://github.com/jackwillis/globe/releases/tag/v0.1.0), together with the
-exact-version source archive (checksums in the release notes). See the [Classic ReadMe](os9/ReadMe.txt)
-(installation, controls, memory, known limits), the [changelog](CHANGELOG.md),
-[data credits](data/DATA-CREDITS.txt) and [release notes](docs/release-notes-0.1.md). Hardware acceptance
-is recorded in [#95](https://github.com/jackwillis/globe/issues/95).
+The published v0.1.0 preview was tested on a **Power Mac G4 AGP, 467 MHz,
+256 MB, bare Mac OS 9.2.2** ([acceptance #95](https://github.com/jackwillis/globe/issues/95)).
+Its application memory settings are 24 MB preferred and 12 MB minimum. Quit the
+app before changing these in Finder's Get Info > Memory; larger windows need
+more memory.
 
-This is work toward v0.1. Earlier X11 builds have been tried by the owner; current headless
-checks pass on host and G4. The OS 9 application is built and packaged, and has been run by the owner under Tiger Classic
-(2026-11-02) and on **bare Mac OS 9 on the G4** (2026-11-07: about one second to settle, input
-checked every 20 ms; [numbers](docs/os9-proof.md)). The menu bar, looks palette and cursor implementations are present but await full bare-OS-9
-acceptance (issues #44-#46 and docs/ux-acceptance.md). Real-display timing on X11 remains open.
-CI is configured on GitHub Actions; check the Actions tab for current runs.
+Later QuickDraw-cursor previews were smoke-tested by Jack in Infinite Mac on
+PowerPC System 7.1.2, 7.5, 7.5.3 and Mac OS 7.6, 8.0, 8.1 and 8.5.
+These are [build-specific emulator observations](https://github.com/jackwillis/globe/issues/174#issuecomment-6969352476),
+not a compatibility certification for the original download. The application is
+PowerPC only; a 68k compile probe does not provide a 68k app. Tiger Classic runs
+are separate from bare OS 9 tests.
 
-- [Agent contract](AGENTS.md) and [prioritized backlog](docs/backlog.md)
-- [Architecture](docs/architecture.md), [design and ADR](docs/adr/0001-m2-to-m5-decisions.md)
-- [Terrain measurements](docs/terrain.md), [performance history](docs/perf/README.md)
-- [Toolchains](docs/toolchain.md) and [OS 9 acceptance](docs/os9-proof.md)
-- [Contributing](CONTRIBUTING.md), [documentation index](docs/README.md),
-  [Python setup](docs/python-tooling.md) and [release checklist](docs/release-checklist.md)
+The compact data set has 1:110 million-scale coastlines and borders, one-degree
+terrain and 304 cities. Small islands, small countries and many cities are
+missing; names are ASCII. There is no street map, data download, saved preference
+file or custom application icon. The v0.1.0 preview can leave an unfinished globe
+edge; turn or zoom to repaint it. Jack later reported sustained use without
+recurrence, without a structured regression test. See the [changelog](CHANGELOG.md)
+for changes after v0.1.0 and [draft v0.1.1 notes](docs/release-notes-0.1.1.md).
 
-## Build and use
+## Build and contribute
 
-```
+The source also builds a NetBSD/Linux **X11 frontend** with a toolbar, looks
+palette and optional local elevation packs. It shares the rendering core but
+has different window controls and shortcuts; Classic instructions do not imply
+full frontend parity. It is a source-build path, not a published Unix download.
+
+With a C++20 compiler, CMake, Ninja, Python 3 and X11 development libraries
+(and Xvfb for display tests):
+
+```sh
 cmake -S . -B build -G Ninja
 cmake --build build
 ctest --test-dir build --output-on-failure
 ./build/globe-x11
-./build/globe-bench --refine --convert --repeat 2 tests/data/bench_drag.txt
 ```
 
-X11 requires an authorized display; the host UI tests use private Xvfb displays. For sanitizers,
-configure a separate build with `-DGLOBE_SANITIZE=ON`. Test availability depends on the configured
-dependencies; use `ctest --test-dir build -N` to list registered tests, then run the suite to see
-execution and pass results.
+The last command needs an authorized X display. Start at
+[Contributing](CONTRIBUTING.md) for verification expectations,
+[toolchains](docs/toolchain.md) for Retro68/Classic builds, and the
+[documentation index](docs/README.md) for architecture, formats and research.
+Internal names such as `globe-x11` and the `globe` namespace remain unchanged.
+The repository is `jackwillis/globe`; its rename is deferred to v0.2 in
+[#124](https://github.com/jackwillis/globe/issues/124).
 
-Drag to rotate north-up; T switches to trackball mode. Wheel, Page Up/Down or +/- zooms, double-click centers
-and zooms, arrows turn, N aligns north, G/B toggle the graticule and borders, and R resets the view.
-H or ? opens the Controls list in the information pane. On Classic, the list shows where plain
-and Command forms both work, such as G or Command-G. S and H are plain only. Closing a window,
-quitting, opening Preferences and copying information use Command-W, Command-Q, Command-comma
-and Command-C. Escape hides Controls. On X11, Q or Escape quits (Escape closes Controls first).
-S switches the look (Map or Relief) and P (X11) opens a looks palette window; A click without dragging preserves the view; on X11 it identifies a
-country (outlined and dither-filled in orange) or nearby city after 0.4 s, unless a second click (zoom) follows. The Style toolbar button is checked for Relief; F2 restores a hidden
-toolbar. Exposing or moving a window resends cached pixels. The graticule hides during an active drag.
-
-## Two editions
-
-- `tools/build-edition.sh full`: native X11 executable with embedded atlas, elevation, countries
-  and places; local optional elevation packs. [Import](docs/elevation-import.md),
-  [toolbar](docs/toolbar.md), [countries](docs/country-format.md), [places](docs/place-format.md).
-- `tools/build-edition.sh floppy`: classic PowerPC OS 9 application with atlas and one-degree
-elevation, countries and cities; no X11 toolbar; native menus/palette are implemented but require hardware acceptance. It emits a MacBinary application,
-  a real 1.44 MB HFS image and a checked [size report](docs/floppy-size.md). **Paused since
-  2026-11-07:** it still builds and is checked in CI, but releases are digital first (a StuffIt
-  archive), and the next edition is an application plus a data
-  folder of packs ([#47](https://github.com/jackwillis/globe/issues/47),
-  [#48](https://github.com/jackwillis/globe/issues/48)).
-
-Both use the same portable core and strict pack formats. Terrain is currently raw embedded v1
-data; [compression has been measured](docs/perf/compression.md), with runtime adoption still open.
-There is no fetch implementation yet; [the fetch design](docs/fetch-design.md) is for review.
-No relay is planned. Sources and attribution are in [data/SOURCES.md](data/SOURCES.md).
-
-`tools/probe-retro68.sh` compile-checks the portable code for PowerPC and 68k. License:
-GPL-3.0-or-later. The historical v1 prototype is retained as tag `v1`.
+Free software under **GPL-3.0-or-later**. Geographic data have separate licences:
+[data sources](data/SOURCES.md), [data credits](data/DATA-CREDITS.txt).
