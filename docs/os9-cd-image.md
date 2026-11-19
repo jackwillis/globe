@@ -1,4 +1,4 @@
-# Mac OS 9 CD image candidate (#171)
+# Mac OS 9 CD image: installation and test evidence (#171)
 
 The Linux release packager stages `PoodleEarth-<version>-<revision>-hfs.iso`
 alongside the StuffIt archive and corresponding source. The version comes from
@@ -28,12 +28,37 @@ to the existing guest command if its CD drive is available. In a GUI, select the
 image in the virtual CD drive's media picker. In Finder, open the Poodle Earth
 volume, drag **Poodle Earth** to a folder on the writable Macintosh hard disk,
 and open the copied application. Use the Finder copy so both forks travel
-together. Running directly from the disc is outside the build verification (#49).
+together. See the [user guide](user-guide.md) for the StuffIt alternative and controls.
 
-QEMU, ClassicMac, SheepShaver and native Mac OS 9 mount/copy/launch are pending.
-Record emulator version, machine model, guest OS and whether Finder shows the
-HFS volume before recording acceptance on #171. Coordinate the published
-download text with #129 and the newcomer instructions with #118 after acceptance.
+## Jack's acceptance of the tested image
+
+On November 19, 2026, Jack reported results for the local PR #172 test image:
+
+- File: `PoodleEarth-PR172-2074034-local-hfs.iso`, 1,210,368 bytes.
+- Source: `20740340c939bb5eda5185f5f288650db50850ee`.
+- SHA-256: `1f4326ce52904f1f152f1d35ecca958974b7ed5cd5ce13bf1931913efb538021`.
+- **Physical Power Mac G4, bare Mac OS 9.2.2:** Jack burned the image on
+  Fedora with xorriso 1.5.8.pl02 and reported that the app, files and Get Info
+  worked. Memory settings were read-only on CD until the app was copied to the
+  hard drive. The native report did not separately specify the launch location.
+- **ClassicMac 4.7.0, emulated Power Mac G4, Mac OS 9.2.1:** Jack attached
+  the image as a CD, launched the app from the mounted CD, copied it to the guest
+  desktop and successfully launched the copy.
+
+These are owner-reported tests, not agent-observed runs. The
+[native record](https://github.com/jackwillis/globe/issues/171#issuecomment-7001544331)
+and [emulator acceptance and waiver](https://github.com/jackwillis/globe/issues/171#issuecomment-7002974798)
+supersede the earlier pending-test statements. Jack approved carrying both tests
+forward without retest **only for subsequent text-only changes**. The waiver
+excludes changes to the executable, Finder metadata or packaging behavior.
+Neither this evidence nor the waiver establishes QEMU/SheepShaver acceptance or
+compatibility with every guest OS.
+
+This is a test build whose source still reports 0.1.0, not a published v0.1.1
+artifact. The final versioned ISO, source revision, filename, checksum, download
+URL and publication remain pending in [#171](https://github.com/jackwillis/globe/issues/171).
+Do not reuse the test image's checksum for a rebuilt release image. The public
+v0.1.0 release has only StuffIt and source downloads.
 
 ## Build and verify on Linux
 
