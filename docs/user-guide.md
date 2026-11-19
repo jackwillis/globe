@@ -1,15 +1,11 @@
 # Poodle Earth user guide
 
 Poodle Earth is an offline globe for PowerPC Classic Macs. This guide covers the
-published [v0.1.0 preview](https://github.com/jackwillis/globe/releases/tag/v0.1.0)
-and identifies controls added on main since that release. The
-[draft v0.1.1 notes](release-notes-0.1.1.md) describe those changes; they do not
-announce an available v0.1.1 download.
+published [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1).
 
 ## Install from StuffIt
 
-1. Download the `.sit` archive from the release page. The v0.1.0 download is
-   `PoodleEarth-0.1.0-5e13400.sit`; the adjacent source archive corresponds to it.
+1. Download the `.sit` archive from the release page. Matching source and checksums are available on the same page.
 2. Transfer the archive intact to the Mac and expand it with **StuffIt Expander**.
    The package contains the Poodle Earth application, ReadMe, two License files
    (the GPL split for SimpleText) and DataCredit. Keep these together in a folder
@@ -24,9 +20,8 @@ unwrapped application when that path is uncertain.
 
 ## Install from an ISO or CD
 
-The [CD guide](os9-cd-image.md) records the tested #172 image. The final release
-ISO's filename, checksum and download link remain pending under
-[#171](https://github.com/jackwillis/globe/issues/171); v0.1.0 has no published ISO.
+Download the hybrid ISO from the [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1).
+The [CD guide](os9-cd-image.md) describes the format and test evidence.
 
 1. In a compatible **PowerPC** Mac emulator, attach the image to the virtual
    **CD-ROM drive**. Start your existing Mac OS guest; this disc contains the app
@@ -74,7 +69,7 @@ bearing, rather than a road route. Edit > Preferences selects metric or imperial
 units. Preferences are held for the session and are not saved to disk. The UI
 is English-only; place names are ASCII.
 
-## Controls added after v0.1.0
+## Scale, compass and controls help
 
 Current main adds a distance scale calibrated at the map center and a compass rose
 that follows the view's north. The scale follows the units preference and stays
