@@ -1,0 +1,25 @@
+ladder pid 1834793 -> results/linux-x86_64-ladder.jsonl   abort: Ctrl-C or touch results/linux-x86_64-ladder.jsonl.ABORT
+A exact    ok      0.06s 0.06s 0.06s
+A narrow   ok      0.07s 0.07s 0.07s
+A wide     ok      0.10s 0.10s 0.09s
+A crossing ok      0.10s 0.09s 0.09s
+A mixed    ok      0.08s 0.08s 0.08s
+gate B: advance (within limits, projected 15 s)
+B exact    ok      0.54s 0.53s 0.52s
+B narrow   ok      0.72s 0.73s 0.69s
+B wide     ok      0.96s 0.89s 0.89s
+B crossing ok      0.90s 0.97s 0.86s
+B mixed    ok      0.71s 0.70s 0.71s
+gate C: advance (within limits, projected 71 s)
+C exact    ok      2.69s 2.59s 2.63s
+C narrow   ok      3.52s 3.53s 3.50s
+C wide     ok      4.53s 4.74s 4.82s
+C crossing ok      4.55s 4.63s 4.56s
+C mixed    ok      3.56s 3.71s 3.74s
+gate D: advance (within limits, projected 144 s)
+D exact    ok      5.63s 5.46s 5.59s
+D narrow   ok      7.03s 7.03s 7.12s
+D wide     ok      9.20s 9.36s 9.60s
+D crossing ok      9.38s 9.84s 9.79s
+D mixed    ok      7.61s 7.77s 7.75s
+done: ladder complete

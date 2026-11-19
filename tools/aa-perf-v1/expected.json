@@ -1,0 +1,107 @@
+{
+ "cells": {
+  "crossing|10000|41072|1": {
+   "aggregate_digest": "1e4e014cfb5531605609416ecc4f2d5ebf5394e1d5b7366399e99b585a77205e",
+   "input_digest": "f494172f5a5fc8c9c338864a93c20bc02c1f1e26ab9865d2f4d12ae727c990cc",
+   "result_digest": "4ad868a34b7ef61ed924708b15ef4faebe3ef6a454493761ea01745b3a19538b"
+  },
+  "crossing|1000|4108|1": {
+   "aggregate_digest": "cd1df728701aa3cf492b1369135a4839d2bf9d95ebbfb0ac5297c73d6e9c5629",
+   "input_digest": "869d9bcd93bb41b594245239527008b6a2c0e998a64da599c3a5fe43faab725e",
+   "result_digest": "7385695cec76f1a18e0ae9ed7b909e7c937162555dca70fb110667f37944de39"
+  },
+  "crossing|100|411|1": {
+   "aggregate_digest": "9f4aaf191d0aadc3066d1e84659a7d9b6dc79241229070133533ccf48bde8752",
+   "input_digest": "06c7ecad81818e6dc627abb6c6af3a055b84052bcac8ba82e67966f0678eb59c",
+   "result_digest": "25203d4dc3bd54fdfc6eb90682606f88f8a83ea686850b86779329b0b304b21f"
+  },
+  "crossing|5000|20536|1": {
+   "aggregate_digest": "da8e9ae885e4c2eeef822c6f886f0f24b5c1a6346deddfb93a96657684f4f8d4",
+   "input_digest": "ee0e219345ed4e6bba434c002ec1e4ac61c5d3c938df1eddf3d75de0ee671b33",
+   "result_digest": "5d3ddabeb71b41e55af4db6caf703cf171bf4e8e9c8487703cdc954115d0d2f6"
+  },
+  "exact|10000|41072|1": {
+   "aggregate_digest": "3101884a12a05ef8127637be31d2cc4e66c13c3a68ca45295091c9eb439fb727",
+   "input_digest": "1af83841e7d53d36106540ec068fb6454be64e9e2f9be704b175daa8fabd2f55",
+   "result_digest": "19cbc65f36f4ee1331dd2ac2081287d4b6150ea84c893b71de105eebdb75f2fc"
+  },
+  "exact|1000|4108|1": {
+   "aggregate_digest": "de0645c97f104aefa9a0b2da14bb3feb244b697a3b7aca399b37f1cad08d4b3d",
+   "input_digest": "29bac58cab993de6615e10695a920a6bc04ed6157fcc99cfc0923d06e545273d",
+   "result_digest": "e77907823764c4f40e3b822b72c37f5984227e9f4941b1b4ccefcf8496fc1c24"
+  },
+  "exact|100|411|1": {
+   "aggregate_digest": "154ced65e1e25bc58aa2c85ea8ebd0cade43b59fcfa186fefe80e087e2f98c9b",
+   "input_digest": "baf3df55b243ea892b1ca36f9bf9c75860671ef85b08bd4c1c0e5ab202a2bbbe",
+   "result_digest": "0cbc4c011ce2e5c79cf9a46e2c4f404f43900bc70c6cd817fc1013855f131d1d"
+  },
+  "exact|5000|20536|1": {
+   "aggregate_digest": "e7f1f7bf586bbdbd0940e9c6e795817927af89afb22c3ec3b57f6415dcf93753",
+   "input_digest": "54db67f18d47ab0a95529128323c919bddb8fe640018196ef5fa8722b27c6617",
+   "result_digest": "b736a3dbc5370538996e06c6cd82214b20dfb6b3576db8a1a3a68100cfd5b99d"
+  },
+  "mixed|10000|41072|1": {
+   "aggregate_digest": "1099d753c53b481771c90ddee652cbb0cba8c6125ba75d66363c14461f03c17c",
+   "input_digest": "3476725ac7b54c40b3d42acd15f45a3f31781db8aec13f3cac1d0a223352c9e9",
+   "result_digest": "9e838196d48c37ad4fec8cbe9b37e5abea9b37e0bfadda035ea39939eb2b8218"
+  },
+  "mixed|1000|4108|1": {
+   "aggregate_digest": "e9ffbfbab9dd3243360f234f27a89325077949c0c41f311607086f1a80e1efb4",
+   "input_digest": "7d52763dfb67b414ca16437e206fb5afced07b9c005c64b814587a64b0e5dd8f",
+   "result_digest": "75b6b1cade935747be9fd3a7e61981acffabe9bca4ebb3eebfbe86bfb1db0a0c"
+  },
+  "mixed|100|411|1": {
+   "aggregate_digest": "2a40029ab1a7c95839492ab9334c36cf68ce46245fab3186b1c0f94c0ca8b91c",
+   "input_digest": "0bf8b98720480bc8b17e9ef2cb7eff1611128ceef2d66f977470bd7524c257fd",
+   "result_digest": "3dadd718472762d3ef12ed88ee650e43f39e00b81ee21dc8b78774522d489151"
+  },
+  "mixed|5000|20536|1": {
+   "aggregate_digest": "ec0545dd9a6be1fc9381143c4f136388f8c0cae6a9ddde35063b556c0ac55906",
+   "input_digest": "f24f9f4126352c55503f63024c8fcffb7bc7cae01ce845ab96b965b93e99dad6",
+   "result_digest": "626bf6308d1b3c6884e00c2c79e86971b58c2c76effeecd91d1e9505bf68fbc2"
+  },
+  "narrow|10000|41072|1": {
+   "aggregate_digest": "a9e0c20c9748ce376cf4f44d2e1c4e933645d415190d705d2ab7dd1284424be4",
+   "input_digest": "86575dbef7426d54c7dacda4e0cc04c1f04a733df8786ee5352988221611d0a5",
+   "result_digest": "7348ce77d3ed89ac38e18e4b36167c699db1dfc49ef5310c19d1462d7822d1c2"
+  },
+  "narrow|1000|4108|1": {
+   "aggregate_digest": "621247ac415b29a4987e6163abd55ae5279b5cdaaa219869f8b939d7cb31813d",
+   "input_digest": "42cc027ead53c5912971af31cc4e8d74fc49d654ed000457b4ffd6210c78c535",
+   "result_digest": "57df299cbfac008c98e6b3f52dfc39a1790a11497627896427a31f98fa915896"
+  },
+  "narrow|100|411|1": {
+   "aggregate_digest": "4cecc53a60f24064e21f592f0cd4f0e4b3476f0bcf86e331e2f79d85ddb2bdcc",
+   "input_digest": "1600d05a63e3759acb37ccae5adcbb98f5580bf9916def2c4b77020020b45d74",
+   "result_digest": "0779727750e49d0f4d3681d5fb0f981f5cb658ca2cd7a2d3177f7786dd7439ab"
+  },
+  "narrow|5000|20536|1": {
+   "aggregate_digest": "abd3a2194f429a69b1b65c60cae9f6354de543d2d299cdd8617eaa2396226e54",
+   "input_digest": "acad71793af6561102340838773d40d8f266a80f499a049ab107fc8e61279e26",
+   "result_digest": "1a8483feea65290842b6b3b152d9db382911534cdbe3840812ae16038ca38fde"
+  },
+  "wide|10000|41072|1": {
+   "aggregate_digest": "f99dbacbf51fc39ad315a6f24390502ef10deab25742b2779a2cdb40e6973d0e",
+   "input_digest": "1f50515c4113343f5f12ba79d01279bd58ad9ca5a3ead023aa9f8c2992cedc88",
+   "result_digest": "230f1f0216cfacd15eb66d129981064bec3d6297a459dd84d4cf83528f407aa1"
+  },
+  "wide|1000|4108|1": {
+   "aggregate_digest": "2dc2c2c46c0902dc720753f4569f53bdd1e32f2a8f967bc344f08f3100c21e18",
+   "input_digest": "ec0f99e0134eef2a99c6adeeab50e9fc0f07c5834e1b083991edd808c08327dd",
+   "result_digest": "4248148920369b23c0252ca6999b349c9acb2ceb7b62910d35fe4d5ff81de366"
+  },
+  "wide|100|411|1": {
+   "aggregate_digest": "89d1a0ed72b67b35dd76f7e1a5d39f8b11d37f93f81ebb78146c3c1c3bdc5564",
+   "input_digest": "7c75ed32bfa05f3d45a76e1193cb1bab4f2547ba2f9131b90a9c2a920c88d975",
+   "result_digest": "33d33d582fb050faae93f71cd98a0f7e510089533d8497811a72cb328de82c63"
+  },
+  "wide|5000|20536|1": {
+   "aggregate_digest": "d2166ebdc245c63a5ff9cecacaea5421113eb726a7a902c57598db92ab31ae1f",
+   "input_digest": "784ddf2f01adfc8495a181e3726d5625ffe324fb65352b0a59fc907659f44268",
+   "result_digest": "47c9611449180139f4c2b6c377dd64c2536c8ae66caa7f12d1ee7192e8071f00"
+  }
+ },
+ "decision_sha256": "ef237ea3ef68796a6357b4eef482efca86a55f4227da5fc709c6abdd5eb5ccbd",
+ "note": "Digests pinned from the Linux x86-64 baseline; any host must reproduce them exactly.",
+ "schema": "PE-AA-01-perf-expected-v1"
+}

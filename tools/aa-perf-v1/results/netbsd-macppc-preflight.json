@@ -1,0 +1,39 @@
+{
+ "byteorder": "big",
+ "clocks": {
+  "monotonic": {
+   "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+   "resolution": 3.0000000000000004e-08
+  },
+  "perf_counter": {
+   "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+   "resolution": 3.0000000000000004e-08
+  },
+  "process_time": {
+   "implementation": "getrusage(RUSAGE_SELF)",
+   "resolution": 1e-06
+  }
+ },
+ "cpu_count": 1,
+ "cpu_model": "7400 (Revision 2.9)",
+ "implementation": "cpython",
+ "int_info": "sys.int_info(bits_per_digit=30, sizeof_digit=4, default_max_str_digits=4300, str_digits_check_threshold=640)",
+ "loadavg": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "machine": "macppc",
+ "maxsize": 2147483647,
+ "physical_memory_kib": 262144,
+ "python": "3.13.14 (main, Aug 29 2026, 17:10:57) [GCC 12.5.0]",
+ "release": "11.1",
+ "swap": {
+  "raw": "total: 1048576 blocks allocated, 0 blocks used, 1048576 blocks available",
+  "source": "swapctl -s",
+  "total_kib": null,
+  "used_kib": null
+ },
+ "system": "NetBSD"
+}
+peak_rss_kib now: 19628   resource module: True   setitimer guard: True
