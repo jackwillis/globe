@@ -189,6 +189,8 @@ if(GLOBE_BUILD_TESTS)
     add_test(NAME elevation_builder COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_elevation_builder.py)
     add_test(NAME atlas_builder
              COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_atlas_builder.py)
+    add_test(NAME stage_data_edition
+             COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/test_stage_data_edition.py)
   endif()
   if(Python3_Interpreter_FOUND)
     add_test(NAME strings_generated COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_strings.py --check)
