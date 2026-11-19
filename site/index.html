@@ -18,15 +18,15 @@
           <h1>Poodle Earth</h1>
           <p class="intro">Offline globe for PowerPC Mac OS 7, 8 and 9.</p>
           <div class="actions">
-            <a class="button primary" href="https://github.com/jackwillis/globe/releases/tag/v0.1.1">
+            <a class="button primary" href="https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1">
               <svg class="download-icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>
               </svg>
               <span>Get Poodle Earth</span>
             </a>
-            <span class="release"><abbr title="StuffIt is the archive format Classic Macs use. Open the .sit file with StuffIt Expander.">StuffIt</abbr> archive · <a href="https://github.com/jackwillis/globe/releases/tag/v0.1.1">v0.1.1</a><br>Free and Open Source under GPLv3</span>
+            <span class="release"><abbr title="StuffIt is the archive format Classic Macs use. Open the .sit file with StuffIt Expander.">StuffIt</abbr> archive · <a href="https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1">v0.1.1</a><br>Free and Open Source under GPLv3</span>
           </div>
-          <p class="source"><a href="https://github.com/jackwillis/globe">View source code on GitHub</a></p>
+          <p class="source"><a href="https://github.com/jackwillis/poodle-earth">View source code on GitHub</a></p>
         </div>
         <figure class="hero-shot">
           <img src="./images/os9-hero-map.png" width="1012" height="912" decoding="async" alt="Poodle Earth window: a globe in the Map look, centred on Asia, beside an information pane.">
@@ -65,13 +65,13 @@
 
         <details id="classic-mac" open>
           <summary>Classic Mac OS 7–9 (PowerPC)</summary>
-          <p>Download <a href="https://github.com/jackwillis/globe/releases/tag/v0.1.1">Poodle Earth v0.1.1</a>. The application prefers 24 MB of application memory (12 MB minimum).</p>
+          <p>Download <a href="https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1">Poodle Earth v0.1.1</a>. The application prefers 24 MB of application memory (12 MB minimum).</p>
           <ol>
-            <li>Download the <a href="https://github.com/jackwillis/globe/releases/tag/v0.1.1">StuffIt archive (.sit)</a> onto your Mac or transfer it there.</li>
+            <li>Download the <a href="https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1">StuffIt archive (.sit)</a> onto your Mac or transfer it there.</li>
             <li>Expand it with StuffIt Expander on the Classic Mac.</li>
             <li>Copy the expanded folder to your hard disk and open Poodle Earth.</li>
           </ol>
-          <p>The <a href="https://github.com/jackwillis/globe/blob/v0.1.1/os9/ReadMe.txt">Classic ReadMe</a> has controls, memory notes and troubleshooting.</p>
+          <p>The <a href="https://github.com/jackwillis/poodle-earth/blob/v0.1.1/os9/ReadMe.txt">Classic ReadMe</a> has controls, memory notes and troubleshooting.</p>
         </details>
 
         <details id="infinite-mac">
@@ -89,7 +89,7 @@
           <ol>
             <li>Download <a href="https://github.com/amcchord/ClassicMac/releases/tag/v4.7.0">ClassicMac</a> for your computer.</li>
             <li>Follow ClassicMac's instructions to configure a PowerPC Mac OS guest using your own appropriately licensed system media.</li>
-            <li>Download the hybrid <code>.iso</code> from the <a href="https://github.com/jackwillis/globe/releases/tag/v0.1.1">v0.1.1 release</a> and attach it as a CD-ROM.</li>
+            <li>Download the hybrid <code>.iso</code> from the <a href="https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1">v0.1.1 release</a> and attach it as a CD-ROM.</li>
             <li>In Finder, copy Poodle Earth and the accompanying files to the guest's writable disk, then launch the copy.</li>
           </ol>
           <p>Poodle Earth has been tested in ClassicMac emulating a Power Mac G4 with Mac OS 9.2.1. ClassicMac also has a separate Mac OS X Tiger profile; Poodle Earth does not currently ship a native Mac OS X version.</p>
@@ -103,17 +103,17 @@
 
         <details id="unix">
           <summary>NetBSD and Linux — build from source (X11)</summary>
-          <p>There is no packaged desktop installer yet. With CMake, Ninja, a C++20 compiler and X11 development dependencies, follow the <a href="https://github.com/jackwillis/globe/blob/main/README.md#build-and-use">source build instructions</a>:</p>
+          <p>There is no packaged desktop installer yet. With CMake, Ninja, a C++20 compiler and X11 development dependencies, follow the <a href="https://github.com/jackwillis/poodle-earth/blob/main/README.md#build-and-contribute">source build instructions</a>:</p>
           <ol>
             <li><code>cmake -S . -B build -G Ninja</code></li>
             <li><code>cmake --build build</code></li>
             <li><code>ctest --test-dir build --output-on-failure</code></li>
             <li>From an X11 desktop, run <code>./build/globe-x11</code>.</li>
           </ol>
-          <p>See the <a href="https://github.com/jackwillis/globe/blob/main/docs/toolchain.md">toolchain notes</a> for tested compiler and target evidence. Cross-compilation alone does not prove target compatibility.</p>
+          <p>See the <a href="https://github.com/jackwillis/poodle-earth/blob/main/docs/toolchain.md">toolchain notes</a> for tested compiler and target evidence. Cross-compilation alone does not prove target compatibility.</p>
         </details>
 
-        <p>Windows, a standalone browser Reader and a multi-platform CD-ROM are future possibilities, not current downloads. Third-party emulators and operating systems are not included with Poodle Earth. <a href="https://github.com/jackwillis/globe/issues">Report an installation problem</a>.</p>
+        <p>Windows, a standalone browser Reader and a multi-platform CD-ROM are future possibilities, not current downloads. Third-party emulators and operating systems are not included with Poodle Earth. <a href="https://github.com/jackwillis/poodle-earth/issues">Report an installation problem</a>.</p>
       </section>
       <section aria-labelledby="map">
         <h2 id="map">About the map</h2>
@@ -128,11 +128,11 @@
     <div class="wrap">
       <nav aria-label="Project links">
         <ul>
-          <li><a href="https://github.com/jackwillis/globe/releases/tag/v0.1.1">Release and source</a></li>
-          <li><a href="https://github.com/jackwillis/globe/blob/v0.1.1/LICENSE">License</a></li>
-          <li><a href="https://github.com/jackwillis/globe/blob/v0.1.1/data/DATA-CREDITS.txt">Data credits</a></li>
-          <li><a href="https://github.com/jackwillis/globe/blob/main/CONTRIBUTING.md">Contributing</a></li>
-          <li><a href="https://github.com/jackwillis/globe/issues">Report an issue</a></li>
+          <li><a href="https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1">Release and source</a></li>
+          <li><a href="https://github.com/jackwillis/poodle-earth/blob/v0.1.1/LICENSE">License</a></li>
+          <li><a href="https://github.com/jackwillis/poodle-earth/blob/v0.1.1/data/DATA-CREDITS.txt">Data credits</a></li>
+          <li><a href="https://github.com/jackwillis/poodle-earth/blob/main/CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="https://github.com/jackwillis/poodle-earth/issues">Report an issue</a></li>
         </ul>
       </nav>
     </div>
