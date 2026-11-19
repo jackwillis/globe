@@ -1,8 +1,8 @@
 # Rendering backends, execution and display adaptation — exploratory design
 
-**Status:** Nonbinding research hypotheses, 2026-11-12, condensed 2026-11-13; neither a backend selection nor an approved refactor. The current single-threaded, cooperative RGB565 CPU renderer is the **reference implementation and fallback**. Experiments are defined once, in the registry proposed in [PR #113](https://github.com/jackwillis/globe/pull/113); this note only records concepts and parked options.
+**Status:** Nonbinding research hypotheses, 2026-11-12, condensed 2026-11-13; neither a backend selection nor an approved refactor. The current single-threaded, cooperative RGB565 CPU renderer is the **reference implementation and fallback**. Experiments are defined once, in the registry proposed in [PR #113](https://github.com/jackwillis/poodle-earth/pull/113); this note only records concepts and parked options.
 
-See [architecture](../architecture.md), [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md), [refinement order](../refinement-order.md), [text layout](../design/text-layout.md), [G4 measurements](../perf/renderer-integration-20261110.md), and issues [#2](https://github.com/jackwillis/globe/issues/2), [#18](https://github.com/jackwillis/globe/issues/18), [#34](https://github.com/jackwillis/globe/issues/34), [#55](https://github.com/jackwillis/globe/issues/55), [#59](https://github.com/jackwillis/globe/issues/59), [#64](https://github.com/jackwillis/globe/issues/64), [#97](https://github.com/jackwillis/globe/issues/97).
+See [architecture](../architecture.md), [ADR 0002](../adr/0002-rendering-shared-code-and-usability.md), [refinement order](../refinement-order.md), [text layout](../design/text-layout.md), [G4 measurements](../perf/renderer-integration-20261110.md), and issues [#2](https://github.com/jackwillis/poodle-earth/issues/2), [#18](https://github.com/jackwillis/poodle-earth/issues/18), [#34](https://github.com/jackwillis/poodle-earth/issues/34), [#55](https://github.com/jackwillis/poodle-earth/issues/55), [#59](https://github.com/jackwillis/poodle-earth/issues/59), [#64](https://github.com/jackwillis/poodle-earth/issues/64), [#97](https://github.com/jackwillis/poodle-earth/issues/97).
 
 ## Three independently variable concerns
 
@@ -21,7 +21,7 @@ Also keep separate: **look** (Map/Relief), **detail quality** (geometry, terrain
 
 ## Logical layers and text
 
-Background/terrain → geographic vectors → place symbols → cartographic labels → highlights/measuring → transient annotations. A layer description would specify semantics, ordering, style, visibility, clipping and resource lifetimes; a backend may consume different prepared representations (CPU screen-space spans, or geometry transformed by a GPU). Stable identity and hit-testing stay consistent. Labels never go into the terrain cache or a scaled zoom-preview image. Glyph-mask compositing is an alternative under [#36](https://github.com/jackwillis/globe/issues/36), not adopted; native drawing remains the baseline ([text layout](../design/text-layout.md)).
+Background/terrain → geographic vectors → place symbols → cartographic labels → highlights/measuring → transient annotations. A layer description would specify semantics, ordering, style, visibility, clipping and resource lifetimes; a backend may consume different prepared representations (CPU screen-space spans, or geometry transformed by a GPU). Stable identity and hit-testing stay consistent. Labels never go into the terrain cache or a scaled zoom-preview image. Glyph-mask compositing is an alternative under [#36](https://github.com/jackwillis/poodle-earth/issues/36), not adopted; native drawing remains the baseline ([text layout](../design/text-layout.md)).
 
 ## Execution and ownership
 
@@ -35,7 +35,7 @@ The CPU reference keeps exact cross-run hashes and the terrain/limb invariants. 
 
 ## Parked and conditional options
 
-Records of options and what would reopen them; none is a plan. Experiments, predictions and stop conditions live in the registry ([PR #113](https://github.com/jackwillis/globe/pull/113)).
+Records of options and what would reopen them; none is a plan. Experiments, predictions and stop conditions live in the registry ([PR #113](https://github.com/jackwillis/poodle-earth/pull/113)).
 
 | Option | Status | What would reopen it |
 | --- | --- | --- |
