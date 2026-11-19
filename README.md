@@ -71,7 +71,7 @@ With a C++20 compiler, CMake, Ninja, Python 3 and X11 development libraries
 cmake -S . -B build -G Ninja
 cmake --build build
 ctest --test-dir build --output-on-failure
-./build/globe-x11
+./build/poodle-earth
 ```
 
 The last command needs an authorized X display. To install the executable and its
@@ -85,7 +85,8 @@ Start at
 [Contributing](CONTRIBUTING.md) for verification expectations,
 [toolchains](docs/toolchain.md) for Retro68/Classic builds, and the
 [documentation index](docs/README.md) for architecture, formats and research.
-Internal names such as `globe-x11` and the `globe` namespace remain unchanged.
+The internal CMake target `globe-x11` and C++ `globe` namespace remain unchanged;
+the Unix executable is named `poodle-earth`.
 The repository is `jackwillis/poodle-earth`; the public rename is tracked in
 [#124](https://github.com/jackwillis/poodle-earth/issues/124).
 
