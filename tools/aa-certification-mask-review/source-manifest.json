@@ -1,0 +1,33 @@
+{
+  "base_commit": "4c8bfc74d8f2e902ad4708aa26db7c8f3c81e201",
+  "base_tree": "4ba268cb0e548002f792541958e199dbf2c6d560",
+  "review_library_id": "libfile_40de1c90f54481919817755526e77ae6",
+  "review_read_complete_lines": 100,
+  "files_sha256": {
+    "AMENDMENT-DECISION.md": "d15e615173cc2d2809a52d6d1ee0278fac45bb9cb7547daeb5f5ba199f837c08",
+    "README.md": "a2157db60d3414d62cb65c3e8534f608792958bd3415a716086dfcd1ae7560f4",
+    "REPORT.md": "bcd61c064548eeea193b5aaed5ab62424d4099639d3b17d3cad90d1c281d8f10",
+    "SUBSET-METHOD.md": "9674a3f02b89f1bfa2ce7b77fa4434bf4db2b3e6423a9c5cb927fb510d588679",
+    "masked_audit.py": "30586f85b194c0f2035c42500d18d82d44bb6ed15e5e93a4f66a8e4ce4992fd2",
+    "reference_bounds.py": "09c918eeb0977b0416e0764a5ce447da6b81f7d5dfc41738d3d51bbf77b3ee13",
+    "subsets.py": "4bef7990b2058a6620596b851d68c94708a90690bb4c2b0b7d80456efc3e9db6",
+    "test_review.py": "3b5b357beab0b81d9f584f43fe24b42cc6c5976e28591dc2110045d3109ee53f",
+    "write_report.py": "c6b9ab060ca94767e3824483463e93f5da165ef7bb3c4293fefe2a98b5b0ed34"
+  },
+  "mask_sha256": "68c4c2ff39983467819eb8f4d06a6e04713c946431b1f7e08b5bc6f0bb23fcd7",
+  "geometry_sha256": "5bf4f7e97ca78b4011f581990f803d4027060147fdce268b3ad61c9c186d3bc2",
+  "mask_source_sha256": {
+    "quality_only.py": "30b87445f821bfd1d58cb6a200fdda60cc77ff0b9437b035a42a103ada728dea",
+    "oracle_rows.py": "5c641e244719cd573c4d3f984f0d19ccc14131f71e0ba7efdf28019df2f51a85",
+    "reference.py": "c8adee30e7552fe3d07f2801a470aa508034b4ef5e0d2cd88d6852b11fc7c685"
+  },
+  "runtime": {
+    "python": "3.14.8 (main, Oct  1 2026, 00:00:00) [GCC 16.2.1 20260819 (Red Hat 16.2.1-2)]",
+    "numpy": "2.5.3",
+    "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "float_model": "binary64 frozen NumPy/libm operations; output bytes authoritative"
+  },
+  "candidate_images_opened": false,
+  "new_geographic_references": 0,
+  "amendment_adopted": false
+}
