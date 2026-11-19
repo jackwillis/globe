@@ -26,7 +26,7 @@ tools/check-policy.sh
 
 The build and all 68 registered tests passed on Fedora 44 with GCC 16.2.1
 for this docs pass (the ten X11 tests needed a rerun with private-display
-socket access outside the execution sandbox). Run `./build/globe-x11` on an authorized
+socket access outside the execution sandbox). Run `./build/poodle-earth` on an authorized
 X display to explore the Unix frontend. Its toolbar/looks palette and keyboard
 handling differ from Classic; a passing host suite is not a claim of GUI parity.
 
