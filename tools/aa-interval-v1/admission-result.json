@@ -1,0 +1,43 @@
+{
+  "adapter": "PE-AA-01-coarse-certificate-adapter-v1",
+  "protocol": "PE-AA-01-certification-amendment-v1",
+  "fixture": "view5-r220-relief",
+  "geometry_id": 10,
+  "style": "relief",
+  "dimensions": [
+    640,
+    480
+  ],
+  "tiles": 4800,
+  "pixels": 307200,
+  "valid": true,
+  "precise_at_1_over_2560": true,
+  "precise_pixels": 307200,
+  "decision_resolved": "not evaluated",
+  "validity_scope": "conditional on pinned reviewed producer and numerical assumptions",
+  "mask_sha256": "68c4c2ff39983467819eb8f4d06a6e04713c946431b1f7e08b5bc6f0bb23fcd7",
+  "mask_count": 74796,
+  "masked_midpoint_radius_bound": "152644143077/1279966020894720",
+  "full_midpoint_radius_bound": "152644143077/5257039970304000",
+  "outside_mask_width_numerator": 0,
+  "quantization_ambiguous_pixels": 2177,
+  "candidate_inputs_read": 0,
+  "geographic_quality_scores_computed": 0,
+  "provenance_sha256": "f733d07bbe324826198eee1012c0bba6845a0fe4cd2b2f48cf35eaffba6dabd3",
+  "runtime": {
+    "python": "3.14.8 (main, Oct  1 2026, 00:00:00) [GCC 16.2.1 20260819 (Red Hat 16.2.1-2)]",
+    "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43"
+  },
+  "resources": {
+    "cpu_seconds": 9.58197183,
+    "elapsed_seconds": 9.669529746985063,
+    "peak_rss_kib": 26904,
+    "address_space_cap_bytes": 402653184,
+    "cpu_soft_cap_seconds": 60
+  },
+  "read_guard": {
+    "unique_files_read": 4870,
+    "writes_permitted": false,
+    "allowlist": "pinned sources, geometry/background, evidence records, mask, 4800 tiles"
+  }
+}
