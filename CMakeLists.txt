@@ -205,6 +205,11 @@ if(GLOBE_BUILD_TESTS)
   target_compile_options(test_version PRIVATE -Wall -Wextra -Wpedantic)
   add_test(NAME version COMMAND test_version "${PROJECT_VERSION}")
   target_include_directories(test_terrain PRIVATE src/render)
+  # Host-only geometry rules of the #148 workspace research prototype (not part of any product).
+  add_executable(test_workspace_layout tests/test_workspace_layout.cpp)
+  target_include_directories(test_workspace_layout PRIVATE tools/workspace-prototype)
+  target_compile_options(test_workspace_layout PRIVATE -Wall -Wextra -Wpedantic)
+  add_test(NAME workspace_layout COMMAND test_workspace_layout)
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
   foreach(name pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)
     add_executable(test_${name} tests/test_${name}.cpp)
