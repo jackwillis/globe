@@ -1,0 +1,31 @@
+{
+  "base_commit": "63016edb9b5c191c542b11423828cf94f06aa8e4",
+  "base_tree": "9944aa0a7d6dc207598fd0fab3373da1860249b3",
+  "original_scored_protocol": "5dd566d942b01b8b8e92e0cb1cc3507910681532",
+  "read_original_source_sha256": {
+    "PROTOCOL.md": "188342dd372f8ab17c179160425f4410aca626f634d8ee8100e6b5f9e4023ad1",
+    "REVIEW-AMENDMENT.md": "883248cf803304ad52586407811344a5a65d06e740aaaa739561a7de79bc9886",
+    "FINAL-PRE-SCORING.md": "3178ab807df2b126288b402cec475ffc3fecef3e8637295b2f54bdb7d90e9b31",
+    "quality_only.py": "30b87445f821bfd1d58cb6a200fdda60cc77ff0b9437b035a42a103ada728dea",
+    "statistics_plan.py": "08eb2a8066cf5bd9a33c1480bf84ae70b8cd14b8b9a84a649a83c21fdc12f040",
+    "review_instruments.py": "2558221d42d4119f42e647f62a094a5dd801ff718aaea2033a085dd7f03d64ab",
+    "isolated_metrics.py": "e5c9fe74859d83eb23941b637e10159e5f28181efa0087eff2d036b796b76cda",
+    "sidecars.py": "6a06f6e9a0d6cde9a1016c2dc8b2eec46eb30abc3f495dfa55754b5ff9de76ad",
+    "oracle_rows.py": "5c641e244719cd573c4d3f984f0d19ccc14131f71e0ba7efdf28019df2f51a85",
+    "validate_oracle.py": "9299b6e44ecf3101b597b43f2c3299e7a136f4bd65e339ba0042600ce6cef00c"
+  },
+  "files_sha256": {
+    "INVENTORY.md": "3ff5142abf56514914b71607ff8fdd7c4f86a192bebf8c395cfa6824ee80d6ee",
+    "PROPOSAL.md": "760011b19684dfc48158cf5de3a75496082025d5e0278cbeecca446dfb7ef08b",
+    "README.md": "07048578ddb84af10075133c53a4f30d26c3bf8ff428f90492190feaa69a31d9",
+    "existing_evidence.py": "b1dbad9c7459625c32b89fe837876e2bf98422d2bbd0a3d9806aa041e5f54b58",
+    "intervals.py": "8b43dd64781690c2dcdd14dd52bff82dd1659f80cdde28331f2a045d31bd7ee5",
+    "test_contract.py": "c67588c52d9818ff13d8ec68e426586f0aa67068f9769553d0d8e4aa8fef9046"
+  },
+  "python": "3.14.8 (main, Oct  1 2026, 00:00:00) [GCC 16.2.1 20260819 (Red Hat 16.2.1-2)]",
+  "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "original_sources_unchanged": true,
+  "geographic_candidates_opened": false,
+  "new_geographic_references": 0,
+  "protocol_adopted": false
+}
