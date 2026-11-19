@@ -153,6 +153,13 @@ if(X11_FOUND AND TARGET globe_embedded_atlas)
   target_link_libraries(globe-x11 PRIVATE globe_embedded_fineelevation globe_embedded_places globe_embedded_countries globe_embedded_atlas globe_embedded_elevation globe_platform_common
                                           globe_clock_posix ${X11_LIBRARIES})
   target_compile_options(globe-x11 PRIVATE -Wall -Wextra -Wpedantic)
+
+  # The executable embeds its atlas and elevation data, so it needs no data files at run time.
+  # Only the notices that must accompany it are installed.
+  include(GNUInstallDirs)
+  install(TARGETS globe-x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(FILES LICENSE README.md data/DATA-CREDITS.txt data/LANDCLASS-NOTICE.txt
+          DESTINATION ${CMAKE_INSTALL_DOCDIR})
 endif()
 
 if(GLOBE_SANITIZE)

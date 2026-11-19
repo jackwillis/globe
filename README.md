@@ -74,7 +74,14 @@ ctest --test-dir build --output-on-failure
 ./build/globe-x11
 ```
 
-The last command needs an authorized X display. Start at
+The last command needs an authorized X display. To install the executable and its
+notices under a prefix (the binary embeds its data and needs no other files):
+
+```sh
+cmake --install build --prefix /usr/local   # honours DESTDIR for staging
+```
+
+Start at
 [Contributing](CONTRIBUTING.md) for verification expectations,
 [toolchains](docs/toolchain.md) for Retro68/Classic builds, and the
 [documentation index](docs/README.md) for architecture, formats and research.
