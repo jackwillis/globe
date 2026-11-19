@@ -590,15 +590,23 @@ class Application {
         SetWTitle(window_, title);
 #endif
     }
+    // Resolve on use so menu availability and drawing share the installed-font policy.
+    static short country_name_font() {
+        short family = 0;
+        GetFNum("\pHelvetica", &family);
+        if (!family)
+            GetFNum("\pPalatino", &family);
+        return family;
+    }
+    bool country_names_available() const {
+        return !country_labels_.empty() && country_name_font() != 0;
+    }
     void draw_country_names() {
         last_label_count_ = 0;
         if (!country_names_ || country_labels_.empty() || presentation_held(model_) ||
             !frame_settled(model_, runner_.active()))
             return;
-        short family = 0;
-        GetFNum("\pHelvetica", &family);
-        if (!family)
-            GetFNum("\pPalatino", &family);
+        const short family = country_name_font();
         if (!family)
             return;
         const auto old_font = window_->txFont;
@@ -763,10 +771,11 @@ class Application {
     // Check marks and dimming for the menu about to be shown; the model is the only state.
     void refresh_menus() {
         if (const MenuHandle view = GetMenuHandle(kViewMenu)) {
+            const bool names_available = country_names_available();
             for (short item = 1; item <= kViewItemCount; ++item) {
                 const auto s =
                     item == kCountryNamesItem
-                        ? MenuItemState{!country_labels_.empty(), country_names_}
+                        ? MenuItemState{names_available, names_available && country_names_}
                         : view_item_state(model_, overlays_.night(), overlays_.measuring(), item);
                 if (s.enabled)
                     EnableItem(view, item);
@@ -813,7 +822,7 @@ class Application {
             copy_card();
         } else if (menu == kEditMenu) {
             SystemEdit(item - 1);
-        } else if (menu == kViewMenu && item == kCountryNamesItem) {
+        } else if (menu == kViewMenu && item == kCountryNamesItem && country_names_available()) {
             country_names_ = !country_names_;
             if (fb_) {
                 present(0, fb_->height());

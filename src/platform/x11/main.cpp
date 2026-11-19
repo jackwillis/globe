@@ -708,11 +708,17 @@ class App {
             const auto text = country_labels_[label.candidate].text;
             const auto length = static_cast<int>(text.size());
             XSetForeground(dpy_, label_gc_, WhitePixel(dpy_, screen));
+            // XDrawString consumes the explicit length; string_view need not be NUL-terminated.
+            // NOLINTBEGIN(bugprone-suspicious-stringview-data-usage)
             XDrawString(dpy_, win_, label_gc_, label.baseline_x + 1, label.baseline_y + 1,
                         text.data(), length);
+            // NOLINTEND(bugprone-suspicious-stringview-data-usage)
             XSetForeground(dpy_, label_gc_, BlackPixel(dpy_, screen));
+            // XDrawString consumes the explicit length; string_view need not be NUL-terminated.
+            // NOLINTBEGIN(bugprone-suspicious-stringview-data-usage)
             XDrawString(dpy_, win_, label_gc_, label.baseline_x, label.baseline_y, text.data(),
                         length);
+            // NOLINTEND(bugprone-suspicious-stringview-data-usage)
         }
     }
 
@@ -842,7 +848,7 @@ class App {
                 if (label_gc_ && ev.xbutton.x >= 8 && ev.xbutton.x <= 130 &&
                     ev.xbutton.y >= kToolbarHeight && ev.xbutton.y <= kToolbarHeight + 22) {
                     country_names_ = !country_names_;
-                    if (frame_valid_ && !presentation_held(model_))
+                    if (frame_valid_ && fb_ && !presentation_held(model_))
                         upload(0, fb_->height());
                     draw_toolbar();
                     return false;

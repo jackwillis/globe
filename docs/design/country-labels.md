@@ -37,7 +37,12 @@ cmp /tmp/countries.gpol data/countries.gpol
 
 The Classic View menu and X11 tools window (F2) both offer **Country Names**.
 Labels default on when the edition and font are available. Classic tries
-Helvetica, then Palatino. X11 tries Helvetica, then the server's fixed font.
+Helvetica, then Palatino at 10 points; if neither family resolves, Country Names
+is unchecked and disabled and no labels draw. A valid edition-bound anchor table
+is also required. X11 tries the 12-pixel ISO-8859-1 Helvetica medium XLFD, then
+the server's `fixed` font. If both fail, no labels draw and the tools toggle is
+omitted. Neither frontend substitutes another font. Broader font roles and any
+new fallback fonts remain in #61.
 Both draw directly over a settled presentation using #36's placer. Pixel
 verification in X11 disables the text overlay. Each front end allocates
 candidate storage once at startup (about 6–7 KiB on 32-bit Classic, 8.3 KiB on
@@ -64,4 +69,15 @@ cache and Toolbox/X server allocations are platform-dependent.
    settle, survive window uncover and resize, and immediately clear when
    disabled. Compare input lag and UI responsiveness across repeated pairs.
 
-Native visual and timing acceptance is pending.
+6. Verify the menu with Helvetica available, with only Palatino available, and
+   with neither installed: the last case must be disabled and unchecked. Also
+   verify labels are unavailable on an edition/anchor mismatch.
+7. Keep the Classic painted-bounds question open: compare actual glyph ink and
+   the one-pixel shadow against the TextWidth/FontInfo placement rectangle,
+   especially Palatino overhangs, adjacent labels and the globe limb. Record
+   clipping or collisions rather than treating host synthetic metrics as proof.
+8. E1 starts with one native label against the same settled frame without it;
+   separately record the normal capped overlay. Review E2 anchor quality for
+   island, multipart and crescent countries (including the cases above).
+
+Native visual and timing acceptance, including Classic painted bounds, is pending.
