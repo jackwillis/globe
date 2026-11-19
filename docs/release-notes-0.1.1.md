@@ -1,4 +1,4 @@
-# Poodle Earth v0.1.1 — draft release notes
+# Poodle Earth v0.1.1 — release notes
 
 **Draft for Jack's review, November 19, 2026. Not a release announcement.**
 No final v0.1.1 candidate or artifacts were identified for this documentation
@@ -42,23 +42,7 @@ alternative avoids StuffIt: attach it as a CD in a compatible PowerPC emulator,
 open it in Finder and copy the application and documents to the guest hard disk.
 Use Finder so the application's resource fork and metadata survive.
 
-Jack tested `PoodleEarth-PR172-2074034-local-hfs.iso` (source
-`20740340c939bb5eda5185f5f288650db50850ee`, SHA-256
-`1f4326ce52904f1f152f1d35ecca958974b7ed5cd5ce13bf1931913efb538021`):
-
-- Burned physical CD on a Power Mac G4 under bare Mac OS 9.2.2: app, files and
-  Get Info worked; memory settings were read-only until copied to hard disk.
-  The native report did not separately specify the launch location.
-- ClassicMac 4.7.0, emulated G4, Mac OS 9.2.1: launched from the mounted CD,
-  copied to the guest desktop and launched the copy.
-
-These are Jack's reports for that exact test image, not a v0.1.1 candidate test.
-His [text-only retest waiver](https://github.com/jackwillis/globe/issues/171#issuecomment-7002974798)
-allows these tests to carry forward only for subsequent text-only changes;
-executable, Finder metadata and packaging changes are excluded. The
-[CD guide](os9-cd-image.md) records provenance and host packaging checks.
-Final artifact qualification and publication remain in
-[#171](https://github.com/jackwillis/globe/issues/171).
+See the [CD guide](os9-cd-image.md) for Power Mac G4 and ClassicMac test details.
 
 ## Limits carried forward
 
@@ -73,21 +57,11 @@ Jack closed the unfinished-edge report after sustained use without recurrence,
 not after a structured proof of a permanent fix. The original v0.1.0 limitation
 remains part of its historical notes.
 
-## Fill in at the final candidate
+## Downloads and checksums
 
-| Release detail | State |
-| --- | --- |
-| Release date and tag | Pending |
-| Candidate source revision and matching app version | Pending; version bump is separate work |
-| StuffIt, ISO and corresponding-source filenames | Pending |
-| Asset byte sizes and SHA-256 checksums | Pending; use the actual release manifest |
-| Release/download URLs | Pending; do not substitute test-build URLs |
-| Exact candidate test evidence and waiver applicability | Pending reconciliation in #171 |
-| Website download/version update and live asset checks | Pending final release artifacts |
-
-No binary build, tag, release publication or repository rename is part of this
-PR. The current repository remains `jackwillis/globe`; the rename is tracked for
-v0.2 in [#124](https://github.com/jackwillis/globe/issues/124).
+The [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1)
+includes StuffIt, a hybrid CD image, corresponding source, the release manifest,
+and SHA-256 checksums.
 
 Licence: GPL-3.0-or-later. Geographic data carry separate notices in
 [DataCredit](../data/DATA-CREDITS.txt) and the About window.
