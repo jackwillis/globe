@@ -113,5 +113,22 @@ class StageDataEditionTest(unittest.TestCase):
                 stage_tool.verify(out, "world-probe")
 
 
+    def test_committed_atlas_pack_bytes_unchanged(self):
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / "payload"
+            names = ["atlas.gatl", "countries.gpol"]
+            manifest = stage_tool.stage(
+                ROOT / "data", out, "world-probe", names, ["DATA-CREDITS.txt"]
+            )
+            self.assertEqual(len(manifest["files"]), 3)
+            self.assertEqual(manifest, stage_tool.verify(out, "world-probe"))
+            for name in names:
+                with self.subTest(pack=name):
+                    self.assertEqual(
+                        (ROOT / "data" / name).read_bytes(),
+                        (out / "share/poodle-earth/packs/world-probe" / name).read_bytes(),
+                    )
+
+
 if __name__ == "__main__":
     unittest.main()
