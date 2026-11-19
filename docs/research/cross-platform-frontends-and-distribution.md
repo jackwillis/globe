@@ -33,6 +33,8 @@ Research targets only. "Unverified" means no import audit or run on the genuine 
 
 A shared source tree does not mean one executable spans many OS releases: that holds only if ABI, APIs, C/C++ runtime, graphics and actual tests permit it. Record every claim per *(source revision, executable, ISA, OS version, driver, runtime libraries, test type)*.
 
+**Portable atlas package boundary:** see [the architecture diagram and staging proof](portable-atlas-distribution.md) and [proposed ADR 0006](../adr/0006-portable-atlas-distribution.md). They distinguish geographic packs, editions and OS packages; neither freezes the runtime format nor authorizes new release scope.
+
 ## Unix packaging direction (owner preference, unverified)
 
 - **NetBSD:** use a **pkgsrc package definition** and produce genuine installable **pkgsrc binary packages** (normally `.tgz`), rather than offering an ad hoc executable `.tar.gz` as the NetBSD release. Test `make package` / `pkg_add`, `PLIST`, dependencies, `LOCALBASE`, manifests and correct per-OS/per-architecture binaries. Candidate targets: macppc (PowerPC), amd64 and i386; only supported after matching target builds and runtime acceptance. See [official pkgsrc guide, binary packages](https://www.netbsd.org/docs/pkgsrc/). Publishing in the pkgsrc collection is a later, separate maintainership decision; a source tarball may still serve the pkgsrc distfile.
