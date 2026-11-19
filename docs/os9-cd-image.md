@@ -54,11 +54,9 @@ excludes changes to the executable, Finder metadata or packaging behavior.
 Neither this evidence nor the waiver establishes QEMU/SheepShaver acceptance or
 compatibility with every guest OS.
 
-This is a test build whose source still reports 0.1.0, not a published v0.1.1
-artifact. The final versioned ISO, source revision, filename, checksum, download
-URL and publication remain pending in [#171](https://github.com/jackwillis/globe/issues/171).
-Do not reuse the test image's checksum for a rebuilt release image. The public
-v0.1.0 release has only StuffIt and source downloads.
+The [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1) publishes the hybrid ISO alongside StuffIt,
+matching source, the release manifest and SHA-256 checksums. Use the published
+checksums to verify the release image.
 
 ## Build and verify on Linux
 
