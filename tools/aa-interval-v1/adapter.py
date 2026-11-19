@@ -225,7 +225,8 @@ class CoarseAdapter:
         return {'adapter': VERSION, 'protocol': self.pins['protocol'],
                 'fixture': self.pins['fixture'], 'geometry_id': self.pins['geometry_id'],
                 'style': 'relief', 'dimensions': [640, 480], 'tiles': 4800,
-                'pixels': PIXELS, 'valid': True, 'precise_at_1_over_2560': precise_count == PIXELS,
+                'pixels': PIXELS, 'structural_admission': 'passed',
+                'geometric_enclosure_reproved': False, 'precise_at_1_over_2560': precise_count == PIXELS,
                 'precise_pixels': precise_count, 'decision_resolved': 'not evaluated',
                 'validity_scope': 'conditional on pinned reviewed producer and numerical assumptions',
                 'mask_sha256': digest(mask), 'mask_count': sum(mask),
@@ -241,6 +242,14 @@ class CoarseAdapter:
                             self.pins['mask']['sha256'], PIXELS)
 
     def bounds(self):
+        """Return a bounded stream with an explicit exhaustion receipt.
+
+        A future consumer must call require_complete() after consuming the stream.
+        A partial, closed or failed stream cannot issue a receipt.
+        """
+        return BoundsStream(self._bounds(), self.pins['evidence']['tail']['combined-manifest.json'])
+
+    def _bounds(self):
         """Future in-memory consumer bridge; full admission precedes first yield.
 
         Not invoked by admit.py. Recheck every payload on the second streaming
@@ -260,3 +269,59 @@ class CoarseAdapter:
             for p in validate_tile(strict_json(decoded), i):
                 x, y = p['pixel']
                 yield y*640+x, tuple(p['lower_numerator']), tuple(p['upper_numerator']), p['denominator']
+
+
+@dataclass(frozen=True)
+class CompletionReceipt:
+    adapter: str
+    manifest_sha256: str
+    pixels: int
+
+
+class BoundsStream:
+    """Single-pass rows; constant-size completion state, no frame buffering.
+
+    Completion is recorded only after the underlying verified generator reaches
+    StopIteration with exactly PIXELS rows. Even the last yielded row is not a
+    receipt: the consumer must request exhaustion, as a normal for-loop does.
+    This API contract is not a security boundary against a hostile Python caller.
+    """
+    def __init__(self, rows, manifest_sha256):
+        self._rows = iter(rows)
+        self._manifest_sha256 = manifest_sha256
+        self._count = 0
+        self._failed = False
+        self._receipt = None
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        require(not self._failed, 'stream failed or closed')
+        if self._receipt is not None:
+            raise StopIteration
+        try:
+            row = next(self._rows)
+            self._count += 1
+            require(self._count <= PIXELS, 'excess stream rows')
+            return row
+        except StopIteration:
+            if self._count != PIXELS:
+                self._failed = True
+                raise ValueError('incomplete stream; no completion receipt')
+            self._receipt = CompletionReceipt(VERSION, self._manifest_sha256, self._count)
+            raise
+        except BaseException:
+            self._failed = True
+            raise
+
+    def close(self):
+        if self._receipt is None:
+            self._failed = True
+        close = getattr(self._rows, 'close', None)
+        if close is not None:
+            close()
+
+    def require_complete(self):
+        require(self._receipt is not None, 'verified full-frame completion not established')
+        return self._receipt

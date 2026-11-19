@@ -34,8 +34,12 @@ with background. Pixel precision is checked by exact integer width inequalities;
 wide valid intervals remain valid with their budget stop/precision status.
 Quota/depth/unknown-area fields and exact half-up RGB565 code ranges are checked.
 Floating resource/radius fields are telemetry and never arithmetic authority.
-The output has VALID (conditional), PRECISE at the original operational 1/2560,
-and unevaluated DECISION-RESOLVED states separately. The fine target 1/10240 is
+The output reports structural_admission="passed", geometric_enclosure_reproved=false,
+PRECISE at the original operational 1/2560, and unevaluated DECISION-RESOLVED
+separately. Structural admission under pinned provenance is not an independently
+proven L≤R≤U enclosure. Engine/verifier version labels in provenance.json are
+descriptive metadata; pinned source/evidence hashes establish identity, not
+independent verification of those labels or of the producer. The fine target 1/10240 is
 neither generated nor imposed as a validity gate.
 
 Enclosure soundness is conditional on the pinned reviewed exact-dyadic producer,
@@ -70,11 +74,20 @@ These bounds are exact for the Cartesian product of scalar reference intervals;
 geometry-induced inter-pixel/channel correlations are conservatively relaxed.
 They are never claimed to be jointly achievable geographic extrema.
 
-The adapter's `bounds()` performs complete admission before yielding any rows,
-then rechecks payload hashes on a second streaming pass. `mask()` returns pinned
+The adapter's `bounds()` returns a single-pass `BoundsStream`. Admission runs on
+the first `next()`, before yielding rows; payload hashes are rechecked on the
+second streaming pass. `mask()` returns pinned
 literal bytes. Those methods are the future in-memory bridge to `fixed_mask`;
-**the geographic bridge is not scored or invoked by the admission CLI**. A caller
-must exhaust the iterator successfully before using a result. This session tests
+**the geographic bridge is not scored or invoked by the admission CLI**. A future authorized caller must exhaust the stream and obtain
+`stream.require_complete()` before using a result. It returns an immutable receipt
+with adapter version, pinned manifest SHA256 and 307200-pixel count only after
+successful StopIteration. Partial iteration (even stopping at the last yielded
+row), close, short completion or an exception cannot establish completion.
+A normal for-loop or fixed_mask drains through StopIteration; fixed_mask still
+independently checks unique complete coverage. The receipt adds constant-size
+state, not a frame buffer. It is an API contract, not an unforgeable admission
+token; fixed_mask remains a general synthetic/in-memory utility and callers must
+use the matching pinned mask and stream. No geographic consumer is added. This session tests
 the certificate-to-metric connection only with synthetic certificates. There is
 no geographic candidate reader or scorer CLI.
 
@@ -92,8 +105,9 @@ pinned hashes. Missing evidence is an error, not permission to regenerate it.
 
 ```sh
 sha256sum -c tools/aa-interval-v1/source-freeze.sha256
-/usr/bin/time -v python3 -B -m unittest discover \
+/usr/bin/time -v timeout 120s python3 -B -m unittest discover \
   -s tools/aa-interval-v1 -p 'test_*.py' -v
+/usr/bin/time -v timeout 120s python3 -B tools/aa-interval-v1/check_mutations.py
 /usr/bin/time -v timeout 90s python3 -B tools/aa-interval-v1/admit.py \
   --fixtures /tmp/pe-aa-phase3b-fixtures \
   --prefix /tmp/aa-full-coarse-evidence \
@@ -102,10 +116,20 @@ sha256sum -c tools/aa-interval-v1/source-freeze.sha256
 ```
 
 The CLI enforces 384 MiB address space, 60/65 CPU seconds and a strict evidence-only
-open audit hook (no file writes). `timeout` supplies the outer wall guard. Shell
+open audit hook. The hook blocks Python-audited open calls for non-allowlisted
+paths and write modes/flags; it does not block unlink, rename, mkdir, truncate,
+chmod, symlink, subprocess, os.system or ctypes. It is installed only by admit.py,
+not by the bounds() library path. It is not a filesystem/process sandbox or a
+general write-prevention mechanism. The actual program uses read-only evidence
+opens and has no evidence-mutation code. Pinned hashes and the reviewed code are
+the trust boundary. Output open_write_denied describes this limited hook;
+unique_open_paths_allowed counts distinct allowed open attempts, not successful
+file reads. `timeout` supplies the outer wall guard. Shell
 redirection can save stdout/stderr outside the evidence inputs. These are verifier
-resource observations, not rendering benchmarks. Tests create temporary synthetic
-files only. The historical evidence packages supply the four input roles; exact
+resource observations, not rendering benchmarks. Tests use synthetic in-memory evidence (one manifest, two cached tile payloads)
+and temporary synthetic files only. No geographic evidence is needed for the
+integration or mutation suite; no admission/hash/parser/validation loop is mocked.
+Only the bounded file-read boundary is replaced, with test-only synthetic pins. The historical evidence packages supply the four input roles; exact
 role file names and hashes are in `provenance.json`. Input source packages:
 coarse original ZIP `d198144721dc036020ac0332c25499eececb312e33fce76fd88d7eb58555649b`,
 completion ZIP `868438999b7dd9971a36cb8494584f3ecbd4bf4656a8122dcc556777156b6bdf`,
@@ -114,3 +138,9 @@ Archives need not be opened by this verifier: extracted records are individually
 pinned, as is the completed manifest. The historical accounting gaps stay intact.
 
 See [REPORT.md](REPORT.md) for results, omissions and the steering stop.
+
+
+CI limitation: the inherited Checks job is failing at clang-format 22.1.8 in
+`tools/aa-experiment/synthetic_driver.cpp`; see REPORT.md. Local Python controls
+passing does not make the PR CI-green. This follow-up changes no ancestor C++ or
+workflow file and does not add these research tests to CI.

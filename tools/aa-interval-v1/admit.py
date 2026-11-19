@@ -14,6 +14,7 @@ from adapter import CoarseAdapter, Paths, digest, bounded_read
 
 
 def install_read_guard(allowed, reads):
+    """Restrict audited open calls only; not a filesystem/process sandbox."""
     def guard(event, arguments):
         if event == 'open':
             name, mode, flags = arguments
@@ -48,7 +49,11 @@ def main():
                            'elapsed_seconds': time.monotonic()-start,
                            'peak_rss_kib': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
                            'address_space_cap_bytes': 384*1024*1024, 'cpu_soft_cap_seconds': 60}
-    result['read_guard'] = {'unique_files_read': len(reads), 'writes_permitted': False,
+    result['read_guard'] = {'unique_open_paths_allowed': len(reads), 'open_write_denied': True,
+                            'scope': 'Python audited open operations only',
+                            'does_not_block': ['unlink', 'rename', 'mkdir', 'truncate', 'chmod', 'symlink',
+                                               'subprocess', 'ctypes'],
+                            'installed_in': 'admit.py only; bounds() API is unguarded',
                             'allowlist': 'pinned sources, geometry/background, evidence records, mask, 4800 tiles'}
     print(json.dumps(result, indent=2))
 

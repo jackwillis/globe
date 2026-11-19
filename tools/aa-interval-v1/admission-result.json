@@ -10,7 +10,8 @@
   ],
   "tiles": 4800,
   "pixels": 307200,
-  "valid": true,
+  "structural_admission": "passed",
+  "geometric_enclosure_reproved": false,
   "precise_at_1_over_2560": true,
   "precise_pixels": 307200,
   "decision_resolved": "not evaluated",
@@ -29,15 +30,27 @@
     "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43"
   },
   "resources": {
-    "cpu_seconds": 9.58197183,
-    "elapsed_seconds": 9.669529746985063,
-    "peak_rss_kib": 26904,
+    "cpu_seconds": 9.942288615999999,
+    "elapsed_seconds": 10.010707284905948,
+    "peak_rss_kib": 26992,
     "address_space_cap_bytes": 402653184,
     "cpu_soft_cap_seconds": 60
   },
   "read_guard": {
-    "unique_files_read": 4870,
-    "writes_permitted": false,
+    "unique_open_paths_allowed": 4870,
+    "open_write_denied": true,
+    "scope": "Python audited open operations only",
+    "does_not_block": [
+      "unlink",
+      "rename",
+      "mkdir",
+      "truncate",
+      "chmod",
+      "symlink",
+      "subprocess",
+      "ctypes"
+    ],
+    "installed_in": "admit.py only; bounds() API is unguarded",
     "allowlist": "pinned sources, geometry/background, evidence records, mask, 4800 tiles"
   }
 }

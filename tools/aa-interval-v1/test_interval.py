@@ -61,6 +61,12 @@ class MetricsTests(unittest.TestCase):
         result = fixed_mask([(0, (0,)*3, (0,)*3, 1)], b'\1', bytes([255, 128, 0]), bytes(3))
         self.assertEqual(result['mae_a'].lower, F(383, 765))
 
+    def test_equal_count_duplicate_and_omitted_pixels(self):
+        rows = [(0, (0,)*3, (0,)*3, 1), (0, (0,)*3, (0,)*3, 1)]
+        # Two rows for a two-pixel frame; count alone would conceal missing ID1.
+        with self.assertRaisesRegex(ValueError, 'duplicate'):
+            fixed_mask(rows, b'\1\1', bytes(6), bytes(6))
+
     def test_tight_shared_difference_and_antisymmetry(self):
         for lo, hi in [(F(0), F(1)), (F(1, 4), F(3, 4)), (F(1, 3), F(2, 3))]:
             ab = scalar_losses(lo, hi, F(1, 4), F(3, 4))[2]
@@ -148,6 +154,44 @@ class AdmissionTests(unittest.TestCase):
             mutate(r)
             with self.subTest(mutation=mutate), self.assertRaises(ValueError):
                 validate_tile(r, 0)
+
+    def test_noncanonical_positive_denominators(self):
+        for den in (1, DEN+1, 2*DEN):
+            record = tile()
+            record['pixels'][0]['denominator'] = den
+            with self.subTest(den=den), self.assertRaisesRegex(ValueError, 'canonical denominator'):
+                validate_tile(record, 0)
+
+    def test_interior_quantizer_boundaries_in_admission(self):
+        # On either side of the FIRST interior rounding boundary. Independent
+        # nearest-code enumeration chooses the larger code at equal distance.
+        for channel, maximum in enumerate((31, 63, 31)):
+            below = DEN//(2*maximum)
+            for value in (below, below+1):
+                record = tile()
+                pixel = record['pixels'][0]
+                pixel['lower_numerator'][channel] = value
+                pixel['upper_numerator'][channel] = value
+                expected = min(range(maximum+1), key=lambda k: (abs(F(k, maximum)-F(value, DEN)), -k))
+                pixel['quantized_codes'][channel] = [expected, expected]
+                self.assertEqual(len(validate_tile(record, 0)), 64)
+                pixel['quantized_codes'][channel] = [1-expected, 1-expected]
+                with self.assertRaisesRegex(ValueError, 'half-up code range'):
+                    validate_tile(record, 0)
+
+    def test_precision_equality_and_one_integer_over(self):
+        width = DEN//1280
+        self.assertEqual(F(width, DEN), F(1, 1280))
+        for w, precise in ((width, True), (width+1, False)):
+            record = tile()
+            pixel = record['pixels'][0]
+            pixel.update(upper_numerator=[w]*3, precision_reached=precise,
+                         state='precision_reached' if precise else 'cell_budget')
+            record['target_attained'] = precise
+            self.assertEqual(len(validate_tile(record, 0)), 64)
+            pixel['precision_reached'] = not precise
+            with self.assertRaisesRegex(ValueError, 'precision status'):
+                validate_tile(record, 0)
 
     def test_valid_wide_is_not_invalid(self):
         r = tile()
