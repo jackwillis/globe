@@ -40,7 +40,7 @@ against `top`. Wall ≈ CPU (CPU/wall ≥ 0.999).
 ## Preliminary slowdown, and what it does not show
 
 G4/Linux CPU ratio **54–61×** for these cells. One repetition of 100 pixels each (Linux had three, on a busy
-host), so the ratio carries perhaps ±10% and an unknown startup/cache bias; it is not a throughput claim.
+host), so the ratio has no measured spread and may include startup or cache bias; it is not a throughput claim.
 Applying it to the Linux ladder only as a sensitivity (the REPORT's X table; X≈55 sits between the 50 and 100
 rows): about 41 ms per uncertain pixel, so stage B (1,000 px) ≈ 30–52 s per cell and per repetition, stage C
 (5,000 px) ≈ 2.5–4.3 min, one 74,796-px condition ≈ 38–65 min and 32 conditions ≈ 20–35 h of CPU. Those last two
