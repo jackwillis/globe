@@ -1,0 +1,188 @@
+{
+ "baseline_tests": 27,
+ "mutants_killed": 22,
+ "results": [
+  {
+   "mutant": "ties round to the lower code",
+   "killed": true,
+   "failing_tests": [
+    "test_lattice_oracle_with_attainment",
+    "test_ties_and_expansion_by_hand"
+   ]
+  },
+  {
+   "mutant": "quantizer cells closed at both ends",
+   "killed": true,
+   "failing_tests": [
+    "test_h_matches_per_channel_oracle_and_is_tighter_than_relaxation",
+    "test_lattice_oracle_with_attainment",
+    "test_ties_and_expansion_by_hand"
+   ]
+  },
+  {
+   "mutant": "Q chosen independently of R",
+   "killed": true,
+   "failing_tests": [
+    "test_false_midpoint_pass_and_fail_are_inconclusive",
+    "test_h_matches_per_channel_oracle_and_is_tighter_than_relaxation",
+    "test_lattice_oracle_with_attainment",
+    "test_ties_and_expansion_by_hand"
+   ]
+  },
+  {
+   "mutant": "bit replication omitted",
+   "killed": true,
+   "failing_tests": [
+    "test_false_midpoint_pass_and_fail_are_inconclusive",
+    "test_h_matches_per_channel_oracle_and_is_tighter_than_relaxation",
+    "test_lattice_oracle_with_attainment",
+    "test_ratio_of_means_not_mean_of_ratios",
+    "test_ties_and_expansion_by_hand"
+   ]
+  },
+  {
+   "mutant": "target weight 1/4 instead of 1/5",
+   "killed": true,
+   "failing_tests": [
+    "test_false_midpoint_pass_and_fail_are_inconclusive",
+    "test_h_matches_per_channel_oracle_and_is_tighter_than_relaxation",
+    "test_h_threshold_equality_and_sign",
+    "test_h_upper_zero_is_not_a_failure_and_straddle_is_inconclusive",
+    "test_identical_candidates_cancel_and_h_is_minus_d_over_five",
+    "test_identical_candidates_with_uncertain_reference_fail_provably",
+    "test_ratio_of_means_not_mean_of_ratios"
+   ]
+  },
+  {
+   "mutant": "local ratio 1/5 instead of 1/10",
+   "killed": true,
+   "failing_tests": [
+    "test_lower_bound_equal_to_zero_is_not_a_violation",
+    "test_mixed_branch_bounds_against_world_enumeration",
+    "test_ratio_branch_equality_and_boundaries"
+   ]
+  },
+  {
+   "mutant": "J keeps only the floor branch",
+   "killed": true,
+   "failing_tests": [
+    "test_lower_bound_equal_to_zero_is_not_a_violation",
+    "test_mixed_branch_bounds_against_world_enumeration",
+    "test_ratio_branch_equality_and_boundaries"
+   ]
+  },
+  {
+   "mutant": "J keeps only the ratio branch",
+   "killed": true,
+   "failing_tests": [
+    "test_floor_branch_equality_and_boundaries",
+    "test_identical_candidates_pass_even_with_unknown_reference",
+    "test_mixed_branch_bounds_against_world_enumeration"
+   ]
+  },
+  {
+   "mutant": "J upper uses the optimistic branch",
+   "killed": true,
+   "failing_tests": [
+    "test_identical_candidates_pass_even_with_unknown_reference"
+   ]
+  },
+  {
+   "mutant": "J equality fails",
+   "killed": true,
+   "failing_tests": [
+    "test_floor_branch_equality_and_boundaries",
+    "test_ratio_branch_equality_and_boundaries"
+   ]
+  },
+  {
+   "mutant": "J violation at equality",
+   "killed": true,
+   "failing_tests": [
+    "test_lower_bound_equal_to_zero_is_not_a_violation"
+   ]
+  },
+  {
+   "mutant": "floor equality eligible",
+   "killed": true,
+   "failing_tests": [
+    "test_denominator_state_boundaries"
+   ]
+  },
+  {
+   "mutant": "D.upper == floor not limited",
+   "killed": true,
+   "failing_tests": [
+    "test_denominator_state_boundaries",
+    "test_floor_boundary_equality_and_one_unit"
+   ]
+  },
+  {
+   "mutant": "H equality fails",
+   "killed": true,
+   "failing_tests": [
+    "test_h_threshold_equality_and_sign"
+   ]
+  },
+  {
+   "mutant": "H.upper == 0 fails",
+   "killed": true,
+   "failing_tests": [
+    "test_h_upper_zero_is_not_a_failure_and_straddle_is_inconclusive"
+   ]
+  },
+  {
+   "mutant": "eligibility ignored for verdicts",
+   "killed": true,
+   "failing_tests": [
+    "test_crossing_denominator_is_inconclusive_even_when_h_is_resolved"
+   ]
+  },
+  {
+   "mutant": "negative scale swaps wrong flags",
+   "killed": true,
+   "failing_tests": [
+    "test_identical_candidates_cancel_and_h_is_minus_d_over_five",
+    "test_identical_candidates_with_uncertain_reference_fail_provably"
+   ]
+  },
+  {
+   "mutant": "geometry ids not required distinct",
+   "killed": true,
+   "failing_tests": [
+    "test_invalid_style_inputs (n=16)"
+   ]
+  },
+  {
+   "mutant": "styles may be mixed",
+   "killed": true,
+   "failing_tests": [
+    "test_invalid_style_inputs (n=16)",
+    "test_map_and_relief_are_never_pooled"
+   ]
+  },
+  {
+   "mutant": "FAIL ignored in conjunction",
+   "killed": true,
+   "failing_tests": [
+    "test_map_and_relief_are_never_pooled",
+    "test_partial_conjunction_is_never_a_complete_pass",
+    "test_three_valued_conjunction"
+   ]
+  },
+  {
+   "mutant": "partial conjunction may pass",
+   "killed": true,
+   "failing_tests": [
+    "test_partial_conjunction_is_never_a_complete_pass"
+   ]
+  },
+  {
+   "mutant": "duplicate pixel guard omitted",
+   "killed": true,
+   "failing_tests": [
+    "test_invalid_frames_are_rejected (args=([(0, (0, 0, 0), (1, 1, 1), 1), (0, (0, 0, 0), (1, 1, 1), 1)], b'\\x01\\x01', b'\\x00\\x00\\x00\\x00\\x00\\x00', b'\\x00\\x00\\x00\\x00\\x00\\x00'))"
+   ]
+  }
+ ]
+}
