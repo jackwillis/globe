@@ -9,9 +9,9 @@ until a candidate is identified.
 
 ## Unreleased
 
-These changes are merged on main after v0.1.0; they are not a published v0.1.1.
-See the [draft v0.1.1 notes](docs/release-notes-0.1.1.md). Final candidate contents
-and release artifacts remain to be reconciled by the maintainer.
+## 0.1.1 — 2026-11-19
+
+[Download v0.1.1](https://github.com/jackwillis/globe/releases/tag/v0.1.1) · [Release notes](docs/release-notes-0.1.1.md)
 
 - Classic: a memory-refused window enlargement now explains how to raise the
   application's memory in Get Info, once per session. Jack checked the alert on
@@ -32,16 +32,10 @@ and release artifacts remain to be reconciled by the maintainer.
   keys ([#40](https://github.com/jackwillis/globe/issues/40), [#144](https://github.com/jackwillis/globe/issues/144)).
 - Classic About displays the full project version
   ([#136](https://github.com/jackwillis/globe/issues/136)).
-- The release packager adds an ISO-9660/HFS CD image alongside StuffIt.
-  Jack tested the **PR #172 image at source `2074034`** on a burned CD in a
-  physical G4 under bare Mac OS 9.2.2, and in ClassicMac 4.7.0 (emulated G4,
-  Mac OS 9.2.1), launching from the mounted CD and from a desktop copy in the
-  emulator. His retest waiver covers subsequent text-only changes, excluding
-  executable, Finder metadata and packaging changes. Final release ISO
-  publication is pending; [exact image identity and evidence](docs/os9-cd-image.md)
-  remain scoped to those environments ([#171](https://github.com/jackwillis/globe/issues/171#issuecomment-7002974798)).
+- The Classic release adds a hybrid ISO-9660/HFS CD image alongside StuffIt.
+  See the [CD guide](docs/os9-cd-image.md) for Finder installation and testing details.
 - Public website with genuine bare-Mac-OS-9 screenshots, accepted by Jack for
-  v0.1.1; refreshed onboarding and installation docs are prepared for review
+  v0.1.1; onboarding and installation docs were refreshed
   ([#129](https://github.com/jackwillis/globe/issues/129), [#192](https://github.com/jackwillis/globe/pull/192), [#118](https://github.com/jackwillis/globe/issues/118)).
 - After v0.1.0, Jack reported sustained use without recurrence of the unfinished
   globe edge. [#74](https://github.com/jackwillis/globe/issues/74) closed on that
