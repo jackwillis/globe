@@ -1,0 +1,126 @@
+{
+  "adapter": "PE-AA-01-coarse-certificate-adapter-v1",
+  "protocol": "PE-AA-01-certification-amendment-v1",
+  "protocol_commit": "9a2214c6286c54f3d451956abe105b9d33877845",
+  "engine_version": "enclosure-scale-v1@7ab358f2",
+  "legacy_verifier": "coarse-tail-admission@63016edb",
+  "fixture": "view5-r220-relief",
+  "geometry_id": 10,
+  "geometry_id_convention": "2*view+(radius==440); 16 IDs, styles separate",
+  "dimensions": [
+    640,
+    480
+  ],
+  "pixel_convention": "row-major frame; [x,x+1] x [y,y+1] pixel area; 8x8 row-major tiles",
+  "inputs": {
+    "view5-r220-relief.geometry": "5bf4f7e97ca78b4011f581990f803d4027060147fdce268b3ad61c9c186d3bc2",
+    "view5-r220-relief-background.rgb565": "7c015590e67af062f511baaec37114a2a478faff8a67988ed99bfe9dad760dcc"
+  },
+  "source_order_sha256": "57f682ae8d2616d9dccd79056c168acf8209e7fa4d78d1c70bccd8d5c835046c",
+  "source_order_encoding": "concatenated ordered feature records from PEAAAB1 geometry, excluding header/count; binds chain order/colors too",
+  "sources": {
+    "tools/aa-experiment/CORRECTION-COMMANDS.md": "def05ec33e2397df7aac22c0ee1829f0ad69ca9147eacf5a78aa77ffd02c79f7",
+    "tools/aa-experiment/FINAL-PRE-SCORING.md": "3178ab807df2b126288b402cec475ffc3fecef3e8637295b2f54bdb7d90e9b31",
+    "tools/aa-experiment/FINAL-RESULTS.md": "9463e6812424edda0703cbb3185fd56ab63f210f6eb387680cc841ce306ac06a",
+    "tools/aa-experiment/PROTOCOL.md": "188342dd372f8ab17c179160425f4410aca626f634d8ee8100e6b5f9e4023ad1",
+    "tools/aa-experiment/README.md": "0d833d0f47668bc50ed2dc867344c3da49c6aba7b16cbf1200e2437305a92832",
+    "tools/aa-experiment/RESULTS.md": "cbcb8daba54a34e952f55ad2d333ed916270d43726abb4bb82784c137182b0ec",
+    "tools/aa-experiment/REVIEW-AMENDMENT.md": "883248cf803304ad52586407811344a5a65d06e740aaaa739561a7de79bc9886",
+    "tools/aa-experiment/REVIEW-RESULTS.md": "e14525c8564ea21ac932a062836a340d8bf3dd4a132efb466331411cef6833af",
+    "tools/aa-experiment/audit_blind.py": "373dedd779f677aa020a05e36f1fea3ff5d923d5a975ef21542977385cd5b74d",
+    "tools/aa-experiment/check_geometry_parity.py": "2de8913ee813c10aa330d1fd2685dd42530d8909137d1ad9270089e7c93fd910",
+    "tools/aa-experiment/final-source-freeze.json": "8f55c5e96204a447f3876719758fce787a6ca75fae1f77c36a485779f0e4dd28",
+    "tools/aa-experiment/final_controls.py": "6d1aec7e57f3ecce0d018d9ba7b3e8edacb4c42e4cb9983cec32b0cea81edb1f",
+    "tools/aa-experiment/images.py": "bf9fffd293f4f8b3c025a09c18e15c79778d69d86f4f4788cf4537cba3a864ae",
+    "tools/aa-experiment/isolated_metrics.py": "e5c9fe74859d83eb23941b637e10159e5f28181efa0087eff2d036b796b76cda",
+    "tools/aa-experiment/oracle_preflight.py": "7e984816ae79288e94c9d24ac850dedf2b3453d8f60492643bda109822c0321c",
+    "tools/aa-experiment/oracle_rows.py": "5c641e244719cd573c4d3f984f0d19ccc14131f71e0ba7efdf28019df2f51a85",
+    "tools/aa-experiment/prepare_blind.py": "f91a873f7e89cee94ebb30543444d064fc9dc1a5553218c976a2d9254a0c0561",
+    "tools/aa-experiment/quality_only.py": "30b87445f821bfd1d58cb6a200fdda60cc77ff0b9437b035a42a103ada728dea",
+    "tools/aa-experiment/reference.py": "c8adee30e7552fe3d07f2801a470aa508034b4ef5e0d2cd88d6852b11fc7c685",
+    "tools/aa-experiment/review-source-freeze.json": "0e127802a29abe981a0785341c24af433b717ca917123d687e6f5f71332035fc",
+    "tools/aa-experiment/review_instruments.py": "2558221d42d4119f42e647f62a094a5dd801ff718aaea2033a085dd7f03d64ab",
+    "tools/aa-experiment/run_reference.py": "ea90eff383af499d96245e62c19faba709885460a7b9ba4faba2f9c7d0d382d3",
+    "tools/aa-experiment/sidecars.py": "6a06f6e9a0d6cde9a1016c2dc8b2eec46eb30abc3f495dfa55754b5ff9de76ad",
+    "tools/aa-experiment/statistics_plan.py": "08eb2a8066cf5bd9a33c1480bf84ae70b8cd14b8b9a84a649a83c21fdc12f040",
+    "tools/aa-experiment/test_sidecars.py": "754f5741f5a92e9fd474dd634de36ed454b70a65b8237498d457b7afdb42557e",
+    "tools/aa-experiment/validate_oracle.py": "9299b6e44ecf3101b597b43f2c3299e7a136f4bd65e339ba0042600ce6cef00c",
+    "tools/aa-certification-contract/INVENTORY.md": "3ff5142abf56514914b71607ff8fdd7c4f86a192bebf8c395cfa6824ee80d6ee",
+    "tools/aa-certification-contract/PROPOSAL.md": "760011b19684dfc48158cf5de3a75496082025d5e0278cbeecca446dfb7ef08b",
+    "tools/aa-certification-contract/README.md": "07048578ddb84af10075133c53a4f30d26c3bf8ff428f90492190feaa69a31d9",
+    "tools/aa-certification-contract/existing_evidence.py": "b1dbad9c7459625c32b89fe837876e2bf98422d2bbd0a3d9806aa041e5f54b58",
+    "tools/aa-certification-contract/intervals.py": "8b43dd64781690c2dcdd14dd52bff82dd1659f80cdde28331f2a045d31bd7ee5",
+    "tools/aa-certification-contract/source-manifest.json": "e77b72fe55312ef9b2c509fc82aefcf13ea492b362edda2e89344a91e639470e",
+    "tools/aa-certification-contract/test_contract.py": "c67588c52d9818ff13d8ec68e426586f0aa67068f9769553d0d8e4aa8fef9046",
+    "tools/aa-certification-mask-review/AMENDMENT-DECISION.md": "d15e615173cc2d2809a52d6d1ee0278fac45bb9cb7547daeb5f5ba199f837c08",
+    "tools/aa-certification-mask-review/README.md": "a2157db60d3414d62cb65c3e8534f608792958bd3415a716086dfcd1ae7560f4",
+    "tools/aa-certification-mask-review/REPORT.md": "bcd61c064548eeea193b5aaed5ab62424d4099639d3b17d3cad90d1c281d8f10",
+    "tools/aa-certification-mask-review/SUBSET-METHOD.md": "9674a3f02b89f1bfa2ce7b77fa4434bf4db2b3e6423a9c5cb927fb510d588679",
+    "tools/aa-certification-mask-review/masked_audit.py": "30586f85b194c0f2035c42500d18d82d44bb6ed15e5e93a4f66a8e4ce4992fd2",
+    "tools/aa-certification-mask-review/reference_bounds.py": "09c918eeb0977b0416e0764a5ce447da6b81f7d5dfc41738d3d51bbf77b3ee13",
+    "tools/aa-certification-mask-review/source-manifest.json": "bf85594133b7ca5fd546ad900f0e370c97cde3f9d165d936cccd8c4c2c75a9db",
+    "tools/aa-certification-mask-review/subsets.py": "4bef7990b2058a6620596b851d68c94708a90690bb4c2b0b7d80456efc3e9db6",
+    "tools/aa-certification-mask-review/test_review.py": "3b5b357beab0b81d9f584f43fe24b42cc6c5976e28591dc2110045d3109ee53f",
+    "tools/aa-certification-mask-review/write_report.py": "c6b9ab060ca94767e3824483463e93f5da165ef7bb3c4293fefe2a98b5b0ed34",
+    "docs/research/pe-aa-01-certification-amendment-v1.md": "0f2323cadf770e60279a53156ea05a4575964e8bcdaafc3c4cba1a9b4e7ff36b",
+    "docs/research/pe-aa-01-certification-precedence-v1.md": "9650c5f9f3b92a5a272b8befbcaf3aba60546b09b998cd03fed9c129ee8168df",
+    "docs/research/pe-aa-01-certification-traceability-v1.md": "97b13e5e35ef7087cf2cb99621c721465d4ba574ade531ae74228cd3b78bfc71",
+    "docs/research/certification-source-record-v1.json": "77878286d628852f978b59a99c1aacf19eb7c6691863e70c8db25184b7336b35",
+    "tools/aa-enclosure-pilot/DESIGN.md": "4f818a76fea0da115fba6d28684c40c5591ebc14f036069bed5f798456bb5900",
+    "tools/aa-enclosure-scale-v1/enclose.py": "06f2cda0efd4649426b4928908600e0a6fb80de56d70ab9fbfd0f1b98cca2f49",
+    "tools/aa-enclosure-scale-v1/reliability.py": "bebc35bfc3dbe8c4503ae954a737b71ebd084205fcd47fdd8e7160e8f161db12",
+    "tools/aa-enclosure-scale-v1/controls_original.py": "b7b948a00167ec6e5b9e9f8a2bbc59856bf29b4f54a05981387eb69554befcee",
+    "tools/aa-enclosure-full-coarse/retained.py": "f28be04ca8244365318dc95814e0c1068cf82ffaa04abec7195d65641467606b",
+    "tools/aa-coarse-tail/admission.py": "6fd26340a05574359781d6e0ea387e3f6d82dbf59f9db5e639d9c94d4422883c"
+  },
+  "evidence": {
+    "prefix": {
+      "source-freeze.json": "d7c3c3d0c6760d116837764f7914821d2291dae77d5b1b408ac60be0b8422a10",
+      "continuation-freeze.json": "07bdf694a44b7fea71d5998a19dcd0d5ca8d1646ade17b413c479a621a74cc23",
+      "input-admission-verification.json": "adad43e7de20d496e3dbdcee3bebacd40c673a872917f259c841147cc136d62f",
+      "runtime.json": "5b4decaf724386f8bf8edf7d1ff06558c7e566e626562fbae5b71574f3b74d3e",
+      "reliability.json": "8d1ad68909150e9173bb3c062fd5db4252e0c0461d7b729deff814b4f17747b0",
+      "recovery-controls.json": "c725ec3a72bc400f6d73ec799145e2f7a2438142bb802881fdf6bfadbe833419",
+      "completed.jsonl": "cf829a9f51b5ceb45878bd81e5d42349aed5e6c30421a9c40e6fed813a5dc9cc"
+    },
+    "tail": {
+      "source-freeze.json": "0968e2ec59b645f2f3f371cb646bfe1d206eb32554beb1970da78e6968df6a14",
+      "final-validation.json": "5cb80253058f0c1301a2f57086f0ec2ee52e5420421b6be305bb77b685c1b0fb",
+      "recovery.json": "623a71745c97b64a9998f7d41852a4f1664f99e1927d24eb1b416e8e965d24c7",
+      "execution.json": "5537cdef6d7d463390c3cc657ef1015dff51ee6125ae9c3a4dd48a8721996bb2",
+      "combined-manifest.json": "64c338a9eb1969c17668fcdb909c941395be3e6a221b0ebf15fabff256d44228"
+    },
+    "audit": {
+      "masked-audit.json": "c672a62cc1910cdc011b10fd53c5e28c4a11cd8171dc85342104ba5b163bb2ed"
+    }
+  },
+  "mask": {
+    "sha256": "68c4c2ff39983467819eb8f4d06a6e04713c946431b1f7e08b5bc6f0bb23fcd7",
+    "count": 74796,
+    "encoding": "row-major 640x480 uint8 0/1",
+    "runtime": {
+      "python": "3.14.8 (main, Oct  1 2026, 00:00:00) [GCC 16.2.1 20260819 (Red Hat 16.2.1-2)]",
+      "numpy": "2.5.3",
+      "platform": "Linux-7.2.10-200.fc44.x86_64-x86_64-with-glibc2.43",
+      "float_model": "binary64 frozen NumPy/libm operations; output bytes authoritative"
+    },
+    "source_sha256": {
+      "quality_only.py": "30b87445f821bfd1d58cb6a200fdda60cc77ff0b9437b035a42a103ada728dea",
+      "oracle_rows.py": "5c641e244719cd573c4d3f984f0d19ccc14131f71e0ba7efdf28019df2f51a85",
+      "reference.py": "c8adee30e7552fe3d07f2801a470aa508034b4ef5e0d2cd88d6852b11fc7c685"
+    }
+  },
+  "numeric_assumptions": [
+    "exact finite binary64 endpoints as dyadic rationals; width 1, join radius 1/2",
+    "original butt caps, closed edges, duplicate handling, feature unions and opaque last-writer order",
+    "CPython arbitrary precision integer operations and IEEE binary64 decoding behave as specified",
+    "normalized encoded RGB from bit-replicated RGB565 divided by 255",
+    "reviewed enclosure algorithm/implementation is sound; this adapter does not re-prove geometric integration",
+    "bounds denominator 255*4^16; unresolved area charged, no implicit background for missing pixels",
+    "half-up Q floor(M*r+1/2), M=31,63,31; code ranges only, no quantized loss implemented",
+    "mask bytes authoritative under recorded historical Python/NumPy/libm construction; not regenerated here"
+  ],
+  "operational_radius": "1/2560",
+  "planned_fine_radius_unimplemented": "1/10240",
+  "decision_status": "not evaluated"
+}

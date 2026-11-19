@@ -1,0 +1,47 @@
+{
+  "mutants_killed": 6,
+  "results": [
+    {
+      "mutant": "second-pass hash omitted",
+      "control": "IntegrationTests.test_second_pass_mutation_and_partial_stream_have_no_receipt",
+      "killed": true,
+      "failures": 1,
+      "errors": 0
+    },
+    {
+      "mutant": "prefix split 4137",
+      "control": "IntegrationTests.test_admit_and_full_stream_completion_boundary",
+      "killed": true,
+      "failures": 0,
+      "errors": 1
+    },
+    {
+      "mutant": "any positive denominator",
+      "control": "AdmissionTests.test_noncanonical_positive_denominators",
+      "killed": true,
+      "failures": 3,
+      "errors": 0
+    },
+    {
+      "mutant": "floor instead of half-up",
+      "control": "AdmissionTests.test_interior_quantizer_boundaries_in_admission",
+      "killed": true,
+      "failures": 0,
+      "errors": 1
+    },
+    {
+      "mutant": "precision loosened twice",
+      "control": "AdmissionTests.test_precision_equality_and_one_integer_over",
+      "killed": true,
+      "failures": 0,
+      "errors": 1
+    },
+    {
+      "mutant": "duplicate pixel guard omitted",
+      "control": "MetricsTests.test_equal_count_duplicate_and_omitted_pixels",
+      "killed": true,
+      "failures": 1,
+      "errors": 0
+    }
+  ]
+}
