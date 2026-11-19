@@ -1,4 +1,8 @@
-# Poodle Earth 0.1 — public preview (release notes draft)
+# Poodle Earth 0.1.0 — public preview (2026-11-13)
+
+Published [v0.1.0 release and downloads](https://github.com/jackwillis/globe/releases/tag/v0.1.0).
+These notes describe that release; later observations and changes are in the
+[changelog](../CHANGELOG.md).
 
 A free, offline, software-rendered interactive Earth for Mac OS 9 on PowerPC Macs. Drag to turn
 the globe, zoom, click a country or city for its information card, switch between a biome-tinted

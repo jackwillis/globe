@@ -1,6 +1,19 @@
 # Documentation index
 
-## Start here
+## For users
+
+- [Poodle Earth overview and published download](../README.md)
+- [Installation, controls and troubleshooting](user-guide.md) · [Classic ReadMe](../os9/ReadMe.txt)
+- [CD image installation and exact test evidence](os9-cd-image.md)
+- [Changelog](../CHANGELOG.md) · [v0.1.0 notes](release-notes-0.1.md) · [draft v0.1.1 notes](release-notes-0.1.1.md)
+- [Data credits](../data/DATA-CREDITS.txt)
+
+## For contributors
+
+- [Build, test and contribution entry point](../CONTRIBUTING.md)
+- [Python tooling](python-tooling.md) · [atlas production](../atlas/README.md)
+
+## Architecture and verification
 
 - [Architecture](architecture.md) · [backlog](backlog.md) · [toolchains](toolchain.md)
 - [Product direction](design/product-direction-2026-11-10.md) · [entity/navigation contract](design/entity-navigation-contract.md) · [draft ADR 0005](adr/0005-entity-identity-and-navigation.md) · [workstation and scripting ideas](design/geographic-workstation-and-scripting.md)
