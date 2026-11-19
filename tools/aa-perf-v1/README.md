@@ -18,7 +18,7 @@ machine.
 | `run.py` | `selftest`, `preflight`, bounded `ladder` (one child process per cell), internal `cell` |
 | `analyze.py` | `summary` (tables, scaling, extrapolation, cross-host), `expected` (writes pins) |
 | `expected.json` | SHA-256 pins of every standard cell's inputs and exact results (Linux x86-64) |
-| `test_perf.py` | 24 controls: determinism, class properties, limits, ladder gating, fallbacks |
+| `test_perf.py` | 30 controls: determinism, class properties, limits, ladder gating, swap parsing and guard, fallbacks |
 | `results/` | Linux baseline JSONL and logs; `netbsd-macppc-*` files arrive from the owner run |
 | `NETBSD-PROCEDURE.md` | Exact owner-run commands, limits, abort and return steps |
 | `REPORT.md` | Observed data, extrapolations, limitations, one recommended next action |
@@ -77,8 +77,10 @@ Per cell: wall limit (1 Hz in-child timer, plus a parent timeout 30 s later), `R
 resident-memory limit checked at the same 1 Hz tick. Optional `--rlimit-data-mib` is off by default
 (untested on NetBSD). Per ladder: a total wall budget, projection before every stage advance
 (linear × 1.25) against the cell, memory and total budgets, stop on any non-ok cell, stop if swap in
-use grows by more than 8 MiB, refuse to start if the 1-minute load exceeds 1.0 (`--allow-busy`
-overrides). Stage D must be named explicitly. Abort with Ctrl-C, `touch <out>.ABORT`, or `kill` of
+use (read before the run and after every cell; NetBSD `swapctl -s` blocks are 512 bytes) grows by more than
+8 MiB or becomes unreadable, refuse to start if swap cannot be read (`--allow-unknown-swap` overrides) or
+if the 1-minute load exceeds 1.0 (`--allow-busy` overrides), and treat `--total-wall-s` as a hard stop
+before each new cell as well as a projection budget. Stage D must be named explicitly. Abort with Ctrl-C, `touch <out>.ABORT`, or `kill` of
 the printed parent PID; completed cells stay in the JSONL.
 
 Every OS facility is optional: no `resource` → no RSS or rusage; no `setitimer` → only the parent

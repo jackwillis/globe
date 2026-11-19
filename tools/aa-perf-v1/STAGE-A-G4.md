@@ -54,8 +54,10 @@ change.
 
 ## Recommendation
 
-Stage B is justified and low-risk if separately authorized: `--stages B --reps 3` costs about 5 classes × 3 ×
-(30–52 s) ≈ 8–13 min of idle G4 time, uses ~25 MiB by the Linux model, and its 100-vs-1,000-pixel comparison
-is the first G4 scaling datum. Run it from a fresh stage-A-gated invocation with the same limits; stage C only
-after reviewing B. The ladder's own swap guard needs the `swapctl` parsing fix, or manual before/after swap
-checks, until then.
+Stage B is justified and low-risk if separately authorized: about 5 classes × 3 × (30–52 s) ≈ 8–13 min of idle
+G4 time, ~25 MiB by the Linux model; its 100-vs-1,000-pixel comparison is the first G4 scaling datum. Use
+`--stages A,B` (not `--stages B`, which skips the projection gate); stage C only after reviewing B.
+
+**Superseded 2026-11-19 (steering correction):** the swap parsing defect above is fixed (512-byte blocks to KiB,
+regression-tested against the recorded text), the ladder now refuses to run and stops if swap is unreadable, and
+stage B limits were set in `NETBSD-PROCEDURE.md` §4 (`--cell-wall-s 600 --cpu-s 750 --total-wall-s 1800`).

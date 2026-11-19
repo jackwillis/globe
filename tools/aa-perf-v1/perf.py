@@ -234,22 +234,51 @@ def _run_text(argv):
         return None
 
 
+SWAP_KIB = {'kb': 1, 'blocks': 0.5}   # swapctl -s prints 512-byte blocks unless asked for KB
+
+
+def parse_meminfo_swap(text):
+    """Swap sizes in KiB from Linux /proc/meminfo text, or None."""
+    fields = dict(line.split(':', 1) for line in text.splitlines() if ':' in line)
+    try:
+        total, free = (int(fields[k].split()[0]) for k in ('SwapTotal', 'SwapFree'))
+    except (KeyError, ValueError, IndexError):
+        return None
+    return {'total_kib': total, 'used_kib': total - free}
+
+
+def parse_swapctl_summary(text):
+    """Swap sizes in KiB from `swapctl -s` text, or None if the format is not recognized.
+
+    NetBSD: "total: 1048576 blocks allocated, 0 blocks used, 1048576 blocks available"
+    (512-byte blocks). Also accepts the KB form. Odd block counts round up.
+    """
+    m = re.search(r'total:\s*(\d+)\s*(KB|blocks)\s+allocated,\s*(\d+)\s*(KB|blocks)\s+used', text or '', re.I)
+    if not m:
+        return None
+
+    def kib(count, unit):
+        return -(-int(count) * 1 // 2) if unit.lower() == 'blocks' else int(count)
+    return {'total_kib': kib(m.group(1), m.group(2)), 'used_kib': kib(m.group(3), m.group(4))}
+
+
 def swap_info():
-    """Swap in use (KiB) where discoverable: /proc/meminfo, else NetBSD/BSD `swapctl -s`."""
+    """Swap in use (KiB) where discoverable; used_kib is None when it cannot be read.
+
+    Linux /proc/meminfo first, else `swapctl -s` (found on PATH or in /sbin, /usr/sbin).
+    """
     try:
         with open('/proc/meminfo') as f:
-            fields = dict(line.split(':', 1) for line in f if ':' in line)
-        total, free = (int(fields[k].split()[0]) for k in ('SwapTotal', 'SwapFree'))
-        return {'source': '/proc/meminfo', 'total_kib': total, 'used_kib': total - free}
-    except (OSError, KeyError, ValueError, IndexError):
+            parsed = parse_meminfo_swap(f.read())
+        if parsed:
+            return dict(parsed, source='/proc/meminfo')
+    except OSError:
         pass
-    text = _run_text(['swapctl', '-s'])
-    if text:
-        m = re.search(r'(\d+)\s*KB allocated.*?(\d+)\s*KB used', text)
-        if m:
-            return {'source': 'swapctl -s', 'total_kib': int(m.group(1)), 'used_kib': int(m.group(2)),
-                    'raw': text}
-        return {'source': 'swapctl -s', 'total_kib': None, 'used_kib': None, 'raw': text}
+    for exe in ('swapctl', '/sbin/swapctl', '/usr/sbin/swapctl'):
+        text = _run_text([exe, '-s'])
+        if text:
+            parsed = parse_swapctl_summary(text) or {'total_kib': None, 'used_kib': None}
+            return dict(parsed, source='swapctl -s', raw=text)
     return None
 
 

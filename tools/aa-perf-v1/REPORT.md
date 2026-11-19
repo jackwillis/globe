@@ -107,7 +107,7 @@ bandwidth, and certificate interval distributions can each move X.
 ## Commands and results (Linux x86-64, Python 3.14.8)
 
 ```sh
-python3 -B -m unittest discover -s tools/aa-perf-v1 -p 'test_*.py' -v      # 24 tests OK, ~2.6 s
+python3 -B -m unittest discover -s tools/aa-perf-v1 -p 'test_*.py' -v      # 30 tests OK (24 at the baseline commit), ~2.6 s
 python3 -B tools/aa-perf-v1/run.py selftest                                # selftest: ok
 python3 -B tools/aa-perf-v1/run.py ladder --label linux-x86_64 --stages A,B,C,D --allow-busy --out results/linux-x86_64-ladder.jsonl   # 191 s, 20/20 cells ok, digests match
 python3 -B tools/aa-perf-v1/run.py ladder --label linux-x86_64-fullframe-bookkeeping --stages A --classes exact,mixed --frame 307200 --allow-busy --out results/linux-x86_64-fullframe-bookkeeping.jsonl

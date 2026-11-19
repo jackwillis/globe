@@ -25,7 +25,7 @@ mkdir -p /tmp/aa-perf-out
 ## 1. Preconditions (read-only checks; stop if any fails)
 
 ```sh
-PY=python3
+PY=python3                         # on the G4 this is /usr/pkg/bin/python3.13
 $PY --version                      # needs 3.7 or newer
 uptime                             # 1-minute load should be under 0.5 with nothing else running
 ps -ax | head -40                  # confirm no demo or build of yours is running
@@ -73,28 +73,37 @@ pixel for uncertain intervals (`results/`); multiply by however much slower the 
 
 ```sh
 cd /tmp/aa-perf
-# Stages A and B, three repetitions each.
-$PY -B tools/aa-perf-v1/run.py ladder --label netbsd-macppc --stages A,B --reps 3 \
-    --cell-wall-s 1200 --cpu-s 1500 --mem-mib 128 --total-wall-s 3600 \
-    --out /tmp/aa-perf-out/netbsd-macppc-AB.jsonl
+# Stage B, three repetitions. A is included so that the A -> B projection gate runs; `--stages B`
+# alone would skip it. A re-runs in about a minute.
+( ulimit -t 2400; $PY -B tools/aa-perf-v1/run.py ladder --label netbsd-macppc --stages A,B --reps 3 \
+    --cell-wall-s 600 --cpu-s 750 --mem-mib 128 --total-wall-s 1800 \
+    --out /tmp/aa-perf-out/netbsd-macppc-AB.jsonl )
 ```
 
-Only if A and B finished `ok`, `digest_check` matched and memory and speed look acceptable:
+Budget basis (G4 stage A, one repetition: 30-52 ms per masked pixel): a stage B cell is three
+repetitions of 1,000 pixels, about 93-158 s (worst 197 s with the gate's 25% margin), so the 600 s
+wall and 750 s CPU limits leave about 3.8x headroom. Stage A with three repetitions is about 1 min and
+stage B about 8-13 min, so the whole run is expected to take 9-15 min; `--total-wall-s 1800` is both
+the projection budget and a hard stop checked before every cell (a cell in progress is still bounded
+by its own limits), and `ulimit -t 2400` caps the CPU of each process (parent and cell).
 
-```sh
-$PY -B tools/aa-perf-v1/run.py ladder --label netbsd-macppc --stages C --reps 1 \
-    --cell-wall-s 3000 --cpu-s 3600 --mem-mib 128 --total-wall-s 7200 \
-    --out /tmp/aa-perf-out/netbsd-macppc-C.jsonl
-```
+Swap is read before the run and after every cell (`swapctl -s`, reported in 512-byte blocks by
+NetBSD and converted to KiB; the harness looks in `/sbin` and `/usr/sbin` as well as `PATH`). The
+ladder refuses to start if it cannot read swap, and stops if the reading disappears or swap in
+use grows by more than 8 MiB (`--swap-mib`). `--allow-unknown-swap` overrides the refusal, and
+then you must check `swapctl -l` yourself before and after.
 
-Stage C at one repetition is the largest authorized step; use three repetitions only if one
-repetition was quick. **Stage D (10,000 pixels) and anything larger are not part of this
-procedure; ask first.** A full 74,796-pixel condition is not authorized.
+Only if A and B finished `ok`, `digest_check` matched and memory and speed look acceptable, ask
+before anything larger. Stage C (5,000 pixels) is not an authorized step of this procedure: its
+cost, about 2.5-4.3 min per repetition per cell if the G4 rate holds, and its limits are to be
+set from the stage B data, and a gate only runs between stages named in the same invocation.
+**Stage D (10,000 pixels) and anything larger are not part of this procedure; ask first.** A full
+74,796-pixel condition is not authorized.
 
 Each stage re-checks the previous stage first (`gate ... advance/STOP`) and refuses to advance
 when its linear projection (with a 25% margin) would exceed a cell, memory or total budget.
 A cell that exceeds its wall limit, RSS limit or CPU limit is recorded and ends the ladder; so
-does swap use growing by more than 8 MiB or a digest mismatch.
+does a digest mismatch.
 
 To run detached from a remote shell, wrap it so the limits survive, and note the PID printed on the
 first line:

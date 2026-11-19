@@ -88,6 +88,47 @@ class Workloads(unittest.TestCase):
         self.assertGreater(sum(a[i] == b[i] for i in idx), 50)
 
 
+class SwapParsing(unittest.TestCase):
+    NETBSD = 'total: 1048576 blocks allocated, 0 blocks used, 1048576 blocks available'  # recorded on maul
+
+    def test_netbsd_blocks_are_512_bytes(self):
+        self.assertEqual(perf.parse_swapctl_summary(self.NETBSD), {'total_kib': 524288, 'used_kib': 0})
+        used = 'total: 1048576 blocks allocated, 20480 blocks used, 1028096 blocks available'
+        self.assertEqual(perf.parse_swapctl_summary(used)['used_kib'], 10240)
+        self.assertEqual(perf.parse_swapctl_summary(used.replace('20480', '3'))['used_kib'], 2)  # rounds up
+
+    def test_kb_form_and_meminfo(self):
+        self.assertEqual(perf.parse_swapctl_summary('total: 262132 KB allocated, 12 KB used, 262120 KB available'),
+                         {'total_kib': 262132, 'used_kib': 12})
+        self.assertEqual(perf.parse_meminfo_swap('SwapTotal:  8388604 kB\nSwapFree:   504896 kB\n'),
+                         {'total_kib': 8388604, 'used_kib': 7883708})
+
+    def test_unrecognized_text_is_unknown_not_zero(self):
+        for text in ('', None, 'no swap devices', 'total: lots', 'total: 5 pages allocated, 0 pages used'):
+            self.assertIsNone(perf.parse_swapctl_summary(text), text)
+        self.assertIsNone(perf.parse_meminfo_swap('MemTotal: 1 kB\n'))
+
+    def test_swap_info_uses_swapctl_off_linux_and_finds_sbin(self):
+        saved = perf._run_text, perf.parse_meminfo_swap
+        perf.parse_meminfo_swap = lambda text: None   # as on NetBSD, which has no /proc/meminfo
+        tried = []
+
+        def fake(argv):
+            tried.append(argv[0])
+            return self.NETBSD if argv[0] == '/sbin/swapctl' else None
+        perf._run_text = fake
+        try:
+            info = perf.swap_info()
+            self.assertEqual((info['used_kib'], info['total_kib'], info['source']), (0, 524288, 'swapctl -s'))
+            self.assertEqual(tried, ['swapctl', '/sbin/swapctl'])
+            perf._run_text = lambda argv: 'unexpected format'
+            self.assertIsNone(perf.swap_info()['used_kib'])
+            perf._run_text = lambda argv: None
+            self.assertIsNone(perf.swap_info())
+        finally:
+            perf._run_text, perf.parse_meminfo_swap = saved
+
+
 class Measurement(unittest.TestCase):
     def test_decision_source_is_the_reviewed_file(self):
         freeze = os.path.join(os.path.dirname(HERE), 'aa-decision-v1', 'source-freeze.sha256')
@@ -186,7 +227,7 @@ class Ladder(unittest.TestCase):
     def args(self, out, **kw):
         base = dict(label='fake', out=out, stages='A,B,C', classes='exact,mixed', frame='auto', reps=3, seed=1,
                     cell_wall_s=1000, cpu_s=2000, mem_mib=128, total_wall_s=5000, swap_mib=8, max_load=1e9,
-                    allow_busy=True, expected=run.EXPECTED)
+                    allow_busy=True, allow_unknown_swap=False, expected=run.EXPECTED)
         base.update(kw)
         return argparse.Namespace(**base)
 
@@ -255,6 +296,52 @@ class Ladder(unittest.TestCase):
             self.assertEqual([(c['class'], c['status'], c['digest_check']) for c in cells],
                              [('exact', 'ok', 'match'), ('narrow', 'ok', 'match')])
             self.assertEqual(analyze.summary([out])['not_ok'], [])
+
+    def with_swaps(self, readings, **kw):
+        """Run a 2-stage fake ladder while perf.swap_info() yields `readings` in turn."""
+        seq = iter(readings)
+        saved = perf.swap_info
+        perf.swap_info = lambda: next(seq, readings[-1])
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                out = os.path.join(d, 'r.jsonl')
+                code = run.ladder(self.args(out, stages='A,B', classes='exact', **kw),
+                                  lambda a, w: fake_cell('exact', int(a[a.index('--masked') + 1]), 0.001))
+                return code, (self.read(out) if os.path.exists(out) else [])
+        finally:
+            perf.swap_info = saved
+
+    def test_swap_growth_stops_and_unknown_never_counts_as_monitoring(self):
+        ok = {'used_kib': 100, 'total_kib': 500000}
+        code, recs = self.with_swaps([ok])
+        self.assertEqual(code, 0)
+        self.assertTrue(recs[0]['params']['swap_monitored'])
+        grew = {'used_kib': 100 + 9 * 1024, 'total_kib': 500000}
+        code, recs = self.with_swaps([ok, grew])
+        self.assertEqual((code, recs[-1]['stopped']), (1, 'swap use grew %d KiB' % (9 * 1024)))
+        code, recs = self.with_swaps([ok, {'used_kib': None, 'total_kib': None}])
+        self.assertEqual((code, recs[-1]['stopped']), (1, 'swap reading became unavailable'))
+        # unknown from the start: refuse, write nothing, unless the owner overrides
+        unknown = {'used_kib': None, 'total_kib': None, 'raw': 'odd'}
+        code, recs = self.with_swaps([unknown])
+        self.assertEqual((code, recs), (2, []))
+        code, recs = self.with_swaps([None])
+        self.assertEqual((code, recs), (2, []))
+        code, recs = self.with_swaps([unknown], allow_unknown_swap=True)
+        self.assertEqual(code, 0)
+        self.assertFalse(recs[0]['params']['swap_monitored'])
+
+    def test_total_wall_budget_is_a_hard_stop_between_cells(self):
+        clock = iter(range(0, 10 ** 6, 400))
+        with tempfile.TemporaryDirectory() as d:
+            out = os.path.join(d, 'r.jsonl')
+            calls = []
+            code = run.ladder(self.args(out, stages='A', classes='exact,narrow,wide', total_wall_s=700),
+                              lambda a, w: calls.append(1) or fake_cell('exact', 100, 0.001),
+                              now=lambda: next(clock))
+            self.assertEqual(code, 1)
+            self.assertLess(len(calls), 3)
+            self.assertIn('wall budget', self.read(out)[-1]['stopped'])
 
     def test_selftest_passes(self):
         self.assertEqual(run.selftest(None), 0)

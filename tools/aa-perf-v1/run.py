@@ -102,6 +102,18 @@ def swap_used(info):
     return None if not info else info.get('used_kib')
 
 
+def swap_problem(base, args):
+    """Reason to stop, or None. An unreadable swap figure is a stop, never a pass."""
+    now_used = swap_used(perf.swap_info())
+    if base is None:  # only reachable with --allow-unknown-swap: the owner checks by hand
+        return None
+    if now_used is None:
+        return 'swap reading became unavailable'
+    if now_used - base > args.swap_mib * 1024:
+        return 'swap use grew %d KiB' % (now_used - base)
+    return None
+
+
 def ladder(args, runner=None, now=time.monotonic):
     runner = runner or run_child
     stages, classes = parse_stages(args.stages), parse_classes(args.classes)
@@ -114,6 +126,10 @@ def ladder(args, runner=None, now=time.monotonic):
     os.makedirs(os.path.dirname(os.path.abspath(args.out)) or '.', exist_ok=True)
     abort_file = args.out + '.ABORT'
     swap0 = swap_used(env['swap'])
+    if swap0 is None and not args.allow_unknown_swap:
+        print('swap in use cannot be read here (swap: %r); refusing to run unmonitored. '
+              'Check swap by hand and pass --allow-unknown-swap to override.' % (env['swap'],))
+        return 2
     start = now()
     exit_code, stopped, completed = 0, None, []
     with open(args.out, 'a') as out:
@@ -122,6 +138,7 @@ def ladder(args, runner=None, now=time.monotonic):
             out.flush()
         emit({'type': 'env', 'env': env, 'params': {'stages': stages, 'classes': classes, 'reps': args.reps,
               'seed': args.seed, 'limits': limits, 'frame': args.frame, 'cpu_limit_s': args.cpu_s,
+              'swap_monitored': swap0 is not None, 'swap_mib': args.swap_mib,
               'parent_pid': os.getpid()}})
         print('ladder pid %d -> %s   abort: Ctrl-C or touch %s' % (os.getpid(), args.out, abort_file))
         prev = []
@@ -141,6 +158,9 @@ def ladder(args, runner=None, now=time.monotonic):
                 if os.path.exists(abort_file):
                     stopped, exit_code = 'abort file present', 3
                     break
+                if limits['total_wall_s'] and now() - start > limits['total_wall_s']:
+                    stopped, exit_code = 'ladder wall budget %d s exhausted' % limits['total_wall_s'], 1
+                    break
                 cell_args = ['--class', cls, '--masked', str(masked), '--frame', str(frame), '--seed',
                              str(args.seed), '--reps', str(args.reps), '--wall-s', str(args.cell_wall_s),
                              '--cpu-s', str(args.cpu_s), '--mem-mib', str(args.mem_mib),
@@ -158,14 +178,14 @@ def ladder(args, runner=None, now=time.monotonic):
                 if rec['status'] != 'ok':
                     stopped, exit_code = 'cell %s/%s: %s' % (stage, cls, rec['status']), 1
                     break
+                why = swap_problem(swap0, args)
+                if why:
+                    stopped, exit_code = why, 1
+                    emit({'type': 'gate', 'stage': stage, 'advance': False, 'reason': why})
+                    break
             if stopped:
                 break
             completed.append(stage)
-            swap1 = swap_used(perf.swap_info())
-            if swap0 is not None and swap1 is not None and swap1 - swap0 > args.swap_mib * 1024:
-                stopped, exit_code = 'swap use grew %d KiB' % (swap1 - swap0), 1
-                emit({'type': 'gate', 'stage': stage, 'advance': False, 'reason': stopped})
-                break
         emit({'type': 'end', 'elapsed_s': now() - start, 'stopped': stopped, 'loadavg': perf.loadavg(),
               'swap': perf.swap_info(), 'completed_stages': completed})
     print('done: %s' % (stopped or 'ladder complete'))
@@ -244,6 +264,8 @@ def main(argv=None):
     lad.add_argument('--swap-mib', type=int, default=8, help='stop if swap in use grows by more than this')
     lad.add_argument('--max-load', type=float, default=1.0)
     lad.add_argument('--allow-busy', action='store_true')
+    lad.add_argument('--allow-unknown-swap', action='store_true',
+                     help='run although swap use cannot be read (check it by hand)')
     lad.set_defaults(fn=lambda a: ladder(a))
     cell = sub.add_parser('cell', parents=[common])
     cell.add_argument('--class', dest='cls', required=True)
