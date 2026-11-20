@@ -35,7 +35,80 @@ bool valid_metrics(LabelMetrics metrics) {
            metrics.descent <= limit && metrics.ascent + metrics.descent > 0;
 }
 
+// The text of a label cut into lines, each measured.
+struct Wrapped {
+    std::size_t count = 0;
+    std::array<LabelLine, kMaxLabelLines> lines{};
+    std::array<LabelMetrics, kMaxLabelLines> metrics{};
+};
+
+// Greedy wrap at spaces: a line takes words while it is at most max_width wide; a single word
+// wider than that stays whole; the last line takes whatever is left. nullopt if the provider
+// cannot measure a run or a measure is invalid.
+std::optional<Wrapped> wrap(std::string_view text, int max_width, LabelRole role,
+                            MeasureLabel measure, void* context) {
+    Wrapped out;
+    const auto measure_run = [&](std::size_t begin, std::size_t end) {
+        const auto m = measure(context, text.substr(begin, end - begin), role);
+        return m && valid_metrics(*m) ? m : std::nullopt;
+    };
+    std::size_t begin = 0;
+    while (out.count < kMaxLabelLines) {
+        std::size_t end = text.size();
+        auto metrics = measure_run(begin, end);
+        if (!metrics)
+            return std::nullopt;
+        // Not the last allowed line and too wide: pull the break back to the last space that fits.
+        if (max_width > 0 && out.count + 1 < kMaxLabelLines &&
+            metrics->right - metrics->left > max_width) {
+            std::size_t space = begin;
+            std::optional<LabelMetrics> fit;
+            std::size_t fit_end = 0;
+            while ((space = text.find(' ', space + 1)) != std::string_view::npos) {
+                const auto m = measure_run(begin, space);
+                if (!m)
+                    return std::nullopt;
+                if (m->right - m->left > max_width && fit)
+                    break;
+                fit = m; // the first word is kept even if it alone is too wide
+                fit_end = space;
+                if (m->right - m->left > max_width)
+                    break;
+            }
+            if (fit) {
+                end = fit_end;
+                metrics = fit;
+            }
+        }
+        out.lines[out.count] = {static_cast<std::uint8_t>(begin),
+                                static_cast<std::uint8_t>(end - begin), 0};
+        out.metrics[out.count++] = *metrics;
+        if (end >= text.size())
+            break;
+        begin = end + 1; // the space
+        while (begin < text.size() && text[begin] == ' ')
+            ++begin;
+        if (begin >= text.size())
+            break;
+    }
+    return out;
+}
+
 } // namespace
+
+std::size_t label_runs(const PlacedLabel& placed, std::string_view text,
+                       std::array<LabelRun, kMaxLabelLines>& out) {
+    if (placed.line_count == 0) {
+        out[0] = {text, placed.baseline_x, placed.baseline_y};
+        return 1;
+    }
+    for (std::size_t i = 0; i < placed.line_count; ++i) {
+        const auto& line = placed.lines[i];
+        out[i] = {text.substr(line.begin, line.length), line.x,
+                  placed.baseline_y + static_cast<int>(i) * placed.line_pitch};
+    }
+    return placed.line_count;
+}
 
 std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> candidates,
                          MeasureLabel measure, void* context, std::span<PlacedLabel> output,
@@ -66,13 +139,20 @@ std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> c
             continue;
         }
 
-        const auto metrics = measure(context, label.text, label.role);
-        if (!metrics || !valid_metrics(*metrics)) {
+        const auto wrapped = wrap(label.text, label.max_width, label.role, measure, context);
+        if (!wrapped) {
             continue;
         }
-
-        const int width = metrics->right - metrics->left;
-        const int height = metrics->ascent + metrics->descent;
+        // One box for all lines: the widest line wide, every line one pitch high.
+        int width = 0, ascent = 0, descent = 0;
+        for (std::size_t i = 0; i < wrapped->count; ++i) {
+            const auto& m = wrapped->metrics[i];
+            width = std::max(width, m.right - m.left);
+            ascent = std::max(ascent, m.ascent);
+            descent = std::max(descent, m.descent);
+        }
+        const int pitch = ascent + descent;
+        const int height = pitch * static_cast<int>(wrapped->count);
         const bool beside = label.side == LabelSide::right;
         const int left =
             beside ? static_cast<int>(point.x) + kMarkerGap : static_cast<int>(point.x) - width / 2;
@@ -115,7 +195,24 @@ std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> c
                 }
             }
         }
-        output[count++] = {*index, left + dx - metrics->left, top + dy + metrics->ascent, box};
+        PlacedLabel placed{*index, box.left - wrapped->metrics[0].left, box.top + ascent, box};
+        if (wrapped->count > 1) {
+            placed.line_count = static_cast<std::uint8_t>(wrapped->count);
+            placed.line_pitch = static_cast<std::int16_t>(pitch);
+            for (std::size_t i = 0; i < wrapped->count; ++i) {
+                const auto& m = wrapped->metrics[i];
+                // Centred labels centre each line in the box; labels beside a dot align left.
+                const int line_width = m.right - m.left;
+                const int line_left = beside ? box.left : box.left + (width - line_width) / 2;
+                placed.lines[i] = wrapped->lines[i];
+                placed.lines[i].x = static_cast<std::int16_t>(line_left - m.left);
+            }
+            placed.baseline_x = placed.lines[0].x;
+        } else {
+            // A single line keeps the box's own left edge, as an unwrapped label always has.
+            placed.baseline_x = box.left - wrapped->metrics[0].left;
+        }
+        output[count++] = placed;
     }
     return count;
 }

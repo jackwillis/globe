@@ -646,33 +646,37 @@ class Application {
         const auto draw = [&](std::span<const PlacedLabel> labels,
                               std::span<const LabelCandidate> source) {
             for (const auto& label : labels) {
-                const auto text = source[label.candidate].text;
-                RGBForeColor(&white);
-                MoveTo(static_cast<short>(label.baseline_x + 1),
-                       static_cast<short>(label.baseline_y + 1));
-                DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
-                RGBForeColor(&black);
-                MoveTo(static_cast<short>(label.baseline_x), static_cast<short>(label.baseline_y));
-                DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
+                std::array<LabelRun, kMaxLabelLines> runs;
+                const auto n = label_runs(label, source[label.candidate].text, runs);
+                for (std::size_t i = 0; i < n; ++i) {
+                    const auto& run = runs[i];
+                    const auto size = static_cast<short>(run.text.size());
+                    RGBForeColor(&white);
+                    MoveTo(static_cast<short>(run.x + 1), static_cast<short>(run.y + 1));
+                    DrawText(const_cast<char*>(run.text.data()), 0, size);
+                    RGBForeColor(&black);
+                    MoveTo(static_cast<short>(run.x), static_cast<short>(run.y));
+                    DrawText(const_cast<char*>(run.text.data()), 0, size);
+                }
             }
         };
-        std::array<PlacedLabel, kMaxPlacedLabels> placed;
-        std::size_t count = 0;
+        // One heap array holds every label placed this frame (countries, large cities, the rest),
+        // so later passes keep clear of earlier ones and the stack stays small.
+        const std::span<PlacedLabel> taken(placed_labels_);
+        std::size_t taken_count = 0;
         if (countries) {
             // Country names duck the city dots.
             if (place_scene_)
                 place_scene_->dot_boxes(model_.camera, dot_boxes_);
-            count =
-                place_labels(model_.camera, country_labels_, measure, &info, placed, dot_boxes_);
-            last_label_count_ = count;
-            draw(std::span(placed).first(count), country_labels_);
+            const auto out = taken.subspan(0, kMaxPlacedLabels);
+            taken_count =
+                place_labels(model_.camera, country_labels_, measure, &info, out, dot_boxes_);
+            last_label_count_ = taken_count;
+            draw(out.first(taken_count), country_labels_);
         }
         if (cities) {
             // Large cities at 10 points, then the rest at 9; each pass keeps clear of the labels
             // already drawn.
-            std::array<PlacedLabel, 2 * kMaxPlacedLabels> taken;
-            std::copy_n(placed.begin(), count, taken.begin());
-            std::size_t taken_count = count;
             TextFace(normal);
             for (const bool large : {true, false}) {
                 select_place_labels(*places_, place_labels_, model_.camera, city_candidates_,
@@ -680,13 +684,11 @@ class Application {
                                     large ? kLastLargeCityTier : kLastPlaceTier);
                 TextSize(large ? 10 : 9);
                 GetFontInfo(&info);
-                std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
-                const auto city_count =
-                    place_labels(model_.camera, city_candidates_, measure, &info, city_placed,
-                                 std::span(taken).first(taken_count));
+                const auto out = taken.subspan(taken_count, kMaxPlacedLabels);
+                const auto city_count = place_labels(model_.camera, city_candidates_, measure,
+                                                     &info, out, taken.first(taken_count));
                 last_city_count_ += city_count;
-                draw(std::span(city_placed).first(city_count), city_candidates_);
-                std::copy_n(city_placed.begin(), city_count, taken.begin() + taken_count);
+                draw(out.first(city_count), city_candidates_);
                 taken_count += city_count;
             }
         }
@@ -986,6 +988,7 @@ class Application {
     std::vector<LabelCandidate> place_labels_;
     std::vector<LabelCandidate> city_candidates_;
     std::vector<PlacedLabel> dot_boxes_;
+    std::vector<PlacedLabel> placed_labels_ = std::vector<PlacedLabel>(3 * kMaxPlacedLabels);
     std::size_t last_label_count_ = 0;
     std::size_t last_city_count_ = 0;
     std::optional<Places> places_;

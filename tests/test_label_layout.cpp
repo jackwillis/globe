@@ -132,5 +132,41 @@ int main() {
     const std::array<PlacedLabel, 1> everywhere{PlacedLabel{0, 0, 0, {0, 0, 128, 128}}};
     CHECK(place_labels(camera, one, measure, &calls, duck, everywhere) == 1);
     CHECK(duck[0].box == (LabelBox{60, 60, 69, 68})); // nowhere clear: stays centred
+
+    // Wrapping: a name wider than max_width breaks at spaces, at most three lines; centred labels
+    // centre each line, labels beside a dot align left; a long single word stays whole.
+    const auto wrapping = [&](int x, int y, std::string_view text, LabelRole role, LabelSide side,
+                              int max_width) {
+        return LabelCandidate{anchor(camera, x, y), text, role, 0, side, max_width};
+    };
+    const auto run_one = [&](const LabelCandidate& candidate, PlacedLabel& result) {
+        const std::array one_label{candidate};
+        std::array<PlacedLabel, 1> out{};
+        const auto n = place_labels(camera, one_label, measure, &calls, out);
+        result = out[0];
+        return n;
+    };
+    PlacedLabel wrapped_label;
+    std::array<LabelRun, kMaxLabelLines> runs;
+    CHECK(run_one(wrapping(64, 64, "aaaa bbbb cccc", LabelRole::area, LabelSide::center, 45),
+                  wrapped_label) == 1);
+    CHECK(wrapped_label.box == (LabelBox{42, 56, 87, 72}));
+    CHECK(label_runs(wrapped_label, "aaaa bbbb cccc", runs) == 2);
+    CHECK(runs[0].text == "aaaa bbbb" && runs[0].x == 44 && runs[0].y == 62);
+    CHECK(runs[1].text == "cccc" && runs[1].x == 56 && runs[1].y == 70);
+    CHECK(run_one(wrapping(64, 64, "aa bb", LabelRole::point, LabelSide::right, 9),
+                  wrapped_label) == 1);
+    CHECK(label_runs(wrapped_label, "aa bb", runs) == 2);
+    CHECK(runs[0].text == "aa" && runs[1].text == "bb" && runs[0].x == 70 && runs[1].x == 70);
+    CHECK(run_one(wrapping(64, 64, "a b c d e f", LabelRole::point, LabelSide::center, 5),
+                  wrapped_label) == 1);
+    CHECK(label_runs(wrapped_label, "a b c d e f", runs) == 3);
+    CHECK(runs[0].text == "a" && runs[1].text == "b" && runs[2].text == "c d e f");
+    CHECK(run_one(wrapping(64, 64, "longword", LabelRole::area, LabelSide::center, 10),
+                  wrapped_label) == 1);
+    CHECK(label_runs(wrapped_label, "longword", runs) == 1 && runs[0].text == "longword");
+    CHECK(run_one(wrapping(64, 64, "aaaa bbbb", LabelRole::area, LabelSide::center, 0),
+                  wrapped_label) == 1 &&
+          wrapped_label.line_count == 0);
     return TEST_MAIN_RESULT();
 }

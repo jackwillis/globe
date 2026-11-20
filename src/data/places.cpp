@@ -66,8 +66,8 @@ std::vector<LabelCandidate> Places::label_candidates() const {
     std::vector<LabelCandidate> labels;
     labels.reserve(count_);
     for (std::uint32_t i = 0; i < count_; ++i)
-        labels.push_back(
-            {to_unit_vector(point(i)), name(i), LabelRole::point, -tier(i), LabelSide::right});
+        labels.push_back({to_unit_vector(point(i)), name(i), LabelRole::point, -tier(i),
+                          LabelSide::right, kCityLabelWidth});
     return labels;
 }
 std::string_view Places::name(std::uint32_t id) const {

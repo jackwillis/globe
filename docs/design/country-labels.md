@@ -108,3 +108,14 @@ Storage: a second candidate vector (all 304 cities, about 14 KiB on 32-bit Class
 reserved per-frame selection vector of up to 256 candidates (about 12 KiB), allocated once at
 startup; plus one more 32-entry output array on the stack. The timing title adds `cities N`.
 Native timing and appearance are unmeasured.
+
+### Wrapping long names (#219)
+
+A name wider than its candidate's `max_width` (80 pixels for countries, 64 for cities; owner
+direction 2026-11-19, first guesses) wraps at spaces into at most three lines, in the core
+(`wrap` in `src/render/label_layout.cpp`, using the platform's own measure). A line takes words
+while it fits; a single word wider than the limit stays whole; the last line takes the remainder.
+The placer sees one box (widest line by number of lines) so overlap, ducking and limb clipping are
+unchanged. Countries centre each line; cities beside a dot align left. `label_runs` turns a placed
+label into the runs to draw. Labels placed in one frame now share one heap array of 96 entries per
+front end instead of stack arrays, since a wrapped placement is larger (about 44 bytes on 32-bit).

@@ -80,7 +80,7 @@ std::vector<LabelCandidate> Countries::label_candidates() const {
     for (std::uint32_t i = 0; i < count_; ++i) {
         const auto& anchor = kCountryAnchors[i];
         labels.push_back({to_unit_vector({anchor.lat / 1e4, anchor.lon / 1e4}), name(i),
-                          LabelRole::area, -anchor.rank});
+                          LabelRole::area, -anchor.rank, LabelSide::center, kCountryLabelWidth});
     }
     return labels;
 }
