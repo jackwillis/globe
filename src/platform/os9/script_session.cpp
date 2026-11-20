@@ -2,11 +2,12 @@
 // Copyright (c) 2026 Jack Willis
 #include "script_session.hpp"
 #include "globe/version.hpp"
+#include "script_output.hpp"
+#include "script_text.hpp"
 #include <Dialogs.h>
 #include <Files.h>
 #include <Gestalt.h>
 #include <StandardFile.h>
-#include <cstdio>
 #include <cstring>
 #ifndef GLOBE_SCRIPT_BUILD
 #define GLOBE_SCRIPT_BUILD "unavailable"
@@ -32,10 +33,13 @@ ScriptSession::~ScriptSession() {
     release();
 }
 void ScriptSession::release() {
-    if (output_ != -1) {
-        if (FSClose(output_) != noErr)
-            disk_error_ = true;
-        output_ = -1;
+    const auto result = script_close_output(
+        output_, output_volume_, [](void*, short file) { return FSClose(file) == noErr; },
+        [](void*, short volume) { return FlushVol(nullptr, volume) == noErr; }, nullptr);
+    if (result.close_failed || result.flush_failed) {
+        if (!disk_error_)
+            disk_error_code_ = result.close_failed ? "close-failure" : "flush-failure";
+        disk_error_ = true;
     }
     if (source_) {
         DisposePtr(source_);
@@ -46,8 +50,10 @@ bool ScriptSession::write(void* context, const char* bytes, std::size_t count) {
     auto& s = *static_cast<ScriptSession*>(context);
     long actual = static_cast<long>(count);
     const auto err = FSWrite(s.output_, &actual, bytes);
-    if (err != noErr || actual != static_cast<long>(count))
+    if (err != noErr || actual != static_cast<long>(count)) {
         s.disk_error_ = true;
+        s.disk_error_code_ = "write-failure";
+    }
     return !s.disk_error_;
 }
 void ScriptSession::choose(const Model& model) {
@@ -72,6 +78,7 @@ void ScriptSession::choose(const Model& model) {
         return;
     saving_ = choice == 3;
     disk_error_ = false;
+    disk_error_code_ = "none";
     short input = -1;
     long length = 0;
     auto err = FSpOpenDF(&selected.sfFile, fsRdPerm, &input);
@@ -103,19 +110,8 @@ void ScriptSession::choose(const Model& model) {
         unsigned long stamp = 0;
         GetDateTime(&stamp);
         char suggestion[32];
-        unsigned n = 0;
-        for (unsigned i = 1; i <= name[0] && n < 10 && name[i] != '.'; ++i) {
-            const auto c = name[i];
-            suggestion[n++] = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-                                      (c >= '0' && c <= '9') || c == '-'
-                                  ? static_cast<char>(c)
-                                  : '_';
-        }
-        if (!n) {
-            std::memcpy(suggestion, "script", 6);
-            n = 6;
-        }
-        std::snprintf(suggestion + n, sizeof suggestion - n, "-%08lx.jsonl", stamp);
+        script_filename({reinterpret_cast<const char*>(name + 1), name[0]}, stamp, suggestion,
+                        sizeof suggestion);
         unsigned char proposed[32], prompt[64];
         pascal_text(proposed, suggestion);
         pascal_text(prompt, "Save script output as:");
@@ -130,9 +126,13 @@ void ScriptSession::choose(const Model& model) {
         err = FSpCreate(&destination.sfFile, 'PdlE', 'TEXT', destination.sfScript);
         if (err != noErr) {
             release();
-            message("Cannot create output. Choose a new name on a writable disk. Nothing was run.");
+            message(err == dupFNErr ? "Output already exists. Nothing was overwritten or run. "
+                                      "Choose a different filename."
+                                    : "Cannot create output. Choose a new name on a writable disk. "
+                                      "Nothing was run.");
             return;
         }
+        output_volume_ = destination.sfFile.vRefNum;
         err = FSpOpenDF(&destination.sfFile, fsWrPerm, &output_);
         if (err != noErr) {
             output_ = -1;
@@ -147,8 +147,7 @@ void ScriptSession::choose(const Model& model) {
     long system = 0;
     char os[48];
     if (Gestalt(gestaltSystemVersion, &system) == noErr)
-        std::snprintf(os, sizeof os, "Mac OS %lx.%lx.%lx", (system >> 8) & 255L,
-                      (system >> 4) & 15L, system & 15L);
+        script_os_version(static_cast<std::uint32_t>(system), os, sizeof os);
     else
         std::strcpy(os, "Mac OS version unavailable");
     const ScriptEnvironment env{kVersion,
@@ -171,14 +170,10 @@ void ScriptSession::finish() {
     char summary[256];
     const bool report_error = disk_error_ || runner.report_failed();
     const unsigned errors = runner.errors() + (disk_error_ && !runner.report_failed() ? 1U : 0U);
-    std::snprintf(
-        summary, sizeof summary,
-        "Script %s. Commands: %u; assertions failed: %u; errors: %u. %s. %s",
-        report_error ? "error" : script_status_name(runner.status()), runner.commands(),
-        runner.assertions_failed(), errors, disk_error_ ? "io-failure" : runner.error_code(),
-        saving_ ? (disk_error_ || runner.report_failed() ? "Transcript NOT saved successfully"
-                                                         : "Transcript saved")
-                : "Output saving disabled");
+    script_summary({report_error ? "error" : script_status_name(runner.status()), runner.commands(),
+                    runner.assertions_failed(), errors,
+                    disk_error_ ? disk_error_code_ : runner.error_code(), saving_, report_error},
+                   summary, sizeof summary);
     message(summary);
 }
 } // namespace globe

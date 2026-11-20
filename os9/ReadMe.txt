@@ -83,7 +83,11 @@ SCRIPT RUNNER (prototype; native acceptance pending)
    set borders false
    wait settled 10000
    assert borders false
- File > Cancel Script or Escape in the Globe window stops a run. The final
+ File > Cancel Script or Escape in the frontmost Globe window stops a run.
+ When another window is frontmost, use File > Cancel Script. The final
  alert reports results and output errors. Limits: 16 KiB/script, 200 bytes/line,
  waits 1..60000 ms. A wait observes application presentation completion, not
- independently verified pixels. No output is written unless explicitly chosen.
+ independently verified pixels. Idle waits observe every 16 ms (rounded to
+ native ticks). Scripts pause while the application is suspended. Saved output
+ is closed and its selected volume flushed; any write/close/flush error is
+ reported as unsuccessful saving. No output is written unless explicitly chosen.

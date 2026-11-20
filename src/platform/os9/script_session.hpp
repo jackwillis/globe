@@ -16,7 +16,8 @@ class ScriptSession {
     static bool write(void*, const char*, std::size_t);
     void release();
     Ptr source_ = nullptr;
-    short output_ = -1;
+    short output_ = -1, output_volume_ = 0;
+    const char* disk_error_code_ = "none";
     bool saving_ = false, disk_error_ = false;
 };
 } // namespace globe

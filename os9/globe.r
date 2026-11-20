@@ -21,7 +21,7 @@ resource 'MENU' (128, preload) {
 };
 resource 'MENU' (129, preload) {
     129, textMenuProc, allEnabled, enabled, "File",
-    { ITEM("Close", "W"); DIVIDER; ITEM("Quit", "Q"); DIVIDER; ITEM("Run Script\0xC9", noKey); ITEM("Cancel Script", noKey) }
+    { ITEM("Close", "W"); DIVIDER; ITEM("Run Script\0xC9", noKey); ITEM("Cancel Script", noKey); DIVIDER; ITEM("Quit", "Q") }
 };
 resource 'MENU' (130, preload) {
     130, textMenuProc, allEnabled, enabled, "Edit",

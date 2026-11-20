@@ -55,7 +55,8 @@ add_library(globe_platform_common
   src/platform/common/pixel_format.cpp
   src/platform/common/frame_stats.cpp
   src/platform/common/cli.cpp
-  src/platform/common/script.cpp)
+  src/platform/common/script.cpp
+  src/platform/common/script_text.cpp)
 target_include_directories(globe_platform_common PUBLIC src/platform/common)
 target_link_libraries(globe_platform_common PUBLIC globe_core)
 
@@ -214,7 +215,7 @@ if(GLOBE_BUILD_TESTS)
   add_test(NAME version COMMAND test_version "${PROJECT_VERSION}")
   target_include_directories(test_terrain PRIVATE src/render)
   # Tests of the platform-neutral helpers (frame_stats also needs the POSIX clock).
-  foreach(name script pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)
+  foreach(name script script_text script_output pixel_format frame_stats cli elevation_packs classic_wait classic_present classic_window_fit wall_clock)
     add_executable(test_${name} tests/test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE globe_platform_common globe_clock_posix)
     target_compile_options(test_${name} PRIVATE -Wall -Wextra -Wpedantic)

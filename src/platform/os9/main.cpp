@@ -27,6 +27,7 @@
 #include "prefs_window.hpp"
 #include "scale_label.hpp"
 #include "script_session.hpp"
+#include "script_text.hpp"
 #include "sidebar.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
@@ -38,7 +39,6 @@
 #include <TextEdit.h>
 #include <Windows.h>
 #include <algorithm>
-#include <cstdio>
 #include <cstring>
 #include <optional>
 #include <string_view>
@@ -270,7 +270,7 @@ class Application {
                 !dirty_ && !script_.runner.active())
                 show_timing();
             // Observe only after native row submissions, outside the measured rendering slice.
-            if (script_.runner.active()) {
+            if (foreground_ && script_.runner.active()) {
                 EventRecord update_pending{};
                 const bool settled = script_presentation_settled(
                     model_, {foreground_, runner_.active(), redraw_, dirty_, shown_quick_,
@@ -917,17 +917,25 @@ class Application {
         return false;
     }
     void set_script_title(bool running) {
+        if (!running) {
+            if (script_title_saved_)
+                SetWTitle(window_, script_previous_title_);
+            script_title_saved_ = false;
+            return;
+        }
+        if (!script_title_saved_) {
+            GetWTitle(window_, script_previous_title_);
+            script_title_saved_ = true;
+        }
         char text[100];
-        if (running)
-            std::snprintf(text, sizeof text, "Poodle Earth - Script command %u (Esc cancels)",
-                          script_.runner.commands());
-        else
-            std::strcpy(text, "Poodle Earth");
+        script_progress_title(script_.runner.commands(), text, sizeof text);
         unsigned char title[100];
         title[0] = static_cast<unsigned char>(std::strlen(text));
         std::memcpy(title + 1, text, title[0]);
         SetWTitle(window_, title);
     }
+    unsigned char script_previous_title_[256]{};
+    bool script_title_saved_ = false;
     ScriptSession script_;
     unsigned script_progress_ = 0;
     std::uint64_t script_revision_ = 0;

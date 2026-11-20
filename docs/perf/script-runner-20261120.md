@@ -1,5 +1,10 @@
 # Script runner prototype: host and cross-build evidence, 2026-11-20
 
+**Historical implementation evidence at reviewed head `201d344`.** Current corrections,
+size measurements and acceptance details are in
+[the independent-review follow-up](script-review-followup-20261120.md). In particular,
+these original tests did not expose the idle-wait scheduling defect; the follow-up does.
+
 Issue #221, branch `codex/classic-script-runner`, baseline `5d7dfe2`.
 Implementation/contract/owner procedure: [script-runner.md](../script-runner.md).
 All evidence here is Linux host or compile/package evidence. No G4, transfer, emulator,

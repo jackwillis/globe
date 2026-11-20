@@ -40,6 +40,7 @@ add_application(${APP} CREATOR PdlE
   ${ROOT}/src/platform/os9/menu_bar.cpp
   ${ROOT}/src/platform/os9/script_session.cpp
   ${ROOT}/src/platform/common/script.cpp
+  ${ROOT}/src/platform/common/script_text.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
   ${ROOT}/src/core/app.cpp ${ROOT}/src/core/controls.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp

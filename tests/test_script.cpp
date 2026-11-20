@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "check.hpp"
+#include "classic_present.hpp"
 #include "classic_wait.hpp"
 #include "script.hpp"
 #include <cstdio>
@@ -238,16 +239,33 @@ int main(int argc, char** argv) {
     const auto idle_wait = [&](bool old_policy, bool initially_settled) {
         ScriptRunner idle;
         CHECK(idle.start("wait settled 10000", env, m, nullptr, nullptr));
+        Model view = m;
+        view.stage = QualityStage::Refine;
+        view.refine_active = false;
+        view.dragging = false;
+        ClassicPresentation presentation;
+        if (!initially_settled) {
+            presentation.request(view.generation);
+            CHECK(presentation.begin(view.generation, 65));
+        }
         std::uint64_t now = 100;
-        tick(idle, m, now);
+        tick(idle, view, now);
         unsigned observations = 0;
         while (idle.active() && observations < 10) {
             const auto wake = old_policy ? idle.deadline() : idle.wake_at(now, 0);
             const auto ticks = classic_wait_ticks(now, wake, false);
             CHECK(ticks > 0); // waiting alone must yield, never spin with zero sleep
             now += (static_cast<std::uint64_t>(ticks) * 1000 + 59) / 60;
-            const bool settled = initially_settled || observations >= 2;
-            tick(idle, m, now, settled);
+            // Native submission of 65 rows needs three 32-row bands; no completion until all
+            // are acknowledged. This exercises the same queue/predicate as the Classic adapter.
+            if (presentation.active(view.generation))
+                presentation.submitted(view.generation);
+            ScriptPresentation state{true};
+            state.pending = presentation.pending(view.generation);
+            const bool settled = script_presentation_settled(view, state);
+            tick(idle, view, now, settled);
+            if (state.pending && !old_policy)
+                CHECK(idle.waiting());
             ++observations;
         }
         CHECK(!idle.active());
