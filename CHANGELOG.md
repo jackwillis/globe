@@ -9,6 +9,11 @@ until a candidate is identified.
 
 ## Unreleased
 
+- Classic: opt-in File → Run Script executes bounded border queries, setters, assertions
+  and presentation waits cooperatively, with optional user-selected JSONL output.
+  Host tests and Retro68 compilation cover the prototype; native acceptance is pending
+  ([#221](https://github.com/jackwillis/poodle-earth/issues/221)).
+
 ## 0.1.1 — 2026-11-19
 
 [Download v0.1.1](https://github.com/jackwillis/globe/releases/tag/v0.1.1) · [Release notes](docs/release-notes-0.1.1.md)

@@ -1,0 +1,4 @@
+get borders
+set borders false
+wait settled 10000
+assert borders false

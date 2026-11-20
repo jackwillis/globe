@@ -26,6 +26,7 @@
 #include "pixel_format.hpp"
 #include "prefs_window.hpp"
 #include "scale_label.hpp"
+#include "script_session.hpp"
 #include "sidebar.hpp"
 #include "wall_clock.hpp"
 #include <Dialogs.h>
@@ -37,6 +38,7 @@
 #include <TextEdit.h>
 #include <Windows.h>
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 #include <optional>
 #include <string_view>
@@ -265,8 +267,38 @@ class Application {
                 max_turn_ms_ = std::max(max_turn_ms_, now_ms() - turn_start);
             if (foreground_ && model_.stage == QualityStage::Refine && runner_.job() != nullptr &&
                 !runner_.active() && !titled_ && !presentation_.pending(model_.generation) &&
-                !dirty_)
+                !dirty_ && !script_.runner.active())
                 show_timing();
+            // Observe only after native row submissions, outside the measured rendering slice.
+            if (script_.runner.active()) {
+                EventRecord update_pending{};
+                const bool settled = script_presentation_settled(
+                    model_, {foreground_, runner_.active(), redraw_, dirty_, shown_quick_,
+                             bar_shown_, presentation_.pending(model_.generation),
+                             EventAvail(updateMask, &update_pending) != 0});
+                script_.runner.step(
+                    model_, {now_ms(), model_.generation, script_revision_, settled},
+                    [](void* context, const Msg& msg) {
+                        auto& app = *static_cast<Application*>(context);
+                        app.apply(msg);
+                        // RefinementJob snapshots Layers. A scripted layer edit must replace any
+                        // old-layer job; the normal apply path still owns Model and Effects.
+                        if (app.runner_.active()) {
+                            app.runner_.cancel(nullptr, app.model_.camera);
+                            app.runner_.start(app.model_, &*app.fb_, &*app.terrain_);
+                        }
+                    },
+                    this);
+                if (!script_.runner.active()) {
+                    script_.finish();
+                    script_progress_ = 0;
+                    set_script_title(false);
+                    turn_start = now_ms();
+                } else if (script_progress_ != script_.runner.commands()) {
+                    script_progress_ = script_.runner.commands();
+                    set_script_title(true);
+                }
+            }
             Point pointer;
             GetMouse(&pointer);
             LocalToGlobal(&pointer);
@@ -274,13 +306,14 @@ class Application {
                        static_cast<short>(pointer.h + 1)};
             RectRgn(mouse_region_, &mouse);
             EventRecord event{};
-            WaitNextEvent(everyEvent, &event,
-                          static_cast<long>(classic_wait_ticks(
-                              now_ms(), wake_,
-                              runner_.active() || (!presentation_held(model_) &&
-                                                   presentation_.pending(model_.generation)),
-                              foreground_)),
-                          foreground_ ? mouse_region_ : nullptr);
+            WaitNextEvent(
+                everyEvent, &event,
+                static_cast<long>(classic_wait_ticks(
+                    now_ms(), script_wake(),
+                    (script_.runner.active() && !script_.runner.waiting()) || runner_.active() ||
+                        (!presentation_held(model_) && presentation_.pending(model_.generation)),
+                    foreground_)),
+                foreground_ ? mouse_region_ : nullptr);
             const auto time = now_ms();
             turn_start = time;
             SetPortWindowPort(window_);
@@ -588,8 +621,11 @@ class Application {
 #endif
     }
     bool copy(int first, int end, bool convert = true) {
-        if (!world_ || !fb_)
+        if (!world_ || !fb_) {
+            if (script_.runner.active())
+                dirty_ = true;
             return false;
+        }
         if (convert)
             presentation_.cancel(); // synchronous moving frame replaces any queued old snapshot
         const auto copy_t0 = now_ms();
@@ -599,8 +635,11 @@ class Application {
             ~Timer() { total += now_ms() - t0; }
         } timer{copy_ms_, copy_t0};
         const auto pix = GetGWorldPixMap(world_);
-        if (!LockPixels(pix))
+        if (!LockPixels(pix)) {
+            if (script_.runner.active())
+                dirty_ = true;
             return false;
+        }
         const PixelFormat format{16, 0x7c00, 0x03e0, 0x001f, true};
         const auto stride = static_cast<std::uint16_t>((**pix).rowBytes) & 0x3fffU;
         // Overlays (night, measure, focused country) go on a copy; the frame itself is
@@ -631,12 +670,16 @@ class Application {
                 dirty_ = false;
         }
         UnlockPixels(pix);
+        if (!converted && script_.runner.active())
+            dirty_ = true;
         return converted;
     }
     bool apply(const Msg& msg) {
         const auto generation = model_.generation;
         const auto stage = model_.stage;
         auto fx = update(model_, msg);
+        if (fx.redraw && std::holds_alternative<CommandIssued>(msg))
+            ++script_revision_; // Layers can change without a new Model generation.
         if (generation != model_.generation) {
             presentation_.cancel();
             runner_.cancel(fb_ ? &*fb_ : nullptr, model_.camera);
@@ -714,6 +757,15 @@ class Application {
                 CheckItem(view, item, s.checked);
             }
         }
+        if (const MenuHandle file = GetMenuHandle(kFileMenu)) {
+            if (script_.runner.active()) {
+                DisableItem(file, kRunScriptItem);
+                EnableItem(file, kCancelScriptItem);
+            } else {
+                EnableItem(file, kRunScriptItem);
+                DisableItem(file, kCancelScriptItem);
+            }
+        }
         // Close is for the About and Preferences windows (or a desk accessory) in front; the globe
         // window leaves the program through Quit.
         const WindowPtr front = FrontWindow();
@@ -740,7 +792,17 @@ class Application {
         const short menu = static_cast<short>(result >> 16);
         const short item = static_cast<short>(result & 0xffff);
         bool quit = false;
-        if (menu == kAppleMenu && item > kHelpItem + 1) {
+        if (menu == kFileMenu && item == kRunScriptItem) {
+            HiliteMenu(0);
+            script_.choose(model_);
+            if (script_.runner.active())
+                set_script_title(true);
+            SetPortWindowPort(window_);
+        } else if (menu == kFileMenu && item == kCancelScriptItem) {
+            script_.runner.cancel();
+            script_.finish();
+            set_script_title(false);
+        } else if (menu == kAppleMenu && item > kHelpItem + 1) {
             unsigned char name[256];
             GetMenuItemText(GetMenuHandle(kAppleMenu), item, name);
             OpenDeskAcc(name);
@@ -764,6 +826,10 @@ class Application {
                 quit = apply(CommandIssued{time, *choice.command});
             else
                 overlay(choice.overlay);
+        }
+        if (quit && script_.runner.active()) {
+            script_.runner.cancel();
+            script_.finish();
         }
         HiliteMenu(0);
         return quit;
@@ -815,6 +881,12 @@ class Application {
             return false;
         const auto code = (message >> 8) & 0xff;
         const auto ch = static_cast<int>(message & 0xff);
+        if (ch == 27 && script_.runner.active()) {
+            script_.runner.cancel();
+            script_.finish();
+            set_script_title(false);
+            return false;
+        }
         if (ch == 27 && help_shown_) { // Escape hides Help; it never quits here
             toggle_help(false);
             return false;
@@ -844,6 +916,27 @@ class Application {
         overlay(binding.overlay);
         return false;
     }
+    std::uint64_t script_wake() const {
+        if (!script_.runner.active() || !script_.runner.waiting())
+            return wake_;
+        const auto deadline = script_.runner.deadline();
+        return wake_ ? std::min(wake_, deadline) : deadline;
+    }
+    void set_script_title(bool running) {
+        char text[100];
+        if (running)
+            std::snprintf(text, sizeof text, "Poodle Earth - Script command %u (Esc cancels)",
+                          script_.runner.commands());
+        else
+            std::strcpy(text, "Poodle Earth");
+        unsigned char title[100];
+        title[0] = static_cast<unsigned char>(std::strlen(text));
+        std::memcpy(title + 1, text, title[0]);
+        SetWTitle(window_, title);
+    }
+    ScriptSession script_;
+    unsigned script_progress_ = 0;
+    std::uint64_t script_revision_ = 0;
     WindowPtr window_ = nullptr;
     GWorldPtr world_ = nullptr;
     RgnHandle mouse_region_ = nullptr;
