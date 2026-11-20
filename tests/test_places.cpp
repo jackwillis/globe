@@ -110,6 +110,10 @@ int main(int argc, char** argv) {
         CHECK(picked.size() == 1 && picked[0].text == "Front");
         select_place_labels(*tiered, labels, *near, picked);
         CHECK(picked.size() == 2);
+        select_place_labels(*tiered, labels, *near, picked, 0, kLastLargeCityTier);
+        CHECK(picked.size() == 1 && picked[0].text == "Front");
+        select_place_labels(*tiered, labels, *near, picked, kLastLargeCityTier + 1);
+        CHECK(picked.size() == 1 && picked[0].text == "Back");
     }
     const auto step = [](double radius) {
         return max_place_tier(*make_camera({{0, 0}, 0, radius, 100, 100}));

@@ -9,6 +9,8 @@
 #include <vector>
 namespace globe {
 constexpr std::uint8_t kLastPlaceTier = 3;
+// Tiers 0 and 1 are the large cities, drawn a point larger than the rest (typography.md).
+constexpr std::uint8_t kLastLargeCityTier = 1;
 class Places {
   public:
     static std::optional<Places> parse(const std::uint8_t* data, std::size_t size);
@@ -47,8 +49,9 @@ class PlaceScene {
 // the view closes in.
 std::uint8_t max_place_tier(const Camera& camera);
 // Candidates for one frame: the entries of `all` (from Places::label_candidates) whose tier suits
-// the zoom, capped at the placer's candidate limit.
+// the zoom and lie in first_tier..last_tier, capped at the placer's candidate limit.
 void select_place_labels(const Places& places, std::span<const LabelCandidate> all,
-                         const Camera& camera, std::vector<LabelCandidate>& out);
+                         const Camera& camera, std::vector<LabelCandidate>& out,
+                         std::uint8_t first_tier = 0, std::uint8_t last_tier = kLastPlaceTier);
 InfoCard place_card(const Places& places, std::uint32_t id);
 } // namespace globe

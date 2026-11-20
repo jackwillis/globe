@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "globe/places.hpp"
+#include <algorithm>
 #include <cmath>
 namespace globe {
 void PlaceScene::draw(Framebuffer& fb, const Camera& camera) const {
@@ -47,11 +48,13 @@ std::uint8_t max_place_tier(const Camera& camera) {
     return kLastPlaceTier;
 }
 void select_place_labels(const Places& places, std::span<const LabelCandidate> all,
-                         const Camera& camera, std::vector<LabelCandidate>& out) {
+                         const Camera& camera, std::vector<LabelCandidate>& out,
+                         std::uint8_t first_tier, std::uint8_t last_tier) {
     out.clear();
-    const auto limit = max_place_tier(camera);
+    const auto limit = std::min(max_place_tier(camera), last_tier);
     for (std::uint32_t i = 0; i < all.size() && i < places.count(); ++i)
-        if (places.tier(i) <= limit && out.size() < kMaxLabelCandidates)
+        if (places.tier(i) >= first_tier && places.tier(i) <= limit &&
+            out.size() < kMaxLabelCandidates)
             out.push_back(all[i]);
 }
 } // namespace globe

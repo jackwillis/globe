@@ -143,6 +143,10 @@ class App {
         }
         if (label_gc_)
             XFreeGC(dpy_, label_gc_);
+        if (label_small_gc_)
+            XFreeGC(dpy_, label_small_gc_);
+        if (label_small_font_)
+            XFreeFont(dpy_, label_small_font_);
         if (label_bold_gc_)
             XFreeGC(dpy_, label_bold_gc_);
         if (label_bold_font_)
@@ -192,6 +196,13 @@ class App {
                 if (label_bold_font_) {
                     values.font = label_bold_font_->fid;
                     label_bold_gc_ = XCreateGC(dpy_, win_, GCFont, &values);
+                }
+                // Smaller cities use a 10-pixel face when there is one.
+                label_small_font_ =
+                    XLoadQueryFont(dpy_, "-*-helvetica-medium-r-normal--10-*-*-*-*-*-iso8859-1");
+                if (label_small_font_) {
+                    values.font = label_small_font_->fid;
+                    label_small_gc_ = XCreateGC(dpy_, win_, GCFont, &values);
                 }
             }
         }
@@ -746,12 +757,26 @@ class App {
                  country_labels_);
         }
         if (city_names_ && places_ && !place_labels_.empty()) {
-            select_place_labels(*places_, place_labels_, model_.camera, city_candidates_);
-            std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
-            const auto city_count =
-                place_labels(model_.camera, city_candidates_, measure, label_font_, city_placed,
-                             std::span(placed).first(count));
-            draw(label_gc_, std::span(city_placed).first(city_count), city_candidates_);
+            // Large cities in the 12-pixel face, the rest in the 10-pixel one where the server has
+            // it; each pass keeps clear of the labels already drawn.
+            std::array<PlacedLabel, 2 * kMaxPlacedLabels> taken;
+            std::copy_n(placed.begin(), count, taken.begin());
+            std::size_t taken_count = count;
+            for (const bool large : {true, false}) {
+                select_place_labels(*places_, place_labels_, model_.camera, city_candidates_,
+                                    large ? 0 : kLastLargeCityTier + 1,
+                                    large ? kLastLargeCityTier : kLastPlaceTier);
+                XFontStruct* const font =
+                    !large && label_small_font_ ? label_small_font_ : label_font_;
+                const GC gc = !large && label_small_gc_ ? label_small_gc_ : label_gc_;
+                std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
+                const auto city_count =
+                    place_labels(model_.camera, city_candidates_, measure, font, city_placed,
+                                 std::span(taken).first(taken_count));
+                draw(gc, std::span(city_placed).first(city_count), city_candidates_);
+                std::copy_n(city_placed.begin(), city_count, taken.begin() + taken_count);
+                taken_count += city_count;
+            }
         }
     }
 
@@ -1126,6 +1151,8 @@ class App {
     std::vector<PlacedLabel> dot_boxes_;
     XFontStruct* label_bold_font_ = nullptr;
     GC label_bold_gc_ = nullptr;
+    XFontStruct* label_small_font_ = nullptr;
+    GC label_small_gc_ = nullptr;
     Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;

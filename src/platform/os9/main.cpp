@@ -601,7 +601,7 @@ class Application {
         short family = 0;
         GetFNum("\pHelvetica", &family);
         if (!family)
-            GetFNum("\pPalatino", &family);
+            GetFNum("\pGeneva", &family); // human labels stay sans; Palatino is for terrain
         return family;
     }
     bool country_names_available() const {
@@ -668,14 +668,27 @@ class Application {
             draw(std::span(placed).first(count), country_labels_);
         }
         if (cities) {
-            select_place_labels(*places_, place_labels_, model_.camera, city_candidates_);
+            // Large cities at 10 points, then the rest at 9; each pass keeps clear of the labels
+            // already drawn.
+            std::array<PlacedLabel, 2 * kMaxPlacedLabels> taken;
+            std::copy_n(placed.begin(), count, taken.begin());
+            std::size_t taken_count = count;
             TextFace(normal);
-            GetFontInfo(&info);
-            std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
-            const auto city_count = place_labels(model_.camera, city_candidates_, measure, &info,
-                                                 city_placed, std::span(placed).first(count));
-            last_city_count_ = city_count;
-            draw(std::span(city_placed).first(city_count), city_candidates_);
+            for (const bool large : {true, false}) {
+                select_place_labels(*places_, place_labels_, model_.camera, city_candidates_,
+                                    large ? 0 : kLastLargeCityTier + 1,
+                                    large ? kLastLargeCityTier : kLastPlaceTier);
+                TextSize(large ? 10 : 9);
+                GetFontInfo(&info);
+                std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
+                const auto city_count =
+                    place_labels(model_.camera, city_candidates_, measure, &info, city_placed,
+                                 std::span(taken).first(taken_count));
+                last_city_count_ += city_count;
+                draw(std::span(city_placed).first(city_count), city_candidates_);
+                std::copy_n(city_placed.begin(), city_count, taken.begin() + taken_count);
+                taken_count += city_count;
+            }
         }
         RGBForeColor(&old_color);
         TextMode(old_mode);

@@ -59,7 +59,7 @@ names on maps* is the reference to read next, and I have not read it directly):
 | Countries | C | Helvetica Bold | 10 | Duck city dots. Built in #185 and #219 |
 | National capitals | C | Helvetica Bold plus a square marker | 10 | Weight alone is subtle at 9 px, so pair it with a symbol. Not built |
 | Large cities (population tiers 0 and 1) | C | Helvetica | 10 | Beside the dot. Built in #219 |
-| Smaller cities (tiers 2 and 3) | C | Helvetica | 9 | Appear as the view zooms in. Built today at 10 |
+| Smaller cities (tiers 2 and 3) | C | Helvetica | 9 | Appear as the view zooms in. Built in #219 |
 | Oceans | C | Palatino Italic | 12 | Letterspaced where the platform allows. Not built |
 | Seas, gulfs, bays | C | Palatino Italic | 10 | Not built (#92) |
 | Lakes | C | Palatino Italic | 9 | Not built |
@@ -72,8 +72,8 @@ names on maps* is the reference to read next, and I have not read it directly):
 ### Fallbacks
 
 - **Classic:** Helvetica falls back to Geneva; Palatino to New York, then Times. These are
-  proposals, not verified on hardware. Shipped code in #185 and #219 still falls from Helvetica to
-  Palatino, which this convention supersedes.
+  proposals, not verified on hardware. Classic code now follows this for country and city names (Helvetica,
+  then Geneva; #219). Palatino fallback and the Monaco scale bar are separate.
 - **X11:** choose by XLFD pattern with a fallback list. Use the bold or oblique face only if the
   server has it; otherwise draw the plain face and rely on size and placement.
 - **Style:** QuickDraw synthesizes bold and italic when a font has no true style, so the result
@@ -96,8 +96,9 @@ Still to check, and not settled by this note:
 
 - Which bitmap sizes and true bold or italic faces the owner's G4 has installed (E1 in this note).
 - A tier-by-zoom rule for city sizes (9 versus 10 points) needs the G4 view to judge.
-- None of this is implemented beyond country and city names; the info-card heading and capital
-  marker are unchanged in code until an issue schedules them.
+- Implemented in #219: bold countries, 10 and 9 point cities, Helvetica-then-Geneva on Classic. Not
+  implemented: the capital marker (the city pack has no capital flag) and the info-card heading,
+  which has no font styling in code today.
 
 ![Map look with labels](images/labels-map-crisp.png)
 

@@ -37,7 +37,7 @@ cmp /tmp/countries.gpol data/countries.gpol
 
 The Classic View menu and X11 tools window (F2) both offer **Country Names**.
 Labels default on when the edition and font are available. Classic tries
-Helvetica, then Palatino at 10 points; if neither family resolves, Country Names
+Helvetica, then Geneva at 10 points (Geneva replaced Palatino with the #219 convention); if neither family resolves, Country Names
 is unchecked and disabled and no labels draw. A valid edition-bound anchor table
 is also required. X11 tries the 12-pixel ISO-8859-1 Helvetica medium XLFD, then
 the server's `fixed` font. If both fail, no labels draw and the tools toggle is
@@ -101,7 +101,8 @@ names only the largest cities. The thresholds are first guesses for the owner to
 
 Font theme (owner direction, 2026-11-19): terrain (physical features such as oceans and lakes) in
 Palatino, human (political features: countries and cities) in Helvetica. Cities and countries share
-the existing Helvetica-then-Palatino lookup; water labels and per-role fonts remain with #61.
+the Helvetica-then-Geneva lookup; large cities (tiers 0 and 1) draw at 10 points and the rest at 9
+(X11 uses a 10-pixel face when the server has one); water labels and per-role fonts remain with #61.
 
 Storage: a second candidate vector (all 304 cities, about 14 KiB on 32-bit Classic) and one
 reserved per-frame selection vector of up to 256 candidates (about 12 KiB), allocated once at
