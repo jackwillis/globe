@@ -73,6 +73,9 @@ class ScriptRunner {
     bool report_failed() const { return report_failed_; }
     const char* error_code() const { return error_; }
     std::uint64_t deadline() const { return deadline_; }
+    // While waiting, request a completion observation every 16 ms (rounded by native waits).
+    // Returns the earlier application wake, observation wake or timeout; no wake when idle.
+    std::uint64_t wake_at(std::uint64_t now_ms, std::uint64_t application_wake) const;
 
   private:
     void emit(JsonRecord&);

@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #include "script.hpp"
 #include "globe/shown_frame.hpp"
+#include <algorithm>
 #include <cstring>
 #include <limits>
 namespace globe {
@@ -298,6 +299,14 @@ void ScriptRunner::cancel() {
     }
     if (!report_failed_)
         end(ScriptStatus::Cancelled);
+}
+std::uint64_t ScriptRunner::wake_at(std::uint64_t now, std::uint64_t application_wake) const {
+    if (!active() || !waiting_)
+        return application_wake;
+    // Subtraction avoids overflow near the injected clock's limit. Never poll beyond timeout.
+    const auto observation =
+        now >= deadline_ ? deadline_ : now + std::min<std::uint64_t>(16, deadline_ - now);
+    return application_wake ? std::min(application_wake, observation) : observation;
 }
 void ScriptRunner::step(const Model& model, ScriptObservation o,
                         void (*dispatch)(void*, const Msg&), void* app) {

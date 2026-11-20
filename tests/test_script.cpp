@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) 2026 Jack Willis
 #include "check.hpp"
+#include "classic_wait.hpp"
 #include "script.hpp"
 #include <cstdio>
 #include <cstdlib>
@@ -232,6 +233,39 @@ int main(int argc, char** argv) {
         CHECK(r.report_failed() && r.status() == ScriptStatus::Error && r.errors() == 1);
         CHECK(!sink.has("\"type\":\"end\""));
     }
+    // Regression: simulate the real outer loop with no mouse/key events and no render work.
+    // The previous policy slept until deadline and timed out before its next settled observation.
+    const auto idle_wait = [&](bool old_policy, bool initially_settled) {
+        ScriptRunner idle;
+        CHECK(idle.start("wait settled 10000", env, m, nullptr, nullptr));
+        std::uint64_t now = 100;
+        tick(idle, m, now);
+        unsigned observations = 0;
+        while (idle.active() && observations < 10) {
+            const auto wake = old_policy ? idle.deadline() : idle.wake_at(now, 0);
+            const auto ticks = classic_wait_ticks(now, wake, false);
+            CHECK(ticks > 0); // waiting alone must yield, never spin with zero sleep
+            now += (static_cast<std::uint64_t>(ticks) * 1000 + 59) / 60;
+            const bool settled = initially_settled || observations >= 2;
+            tick(idle, m, now, settled);
+            ++observations;
+        }
+        CHECK(!idle.active());
+        CHECK(observations <= (initially_settled || old_policy ? 2U : 4U));
+        return idle.status();
+    };
+    CHECK(idle_wait(false, true) == ScriptStatus::Pass);
+    CHECK(idle_wait(false, false) == ScriptStatus::Pass); // pending work finishes on a later turn
+    CHECK(idle_wait(true, true) == ScriptStatus::Error);  // falsifies reviewed-head policy
+    sink = {};
+    r.start("wait settled 10", env, m, Sink::write, &sink);
+    tick(r, m, 100);
+    CHECK(r.wake_at(100, 0) == 110);   // short timeout wins over observation interval
+    CHECK(r.wake_at(100, 105) == 105); // preserve earlier real application work
+    CHECK(r.wake_at(110, 0) == 110);
+    tick(r, m, 110, true);
+    CHECK(r.status() == ScriptStatus::Error && sink.has("timeout"));
+    CHECK(r.wake_at(110, 0) == 0); // terminal runner stops observation wakes
     // Disabled output still runs and summarizes without retaining history.
     CHECK(r.start("get borders\nset borders true\nassert borders true", env, m, nullptr, nullptr));
     for (unsigned i = 0; i < 4; ++i)

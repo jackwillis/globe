@@ -309,7 +309,7 @@ class Application {
             WaitNextEvent(
                 everyEvent, &event,
                 static_cast<long>(classic_wait_ticks(
-                    now_ms(), script_wake(),
+                    now_ms(), script_.runner.wake_at(now_ms(), wake_),
                     (script_.runner.active() && !script_.runner.waiting()) || runner_.active() ||
                         (!presentation_held(model_) && presentation_.pending(model_.generation)),
                     foreground_)),
@@ -915,12 +915,6 @@ class Application {
             return apply(CommandIssued{time, *command});
         overlay(binding.overlay);
         return false;
-    }
-    std::uint64_t script_wake() const {
-        if (!script_.runner.active() || !script_.runner.waiting())
-            return wake_;
-        const auto deadline = script_.runner.deadline();
-        return wake_ ? std::min(wake_, deadline) : deadline;
     }
     void set_script_title(bool running) {
         char text[100];

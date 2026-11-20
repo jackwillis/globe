@@ -80,8 +80,11 @@ window tracking also cannot deliver a deadline until control returns to the oute
 The runner consumes at most one source line or one pending-condition observation per turn,
 including comments/blanks. There is one pending wait. Source scanning is bounded by the
 16-KiB script limit. Script dispatch, serialization and file I/O occur outside the measured
-rendering slice. `WaitNextEvent` gets the earlier rendering/script deadline; waiting alone
-does not request a busy polling loop. There is no secondary/recursive execution loop.
+rendering slice. `WaitNextEvent` gets the earliest rendering wake, script timeout, or **16-ms completion
+observation wake** while a wait is pending (rounded up to 60-Hz native ticks). This
+bounded observation policy also checks already-settled idle views without mouse events.
+Waiting alone requests positive sleeps, not a zero-sleep busy loop; terminal runners
+stop these wakes. There is no secondary/recursive execution loop.
 The native file dialogs are modal only before execution. Existing OS calls, rendering,
 full-frame conversion and disk I/O can still stall a turn; no hardware latency bound is claimed.
 
