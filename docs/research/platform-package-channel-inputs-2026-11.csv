@@ -1,0 +1,46 @@
+OS / platform,Architecture,Package / channel,Proposed lane (hypothetical),Benefit 1-5 (hypothetical),Confidence (hypothetical),Extra engineering days (hypothetical),Value/day (workbook rounded)
+Linux,x86_64/i686/ARM/PPC,.tar.gz / portable folder,Candidate v0.1.3,4.2,0.85,3,1.19
+Linux,x86_64,.deb,Candidate v0.1.4,2,0.75,4,0.38
+Linux,x86_64,.rpm,Candidate v0.1.4,2.2,0.7,4.5,0.34
+Linux,x86_64,AppImage,Stretch v0.1.3,3,0.58,5,0.35
+Linux,x86_64,Flatpak,Future / research,3.6,0.7,5,0.5
+Linux,i686/i586,Portable .tar.gz,Research,2.2,0.55,3,0.4
+Linux,ARMv7/aarch64/PPC,Portable .tar.gz,Research,2.5,0.49,3,0.41
+Linux,all tested architectures,Run from ISO / Install.sh,Future / research,3,0.55,6,0.28
+NetBSD,macppc/amd64/i386,pkgsrc binary .tgz,Candidate v0.1.3,2.5,0.88,6,0.37
+NetBSD,macppc/amd64,Run from CD + pkgsrc pkg,Future / research,3.5,0.75,6,0.44
+FreeBSD,amd64/aarch64,pkg(8) package,Conditional v0.1.4,2.8,0.65,5,0.36
+FreeBSD,amd64,Run from CD / install package,Future / research,3,0.58,6,0.29
+OpenBSD,amd64/i386/macppc/sparc64,pkg_add compatible package,Future / research,3,0.53,5,0.32
+OpenBSD,tested ISA,Run from CD / install package,Future / research,3.3,0.48,6,0.26
+Windows,Win98/2000/XP x86,ZIP portable folder,Future / research,2.1,0.45,3,0.32
+Windows,Win98/2000/XP x86,Native installer,Future / research,3,0.42,6,0.21
+Windows,modern x86/x64,Native installer,Future / research,3.4,0.61,6,0.35
+Windows,tested x86/x64,Run from CD / Install.exe,Future / research,4.1,0.55,6,0.38
+Classic Mac OS,PowerPC,Installer + .sit,Published v0.1.1,3.3,0.9,3,0.99
+Classic Mac OS,PowerPC,Run from HFS view / Install app,Published v0.1.1,4,0.87,3,1.16
+Mac OS X,PowerPC / Intel,DMG / .app bundle,Future / research,3.7,0.27,6,0.17
+Mac OS X,PowerPC / Intel,Run .app from disc / installer,Future / research,3.9,0.22,6,0.14
+macOS,Intel/ARM universal,Universal .dmg,Future / research,4.5,0.33,6,0.25
+macOS,Intel/ARM universal,Run app from disc / copy .app,Future / research,4,0.25,7,0.14
+Haiku,x86_64/x86,hpkg,Future / research,3.6,0.56,6.5,0.31
+Haiku,x86_64/x86,Run from disc / install hpkg,Future / research,3.2,0.51,6,0.27
+BeOS,R5 x86,ZIP/BeOS installer,Future / research,3.9,0.14,6,0.09
+illumos,SPARC/x86,IPS/pkgsrc/Tar depending distro,Future / research,2.9,0.35,6,0.17
+All platforms,all tested,Source tarball + reproducible scripts,Future / research,4,0.91,1.5,2.43
+Linux,x86_64,Arch Linux PKGBUILD / AUR,Future,2,0.7,3,0.47
+Linux,x86_64,NixOS / nixpkgs derivation,Future,2.7,0.65,5,0.35
+Linux,x86_64,Snap package,Future,1.5,0.55,5,0.17
+Linux / musl,x86_64,Alpine apk / portable musl tarball,Research,2.4,0.52,6,0.21
+Chimera Linux,x86_64,Chimera native package (musl/LLVM),Future,1.4,0.45,6,0.11
+WebAssembly,wasm32,Offline browser static bundle,Research after packages,3.6,0.37,9,0.15
+Android,arm64-v8a,APK sideload / optional store,Future,2,0.3,10,0.06
+Redox OS,x86_64,Redox native package,Long shot,1.1,0.22,9,0.03
+Vinix,x86_64,Vinix system package,Long shot,1,0.22,10,0.02
+MINIX 3,i386,pkgsrc-on-MINIX package,Long shot,1.2,0.1,12,0.01
+SerenityOS,x86_64,Native Serenity application bundle,Long shot,1.1,0.2,10,0.02
+Genode / Sculpt,x86_64,Genode depot component,Long shot,1.2,0.18,12,0.02
+9front / Plan 9,amd64,9front native archive,Long shot,1,0.1,12,0.01
+MorphOS,PowerPC,MorphOS archive / installer,Long shot,1.8,0.18,12,0.03
+AROS,x86_64/i386,AROS archive / package,Long shot,1.6,0.18,12,0.02
+DragonFly BSD,x86_64,dports / pkg(8) native package,Future,1.5,0.5,6,0.13
