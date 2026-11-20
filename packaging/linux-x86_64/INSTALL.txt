@@ -1,0 +1,37 @@
+Poodle Earth for Linux x86-64 (X11) - install notes
+
+This archive holds one program, bin/poodle-earth. It carries its own maps,
+elevation and place names inside the executable, so it needs no data files.
+
+REQUIREMENTS
+  - Linux on x86-64 (amd64) with an X11 display (Wayland through XWayland works).
+  - glibc: see BUILD-INFO.txt, "glibc_required". The program will not start on
+    an older glibc than that.
+  - Shared libraries: libX11.so.6, libstdc++.so.6, libgcc_s.so.1, libm.so.6,
+    libc.so.6. Debian/Ubuntu: libx11-6 libstdc++6. Fedora: libX11 libstdc++.
+  - No root is needed to try it: run ./bin/poodle-earth from the unpacked folder.
+
+INSTALL
+  tar xzf poodle-earth-VERSION-linux-x86_64.tar.gz
+  cd poodle-earth-VERSION-linux-x86_64
+  ./install.sh                     # installs under /usr/local (may need sudo)
+  ./install.sh --prefix "$HOME/.local"      # or a prefix you own
+
+  Files installed (see MANIFEST):
+    <prefix>/bin/poodle-earth
+    <prefix>/share/doc/poodle-earth/{LICENSE,README.md,DATA-CREDITS.txt,LANDCLASS-NOTICE.txt}
+  Nothing else is written: no settings, caches or files in your home directory.
+
+REMOVE
+  ./install.sh [--prefix SAME_PREFIX] uninstall
+  (or delete the files listed in MANIFEST under the prefix).
+
+CHECK THE DOWNLOAD
+  sha256sum -c SHA256SUMS          # next to the archive, before unpacking
+
+LICENCE, DATA AND SOURCE
+  The program is free software under GPL-3.0-or-later (share/doc/poodle-earth/LICENSE).
+  The map data embedded in it is separate and keeps its own terms: see
+  share/doc/poodle-earth/DATA-CREDITS.txt and LANDCLASS-NOTICE.txt.
+  The complete corresponding source is the -source.tar.gz published beside this
+  archive; SOURCE.txt names the exact revision this binary was built from.
