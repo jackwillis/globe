@@ -1,0 +1,6 @@
+@comment $NetBSD$
+bin/poodle-earth
+share/doc/poodle-earth/DATA-CREDITS.txt
+share/doc/poodle-earth/LANDCLASS-NOTICE.txt
+share/doc/poodle-earth/LICENSE
+share/doc/poodle-earth/README.md

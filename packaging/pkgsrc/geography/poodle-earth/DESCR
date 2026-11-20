@@ -1,0 +1,10 @@
+Poodle Earth is a small, fast globe and atlas for the X Window System.
+Drag to turn the globe, zoom in to coastlines, borders, terrain and
+cities. It was written to run on modest hardware, including 1990s-2000s
+PowerPC machines, and draws everything itself with plain Xlib: no GTK,
+Qt, OpenGL or network access.
+
+The maps, elevation and place names are built into the executable, so no
+data files are installed and nothing is written to your home directory.
+The program is GPL-3.0-or-later; the data is separate and keeps its own
+licences (see DATA-CREDITS.txt in the documentation directory).
