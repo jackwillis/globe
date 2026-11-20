@@ -27,23 +27,67 @@ Choosing system fonts also settles the licensing question: nothing is embedded o
 | B. X11 chrome: toolbar, palette, info window | X11 (core fonts today) | Fonts on the Unix machine | Own stack; no need to match OS 9 |
 | C. Map labels over the globe | The platform's text calls, on the shown frame | The same system fonts as A or B | Layout in the core, drawing per platform |
 
-## Proposed roles
+## Convention v1 (proposal, #219; owner direction 2026-11-19)
 
-| Element | Surface | Font and style | Note |
-| --- | --- | --- | --- |
-| Menus, standard controls, dialogs | A | System-managed (native) | Do not override Toolbox conventions |
-| Looks palette, readouts, status, diagnostics | A, B | Helvetica, or the system font where the control is native | Coordinates and measurements in Helvetica |
-| Country names | C | Palatino Roman, mixed case, light letterspacing | Serif for areas |
-| Oceans, seas, lakes | C | Palatino Italic, wide letterspacing | Italics for water is a long-standing convention (see below) |
-| Cities | C | Helvetica, one size or two by rank | Sans for points |
-| National capitals | C | Helvetica Bold plus a square marker | Weight alone is subtle at 9 px (see mockup), so pair it with a symbol |
-| Info-card heading | A | Palatino Bold | |
-| Info-card body | A | Helvetica | |
-| Mountain ranges, rivers | C | Not decided | No such layer yet; decide when #52/#53 produce one |
-| Globe wordmark | | Not decided | Revisit when there is a place to show it |
+**Terrain versus human.** Physical features (the sea, lakes, land forms) are set in Palatino. Human,
+political features (countries, cities, capitals) are set in Helvetica. Interface text is Helvetica.
+This replaces the earlier "serif for areas, sans for points" rule, which is kept in git history.
 
-One rule sits behind it: serif for areas, sans for points. That matches the general practice that
-typeface is used mainly to tell feature classes apart.
+### Principles
+
+Drawn from general cartographic practice (see Cartographic conventions below; Imhof's *Positioning
+names on maps* is the reference to read next, and I have not read it directly):
+
+1. **Few variables, each with one meaning.** Family says physical or political. Weight says
+   importance. Italic means water. Size ranks features within a class. Labels of neighbouring
+   classes differ in at least two visible ways, so bold against regular at 10 points is never the
+   only cue.
+2. **Legibility first.** Horizontal text only; a one pixel halo (white shadow) on every label; no
+   labels while the globe moves; no label covers a marker.
+3. **Use installed sizes.** 9, 10 or 12 points, never scaled bitmaps. Every role has a fallback
+   font; if none resolves, that label layer is disabled and unchecked.
+4. **Placement follows meaning.** Area names are centred on their area and may move off a point
+   marker. Point names sit to the right of their dot. A higher-ranked label wins any clash, and a
+   lower-ranked one is dropped, never squeezed.
+
+### Roles
+
+| Element | Surface | Font and style | Size | Notes |
+| --- | --- | --- | --- | --- |
+| Menus, standard controls, dialogs | A | System-managed (native) | system | Do not override Toolbox conventions |
+| Looks palette, readouts, status, diagnostics | A, B | Helvetica, or the system font where native | system | Coordinates and measurements |
+| Countries | C | Helvetica Bold | 10 | Duck city dots. Built in #185 and #219 |
+| National capitals | C | Helvetica Bold plus a square marker | 10 | Weight alone is subtle at 9 px, so pair it with a symbol. Not built |
+| Large cities (population tiers 0 and 1) | C | Helvetica | 10 | Beside the dot. Built in #219 |
+| Smaller cities (tiers 2 and 3) | C | Helvetica | 9 | Appear as the view zooms in. Built today at 10 |
+| Oceans | C | Palatino Italic | 12 | Letterspaced where the platform allows. Not built |
+| Seas, gulfs, bays | C | Palatino Italic | 10 | Not built (#92) |
+| Lakes | C | Palatino Italic | 9 | Not built |
+| Mountains, deserts, ranges | C | Palatino | 10 | Not decided; wait for a data layer |
+| Rivers | C | Not decided | | Horizontal-only rule conflicts with line labels |
+| Info-card heading | A | Helvetica Bold | system | Was Palatino Bold; Palatino is now reserved for the physical world. Owner to confirm |
+| Info-card body | A | Helvetica | system | |
+| Globe wordmark | | Not decided | | Revisit when there is a place to show it |
+
+### Fallbacks
+
+- **Classic:** Helvetica falls back to Geneva; Palatino to New York, then Times. These are
+  proposals, not verified on hardware. Shipped code in #185 and #219 still falls from Helvetica to
+  Palatino, which this convention supersedes.
+- **X11:** choose by XLFD pattern with a fallback list. Use the bold or oblique face only if the
+  server has it; otherwise draw the plain face and rely on size and placement.
+- **Style:** QuickDraw synthesizes bold and italic when a font has no true style, so the result
+  is checked on the G4 before a style is relied on.
+
+### Open decisions and checks
+
+- Info-card headings in Helvetica Bold, as above, or Palatino Bold as before.
+- Colour for water labels: black with the white halo (current), or a dark blue. Decide on seeing
+  water labels on the G4.
+- Which bitmap sizes and true bold or italic faces the owner's G4 has installed (E1 in this note).
+- Italic for countries was considered and rejected: italic is the water convention and is harder to
+  read at 10 points. Capital letters or 11 points are the fallbacks if bold is too heavy.
+- A tier-by-zoom rule for city sizes (9 versus 10 points) needs the G4 view to judge.
 
 ![Map look with labels](images/labels-map-crisp.png)
 
