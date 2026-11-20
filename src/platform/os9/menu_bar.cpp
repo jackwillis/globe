@@ -85,6 +85,7 @@ void rebuild_menu_bar() {
     add_item(view, tr(Str::ItemNight), 'D');
     add_item(view, tr(Str::ItemMeasure), 'M');
     add_item(view, tr(Str::ItemCountryNames));
+    add_item(view, tr(Str::ItemCityNames));
     for (MenuHandle menu : {apple, file, edit, view})
         InsertMenu(menu, 0);
     AppendResMenu(apple, 'DRVR');

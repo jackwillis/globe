@@ -32,7 +32,8 @@ enum ViewItem : short {
     kNightItem,
     kMeasureItem,
     kCountryNamesItem,
-    kViewItemCount = kCountryNamesItem,
+    kCityNamesItem,
+    kViewItemCount = kCityNamesItem,
 };
 struct MenuChoice {
     std::optional<Command> command; // sent through update()

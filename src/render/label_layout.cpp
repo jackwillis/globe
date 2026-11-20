@@ -38,7 +38,8 @@ bool valid_metrics(LabelMetrics metrics) {
 } // namespace
 
 std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> candidates,
-                         MeasureLabel measure, void* context, std::span<PlacedLabel> output) {
+                         MeasureLabel measure, void* context, std::span<PlacedLabel> output,
+                         std::span<const PlacedLabel> avoid) {
     const auto cap = std::min(output.size(), kMaxPlacedLabels);
     if (cap == 0 || !measure || candidates.size() > kMaxLabelCandidates) {
         return 0;
@@ -72,12 +73,21 @@ std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> c
 
         const int width = metrics->right - metrics->left;
         const int height = metrics->ascent + metrics->descent;
-        const int left = static_cast<int>(point.x) - width / 2;
+        const bool beside = label.side == LabelSide::right;
+        const int left =
+            beside ? static_cast<int>(point.x) + kMarkerGap : static_cast<int>(point.x) - width / 2;
         const int top = static_cast<int>(point.y) - height / 2;
         const LabelBox box{left, top, left + width, top + height};
+        // Only a label beside its marker keeps clear of neighbours; centred labels may touch.
+        const int gap = beside ? kNeighbourGap : 0;
+        const LabelBox padded{box.left - gap, box.top - gap, box.right + gap, box.bottom + gap};
+        const auto hits = [padded](const PlacedLabel& placed) {
+            return overlaps(padded, placed.box);
+        };
         if (!fits(camera, box) ||
             std::any_of(output.begin(), output.begin() + static_cast<std::ptrdiff_t>(count),
-                        [box](const PlacedLabel& placed) { return overlaps(box, placed.box); })) {
+                        hits) ||
+            std::any_of(avoid.begin(), avoid.end(), hits)) {
             continue;
         }
         output[count++] = {*index, left - metrics->left, top + metrics->ascent, box};

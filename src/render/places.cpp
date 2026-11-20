@@ -19,4 +19,25 @@ void PlaceScene::draw(Framebuffer& fb, const Camera& camera) const {
             fb.fill_span(row, x - 1, x + 1, 0xffff);
     }
 }
+std::uint8_t max_place_tier(const Camera& camera) {
+    // Radius as a fraction of the shorter window side: a whole globe is about half, a close view
+    // several times that.
+    const double side = camera.width < camera.height ? camera.width : camera.height;
+    const double zoom = camera.radius_px / side;
+    if (zoom < 0.8)
+        return 0;
+    if (zoom < 1.4)
+        return 1;
+    if (zoom < 2.6)
+        return 2;
+    return kLastPlaceTier;
+}
+void select_place_labels(const Places& places, std::span<const LabelCandidate> all,
+                         const Camera& camera, std::vector<LabelCandidate>& out) {
+    out.clear();
+    const auto limit = max_place_tier(camera);
+    for (std::uint32_t i = 0; i < all.size() && i < places.count(); ++i)
+        if (places.tier(i) <= limit && out.size() < kMaxLabelCandidates)
+            out.push_back(all[i]);
+}
 } // namespace globe

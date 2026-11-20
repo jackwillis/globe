@@ -12,12 +12,16 @@
 namespace globe {
 
 enum class LabelRole : std::uint8_t { area, point };
+// Where the box sits against the anchor: centred on it, or to its right with a gap so a point
+// marker stays visible.
+enum class LabelSide : std::uint8_t { center, right };
 
 struct LabelCandidate {
     Vec3 anchor; // Earth-centered unit vector.
     std::string_view text;
     LabelRole role;
     int priority; // Higher first, ties in input order.
+    LabelSide side = LabelSide::center;
 };
 
 // Conservative painted bounds in pixels, relative to the baseline origin.
@@ -47,7 +51,13 @@ constexpr std::size_t kMaxPlacedLabels = 32;
 // batches return zero. Output capacity is the requested cap, clamped to kMaxPlacedLabels.
 // A provider returns nullopt for an unavailable run. No text is retained; output indexes
 // the input batch. Input and output storage must not overlap.
+//
+// `avoid` holds labels already placed by an earlier call; a new label never overlaps one. A label
+// on the right of its anchor also keeps kNeighbourGap pixels from every other box.
+constexpr int kNeighbourGap = 2;
+constexpr int kMarkerGap = 4;
 std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> candidates,
-                         MeasureLabel measure, void* context, std::span<PlacedLabel> output);
+                         MeasureLabel measure, void* context, std::span<PlacedLabel> output,
+                         std::span<const PlacedLabel> avoid = {});
 
 } // namespace globe

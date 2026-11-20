@@ -87,5 +87,29 @@ int main() {
                        large_output) == kMaxPlacedLabels);
     CHECK(calls == static_cast<int>(kMaxPlacedLabels));
     CHECK(large_output.back() == PlacedLabel{});
+
+    // A label beside its marker sits to the right with a gap, keeps clear of neighbours and of
+    // labels an earlier call placed.
+    const auto beside = [&](int x, int y, std::string_view text, int priority) {
+        return LabelCandidate{anchor(camera, x, y), text, LabelRole::point, priority,
+                              LabelSide::right};
+    };
+    std::array<PlacedLabel, 4> side_out{};
+    const std::array lone{beside(64, 64, "dot", 0)};
+    CHECK(place_labels(camera, lone, measure, &calls, side_out) == 1);
+    CHECK(side_out[0] == (PlacedLabel{0, 70, 66, {68, 60, 77, 68}}));
+    // 77 is the first free column; a box starting at 78 is within the two pixel gap.
+    const std::array crowded{beside(64, 64, "dot", 2), beside(74, 64, "dot", 1),
+                             beside(75, 64, "dot", 0)};
+    side_out = {};
+    CHECK(place_labels(camera, crowded, measure, &calls, side_out) == 2);
+    CHECK(side_out[0].candidate == 0 && side_out[1].candidate == 2);
+    std::array<PlacedLabel, 4> first_pass{};
+    CHECK(place_labels(camera, std::span(candidates).first(2), measure, &calls, first_pass) == 1);
+    side_out = {};
+    CHECK(place_labels(camera, lone, measure, &calls, side_out, std::span(first_pass).first(1)) ==
+          0);
+    const std::array<PlacedLabel, 1> elsewhere{PlacedLabel{0, 0, 0, {0, 0, 4, 4}}};
+    CHECK(place_labels(camera, lone, measure, &calls, side_out, elsewhere) == 1);
     return TEST_MAIN_RESULT();
 }

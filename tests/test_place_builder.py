@@ -9,11 +9,13 @@ m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 assert m.encode([(1,'Front',0,0),(2,'Back',150,0)])==(ROOT/'tests/data/places.gplc').read_bytes()
 records=m.source(ROOT/'data/wikidata-cities-20261101.json')
 assert len(records)==19 and all(r[0]!=3139 for r in records)
+assert m.encode([(1,'Front',0,0,0),(2,'Back',150,0,3)],2)==(ROOT/'tests/data/places-v2.gplc').read_bytes()
 assert m.encode(records)==(ROOT/'tests/data/cities-starter19.gplc').read_bytes()
 # The bundled pack: population >= 1,000,000, at most 30 per country, from the pinned large snapshot.
 large=m.large_source(ROOT/'data/wikidata-cities-large-20261102.json')
 assert 300<=len(large)<=500 and len(large)<=4096, len(large)
-assert m.encode(large)==(ROOT/'data/cities.gplc').read_bytes()
+assert m.encode(large,2)==(ROOT/'data/cities.gplc').read_bytes()
+assert [sum(r[4]==t for r in large) for t in range(4)]==[27,43,43,191]
 assert len({r[0] for r in large})==len(large)
 names={r[1] for r in large}
 assert {'Shanghai','London','Cairo','Sao Paulo'} & {m.ascii_name(n).decode() for n in names}
@@ -45,10 +47,20 @@ M=m.MIN_POPULATION
 picked=m.select_large([row(10,'AtMin',M,1),row(11,'BelowMin',M-1,2),row(3139,'Dept',5*M,3),
     row(20,'Dup',M+1,4),row(20,'Dup',4*M,4),row(30,'NoCountryA',M),row(31,'NoCountryB',M),row(12,'Mid',2*M,5)])
 assert [r[0] for r in picked]==[20,12,10,30,31],picked
+assert [r[4] for r in picked]==[2,3,3,3,3]
+assert [m.tier_of(p) for p in (M,2499999,2500000,4999999,5000000,9999999,10000000)]==[3,3,2,2,1,1,0]
+assert m.encode([(1,'A',0,0,2)],2)[24+20]==2
+for bad in [[(1,'A',0,0,4)],[(1,'A',0,0)],[(1,'A',0,0,-1)]]:
+    try:m.encode(bad,2)
+    except ValueError:pass
+    else:raise AssertionError('accepted invalid tier')
 assert [r[1] for r in picked][0]=='Dup'
 # A repeated Q keeps its largest population; and the one record per Q is what is counted against the cap.
 capped=m.select_large([row(100+i,'C%d'%i,M+i,7) for i in range(m.PER_COUNTRY+3)])
 assert len(capped)==m.PER_COUNTRY and capped[0][0]==100+m.PER_COUNTRY+2 and capped[-1][0]==103
+try:m.encode([(1,'A',0,0,0)],1)
+except ValueError:pass
+else:raise AssertionError('v1 accepted a tier')
 assert m.ascii_name(' Pad ')==b'Pad'
 # Cities without a country each count as their own country, so the cap never merges them.
 loose=m.select_large([row(500+i,'L%d'%i,M+i) for i in range(m.PER_COUNTRY+3)])

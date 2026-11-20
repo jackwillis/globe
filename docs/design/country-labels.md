@@ -81,3 +81,26 @@ cache and Toolbox/X server allocations are platform-dependent.
    island, multipart and crescent countries (including the cases above).
 
 Native visual and timing acceptance, including Classic painted bounds, is pending.
+
+## City names (#219)
+
+**View → City Names** (Classic) and the X11 tools window's second toggle draw city names beside
+their dots on settled frames, after the country names and in the same font. Cities are placed by
+the same placer in a second call that treats the country labels as already taken, so a city never
+covers a country name. A city label sits four pixels right of its dot and keeps two pixels from
+every other label.
+
+Which cities appear depends on zoom. GPLC v2 stores a population tier per city (0 is 10 million or
+more, then 5 million, 2.5 million, and the rest; see [place-format.md](../place-format.md)).
+`max_place_tier` takes the radius as a fraction of the shorter window side: under 0.8 only tier 0,
+under 1.4 up to tier 1, under 2.6 up to tier 2, then all four. A whole globe is about 0.4, so it
+names only the largest cities. The thresholds are first guesses for the owner to judge on the G4.
+
+Font theme (owner direction, 2026-11-19): terrain (physical features such as oceans and lakes) in
+Palatino, human (political features: countries and cities) in Helvetica. Cities and countries share
+the existing Helvetica-then-Palatino lookup; water labels and per-role fonts remain with #61.
+
+Storage: a second candidate vector (all 304 cities, about 14 KiB on 32-bit Classic) and one
+reserved per-frame selection vector of up to 256 candidates (about 12 KiB), allocated once at
+startup; plus one more 32-entry output array on the stack. The timing title adds `cities N`.
+Native timing and appearance are unmeasured.

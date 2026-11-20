@@ -193,7 +193,7 @@ unmodified as `data/wikidata-cities-large-20261102.json`: 352,844 bytes, SHA-256
 Selection (in the builder, not the query): population at least 1,000,000, at most 30 cities per
 country by population (cap chosen because China has 252 of the 534 rows; with the cap the pack has
 304 cities in 94 countries). Generated `data/cities.gplc`: 9,641 bytes, SHA-256
-`89b154930fa6017cf31c765f038dbcb8fdfd8e66ffadbfc16356c0dcebc95089`, replacing the 19-city starter
+`89b154930fa6017cf31c765f038dbcb8fdfd8e66ffadbfc16356c0dcebc95089` (v1; regenerated 2026-11-19 as GPLC v2 with a population tier per city, same 9,641 bytes, SHA-256 `2cd7ce0828794e858e941b526ceabb30333628579cec857592f9bfdab7ee322d`, tier floors 10M, 5M and 2.5M), replacing the 19-city starter
 (613 bytes, SHA-256 `6dec1b1d5251ca86a3e353147b2cc6e553d7e8d24df02181beb9581f7afc06e4`, kept as
 `tests/data/cities-starter19.gplc`). Regenerate:
 

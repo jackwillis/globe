@@ -12,8 +12,10 @@ std::int32_t signed32(const std::uint8_t* p) {
 }
 } // namespace
 std::optional<Places> Places::parse(const std::uint8_t* b, std::size_t size) {
-    if (!b || size < 24 || std::memcmp(b, "GPLC", 4) != 0 || load_le16(b + 4) != 1 ||
-        load_le16(b + 6) || load_le32(b + 16))
+    if (!b || size < 24 || std::memcmp(b, "GPLC", 4) != 0 || load_le16(b + 6) || load_le32(b + 16))
+        return std::nullopt;
+    const auto version = load_le16(b + 4);
+    if (version != 1 && version != 2)
         return std::nullopt;
     const auto n = load_le32(b + 8), text = load_le32(b + 12);
     if (!n || n > 4096 || !text || text > 1048576)
@@ -21,6 +23,7 @@ std::optional<Places> Places::parse(const std::uint8_t* b, std::size_t size) {
     Places out;
     out.data_ = b;
     out.count_ = n;
+    out.has_tiers_ = version == 2;
     out.text_offset_ = 24 + static_cast<std::size_t>(n) * 24;
     if (size != out.text_offset_ + text ||
         load_le32(b + 20) != crc32_extend(crc32(b, 20), b + 24, size - 24))
@@ -32,7 +35,7 @@ std::optional<Places> Places::parse(const std::uint8_t* b, std::size_t size) {
         const auto lon = signed32(r + 4), lat = signed32(r + 8);
         if (qid <= prev || lon < -180000000 || lon > 180000000 || lat < -90000000 ||
             lat > 90000000 || offset != next || !length || length > 95 || length > text - next ||
-            load_le32(r + 20))
+            load_le32(r + 20) > (version == 2 ? kLastPlaceTier : 0U))
             return std::nullopt;
         for (std::uint32_t j = 0; j < length; ++j)
             if (b[out.text_offset_ + offset + j] < 32 || b[out.text_offset_ + offset + j] > 126)
@@ -52,6 +55,20 @@ LatLon Places::point(std::uint32_t id) const {
         return {};
     const auto* r = data_ + 24 + static_cast<std::size_t>(id) * 24;
     return {signed32(r + 8) / 1e6, signed32(r + 4) / 1e6};
+}
+std::uint8_t Places::tier(std::uint32_t id) const {
+    if (id >= count_ || !has_tiers_)
+        return kLastPlaceTier;
+    return static_cast<std::uint8_t>(
+        load_le32(data_ + 24 + static_cast<std::size_t>(id) * 24 + 20));
+}
+std::vector<LabelCandidate> Places::label_candidates() const {
+    std::vector<LabelCandidate> labels;
+    labels.reserve(count_);
+    for (std::uint32_t i = 0; i < count_; ++i)
+        labels.push_back(
+            {to_unit_vector(point(i)), name(i), LabelRole::point, -tier(i), LabelSide::right});
+    return labels;
 }
 std::string_view Places::name(std::uint32_t id) const {
     if (id >= count_)

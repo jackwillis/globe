@@ -188,8 +188,11 @@ class Application {
             country_labels_ = countries_->label_candidates();
         }
         places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
-        if (places_)
+        if (places_) {
             place_scene_ = PlaceScene::create(*places_);
+            place_labels_ = places_->label_candidates();
+            city_candidates_.reserve(kMaxLabelCandidates); // so a frame never allocates
+        }
         overlays_.attach(countries_ ? &*countries_ : nullptr,
                          country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
                          place_scene_ ? &*place_scene_ : nullptr);
@@ -580,6 +583,8 @@ class Application {
         number(max_step_ms_);
         put(" ms, names ");
         number(last_label_count_);
+        put(", cities ");
+        number(last_city_count_);
         if (unknown_count_ != 0) {
             put(", ev ");
             number(last_unknown_);
@@ -601,9 +606,15 @@ class Application {
     bool country_names_available() const {
         return !country_labels_.empty() && country_name_font() != 0;
     }
+    bool city_names_available() const { return !place_labels_.empty() && country_name_font() != 0; }
+    // Country names, then city names beside their dots in the same font, on a settled frame. Cities
+    // never cover a country label; both obey the placer's caps.
     void draw_country_names() {
         last_label_count_ = 0;
-        if (!country_names_ || country_labels_.empty() || presentation_held(model_) ||
+        last_city_count_ = 0;
+        const bool countries = country_names_ && !country_labels_.empty();
+        const bool cities = city_names_ && places_ && !place_labels_.empty();
+        if ((!countries && !cities) || presentation_held(model_) ||
             !frame_settled(model_, runner_.active()))
             return;
         const short family = country_name_font();
@@ -621,30 +632,42 @@ class Application {
         TextMode(srcOr);
         FontInfo info;
         GetFontInfo(&info);
-        std::array<PlacedLabel, kMaxPlacedLabels> placed;
-        const auto count = place_labels(
-            model_.camera, country_labels_,
-            [](void* context, std::string_view text, LabelRole) -> std::optional<LabelMetrics> {
-                const auto& metrics = *static_cast<const FontInfo*>(context);
-                return LabelMetrics{
-                    -1,
-                    TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())) +
-                        1,
-                    metrics.ascent + 1, metrics.descent + 1};
-            },
-            &info, placed);
-        last_label_count_ = count;
+        const auto measure = [](void* context, std::string_view text,
+                                LabelRole) -> std::optional<LabelMetrics> {
+            const auto& metrics = *static_cast<const FontInfo*>(context);
+            return LabelMetrics{
+                -1,
+                TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())) + 1,
+                metrics.ascent + 1, metrics.descent + 1};
+        };
         RGBColor white{0xffff, 0xffff, 0xffff}, black{0, 0, 0};
-        for (std::size_t i = 0; i < count; ++i) {
-            const auto& label = placed[i];
-            const auto text = country_labels_[label.candidate].text;
-            RGBForeColor(&white);
-            MoveTo(static_cast<short>(label.baseline_x + 1),
-                   static_cast<short>(label.baseline_y + 1));
-            DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
-            RGBForeColor(&black);
-            MoveTo(static_cast<short>(label.baseline_x), static_cast<short>(label.baseline_y));
-            DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
+        const auto draw = [&](std::span<const PlacedLabel> labels,
+                              std::span<const LabelCandidate> source) {
+            for (const auto& label : labels) {
+                const auto text = source[label.candidate].text;
+                RGBForeColor(&white);
+                MoveTo(static_cast<short>(label.baseline_x + 1),
+                       static_cast<short>(label.baseline_y + 1));
+                DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
+                RGBForeColor(&black);
+                MoveTo(static_cast<short>(label.baseline_x), static_cast<short>(label.baseline_y));
+                DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
+            }
+        };
+        std::array<PlacedLabel, kMaxPlacedLabels> placed;
+        std::size_t count = 0;
+        if (countries) {
+            count = place_labels(model_.camera, country_labels_, measure, &info, placed);
+            last_label_count_ = count;
+            draw(std::span(placed).first(count), country_labels_);
+        }
+        if (cities) {
+            select_place_labels(*places_, place_labels_, model_.camera, city_candidates_);
+            std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
+            const auto city_count = place_labels(model_.camera, city_candidates_, measure, &info,
+                                                 city_placed, std::span(placed).first(count));
+            last_city_count_ = city_count;
+            draw(std::span(city_placed).first(city_count), city_candidates_);
         }
         RGBForeColor(&old_color);
         TextMode(old_mode);
@@ -772,10 +795,13 @@ class Application {
     void refresh_menus() {
         if (const MenuHandle view = GetMenuHandle(kViewMenu)) {
             const bool names_available = country_names_available();
+            const bool city_available = city_names_available();
             for (short item = 1; item <= kViewItemCount; ++item) {
                 const auto s =
                     item == kCountryNamesItem
                         ? MenuItemState{names_available, names_available && country_names_}
+                    : item == kCityNamesItem
+                        ? MenuItemState{city_available, city_available && city_names_}
                         : view_item_state(model_, overlays_.night(), overlays_.measuring(), item);
                 if (s.enabled)
                     EnableItem(view, item);
@@ -824,6 +850,11 @@ class Application {
             SystemEdit(item - 1);
         } else if (menu == kViewMenu && item == kCountryNamesItem && country_names_available()) {
             country_names_ = !country_names_;
+            if (fb_) {
+                present(0, fb_->height());
+            }
+        } else if (menu == kViewMenu && item == kCityNamesItem && city_names_available()) {
+            city_names_ = !city_names_;
             if (fb_) {
                 present(0, fb_->height());
             }
@@ -930,7 +961,11 @@ class Application {
     std::optional<CountryScene> country_scene_;
     std::vector<LabelCandidate> country_labels_;
     bool country_names_ = true;
+    bool city_names_ = true;
+    std::vector<LabelCandidate> place_labels_;
+    std::vector<LabelCandidate> city_candidates_;
     std::size_t last_label_count_ = 0;
+    std::size_t last_city_count_ = 0;
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     Overlays overlays_;
