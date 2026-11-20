@@ -118,6 +118,7 @@ class App {
             place_scene_ = PlaceScene::create(*places_);
             place_labels_ = places_->label_candidates();
             city_candidates_.reserve(kMaxLabelCandidates);
+            dot_boxes_.reserve(places_->count());
         }
         countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
         if (countries_) {
@@ -142,6 +143,10 @@ class App {
         }
         if (label_gc_)
             XFreeGC(dpy_, label_gc_);
+        if (label_bold_gc_)
+            XFreeGC(dpy_, label_bold_gc_);
+        if (label_bold_font_)
+            XFreeFont(dpy_, label_bold_font_);
         if (label_font_)
             XFreeFont(dpy_, label_font_);
         if (gc_ != nullptr) {
@@ -181,6 +186,13 @@ class App {
                 XGCValues values{};
                 values.font = label_font_->fid;
                 label_gc_ = XCreateGC(dpy_, win_, GCFont, &values);
+                // Country names are bold where the server has one; otherwise they match the cities.
+                label_bold_font_ =
+                    XLoadQueryFont(dpy_, "-*-helvetica-bold-r-normal--12-*-*-*-*-*-iso8859-1");
+                if (label_bold_font_) {
+                    values.font = label_bold_font_->fid;
+                    label_bold_gc_ = XCreateGC(dpy_, win_, GCFont, &values);
+                }
             }
         }
         if (!make_buffers(opt_.width, opt_.height)) {
@@ -703,21 +715,21 @@ class App {
                                 bounds.descent + 1};
         };
         const int screen = DefaultScreen(dpy_);
-        const auto draw = [&](std::span<const PlacedLabel> labels,
+        const auto draw = [&](GC gc, std::span<const PlacedLabel> labels,
                               std::span<const LabelCandidate> source) {
             for (const auto& label : labels) {
                 const auto text = source[label.candidate].text;
                 const auto length = static_cast<int>(text.size());
-                XSetForeground(dpy_, label_gc_, WhitePixel(dpy_, screen));
+                XSetForeground(dpy_, gc, WhitePixel(dpy_, screen));
                 // XDrawString consumes the explicit length; string_view need not be NUL-terminated.
                 // NOLINTBEGIN(bugprone-suspicious-stringview-data-usage)
-                XDrawString(dpy_, win_, label_gc_, label.baseline_x + 1, label.baseline_y + 1,
-                            text.data(), length);
+                XDrawString(dpy_, win_, gc, label.baseline_x + 1, label.baseline_y + 1, text.data(),
+                            length);
                 // NOLINTEND(bugprone-suspicious-stringview-data-usage)
-                XSetForeground(dpy_, label_gc_, BlackPixel(dpy_, screen));
+                XSetForeground(dpy_, gc, BlackPixel(dpy_, screen));
                 // XDrawString consumes the explicit length; string_view need not be NUL-terminated.
                 // NOLINTBEGIN(bugprone-suspicious-stringview-data-usage)
-                XDrawString(dpy_, win_, label_gc_, label.baseline_x, label.baseline_y, text.data(),
+                XDrawString(dpy_, win_, gc, label.baseline_x, label.baseline_y, text.data(),
                             length);
                 // NOLINTEND(bugprone-suspicious-stringview-data-usage)
             }
@@ -725,8 +737,13 @@ class App {
         std::array<PlacedLabel, kMaxPlacedLabels> placed;
         std::size_t count = 0;
         if (country_names_ && !country_labels_.empty()) {
-            count = place_labels(model_.camera, country_labels_, measure, label_font_, placed);
-            draw(std::span(placed).first(count), country_labels_);
+            // Country names are bold and duck the city dots.
+            XFontStruct* const font = label_bold_font_ ? label_bold_font_ : label_font_;
+            if (place_scene_)
+                place_scene_->dot_boxes(model_.camera, dot_boxes_);
+            count = place_labels(model_.camera, country_labels_, measure, font, placed, dot_boxes_);
+            draw(label_bold_gc_ ? label_bold_gc_ : label_gc_, std::span(placed).first(count),
+                 country_labels_);
         }
         if (city_names_ && places_ && !place_labels_.empty()) {
             select_place_labels(*places_, place_labels_, model_.camera, city_candidates_);
@@ -734,7 +751,7 @@ class App {
             const auto city_count =
                 place_labels(model_.camera, city_candidates_, measure, label_font_, city_placed,
                              std::span(placed).first(count));
-            draw(std::span(city_placed).first(city_count), city_candidates_);
+            draw(label_gc_, std::span(city_placed).first(city_count), city_candidates_);
         }
     }
 
@@ -1106,6 +1123,9 @@ class App {
     bool city_names_ = true;
     std::vector<LabelCandidate> place_labels_;
     std::vector<LabelCandidate> city_candidates_;
+    std::vector<PlacedLabel> dot_boxes_;
+    XFontStruct* label_bold_font_ = nullptr;
+    GC label_bold_gc_ = nullptr;
     Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;

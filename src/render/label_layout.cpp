@@ -77,20 +77,45 @@ std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> c
         const int left =
             beside ? static_cast<int>(point.x) + kMarkerGap : static_cast<int>(point.x) - width / 2;
         const int top = static_cast<int>(point.y) - height / 2;
-        const LabelBox box{left, top, left + width, top + height};
         // Only a label beside its marker keeps clear of neighbours; centred labels may touch.
         const int gap = beside ? kNeighbourGap : 0;
-        const LabelBox padded{box.left - gap, box.top - gap, box.right + gap, box.bottom + gap};
-        const auto hits = [padded](const PlacedLabel& placed) {
-            return overlaps(padded, placed.box);
+        const auto box_at = [&](int dx, int dy) {
+            return LabelBox{left + dx, top + dy, left + dx + width, top + dy + height};
         };
-        if (!fits(camera, box) ||
-            std::any_of(output.begin(), output.begin() + static_cast<std::ptrdiff_t>(count),
-                        hits) ||
-            std::any_of(avoid.begin(), avoid.end(), hits)) {
+        const auto hits = [gap](LabelBox box) {
+            const LabelBox padded{box.left - gap, box.top - gap, box.right + gap, box.bottom + gap};
+            return [padded](const PlacedLabel& placed) { return overlaps(padded, placed.box); };
+        };
+        const auto taken = [&](LabelBox box) {
+            return std::any_of(output.begin(), output.begin() + static_cast<std::ptrdiff_t>(count),
+                               hits(box));
+        };
+        const auto avoided = [&](LabelBox box) {
+            return std::any_of(avoid.begin(), avoid.end(), hits(box));
+        };
+        LabelBox box = box_at(0, 0);
+        if (!fits(camera, box) || taken(box))
             continue;
+        int dx = 0, dy = 0;
+        if (avoided(box)) {
+            if (beside)
+                continue; // a label beside its marker is dropped, never moved
+            // A centred label ducks: up, down, right, then left of where it was, until clear. With
+            // nowhere clear it stays put and is drawn over what it avoids.
+            const int up = height / 2 + kDuckMargin, across = width / 2 + kDuckMargin;
+            const std::array<std::array<int, 2>, 4> moves{
+                {{0, -up}, {0, up}, {across, 0}, {-across, 0}}};
+            for (const auto& move : moves) {
+                const auto moved = box_at(move[0], move[1]);
+                if (fits(camera, moved) && !taken(moved) && !avoided(moved)) {
+                    dx = move[0];
+                    dy = move[1];
+                    box = moved;
+                    break;
+                }
+            }
         }
-        output[count++] = {*index, left - metrics->left, top + metrics->ascent, box};
+        output[count++] = {*index, left + dx - metrics->left, top + dy + metrics->ascent, box};
     }
     return count;
 }

@@ -19,6 +19,20 @@ void PlaceScene::draw(Framebuffer& fb, const Camera& camera) const {
             fb.fill_span(row, x - 1, x + 1, 0xffff);
     }
 }
+void PlaceScene::dot_boxes(const Camera& camera, std::vector<PlacedLabel>& out) const {
+    out.clear();
+    for (std::size_t i = 0; i < points_.size(); ++i) {
+        const auto v = to_camera_space(camera, points_[i]);
+        if (v.z < 0)
+            continue;
+        const auto p = to_screen(camera, v);
+        if (p.x < -3 || p.x > camera.width + 3 || p.y < -3 || p.y > camera.height + 3)
+            continue;
+        const auto x = static_cast<int>(std::floor(p.x + 0.5)),
+                   y = static_cast<int>(std::floor(p.y + 0.5));
+        out.push_back({i, 0, 0, {x - 3, y - 3, x + 4, y + 4}});
+    }
+}
 std::uint8_t max_place_tier(const Camera& camera) {
     // Radius as a fraction of the shorter window side: a whole globe is about half, a close view
     // several times that.

@@ -33,6 +33,9 @@ class PlaceScene {
   public:
     static std::optional<PlaceScene> create(Places data);
     void draw(Framebuffer& fb, const Camera& camera) const;
+    // Boxes of the dots `draw` paints at this camera, with a pixel around each, as label avoid
+    // boxes. Only candidate and box are meaningful (candidate is the place index).
+    void dot_boxes(const Camera& camera, std::vector<PlacedLabel>& out) const;
     std::optional<std::uint32_t> pick(const Camera& camera, ScreenPoint pointer,
                                       double radius_px = 6) const;
 

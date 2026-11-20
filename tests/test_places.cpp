@@ -33,6 +33,14 @@ int main(int argc, char** argv) {
     if (opposite)
         CHECK(scene->pick(*opposite, {55, 60}, 6) == 1);
     CHECK(!scene->pick(*camera, {80, 60}, -1));
+    // Dot boxes cover the painted 5x5 dot plus a pixel, front side only.
+    std::vector<PlacedLabel> dots;
+    scene->dot_boxes(*camera, dots);
+    CHECK(dots.size() == 1 && dots[0].candidate == 0 && dots[0].box == (LabelBox{77, 57, 84, 64}));
+    if (opposite) {
+        scene->dot_boxes(*opposite, dots);
+        CHECK(dots.size() == 1 && dots[0].candidate == 1);
+    }
     auto fb = Framebuffer::create(160, 120);
     CHECK(fb);
     if (fb) {

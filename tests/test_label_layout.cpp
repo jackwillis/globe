@@ -111,5 +111,26 @@ int main() {
           0);
     const std::array<PlacedLabel, 1> elsewhere{PlacedLabel{0, 0, 0, {0, 0, 4, 4}}};
     CHECK(place_labels(camera, lone, measure, &calls, side_out, elsewhere) == 1);
+
+    // A centred label ducks the boxes in `avoid`: up first, then down, right, left; with nowhere
+    // clear it stays put. Overlap with another label still drops it. "dot" is 7+2 wide, 8 high.
+    const auto centred = [&](int x, int y, std::string_view text, int priority) {
+        return LabelCandidate{anchor(camera, x, y), text, LabelRole::point, priority};
+    };
+    const std::array<PlacedLabel, 1> dot{PlacedLabel{0, 0, 0, {60, 60, 68, 68}}};
+    const std::array<LabelCandidate, 1> one{centred(64, 64, "dot", 0)};
+    std::array<PlacedLabel, 2> duck{};
+    CHECK(place_labels(camera, one, measure, &calls, duck, dot) == 1);
+    CHECK(duck[0].box == (LabelBox{60, 52, 69, 60})); // up by 4 + 4, touching the dot's top edge
+    const std::array<PlacedLabel, 2> up_taken{dot[0], PlacedLabel{0, 0, 0, {58, 50, 72, 61}}};
+    CHECK(place_labels(camera, one, measure, &calls, duck, up_taken) == 1);
+    CHECK(duck[0].box == (LabelBox{60, 68, 69, 76})); // up is taken, so down
+    const std::array<PlacedLabel, 3> boxed{dot[0], PlacedLabel{0, 0, 0, {58, 50, 72, 59}},
+                                           PlacedLabel{0, 0, 0, {58, 69, 72, 80}}};
+    CHECK(place_labels(camera, one, measure, &calls, duck, boxed) == 1);
+    CHECK(duck[0].box == (LabelBox{68, 60, 77, 68})); // up and down taken, so right
+    const std::array<PlacedLabel, 1> everywhere{PlacedLabel{0, 0, 0, {0, 0, 128, 128}}};
+    CHECK(place_labels(camera, one, measure, &calls, duck, everywhere) == 1);
+    CHECK(duck[0].box == (LabelBox{60, 60, 69, 68})); // nowhere clear: stays centred
     return TEST_MAIN_RESULT();
 }

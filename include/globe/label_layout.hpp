@@ -52,10 +52,14 @@ constexpr std::size_t kMaxPlacedLabels = 32;
 // A provider returns nullopt for an unavailable run. No text is retained; output indexes
 // the input batch. Input and output storage must not overlap.
 //
-// `avoid` holds labels already placed by an earlier call; a new label never overlaps one. A label
-// on the right of its anchor also keeps kNeighbourGap pixels from every other box.
+// `avoid` holds boxes the caller wants kept clear: labels placed by an earlier call, or marker
+// dots. A label beside its anchor is dropped if it would overlap one, and keeps kNeighbourGap
+// pixels from every other box. A centred label moves up, down, right or left (by half its size
+// plus kDuckMargin) to the first spot that is clear of `avoid`, and stays where it was if none is.
+// Overlap with labels placed in this call still drops a label, as before.
 constexpr int kNeighbourGap = 2;
 constexpr int kMarkerGap = 4;
+constexpr int kDuckMargin = 4;
 std::size_t place_labels(const Camera& camera, std::span<const LabelCandidate> candidates,
                          MeasureLabel measure, void* context, std::span<PlacedLabel> output,
                          std::span<const PlacedLabel> avoid = {});

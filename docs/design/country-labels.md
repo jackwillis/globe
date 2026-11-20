@@ -85,7 +85,10 @@ Native visual and timing acceptance, including Classic painted bounds, is pendin
 ## City names (#219)
 
 **View → City Names** (Classic) and the X11 tools window's second toggle draw city names beside
-their dots on settled frames, after the country names and in the same font. Cities are placed by
+their dots on settled frames, after the country names. Country names are bold and city names plain,
+both in the same family (X11 uses the bold Helvetica XLFD when the server has it). Country names
+also duck the city dots: a centred label that would cover a dot moves up, down, right or left by
+half its size plus four pixels, and stays centred if nowhere is clear. Cities are placed by
 the same placer in a second call that treats the country labels as already taken, so a city never
 covers a country name. A city label sits four pixels right of its dot and keeps two pixels from
 every other label.

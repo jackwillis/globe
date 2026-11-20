@@ -192,6 +192,7 @@ class Application {
             place_scene_ = PlaceScene::create(*places_);
             place_labels_ = places_->label_candidates();
             city_candidates_.reserve(kMaxLabelCandidates); // so a frame never allocates
+            dot_boxes_.reserve(places_->count());
         }
         overlays_.attach(countries_ ? &*countries_ : nullptr,
                          country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
@@ -628,8 +629,9 @@ class Application {
         GetForeColor(&old_color);
         TextFont(family);
         TextSize(10);
-        TextFace(normal);
         TextMode(srcOr);
+        // Countries in bold, cities in the plain face; each pass measures with its own face.
+        TextFace(bold);
         FontInfo info;
         GetFontInfo(&info);
         const auto measure = [](void* context, std::string_view text,
@@ -657,12 +659,18 @@ class Application {
         std::array<PlacedLabel, kMaxPlacedLabels> placed;
         std::size_t count = 0;
         if (countries) {
-            count = place_labels(model_.camera, country_labels_, measure, &info, placed);
+            // Country names duck the city dots.
+            if (place_scene_)
+                place_scene_->dot_boxes(model_.camera, dot_boxes_);
+            count =
+                place_labels(model_.camera, country_labels_, measure, &info, placed, dot_boxes_);
             last_label_count_ = count;
             draw(std::span(placed).first(count), country_labels_);
         }
         if (cities) {
             select_place_labels(*places_, place_labels_, model_.camera, city_candidates_);
+            TextFace(normal);
+            GetFontInfo(&info);
             std::array<PlacedLabel, kMaxPlacedLabels> city_placed;
             const auto city_count = place_labels(model_.camera, city_candidates_, measure, &info,
                                                  city_placed, std::span(placed).first(count));
@@ -964,6 +972,7 @@ class Application {
     bool city_names_ = true;
     std::vector<LabelCandidate> place_labels_;
     std::vector<LabelCandidate> city_candidates_;
+    std::vector<PlacedLabel> dot_boxes_;
     std::size_t last_label_count_ = 0;
     std::size_t last_city_count_ = 0;
     std::optional<Places> places_;

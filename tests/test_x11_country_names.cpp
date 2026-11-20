@@ -107,9 +107,14 @@ int main(int argc, char** argv) {
         XFlush(d);
         usleep(150000);
     };
+    // With the country names off no country label can take a city's place, so the toggle shows.
+    toggle();
+    const auto cities_on = pixels(d, globe);
     toggle_cities();
-    CHECK(pixels(d, globe) != on);
+    CHECK(pixels(d, globe) != cities_on);
     toggle_cities();
+    CHECK(pixels(d, globe) == cities_on);
+    toggle();
     CHECK(pixels(d, globe) == on);
     XEvent press{};
     press.xbutton.type = ButtonPress;
