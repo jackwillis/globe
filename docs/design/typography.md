@@ -65,7 +65,7 @@ names on maps* is the reference to read next, and I have not read it directly):
 | Lakes | C | Palatino Italic | 9 | Not built |
 | Mountains, deserts, ranges | C | Palatino | 10 | Not decided; wait for a data layer |
 | Rivers | C | Not decided | | Horizontal-only rule conflicts with line labels |
-| Info-card heading | A | Helvetica Bold | system | Was Palatino Bold; Palatino is now reserved for the physical world. Owner to confirm |
+| Info-card heading | A | Helvetica Bold | system | Was Palatino Bold; Palatino is now reserved for the physical world. Not yet in code |
 | Info-card body | A | Helvetica | system | |
 | Globe wordmark | | Not decided | | Revisit when there is a place to show it |
 
@@ -79,15 +79,25 @@ names on maps* is the reference to read next, and I have not read it directly):
 - **Style:** QuickDraw synthesizes bold and italic when a font has no true style, so the result
   is checked on the G4 before a style is relied on.
 
-### Open decisions and checks
+### Decisions and open checks
 
-- Info-card headings in Helvetica Bold, as above, or Palatino Bold as before.
-- Colour for water labels: black with the white halo (current), or a dark blue. Decide on seeing
-  water labels on the G4.
-- Which bitmap sizes and true bold or italic faces the owner's G4 has installed (E1 in this note).
+Owner, 2026-11-19: "take all your recommendations". Settled by that:
+
+- Info-card headings are Helvetica Bold (Palatino is reserved for the physical world).
+- Capitals are bold plus a square marker; bold alone is not the cue.
+- Water labels start as black with the white halo; a dark blue is reconsidered only after water
+  labels are seen on the G4.
+- Mountains, deserts, ranges and rivers stay undecided until a data layer exists.
+- Fallbacks are as proposed above (Helvetica to Geneva; Palatino to New York, then Times).
 - Italic for countries was considered and rejected: italic is the water convention and is harder to
   read at 10 points. Capital letters or 11 points are the fallbacks if bold is too heavy.
+
+Still to check, and not settled by this note:
+
+- Which bitmap sizes and true bold or italic faces the owner's G4 has installed (E1 in this note).
 - A tier-by-zoom rule for city sizes (9 versus 10 points) needs the G4 view to judge.
+- None of this is implemented beyond country and city names; the info-card heading and capital
+  marker are unchanged in code until an issue schedules them.
 
 ![Map look with labels](images/labels-map-crisp.png)
 
