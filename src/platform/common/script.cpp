@@ -204,27 +204,30 @@ bool ScriptRunner::start(std::string_view source, const ScriptEnvironment& env, 
     write_ = write;
     destination_ = out;
     status_ = ScriptStatus::Running;
-    JsonRecord r;
-    r.literal("{\"type\":\"run\",\"schema\":\"pe-script/1\",\"app_version\":");
-    r.string(env.version);
-    r.literal(",\"app_build\":");
-    r.string(env.build);
-    r.literal(",\"os\":");
-    r.string(env.os);
-    r.literal(",\"platform\":");
-    r.string(env.platform);
-    r.literal(",\"environment\":");
-    r.string(env.environment);
-    r.literal(",\"script\":");
-    r.string(env.script);
-    r.literal(",\"script_checksum\":null,\"checksum_status\":\"unavailable\",\"save_requested\":");
-    r.boolean(env.save_requested);
-    r.literal(",\"initial_borders\":");
-    r.boolean(model.layers.borders);
-    r.literal(",\"edition\":");
-    r.string(env.edition);
-    r.literal("}");
-    emit(r);
+    { // End the large run-record lifetime before error reporting constructs another record.
+        JsonRecord r;
+        r.literal("{\"type\":\"run\",\"schema\":\"pe-script/1\",\"app_version\":");
+        r.string(env.version);
+        r.literal(",\"app_build\":");
+        r.string(env.build);
+        r.literal(",\"os\":");
+        r.string(env.os);
+        r.literal(",\"platform\":");
+        r.string(env.platform);
+        r.literal(",\"environment\":");
+        r.string(env.environment);
+        r.literal(",\"script\":");
+        r.string(env.script);
+        r.literal(
+            ",\"script_checksum\":null,\"checksum_status\":\"unavailable\",\"save_requested\":");
+        r.boolean(env.save_requested);
+        r.literal(",\"initial_borders\":");
+        r.boolean(model.layers.borders);
+        r.literal(",\"edition\":");
+        r.string(env.edition);
+        r.literal("}");
+        emit(r);
+    }
     if (active() && source.size() > kScriptBytes)
         error("resource-limit");
     return active();

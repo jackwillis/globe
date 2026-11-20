@@ -218,8 +218,27 @@ int main(int argc, char** argv) {
     CHECK(sink.has("unsupported-operation"));
     std::string huge(kScriptBytes + 1, ' ');
     sink = {};
+    const auto oversized_allocations = allocations;
     CHECK(!r.start(huge, env, m, Sink::write, &sink));
-    CHECK(sink.has("resource-limit"));
+    CHECK(allocations == oversized_allocations);
+    CHECK(r.status() == ScriptStatus::Error && r.errors() == 1 && r.commands() == 0);
+    CHECK(sink.records == 3);
+    CHECK(std::strncmp(sink.data, "{\"type\":\"run\"", 13) == 0);
+    CHECK(sink.has("\"seq\":0,\"line\":0"));
+    CHECK(sink.has("\"code\":\"resource-limit\""));
+    CHECK(sink.has("{\"type\":\"end\",\"status\":\"error\",\"commands\":0,\"assertions_failed\":0,"
+                   "\"errors\":1}"));
+    // Failure at each of run/error/end must latch I/O failure and never produce a valid end.
+    for (unsigned fail = 1; fail <= 3; ++fail) {
+        sink = {};
+        sink.fail_at = fail;
+        CHECK(!r.start(huge, env, m, Sink::write, &sink));
+        CHECK(r.report_failed() && r.status() == ScriptStatus::Error);
+        CHECK(r.errors() == (fail == 1 ? 1U : 2U) && r.commands() == 0);
+        CHECK(std::string_view(r.error_code()) == "io-failure");
+        CHECK(sink.records == fail && !sink.has("\"type\":\"end\""));
+        CHECK((fail == 3) == sink.has("resource-limit"));
+    }
     sink = {};
     r.start(std::string_view("get borders\0", 12), env, m, Sink::write, &sink);
     tick(r, m);

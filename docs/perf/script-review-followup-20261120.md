@@ -111,8 +111,9 @@ native sources, plus the new formatter/shared runner. Compiler-local frames:
   a 368-byte body. This is **not** a claimed stack reduction; caller/local frames can grow.
 - Bounded text helpers: filename 112, other public formats 96, integer digits 96,
   append 32 bytes; includes compiler spills/ABI, excludes callers.
-- JSON `start` and command `result`: 4208 bytes each; `end`: 4192. Large-record paths can
-  nest, e.g. source-size error while the run record is live. No whole-stack bound inferred.
+- At reviewed head `5edde91`, JSON `start` and command `result`: 4208 bytes each;
+  `end`: 4192. The final scope correction below ends the initial run-record lifetime
+  before source-size error reporting. No whole-stack bound is inferred.
 
 Removing formatting eliminates its libc call-chain dependency, but no runtime stack-peak
 saving is claimed. Title preservation adds 256 bytes to application state. The revised
@@ -176,3 +177,61 @@ and native StackSpace samples all require later owner acceptance. The pre-existi
 border/refinement discrepancy is documented, not broadened into this correction. No new
 scripting commands or runtime dependencies. Next: independent re-review of the draft;
 owner-run native acceptance follows only after that review.
+
+
+## Final record-lifetime correction
+
+Owner-assigned final P2 correction after independent re-review of `5edde916be1e08be7a7e01e4236187a6b20a954d`.
+The live PR head matched, the existing worktree was clean, and all four reviewed-head CI
+checks were successful. No other implementation or polish is included.
+
+`ScriptRunner::start()` now puts construction/emission of the initial `run` record in an
+explicit inner scope. Its roughly 4-KiB buffer is no longer a live C++ object when the
+oversized-source path calls `error()`. Initial run reporting, schema, order, counters,
+source ownership and error/write-failure propagation are unchanged. The native adapter's
+existing pre-read 16-KiB rejection remains unchanged; this was not a demonstrated native fault.
+
+The focused host regression now checks oversized-source `run` first, the synthetic
+sequence/line 0 resource-limit error, final error record/counts, and zero extra C++ allocations.
+It injects write failure at each of the three records, checking terminal error, exact error
+counts and absence of a valid `end`. Existing JSONL tests remain unchanged.
+
+### Static lifetime/frame comparison
+
+Retro68 PowerPC GCC16.1.0, `-std=c++20 -Os -fno-exceptions -fno-rtti -fstack-usage`, same
+include paths, separately compiled the saved `5edde91` source and corrected source:
+
+```sh
+/Retro68-build/toolchain/bin/powerpc-apple-macos-g++ -std=c++20 -Os \
+  -fno-exceptions -fno-rtti -fstack-usage -Iinclude -Isrc/platform/common \
+  -c /before.cpp -o build-os9-script/lifetime-before.o
+/Retro68-build/toolchain/bin/powerpc-apple-macos-g++ -std=c++20 -Os \
+  -fno-exceptions -fno-rtti -fstack-usage -Iinclude -Isrc/platform/common \
+  -c src/platform/common/script.cpp -o build-os9-script/lifetime-after.o
+```
+
+`ScriptRunner::start()` reports **4208 bytes static before and after**. Lexical lifetimes
+are now disjoint, but the compiler still reserves the same function frame. This does **not**
+establish reduced physical nested stack use, native headroom or whole-stack safety. The
+previously documented owner-run `StackSpace()` observation remains pending. No architecture
+change was introduced to force a different compiler frame layout.
+
+### Final verification and candidate
+
+The normal host/sanitizer/probe/build/package commands above were rerun for this correction.
+Focused ASan/UBSan/LeakSanitizer: **8/8 passed**; the existing JSONL and zero-allocation
+checks remain passing. Full normal host suite: **72/72 passed** sequentially (117.61 s).
+Portable Retro68 probe: **70/70 compile checks passed** (PowerPC and m68k subsets), with
+no `FAIL` or compiler errors in its log. Changed C++ format, shared-source clang-tidy and
+repository policy checks passed. New-head CI status is recorded at handoff.
+
+Classic compile/Rez/PEF/MacBinary and HFS package checks passed with identical fork
+round-trip. Data fork: **595,991 bytes**; MacBinary: **598,016 bytes**.
+Specific local candidate (not transferred or executed):
+`build-os9-script/PoodleEarth-pr222-stack-lifetime.bin` (Finder-named MacBinary), SHA-256
+`cb43f100bcaae4fa8cb6429f35a3b2360f89fdb024ded4268560e33ac7ca7ba6`.
+Build identity in this container remains explicitly unavailable because Git metadata lies
+outside its mount. The source revision is the resulting commit recorded on the PR/issue;
+CI results at that new head are separate from local evidence. No G4/emulator, transfer,
+milestone/release operation or merge occurred. Next: Claude's review of the resulting commit,
+then only separately owner-authorized limited native acceptance using the documented procedure.
