@@ -21,7 +21,7 @@ resource 'MENU' (128, preload) {
 };
 resource 'MENU' (129, preload) {
     129, textMenuProc, allEnabled, enabled, "File",
-    { ITEM("Close", "W"); DIVIDER; ITEM("Quit", "Q") }
+    { ITEM("Close", "W"); DIVIDER; ITEM("Run Script\0xC9", noKey); ITEM("Cancel Script", noKey); DIVIDER; ITEM("Quit", "Q") }
 };
 resource 'MENU' (130, preload) {
     130, textMenuProc, allEnabled, enabled, "Edit",
@@ -65,5 +65,33 @@ resource 'DITL' (129, purgeable) {
     {
         {83, 262, 103, 330}, Button { enabled, "OK" };
         {10, 70, 75, 330}, StaticText { disabled, "^0" };
+    }
+};
+
+/* All confirmation is before the cooperative runner starts; no nested execution loop. */
+resource 'ALRT' (130, purgeable) {
+    {80, 60, 240, 460}, 130,
+    { OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1 },
+    alertPositionMainScreen
+};
+resource 'DITL' (130, purgeable) {
+    {
+        {120, 300, 140, 380}, Button { enabled, "Run" };
+        {120, 14, 140, 94}, Button { enabled, "Cancel" };
+        {120, 120, 140, 280}, Button { enabled, "Run and Save Output" };
+        {10, 16, 105, 380}, StaticText { disabled,
+            "Run script: ^0\rThe script may change the view. Save output chooses a new file before execution. "
+            "During execution, use File > Cancel Script or Escape to stop." };
+    }
+};
+resource 'ALRT' (132, purgeable) {
+    {80, 60, 240, 460}, 132,
+    { OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1 },
+    alertPositionMainScreen
+};
+resource 'DITL' (132, purgeable) {
+    {
+        {120, 300, 140, 380}, Button { enabled, "OK" };
+        {10, 16, 110, 380}, StaticText { disabled, "^0" };
     }
 };

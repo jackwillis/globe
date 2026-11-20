@@ -59,6 +59,9 @@ void rebuild_menu_bar() {
     titled(kFileMenu, tr(Str::MenuFile), &file);
     add_item(file, tr(Str::ItemClose), 'W');
     add_divider(file);
+    add_item(file, "Run Script", 0, true);
+    add_item(file, "Cancel Script");
+    add_divider(file);
     add_item(file, tr(Str::ItemQuit), 'Q');
     titled(kEditMenu, tr(Str::MenuEdit), &edit);
     add_item(edit, tr(Str::ItemUndo), 'Z');

@@ -38,6 +38,9 @@ add_application(${APP} CREATOR PdlE
   ${ROOT}/src/platform/os9/scale_label.cpp
   ${ROOT}/src/platform/os9/prefs_window.cpp
   ${ROOT}/src/platform/os9/menu_bar.cpp
+  ${ROOT}/src/platform/os9/script_session.cpp
+  ${ROOT}/src/platform/common/script.cpp
+  ${ROOT}/src/platform/common/script_text.cpp
   ${ROOT}/src/platform/common/pixel_format.cpp
   ${ROOT}/src/core/geometry.cpp ${ROOT}/src/core/projection.cpp ${ROOT}/src/core/trackball.cpp
   ${ROOT}/src/core/app.cpp ${ROOT}/src/core/controls.cpp ${ROOT}/src/core/countries.cpp ${ROOT}/src/core/places.cpp ${ROOT}/src/core/strings.cpp
@@ -62,3 +65,11 @@ endif()
 target_include_directories(${APP} PRIVATE ${ROOT}/include ${ROOT}/src/platform/common)
 target_compile_options(${APP} PRIVATE -Os -Wall -Wextra -Wpedantic -fno-exceptions -fno-rtti)
 # No AppearanceLib: required theme-cursor imports prevent startup on Mac OS 8.1.
+
+# Truthful source identity, including a dirty marker for local compile candidates.
+execute_process(COMMAND git describe --always --dirty WORKING_DIRECTORY ${ROOT}
+  OUTPUT_VARIABLE SCRIPT_BUILD OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+if(NOT SCRIPT_BUILD)
+  set(SCRIPT_BUILD unavailable)
+endif()
+target_compile_definitions(${APP} PRIVATE GLOBE_SCRIPT_BUILD="${SCRIPT_BUILD}")

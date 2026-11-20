@@ -13,8 +13,9 @@ constexpr short kAppleMenu = 128, kFileMenu = 129, kEditMenu = 130, kViewMenu = 
 constexpr short kAboutItem = 1; // Apple: About, Controls, divider; desk accessories follow
 constexpr short kHelpItem = 2;  // Apple: shows the same controls list as the H key
 constexpr short kCloseItem = 1; // File: closes the About or Preferences window in front
-constexpr short kQuitItem = 3;  // File: Close, divider, Quit
-constexpr short kCopyItem = 4;  // Edit: copies the information card (or goes to a desk accessory)
+constexpr short kRunScriptItem = 3, kCancelScriptItem = 4;
+constexpr short kQuitItem = 6; // File: Close, divider, Run Script, Cancel Script, divider, Quit
+constexpr short kCopyItem = 4; // Edit: copies the information card (or goes to a desk accessory)
 constexpr short kPreferencesItem = 8; // Edit: Undo, divider, Cut, Copy, Paste, Clear, divider
 enum ViewItem : short {
     kZoomInItem = 1,

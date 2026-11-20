@@ -74,3 +74,20 @@ SOURCE CODE
  Repository and user guide:
  https://github.com/jackwillis/poodle-earth
  https://github.com/jackwillis/poodle-earth/blob/main/docs/user-guide.md
+
+SCRIPT RUNNER (prototype; native acceptance pending)
+ File > Run Script selects a plain-text script. Choose Run or Run and Save
+ Output; saving asks for a new destination file. Existing files are refused.
+ Example (one command per line, CR/LF/CRLF accepted):
+   get borders
+   set borders false
+   wait settled 10000
+   assert borders false
+ File > Cancel Script or Escape in the frontmost Globe window stops a run.
+ When another window is frontmost, use File > Cancel Script. The final
+ alert reports results and output errors. Limits: 16 KiB/script, 200 bytes/line,
+ waits 1..60000 ms. A wait observes application presentation completion, not
+ independently verified pixels. Idle waits observe every 16 ms (rounded to
+ native ticks). Scripts pause while the application is suspended. Saved output
+ is closed and its selected volume flushed; any write/close/flush error is
+ reported as unsuccessful saving. No output is written unless explicitly chosen.
