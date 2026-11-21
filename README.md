@@ -55,7 +55,9 @@ missing; names are ASCII. There is no street map, data download, saved preferenc
 file or custom application icon. The v0.1.0 preview can leave an unfinished globe
 edge; turn or zoom to repaint it. Jack later reported sustained use without
 recurrence, without a structured regression test. See the [changelog](CHANGELOG.md)
-for changes after v0.1.0 and [draft v0.1.1 notes](docs/release-notes-0.1.1.md).
+for changes after v0.1.0 and [v0.1.1 notes](docs/release-notes-0.1.1.md).
+[Draft v0.1.2 notes](docs/release-notes-0.1.2.md) describe an unpublished
+candidate; the current download above remains v0.1.1.
 
 ## Build and contribute
 
