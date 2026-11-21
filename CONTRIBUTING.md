@@ -2,7 +2,7 @@
 
 Poodle Earth is a free-software, offline atlas for NetBSD/X11 and Classic Mac OS 9. Bug reports, reproducible test evidence, geographic corrections and scoped code contributions are welcome.
 
-Start with [README](README.md), [architecture](docs/architecture.md), [documentation index](docs/README.md) and [current issues](https://github.com/jackwillis/globe/issues). Before major pack-format, identity or memory-policy changes, discuss the compatibility boundary in an issue.
+Start with [README](README.md), [architecture](docs/architecture.md), [documentation index](docs/README.md) and [current issues](https://github.com/jackwillis/poodle-earth/issues). Before major pack-format, identity or memory-policy changes, discuss the compatibility boundary in an issue.
 
 ## Choose a small task
 

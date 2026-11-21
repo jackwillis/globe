@@ -1,6 +1,6 @@
 # Poodle Earth 0.1.0 — public preview (2026-11-13)
 
-Published [v0.1.0 release and downloads](https://github.com/jackwillis/globe/releases/tag/v0.1.0).
+Published [v0.1.0 release and downloads](https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.0).
 These notes describe that release; later observations and changes are in the
 [changelog](../CHANGELOG.md).
 

@@ -1,6 +1,6 @@
 # Release checklist
 
-**Living, reusable checklist.** Apply the relevant items to each Poodle Earth release, recording evidence and justified exceptions on the release/hardware issue. This document is a review aid, **not authority to change release scope, access hardware, tag or publish**. Only the owner authorizes releases. See [agent contract](../AGENTS.md), [release engineering epic](https://github.com/jackwillis/globe/issues/6) and [recurring audit issue](https://github.com/jackwillis/globe/issues/127).
+**Living, reusable checklist.** Apply the relevant items to each Poodle Earth release, recording evidence and justified exceptions on the release/hardware issue. This document is a review aid, **not authority to change release scope, access hardware, tag or publish**. Only the owner authorizes releases. See [agent contract](../AGENTS.md), [release engineering epic](https://github.com/jackwillis/poodle-earth/issues/6) and [recurring audit issue](https://github.com/jackwillis/poodle-earth/issues/127).
 
 The public preview `v0.1.0` was published on **2026-11-13**; the historical prototype tag `v1` is not a semantic 1.0 release. Use the *actual* candidate version in CMake, application resources, archives and release metadata. Do not treat old planning documents or a previously closed defect as current release evidence.
 
@@ -44,7 +44,7 @@ The public preview `v0.1.0` was published on **2026-11-13**; the historical prot
 
 ## 5. Changelog, release notes and follow-up
 
-- [ ] Update **`CHANGELOG.md`** with a curated, accurate user-visible summary for the actual version, not a dump of commits; preserve the historical behavior/known limits of older releases ([#125](https://github.com/jackwillis/globe/issues/125)).
+- [ ] Update **`CHANGELOG.md`** with a curated, accurate user-visible summary for the actual version, not a dump of commits; preserve the historical behavior/known limits of older releases ([#125](https://github.com/jackwillis/poodle-earth/issues/125)).
 - [ ] Prepare **version-specific release notes** with supported platforms, real tests, known limits, artifact links, checksums and corresponding source. The published GitHub release/tag is authoritative for what was actually shipped; do not list proposed features as released.
 - [ ] Publish an accurate **feature availability / parity status** for the release: patch-only frontend features and linked follow-up work, or minor/major parity evidence and owner-approved exceptions. Do not imply cross-frontend parity from one working native build.
 - [ ] Check that documentation and issue/milestone state agree with the release, but do not override owner decisions or `status: ready`. Link real verification records and any remaining tasks to the relevant issues.
@@ -52,4 +52,4 @@ The public preview `v0.1.0` was published on **2026-11-13**; the historical prot
 
 ## Scope reminders
 
-This checklist supplements the single release-specific hardware acceptance issue and existing [README/onboarding work](https://github.com/jackwillis/globe/issues/118). It does not create new milestones or change a patch release's agreed scope. Apply platform-specific items **only when that platform/artifact is actually shipping**. Do not execute checks on the owner's G4 without separately granted hardware approval.
+This checklist supplements the single release-specific hardware acceptance issue and existing [README/onboarding work](https://github.com/jackwillis/poodle-earth/issues/118). It does not create new milestones or change a patch release's agreed scope. Apply platform-specific items **only when that platform/artifact is actually shipping**. Do not execute checks on the owner's G4 without separately granted hardware approval.

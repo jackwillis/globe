@@ -1,6 +1,6 @@
 # Authentic Mac OS 9 screenshots
 
-Captured for [#118](https://github.com/jackwillis/globe/issues/118) on 2026-11-17 on a Power Mac G4
+Captured for [#118](https://github.com/jackwillis/poodle-earth/issues/118) on 2026-11-17 on a Power Mac G4
 running **bare Mac OS 9.2.2** (1280×960 display), with Command-Shift-3. These are real application
 captures, not headless renders and not Tiger Classic.
 

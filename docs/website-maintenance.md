@@ -23,13 +23,13 @@ and after website updates. The workflow uploads only `site/`.
 
 Confirm the account site's custom-domain configuration, the repository
 name and the actual URL in Pages settings. As part of
-[#124](https://github.com/jackwillis/globe/issues/124), sweep the GitHub links
+[#124](https://github.com/jackwillis/poodle-earth/issues/124), sweep the GitHub links
 in `site/index.html` and test the final asset URLs. Add the public website link
 to the root README once the live URL works.
 See [GitHub Pages publishing sources](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
 Use the [release checklist](release-checklist.md) and its proposed website
-steps in [PR #154](https://github.com/jackwillis/globe/pull/154). For each
+steps in [PR #154](https://github.com/jackwillis/poodle-earth/pull/154). For each
 new release, update the StuffIt button, version and release notes link,
 corresponding source archive, tagged ReadMe/license/credits links, and tested
 compatibility and shipped features together. Use the asset URLs from the

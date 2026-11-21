@@ -1,6 +1,6 @@
 # Geographic workstation and scripting — exploratory direction
 
-**Status:** Owner-directed aspirations and unvalidated hypotheses, 2026-11-10, condensed 2026-11-13. Nonbinding: nothing here is implemented, scheduled, or a release gate. It supplements the [product brief](product-direction-2026-11-10.md) and does not amend [ADR 0005](../adr/0005-entity-identity-and-navigation.md) or the [entity/navigation contract](entity-navigation-contract.md). The optional console and Listener are owned by [#63](https://github.com/jackwillis/globe/issues/63).
+**Status:** Owner-directed aspirations and unvalidated hypotheses, 2026-11-10, condensed 2026-11-13. Nonbinding: nothing here is implemented, scheduled, or a release gate. It supplements the [product brief](product-direction-2026-11-10.md) and does not amend [ADR 0005](../adr/0005-entity-identity-and-navigation.md) or the [entity/navigation contract](entity-navigation-contract.md). The optional console and Listener are owned by [#63](https://github.com/jackwillis/poodle-earth/issues/63).
 
 ## Product direction
 

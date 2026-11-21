@@ -1,7 +1,7 @@
 # Poodle Earth user guide
 
 Poodle Earth is an offline globe for PowerPC Classic Macs. This guide covers the
-published [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1).
+published [v0.1.1 release](https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1).
 
 ## Install from StuffIt
 
@@ -20,7 +20,7 @@ unwrapped application when that path is uncertain.
 
 ## Install from an ISO or CD
 
-Download the hybrid ISO from the [v0.1.1 release](https://github.com/jackwillis/globe/releases/tag/v0.1.1).
+Download the hybrid ISO from the [v0.1.1 release](https://github.com/jackwillis/poodle-earth/releases/tag/v0.1.1).
 The [CD guide](os9-cd-image.md) describes the format and test evidence.
 
 1. In a compatible **PowerPC** Mac emulator, attach the image to the virtual
@@ -99,7 +99,7 @@ The images in this guide were captured by Jack on bare Mac OS 9.2.2 using build
 - **Application will not open:** confirm the guest is PowerPC, copy again using
   Finder or re-expand the `.sit` on the Mac, and check free memory. The original
   v0.1.0 has an AppearanceLib dependency that fails on Mac OS 8.1. A later
-  QuickDraw-cursor fix has [owner-reported emulator smoke tests](https://github.com/jackwillis/globe/issues/174#issuecomment-6969352476)
+  QuickDraw-cursor fix has [owner-reported emulator smoke tests](https://github.com/jackwillis/poodle-earth/issues/174#issuecomment-6969352476)
   on PowerPC System 7.1.2 through Mac OS 8.5; these do not establish every machine
   and OS combination or change the original release's requirements.
 - **Wheel does nothing:** Classic has no native scroll-wheel input here; use

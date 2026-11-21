@@ -1,4 +1,4 @@
-# Agent operating contract: Poodle Earth (jackwillis/globe)
+# Agent operating contract: Poodle Earth (jackwillis/poodle-earth)
 
 For every AI agent working here: Claude, Codex, ChatGPT. Tool-specific notes live in
 CLAUDE.md and docs/agents/codex.md. They add to this file and never replace it.
@@ -9,9 +9,9 @@ CLAUDE.md and docs/agents/codex.md. They add to this file and never replace it.
    Local main may differ from origin. Do not touch another agent's worktree or build.
 2. GitHub, over REST (`gh issue list` and `gh pr list` use GraphQL, which some
    sessions block):
-   - Current release: `gh api repos/jackwillis/globe/milestones`; the description
+   - Current release: `gh api repos/jackwillis/poodle-earth/milestones`; the description
      that starts `Status: current` (every issue's `milestone.description` shows it too).
-   - Ready work: `gh api -X GET repos/jackwillis/globe/issues -f state=open
+   - Ready work: `gh api -X GET repos/jackwillis/poodle-earth/issues -f state=open
      -f labels='status: ready' -f milestone=<number>`.
    - Active work: the same with `status: in progress` and `status: in review`,
      plus open PRs.
