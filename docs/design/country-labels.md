@@ -50,7 +50,31 @@ candidate storage once at startup (about 6–7 KiB on 32-bit Classic, 8.3 KiB on
 index array, about 1.5 KiB total on the stack before call overhead. Native font
 cache and Toolbox/X server allocations are platform-dependent.
 
-## E1 owner-run Power Mac G4 check
+## v0.1.2 acceptance and limitations — 2026-11-20
+
+The owner ran PR #185 at `b7aa82a587dbc3a38c1ed8af3411b0d516db068e`
+on the Power Mac G4 under bare Mac OS 9 on November 19. The timing-title
+MacBinary was 592,512 bytes, SHA-256
+`d5f9a7a48c41809406dceec1ab795190d6bf604e3faec6d6c26c0647fd652d3c`.
+The owner accepted the appearance and anchor placement and reported no
+perceptible slowdown. This is qualitative native evidence for that revision;
+no numerical E1 comparison was collected. The owner waived that comparison
+and the Palatino-only/neither-family font-removal checks for v0.1.2.
+
+The November 20 release-scope decision preserves Helvetica first with
+Palatino fallback. #218 is superseded; broader #61 typography stays in v0.2.
+Actual Classic glyph ink and shadow bounds, including Palatino overhangs,
+remain unverified and are an accepted, documented limitation for this patch.
+Host metrics tests and cross-compilation do not establish those bounds.
+Integration validation is recorded separately on PR #185 and #119; it does
+not imply a new native run or invalidate the accepted historical result.
+See the [owner acceptance report](https://github.com/jackwillis/poodle-earth/issues/119#issuecomment-7028370658)
+and [release-scope resolution](https://github.com/jackwillis/poodle-earth/issues/119#issuecomment-7058237691).
+
+## Original E1 owner-run Power Mac G4 procedure (historical)
+
+The procedure below is retained for provenance, not as an additional v0.1.2
+gate. Its numerical and font-removal steps were waived as recorded above.
 
 1. Build a distinct PowerPC Classic app with `-DGLOBE_TIMING_TITLE=ON` and
    record its commit, binary size, OS version, screen depth, window size,
@@ -80,4 +104,5 @@ cache and Toolbox/X server allocations are platform-dependent.
    separately record the normal capped overlay. Review E2 anchor quality for
    island, multipart and crescent countries (including the cases above).
 
-Native visual and timing acceptance, including Classic painted bounds, is pending.
+The historical procedure does not establish numerical timings or actual painted
+bounds; use the acceptance and limitations record above for v0.1.2 status.
