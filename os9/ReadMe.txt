@@ -1,6 +1,6 @@
 Poodle Earth - Classic PowerPC ReadMe
 
-Poodle Earth v0.1.1
+Poodle Earth v0.1.2
 
 An offline, software-rendered globe: drag to turn it, zoom in, and click a
 country or city for its information card. Nothing is downloaded or sent;
@@ -44,7 +44,10 @@ USE
  B borders, T drag mode, D night side, M measure two points. The menus
  show the Command-key versions (Command-= also zooms in). Command-Q quits.
  Edit > Preferences sets metric or imperial units for this session only.
- This version adds a center-distance scale, a north-following compass and
+ This version has a center-distance scale, a north-following compass and
+ country names on settled views. View > Country Names toggles the names;
+ labels disappear during drag and zoom. Classic uses installed Helvetica,
+ then Palatino, and Poodle Earth distributes no fonts.
  Controls help: H or ? or Apple menu > Controls; Escape hides help and does
  not quit. S and H are plain keys only; use the menu Command shortcuts for
  Copy, Preferences, Close and Quit. Other listed globe keys also have Command

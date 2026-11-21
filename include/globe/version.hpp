@@ -7,6 +7,6 @@
 namespace globe {
 
 // Keep this equal to PROJECT_VERSION in the top-level CMakeLists.txt.
-inline constexpr std::string_view kVersion = "0.1.1";
+inline constexpr std::string_view kVersion = "0.1.2";
 
 } // namespace globe

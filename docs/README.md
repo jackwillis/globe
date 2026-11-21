@@ -5,7 +5,7 @@
 - [Poodle Earth overview and published download](../README.md)
 - [Installation, controls and troubleshooting](user-guide.md) · [Classic ReadMe](../os9/ReadMe.txt)
 - [CD image installation and exact test evidence](os9-cd-image.md)
-- [Changelog](../CHANGELOG.md) · [v0.1.0 notes](release-notes-0.1.md) · [draft v0.1.1 notes](release-notes-0.1.1.md)
+- [Changelog](../CHANGELOG.md) · [v0.1.0 notes](release-notes-0.1.md) · [v0.1.1 notes](release-notes-0.1.1.md) · [draft v0.1.2 notes](release-notes-0.1.2.md)
 - [Data credits](../data/DATA-CREDITS.txt)
 
 ## For contributors
