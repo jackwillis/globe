@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
     CHECK(data);
     if (!data)
         return 1;
+    CHECK(data->label_candidates().empty());
     auto scene = CountryScene::create(*data);
     CHECK(scene);
     if (!scene)
@@ -86,6 +87,22 @@ int main(int argc, char** argv) {
     if (real) {
         auto world = CountryScene::create(*real);
         CHECK(world);
+        const auto labels = real->label_candidates();
+        CHECK(labels.size() == real->count());
+        if (world) {
+            for (auto name : {"Fiji", "Indonesia", "New Zealand", "Vietnam", "Croatia",
+                              "Philippines", "Trinidad and Tobago", "Equatorial Guinea"}) {
+                const LabelCandidate* label = nullptr;
+                for (const auto& candidate : labels)
+                    if (candidate.text == name)
+                        label = &candidate;
+                CHECK(label);
+                if (label) {
+                    const auto id = world->pick(from_unit_vector(label->anchor));
+                    CHECK(id && real->name(*id) == name);
+                }
+            }
+        }
         if (world)
             for (auto query : {LatLon{38, -97}, LatLon{48, 2}, LatLon{-89, 0}, LatLon{60, 100}}) {
                 auto id = world->pick(query);
@@ -93,6 +110,24 @@ int main(int argc, char** argv) {
                 if (id)
                     std::printf("%s\n", std::string(real->name(*id)).c_str());
             }
+        const Camera view{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}, 240, 240, 220, 480, 480};
+        const auto metrics = [](void*, std::string_view text,
+                                LabelRole) -> std::optional<LabelMetrics> {
+            return LabelMetrics{0, static_cast<int>(text.size()) * 5, 8, 2};
+        };
+        std::array<PlacedLabel, kMaxPlacedLabels> first{}, repeated{};
+        const auto count = place_labels(view, labels, metrics, nullptr, first);
+        CHECK(count > 0 && count <= first.size());
+        CHECK(place_labels(view, labels, metrics, nullptr, repeated) == count);
+        CHECK(first == repeated);
+        // A valid same-count edition with different text must not use the generated anchors.
+        realbytes.back() = realbytes.back() == 'X' ? 'Y' : 'X';
+        CHECK(!Countries::parse(realbytes.data(), realbytes.size()));
+        store_le32(realbytes.data() + 28,
+                   crc32_extend(crc32(realbytes.data(), 28), realbytes.data() + 32,
+                                realbytes.size() - 32));
+        const auto alternate = Countries::parse(realbytes.data(), realbytes.size());
+        CHECK(alternate && alternate->label_candidates().empty());
     }
     return TEST_MAIN_RESULT();
 }

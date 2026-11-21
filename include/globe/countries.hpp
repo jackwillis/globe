@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jack Willis
 #pragma once
 #include "globe/geometry.hpp"
+#include "globe/label_layout.hpp"
 #include "globe/strings.hpp"
 #include <array>
 #include <cstddef>
@@ -27,6 +28,7 @@ class Countries {
     static std::optional<Countries> parse(const std::uint8_t* bytes, std::size_t size);
     std::uint32_t count() const { return count_; }
     std::uint32_t point_count() const { return points_; }
+    std::vector<LabelCandidate> label_candidates() const;
     CountryRecord country(std::uint32_t id) const;
     CountryRing ring(std::uint32_t id) const;
     LatLon point(std::uint32_t id) const;

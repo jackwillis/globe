@@ -44,4 +44,5 @@ ItemBorders = Borders
 ItemTrackball = Trackball Drag
 ItemNight = Night Side
 ItemMeasure = Measure
+ItemCountryNames = Country Names
 ResizeNeedsMemory = This window size needs more memory. Quit Poodle Earth and increase its memory size using Get Info in the Finder.

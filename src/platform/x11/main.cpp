@@ -117,8 +117,10 @@ class App {
         if (places_)
             place_scene_ = PlaceScene::create(*places_);
         countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
-        if (countries_)
+        if (countries_) {
             country_scene_ = CountryScene::create(*countries_);
+            country_labels_ = countries_->label_candidates();
+        }
         overlays_.attach(countries_ ? &*countries_ : nullptr,
                          country_scene_ ? &*country_scene_ : nullptr, places_ ? &*places_ : nullptr,
                          place_scene_ ? &*place_scene_ : nullptr);
@@ -135,6 +137,10 @@ class App {
         if (image_ != nullptr) {
             XDestroyImage(image_);
         }
+        if (label_gc_)
+            XFreeGC(dpy_, label_gc_);
+        if (label_font_)
+            XFreeFont(dpy_, label_font_);
         if (gc_ != nullptr) {
             XFreeGC(dpy_, gc_);
         }
@@ -163,12 +169,23 @@ class App {
         wm_delete_ = XInternAtom(dpy_, "WM_DELETE_WINDOW", False);
         XSetWMProtocols(dpy_, win_, &wm_delete_, 1);
         gc_ = XCreateGC(dpy_, win_, 0, nullptr);
+        if (!opt_.verify_pixels && !country_labels_.empty()) {
+            label_font_ =
+                XLoadQueryFont(dpy_, "-*-helvetica-medium-r-normal--12-*-*-*-*-*-iso8859-1");
+            if (!label_font_)
+                label_font_ = XLoadQueryFont(dpy_, "fixed");
+            if (label_font_) {
+                XGCValues values{};
+                values.font = label_font_->fid;
+                label_gc_ = XCreateGC(dpy_, win_, GCFont, &values);
+            }
+        }
         if (!make_buffers(opt_.width, opt_.height)) {
             return false;
         }
         toolbar_ = XCreateSimpleWindow(dpy_, RootWindow(dpy_, screen), 0, opt_.height + 20,
-                                       kToolbarWidth, kToolbarHeight, 1, BlackPixel(dpy_, screen),
-                                       WhitePixel(dpy_, screen));
+                                       kToolbarWidth, kToolbarHeight + 28, 1,
+                                       BlackPixel(dpy_, screen), WhitePixel(dpy_, screen));
         XStoreName(dpy_, toolbar_, "Poodle Earth tools");
         XSetTransientForHint(dpy_, toolbar_, win_);
         const Atom kind = XInternAtom(dpy_, "_NET_WM_WINDOW_TYPE_UTILITY", False);
@@ -670,6 +687,41 @@ class App {
         upload(0, fb.height());
     }
 
+    void draw_country_names() {
+        if (!labels_shown_)
+            return;
+        std::array<PlacedLabel, kMaxPlacedLabels> placed;
+        const auto count = place_labels(
+            model_.camera, country_labels_,
+            [](void* context, std::string_view text, LabelRole) -> std::optional<LabelMetrics> {
+                int direction, ascent, descent;
+                XCharStruct bounds{};
+                XTextExtents(static_cast<XFontStruct*>(context), text.data(),
+                             static_cast<int>(text.size()), &direction, &ascent, &descent, &bounds);
+                return LabelMetrics{bounds.lbearing, bounds.rbearing + 1, bounds.ascent,
+                                    bounds.descent + 1};
+            },
+            label_font_, placed);
+        const int screen = DefaultScreen(dpy_);
+        for (std::size_t i = 0; i < count; ++i) {
+            const auto& label = placed[i];
+            const auto text = country_labels_[label.candidate].text;
+            const auto length = static_cast<int>(text.size());
+            XSetForeground(dpy_, label_gc_, WhitePixel(dpy_, screen));
+            // XDrawString consumes the explicit length; string_view need not be NUL-terminated.
+            // NOLINTBEGIN(bugprone-suspicious-stringview-data-usage)
+            XDrawString(dpy_, win_, label_gc_, label.baseline_x + 1, label.baseline_y + 1,
+                        text.data(), length);
+            // NOLINTEND(bugprone-suspicious-stringview-data-usage)
+            XSetForeground(dpy_, label_gc_, BlackPixel(dpy_, screen));
+            // XDrawString consumes the explicit length; string_view need not be NUL-terminated.
+            // NOLINTBEGIN(bugprone-suspicious-stringview-data-usage)
+            XDrawString(dpy_, win_, label_gc_, label.baseline_x, label.baseline_y, text.data(),
+                        length);
+            // NOLINTEND(bugprone-suspicious-stringview-data-usage)
+        }
+    }
+
     // Shows the already packed image again, without rendering or converting.
     void resend() {
         if (!fb_ || image_ == nullptr)
@@ -677,6 +729,8 @@ class App {
         const std::uint64_t t = monotonic_ns();
         XPutImage(dpy_, win_, gc_, image_, 0, 0, 0, 0, static_cast<unsigned>(fb_->width()),
                   static_cast<unsigned>(fb_->height()));
+        if (!presentation_held(model_) && frame_settled(model_, runner_.active()))
+            draw_country_names();
         XSync(dpy_, False);
         t_.present_ms.push_back(ms_since(t));
         if (opt_.verify_pixels) {
@@ -693,6 +747,13 @@ class App {
         // Overlays and the progress bar go on a copy (or the bar on the frame for this upload), so
         // the rendered frame stays exactly as it was and clearing an overlay needs no re-render.
         const bool settled = frame_settled(model_, runner_.active());
+        const bool show_labels =
+            settled && !presentation_held(model_) && country_names_ && label_gc_;
+        if (show_labels || labels_shown_) {
+            first_row = 0;
+            end_row = fb.height();
+        }
+        labels_shown_ = show_labels;
         const double progress = bar_progress(model_, runner_.job());
         if (progress >= 0.0 || bar_shown_) { // a bar to draw, or one to wipe: cover its rows
             first_row = std::min(first_row, fb.height() - kProgressBarRows);
@@ -711,6 +772,7 @@ class App {
         t = monotonic_ns();
         XPutImage(dpy_, win_, gc_, image_, 0, first_row, 0, first_row,
                   static_cast<unsigned>(fb.width()), static_cast<unsigned>(end_row - first_row));
+        draw_country_names();
         XSync(dpy_, False);
         t_.present_ms.push_back(ms_since(t));
         if (opt_.verify_pixels) {
@@ -738,7 +800,7 @@ class App {
         const int screen = DefaultScreen(dpy_);
         const auto white = WhitePixel(dpy_, screen), black = BlackPixel(dpy_, screen);
         XSetForeground(dpy_, gc_, white);
-        XFillRectangle(dpy_, toolbar_, gc_, 0, 0, kToolbarWidth, kToolbarHeight);
+        XFillRectangle(dpy_, toolbar_, gc_, 0, 0, kToolbarWidth, kToolbarHeight + 28);
         for (std::size_t i = 0; i < kCommandCount; ++i) {
             const auto state = toolbar_cache_[i];
             if (!state.visible)
@@ -752,6 +814,13 @@ class App {
             XSetForeground(dpy_, gc_, state.checked ? white : black);
             XDrawString(dpy_, toolbar_, gc_, r.x + 6, r.y + 18, labels[i],
                         static_cast<int>(std::strlen(labels[i])));
+        }
+        if (label_gc_) {
+            XSetForeground(dpy_, gc_, black);
+            XDrawRectangle(dpy_, toolbar_, gc_, 8, kToolbarHeight, 122, 22);
+            const char* label = country_names_ ? "[x] Country Names" : "[ ] Country Names";
+            XDrawString(dpy_, toolbar_, gc_, 13, kToolbarHeight + 15, label,
+                        static_cast<int>(std::strlen(label)));
         }
     }
     bool handle(XEvent& ev) {
@@ -776,6 +845,14 @@ class App {
             if (ev.type == KeyPress)
                 return on_key(XLookupKeysym(&ev.xkey, 0), now);
             if (ev.type == ButtonPress && ev.xbutton.button == Button1) {
+                if (label_gc_ && ev.xbutton.x >= 8 && ev.xbutton.x <= 130 &&
+                    ev.xbutton.y >= kToolbarHeight && ev.xbutton.y <= kToolbarHeight + 22) {
+                    country_names_ = !country_names_;
+                    if (frame_valid_ && fb_ && !presentation_held(model_))
+                        upload(0, fb_->height());
+                    draw_toolbar();
+                    return false;
+                }
                 const auto hit = toolbar_hit({double(ev.xbutton.x), double(ev.xbutton.y)});
                 if (hit) {
                     const auto state = toolbar_state(model_)[static_cast<std::size_t>(*hit)];
@@ -996,6 +1073,8 @@ class App {
     std::optional<PlaceScene> place_scene_;
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
+    std::vector<LabelCandidate> country_labels_;
+    bool country_names_ = true;
     Overlays overlays_;
     std::size_t info_cards_ = 0;
     Window win_ = 0, toolbar_ = 0;
@@ -1004,7 +1083,9 @@ class App {
     ScreenPoint pointer_{-1e20, -1e20};
     ToolbarState toolbar_cache_{};
     std::size_t toolbar_commands_ = 0, cursor_changes_ = 0;
-    GC gc_ = nullptr;
+    GC gc_ = nullptr, label_gc_ = nullptr;
+    XFontStruct* label_font_ = nullptr;
+    bool labels_shown_ = false;
     Visual* visual_ = nullptr;
     int depth_ = 0;
     Atom wm_delete_ = 0;

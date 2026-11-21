@@ -183,8 +183,10 @@ class Application {
             return false;
         // Picking data are optional: without them clicks do nothing and the overlays still work.
         countries_ = Countries::parse(kEmbeddedCountriesData, kEmbeddedCountriesSize);
-        if (countries_)
+        if (countries_) {
             country_scene_ = CountryScene::create(*countries_);
+            country_labels_ = countries_->label_candidates();
+        }
         places_ = Places::parse(kEmbeddedPlacesData, kEmbeddedPlacesSize);
         if (places_)
             place_scene_ = PlaceScene::create(*places_);
@@ -576,7 +578,8 @@ class Application {
         number(max_turn_ms_);
         put(" ms, step ");
         number(max_step_ms_);
-        put(" ms");
+        put(" ms, names ");
+        number(last_label_count_);
         if (unknown_count_ != 0) {
             put(", ev ");
             number(last_unknown_);
@@ -586,6 +589,68 @@ class Application {
         title[0] = static_cast<unsigned char>(n);
         SetWTitle(window_, title);
 #endif
+    }
+    // Resolve on use so menu availability and drawing share the installed-font policy.
+    static short country_name_font() {
+        short family = 0;
+        GetFNum("\pHelvetica", &family);
+        if (!family)
+            GetFNum("\pPalatino", &family);
+        return family;
+    }
+    bool country_names_available() const {
+        return !country_labels_.empty() && country_name_font() != 0;
+    }
+    void draw_country_names() {
+        last_label_count_ = 0;
+        if (!country_names_ || country_labels_.empty() || presentation_held(model_) ||
+            !frame_settled(model_, runner_.active()))
+            return;
+        const short family = country_name_font();
+        if (!family)
+            return;
+        const auto old_font = window_->txFont;
+        const auto old_size = window_->txSize;
+        const auto old_face = window_->txFace;
+        const auto old_mode = window_->txMode;
+        RGBColor old_color;
+        GetForeColor(&old_color);
+        TextFont(family);
+        TextSize(10);
+        TextFace(normal);
+        TextMode(srcOr);
+        FontInfo info;
+        GetFontInfo(&info);
+        std::array<PlacedLabel, kMaxPlacedLabels> placed;
+        const auto count = place_labels(
+            model_.camera, country_labels_,
+            [](void* context, std::string_view text, LabelRole) -> std::optional<LabelMetrics> {
+                const auto& metrics = *static_cast<const FontInfo*>(context);
+                return LabelMetrics{
+                    -1,
+                    TextWidth(const_cast<char*>(text.data()), 0, static_cast<short>(text.size())) +
+                        1,
+                    metrics.ascent + 1, metrics.descent + 1};
+            },
+            &info, placed);
+        last_label_count_ = count;
+        RGBColor white{0xffff, 0xffff, 0xffff}, black{0, 0, 0};
+        for (std::size_t i = 0; i < count; ++i) {
+            const auto& label = placed[i];
+            const auto text = country_labels_[label.candidate].text;
+            RGBForeColor(&white);
+            MoveTo(static_cast<short>(label.baseline_x + 1),
+                   static_cast<short>(label.baseline_y + 1));
+            DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
+            RGBForeColor(&black);
+            MoveTo(static_cast<short>(label.baseline_x), static_cast<short>(label.baseline_y));
+            DrawText(const_cast<char*>(text.data()), 0, static_cast<short>(text.size()));
+        }
+        RGBForeColor(&old_color);
+        TextMode(old_mode);
+        TextFace(old_face);
+        TextSize(old_size);
+        TextFont(old_font);
     }
     bool copy(int first, int end, bool convert = true) {
         if (!world_ || !fb_)
@@ -627,6 +692,8 @@ class Application {
                       static_cast<short>(fb_->width())};
             CopyBits(reinterpret_cast<BitMap*>(*pix), &window_->portBits, &rect, &rect, srcCopy,
                      nullptr);
+            if (end == fb_->height())
+                draw_country_names();
             if (convert)
                 dirty_ = false;
         }
@@ -704,9 +771,12 @@ class Application {
     // Check marks and dimming for the menu about to be shown; the model is the only state.
     void refresh_menus() {
         if (const MenuHandle view = GetMenuHandle(kViewMenu)) {
+            const bool names_available = country_names_available();
             for (short item = 1; item <= kViewItemCount; ++item) {
                 const auto s =
-                    view_item_state(model_, overlays_.night(), overlays_.measuring(), item);
+                    item == kCountryNamesItem
+                        ? MenuItemState{names_available, names_available && country_names_}
+                        : view_item_state(model_, overlays_.night(), overlays_.measuring(), item);
                 if (s.enabled)
                     EnableItem(view, item);
                 else
@@ -752,6 +822,11 @@ class Application {
             copy_card();
         } else if (menu == kEditMenu) {
             SystemEdit(item - 1);
+        } else if (menu == kViewMenu && item == kCountryNamesItem && country_names_available()) {
+            country_names_ = !country_names_;
+            if (fb_) {
+                present(0, fb_->height());
+            }
         } else {
             const auto choice = menu_choice(menu, item, model_.terrain_style);
             if (choice.about)
@@ -853,6 +928,9 @@ class Application {
     std::optional<TerrainScene> terrain_;
     std::optional<Countries> countries_;
     std::optional<CountryScene> country_scene_;
+    std::vector<LabelCandidate> country_labels_;
+    bool country_names_ = true;
+    std::size_t last_label_count_ = 0;
     std::optional<Places> places_;
     std::optional<PlaceScene> place_scene_;
     Overlays overlays_;
